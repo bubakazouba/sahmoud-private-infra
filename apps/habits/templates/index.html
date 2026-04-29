@@ -1,0 +1,40 @@
+<!doctype html><html><head><meta charset=utf-8><title>habits</title>
+<style>
+body{background:#0d1117;color:#c9d1d9;font-family:-apple-system,sans-serif;margin:0;padding:24px;max-width:640px}
+h1{color:#79c0ff;margin:0 0 16px}
+form{display:flex;gap:8px;margin-bottom:16px}
+input[type=text]{flex:1;background:#161b22;border:1px solid #30363d;color:#c9d1d9;padding:8px;border-radius:6px}
+button{background:#238636;border:none;color:#fff;padding:8px 14px;border-radius:6px;cursor:pointer}
+ul{list-style:none;padding:0;margin:0}
+li{display:flex;gap:8px;align-items:center;padding:10px;border-bottom:1px solid #21262d}
+li span{flex:1}
+.streak{color:#f0883e;font-weight:600;font-size:18px;min-width:60px;text-align:center}
+li button{background:#21262d;color:#c9d1d9;font-size:12px;padding:4px 8px}
+.check{background:#238636}
+.del{background:#da3633}
+a{color:#79c0ff}
+</style></head><body>
+<h1>🔥 habits</h1>
+<form id=add><input type=text id=t placeholder="add a habit (e.g. read 30min)…" autofocus><button>add</button></form>
+<ul id=list></ul>
+<p style=margin-top:24px;color:#6e7681;font-size:11px>backend: flask · db: sqlite · streaks reset if gap > 36h · <a href="../">↑ infra</a></p>
+<script>
+const BASE = "{{ base }}";
+async function load(){
+  const j = await (await fetch(BASE+"/api/habits")).json();
+  document.getElementById("list").innerHTML = j.habits.map(h =>
+    `<li><span>${h.name}</span><span class=streak>🔥 ${h.streak}</span>
+     <button class=check onclick="check(${h.id})">✓ today</button>
+     <button class=del onclick="del(${h.id})">×</button></li>`).join("");
+}
+async function check(id){ await fetch(BASE+"/api/habits/"+id+"/check",{method:"POST"}); load();}
+async function del(id){ await fetch(BASE+"/api/habits/"+id,{method:"DELETE"}); load();}
+document.getElementById("add").onsubmit = async e => {
+  e.preventDefault();
+  const t = document.getElementById("t");
+  if(!t.value.trim()) return;
+  await fetch(BASE+"/api/habits",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name:t.value})});
+  t.value = ""; load();
+};
+load();
+</script></body></html>

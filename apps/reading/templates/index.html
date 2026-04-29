@@ -1,0 +1,56 @@
+<!doctype html><html><head><meta charset=utf-8><title>reading</title>
+<style>
+body{background:#0d1117;color:#c9d1d9;font-family:-apple-system,sans-serif;margin:0;padding:24px;max-width:720px}
+h1{color:#79c0ff;margin:0 0 16px}
+form{display:grid;grid-template-columns:2fr 2fr 90px auto;gap:8px;margin-bottom:16px}
+input{background:#161b22;border:1px solid #30363d;color:#c9d1d9;padding:8px;border-radius:6px}
+button{background:#238636;border:none;color:#fff;padding:8px 14px;border-radius:6px;cursor:pointer}
+ul{list-style:none;padding:0;margin:0}
+li{padding:12px;border-bottom:1px solid #21262d}
+.title{color:#79c0ff;font-weight:600;font-size:15px}
+.author{color:#8b949e;font-size:12px}
+.bar{background:#21262d;border-radius:4px;height:6px;margin:8px 0 4px;overflow:hidden}
+.fill{background:#7ee787;height:100%;transition:width .3s}
+.row{display:flex;gap:6px;align-items:center;font-size:12px;color:#8b949e}
+input.pages{width:80px;background:#0d1117;padding:4px 6px;font-size:12px}
+.del{background:#da3633;color:#fff;padding:2px 8px;font-size:11px;border:none;border-radius:4px;cursor:pointer;margin-left:auto}
+a{color:#79c0ff}
+</style></head><body>
+<h1>📖 reading</h1>
+<form id=add>
+<input id=title placeholder="title">
+<input id=author placeholder="author (optional)">
+<input id=total type=number placeholder="pages">
+<button>add</button>
+</form>
+<ul id=list></ul>
+<p style=margin-top:24px;color:#6e7681;font-size:11px>backend: flask · db: sqlite · <a href="../">↑ infra</a></p>
+<script>
+const BASE = "{{ base }}";
+async function load(){
+  const j = await (await fetch(BASE+"/api/books")).json();
+  document.getElementById("list").innerHTML = j.books.map(b => {
+    const pct = Math.min(100, Math.round((b.pages_read / b.total_pages) * 100));
+    return `<li>
+     <div class=title>${b.title}${b.author?' <span class=author>· '+b.author+'</span>':''}</div>
+     <div class=bar><div class=fill style="width:${pct}%"></div></div>
+     <div class=row>
+       <input class=pages type=number value="${b.pages_read}" onchange="upd(${b.id},this.value)">/ ${b.total_pages} (${pct}%)
+       <button class=del onclick="del(${b.id})">×</button>
+     </div></li>`;
+  }).join("");
+}
+async function upd(id,p){ await fetch(BASE+"/api/books/"+id,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({pages_read:parseInt(p)||0})}); load();}
+async function del(id){ await fetch(BASE+"/api/books/"+id,{method:"DELETE"}); load();}
+document.getElementById("add").onsubmit = async e => {
+  e.preventDefault();
+  const title = document.getElementById("title").value.trim();
+  const author = document.getElementById("author").value.trim();
+  const total = document.getElementById("total").value;
+  if(!title || !total) return;
+  await fetch(BASE+"/api/books",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({title,author,total_pages:parseInt(total)})});
+  document.getElementById("title").value="";document.getElementById("author").value="";document.getElementById("total").value="";
+  load();
+};
+load();
+</script></body></html>

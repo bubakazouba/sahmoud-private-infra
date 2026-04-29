@@ -1,0 +1,53 @@
+<!doctype html><html><head><meta charset=utf-8><title>expenses</title>
+<style>
+body{background:#0d1117;color:#c9d1d9;font-family:-apple-system,sans-serif;margin:0;padding:24px;max-width:720px}
+h1{color:#79c0ff;margin:0 0 16px}
+form{display:grid;grid-template-columns:1fr 1fr 2fr 1fr auto;gap:8px;margin-bottom:16px}
+input{background:#161b22;border:1px solid #30363d;color:#c9d1d9;padding:8px;border-radius:6px}
+button{background:#238636;border:none;color:#fff;padding:8px 14px;border-radius:6px;cursor:pointer}
+.totals{background:#161b22;border:1px solid #21262d;border-radius:8px;padding:12px;margin-bottom:16px;display:flex;gap:14px;flex-wrap:wrap}
+.totals span{font-size:13px}
+.totals strong{color:#f0883e}
+ul{list-style:none;padding:0;margin:0}
+li{display:grid;grid-template-columns:90px 100px 1fr 80px 30px;gap:8px;padding:8px 10px;border-bottom:1px solid #21262d;align-items:center}
+.amount{color:#7ee787;font-weight:600;text-align:right}
+.cat{color:#79c0ff;font-size:12px}
+.del{background:#da3633;color:#fff;padding:2px 6px;font-size:11px;border:none;border-radius:4px;cursor:pointer}
+a{color:#79c0ff}
+</style></head><body>
+<h1>💸 expenses</h1>
+<div class=totals id=totals></div>
+<form id=add>
+<input id=amount type=number step=0.01 placeholder="$">
+<input id=category placeholder="category">
+<input id=note placeholder="note (optional)">
+<input id=date type=date>
+<button>add</button>
+</form>
+<ul id=list></ul>
+<p style=margin-top:24px;color:#6e7681;font-size:11px>backend: flask · db: sqlite · <a href="../">↑ infra</a></p>
+<script>
+const BASE = "{{ base }}";
+document.getElementById("date").value = new Date().toISOString().slice(0,10);
+async function load(){
+  const j = await (await fetch(BASE+"/api/expenses")).json();
+  document.getElementById("totals").innerHTML = Object.entries(j.totals).map(([k,v]) => `<span>${k}: <strong>$${v.toFixed(2)}</strong></span>`).join("") || '<span style=color:#6e7681>no expenses yet</span>';
+  document.getElementById("list").innerHTML = j.expenses.map(e =>
+    `<li><span>${e.date}</span><span class=cat>${e.category}</span><span>${e.note||''}</span>
+     <span class=amount>$${e.amount.toFixed(2)}</span>
+     <button class=del onclick="del(${e.id})">×</button></li>`).join("");
+}
+async function del(id){ await fetch(BASE+"/api/expenses/"+id,{method:"DELETE"}); load();}
+document.getElementById("add").onsubmit = async e => {
+  e.preventDefault();
+  const amount = document.getElementById("amount").value;
+  const category = document.getElementById("category").value || "misc";
+  const note = document.getElementById("note").value;
+  const date = document.getElementById("date").value;
+  if(!amount) return;
+  await fetch(BASE+"/api/expenses",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({amount,category,note,date})});
+  document.getElementById("amount").value="";document.getElementById("note").value="";
+  load();
+};
+load();
+</script></body></html>

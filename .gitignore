@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+state/*.log
+state/*.pid
+state/*.db*
+pgdata/
+apps/*/data.db*

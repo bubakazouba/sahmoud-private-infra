@@ -1,0 +1,39 @@
+<!doctype html><html><head><meta charset=utf-8><title>todo</title>
+<style>
+body{background:#0d1117;color:#c9d1d9;font-family:-apple-system,sans-serif;margin:0;padding:24px;max-width:640px}
+h1{color:#79c0ff;margin:0 0 16px}
+form{display:flex;gap:8px;margin-bottom:16px}
+input[type=text]{flex:1;background:#161b22;border:1px solid #30363d;color:#c9d1d9;padding:8px;border-radius:6px;font-size:14px}
+button{background:#238636;border:none;color:#fff;padding:8px 14px;border-radius:6px;cursor:pointer;font-size:14px}
+ul{list-style:none;padding:0;margin:0}
+li{display:flex;gap:8px;align-items:center;padding:10px;border-bottom:1px solid #21262d}
+li.done span{text-decoration:line-through;color:#6e7681}
+li span{flex:1}
+li button{background:#21262d;color:#c9d1d9;font-size:12px;padding:4px 8px}
+.del{background:#da3633;color:#fff}
+a{color:#79c0ff}
+</style></head><body>
+<h1>📝 todo</h1>
+<form id=add><input type=text id=t placeholder="add a todo…" autofocus><button>add</button></form>
+<ul id=list></ul>
+<p style=margin-top:24px;color:#6e7681;font-size:11px>backend: flask · db: sqlite · <a href="../">↑ infra</a></p>
+<script>
+const BASE = "{{ base }}";
+async function load(){
+  const r = await fetch(BASE + "/api/items"); const j = await r.json();
+  document.getElementById("list").innerHTML = j.items.map(i =>
+    `<li class="${i.done?'done':''}"><span>${i.text}</span>
+     <button onclick="toggle(${i.id},${i.done?0:1})">${i.done?'undo':'done'}</button>
+     <button class=del onclick="del(${i.id})">×</button></li>`).join("");
+}
+async function toggle(id,done){ await fetch(BASE+"/api/items/"+id,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({done})}); load();}
+async function del(id){ await fetch(BASE+"/api/items/"+id,{method:"DELETE"}); load();}
+document.getElementById("add").onsubmit = async e => {
+  e.preventDefault();
+  const t = document.getElementById("t");
+  if(!t.value.trim()) return;
+  await fetch(BASE+"/api/items",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text:t.value})});
+  t.value = ""; load();
+};
+load();
+</script></body></html>
