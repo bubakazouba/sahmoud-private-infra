@@ -131,8 +131,44 @@ def test_demo_app_serves_directly(isolated_db, app_name, probe_path):
         p.wait(timeout=3)
 
 
-def test_xss_escaped_in_todo(isolated_db):
-    """User input rendered to the DOM must be HTML-escaped (Hanan's flag, 4/29)."""
+@pytest.mark.parametrize("app_name", ["todo", "habits", "bookmarks", "expenses", "reading"])
+def test_xss_helper_present_in_template(isolated_db, app_name):
+    """Every app's template must include the esc() HTML-escape helper.
+    Backstop against future template edits that drop the safety wrapper.
+    Originally Hanan's flag on commit af2361f (4/29): only todo had a regression
+    test; all 5 templates needed coverage to prevent backslide.
+    """
+    port = _free_port()
+    app_path = APPS_DIR / app_name / "app.py"
+    p = _spawn(app_name, app_path, port)
+    try:
+        with httpx.Client(timeout=5.0) as c:
+            r = c.get(f"http://127.0.0.1:{port}/")
+            assert r.status_code == 200
+            html = r.text
+            # The esc() helper signature must be present in the rendered template.
+            assert "function esc(" in html, f"{app_name}: missing esc() helper in template"
+            # And no unguarded `${userInput}` patterns from the original injection sites.
+            # We grep for known-bad patterns that previously existed.
+            bad_patterns = {
+                "todo":      "<span>${i.text}</span>",
+                "habits":    "<span>${h.name}</span>",
+                "bookmarks": "${b.title}</a>",
+                "expenses":  "${e.category}",
+                "reading":   "${b.title}${b.author",
+            }
+            assert bad_patterns[app_name] not in html, \
+                f"{app_name}: regressed to unguarded ${{userInput}} pattern"
+    finally:
+        p.terminate()
+        p.wait(timeout=3)
+
+
+def test_xss_payload_round_trips_unescaped_in_db(isolated_db):
+    """The DB stores the raw payload — escaping happens at render time only.
+    This protects against double-escape bugs where the DB persists already-escaped
+    text and the renderer escapes again.
+    """
     port = _free_port()
     app_path = APPS_DIR / "todo" / "app.py"
     p = _spawn("todo", app_path, port)
@@ -140,18 +176,9 @@ def test_xss_escaped_in_todo(isolated_db):
         with httpx.Client(timeout=5.0) as c:
             payload = '<img src=x onerror=alert(1)>'
             c.post(f"http://127.0.0.1:{port}/api/items", json={"text": payload})
-            r = c.get(f"http://127.0.0.1:{port}/")
-            html = r.text
-            # The literal payload must NOT appear unescaped in the rendered page.
-            # The frontend escapes it client-side via esc(), so what comes back
-            # from the server is just the template — and the template uses
-            # esc(i.text) when interpolating the JSON. We assert the template
-            # contains the esc() helper to prove the regression coverage.
-            assert "function esc(" in html
-            # And the API response itself contains the raw value (DB doesn't
-            # mangle it — only the renderer escapes).
             j = c.get(f"http://127.0.0.1:{port}/api/items").json()
-            assert any(it["text"] == payload for it in j["items"])
+            assert any(it["text"] == payload for it in j["items"]), \
+                "DB or API mangled the raw payload — escape happens at render only"
     finally:
         p.terminate()
         p.wait(timeout=3)
