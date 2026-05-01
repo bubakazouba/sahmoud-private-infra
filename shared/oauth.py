@@ -26,6 +26,18 @@ os.environ.setdefault("OAUTHLIB_RELAX_TOKEN_SCOPE", "1")
 
 INFRA_ROOT = Path(__file__).resolve().parent.parent
 
+# Load .env from project root if present (no python-dotenv dependency required).
+# manage.py spawns control_plane / supervisor as subprocess.Popen without env=,
+# so any vars set only in .env wouldn't reach them otherwise.
+_env_file = INFRA_ROOT / ".env"
+if _env_file.exists():
+    for line in _env_file.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        k, v = line.split("=", 1)
+        os.environ.setdefault(k.strip(), v.strip())
+
 CREDS_FILE = os.environ.get(
     "OAUTH_CLIENT_SECRETS_FILE",
     str(INFRA_ROOT / "credentials" / "google_oauth_web.json"),
