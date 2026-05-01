@@ -26,12 +26,14 @@ a{color:#79c0ff}
 <p style=margin-top:24px;color:#6e7681;font-size:11px>backend: flask · db: sqlite · <a href="../">↑ infra</a></p>
 <script>
 const BASE = "{{ base }}";
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function safeUrl(u){const s=String(u);return /^(https?:|mailto:|tel:)/i.test(s)?s:'#';}
 async function load(){
   const j = await (await fetch(BASE+"/api/bookmarks")).json();
   document.getElementById("list").innerHTML = j.bookmarks.map(b =>
     `<li><button class=del onclick="del(${b.id})">×</button>
-     <div class=title><a href="${b.url}" target=_blank>${b.title}</a>${b.tag?'<span class=tag>'+b.tag+'</span>':''}</div>
-     <div class=url>${b.url}</div></li>`).join("");
+     <div class=title><a href="${esc(safeUrl(b.url))}" target=_blank rel="noopener noreferrer">${esc(b.title)}</a>${b.tag?'<span class=tag>'+esc(b.tag)+'</span>':''}</div>
+     <div class=url>${esc(b.url)}</div></li>`).join("");
 }
 async function del(id){ await fetch(BASE+"/api/bookmarks/"+id,{method:"DELETE"}); load();}
 document.getElementById("add").onsubmit = async e => {

@@ -27,15 +27,16 @@ a{color:#79c0ff}
 <p style=margin-top:24px;color:#6e7681;font-size:11px>backend: flask · db: sqlite · <a href="../">↑ infra</a></p>
 <script>
 const BASE = "{{ base }}";
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 async function load(){
   const j = await (await fetch(BASE+"/api/books")).json();
   document.getElementById("list").innerHTML = j.books.map(b => {
     const pct = Math.min(100, Math.round((b.pages_read / b.total_pages) * 100));
     return `<li>
-     <div class=title>${b.title}${b.author?' <span class=author>· '+b.author+'</span>':''}</div>
+     <div class=title>${esc(b.title)}${b.author?' <span class=author>· '+esc(b.author)+'</span>':''}</div>
      <div class=bar><div class=fill style="width:${pct}%"></div></div>
      <div class=row>
-       <input class=pages type=number value="${b.pages_read}" onchange="upd(${b.id},this.value)">/ ${b.total_pages} (${pct}%)
+       <input class=pages type=number value="${Number(b.pages_read)}" onchange="upd(${b.id},this.value)">/ ${Number(b.total_pages)} (${pct}%)
        <button class=del onclick="del(${b.id})">×</button>
      </div></li>`;
   }).join("");

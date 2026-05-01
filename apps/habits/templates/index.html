@@ -20,10 +20,11 @@ a{color:#79c0ff}
 <p style=margin-top:24px;color:#6e7681;font-size:11px>backend: flask · db: sqlite · streaks reset if gap > 36h · <a href="../">↑ infra</a></p>
 <script>
 const BASE = "{{ base }}";
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 async function load(){
   const j = await (await fetch(BASE+"/api/habits")).json();
   document.getElementById("list").innerHTML = j.habits.map(h =>
-    `<li><span>${h.name}</span><span class=streak>🔥 ${h.streak}</span>
+    `<li><span>${esc(h.name)}</span><span class=streak>🔥 ${h.streak}</span>
      <button class=check onclick="check(${h.id})">✓ today</button>
      <button class=del onclick="del(${h.id})">×</button></li>`).join("");
 }

@@ -19,10 +19,11 @@ a{color:#79c0ff}
 <p style=margin-top:24px;color:#6e7681;font-size:11px>backend: flask · db: sqlite · <a href="../">↑ infra</a></p>
 <script>
 const BASE = "{{ base }}";
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 async function load(){
   const r = await fetch(BASE + "/api/items"); const j = await r.json();
   document.getElementById("list").innerHTML = j.items.map(i =>
-    `<li class="${i.done?'done':''}"><span>${i.text}</span>
+    `<li class="${i.done?'done':''}"><span>${esc(i.text)}</span>
      <button onclick="toggle(${i.id},${i.done?0:1})">${i.done?'undo':'done'}</button>
      <button class=del onclick="del(${i.id})">×</button></li>`).join("");
 }

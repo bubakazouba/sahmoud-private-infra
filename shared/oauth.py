@@ -3,6 +3,14 @@
 Strategy: a session cookie holds {"email": <addr>} once the user has completed
 the OAuth dance. The control plane checks this on every inbound request and
 redirects to /login if missing or not on the allowlist.
+
+Config — all via environment variables (no personal data baked in):
+  OAUTH_CLIENT_SECRETS_FILE   path to Google OAuth web client JSON
+  OAUTH_CLIENT_ID             OAuth web client_id (must match the secrets file)
+  ALLOWED_EMAILS              comma-separated allowlist
+  PUBLIC_URL                  external https URL (Tailscale Funnel URL etc.)
+  INFRA_SECRET_KEY            session-cookie signing key — persisted across restarts
+                              (auto-generated to state/secret.key on first boot)
 """
 import os
 import secrets
@@ -16,19 +24,43 @@ from pathlib import Path
 os.environ.setdefault("OAUTHLIB_INSECURE_TRANSPORT", "1")
 os.environ.setdefault("OAUTHLIB_RELAX_TOKEN_SCOPE", "1")
 
+INFRA_ROOT = Path(__file__).resolve().parent.parent
+
 CREDS_FILE = os.environ.get(
     "OAUTH_CLIENT_SECRETS_FILE",
-    str(Path(__file__).resolve().parents[2] / "chat-assistant" / "credentials" / "google_oauth_web.json"),
+    str(INFRA_ROOT / "credentials" / "google_oauth_web.json"),
 )
 ALLOWED_EMAILS = {
     e.strip().lower()
-    for e in os.environ.get("ALLOWED_EMAILS", "slashhashdash@gmail.com,ahssahmoud@gmail.com").split(",")
+    for e in os.environ.get("ALLOWED_EMAILS", "").split(",")
     if e.strip()
 }
-PUBLIC_URL = os.environ.get("PUBLIC_URL", "https://desktop-0rco3g7.tail0159f4.ts.net")
-OAUTH_CLIENT_ID = "849053190568-199sqvibphtmburgihpj484scoo8npk8.apps.googleusercontent.com"
+PUBLIC_URL = os.environ.get("PUBLIC_URL", "http://127.0.0.1:8765")
+OAUTH_CLIENT_ID = os.environ.get("OAUTH_CLIENT_ID", "")
 SCOPES = ["openid", "https://www.googleapis.com/auth/userinfo.email"]
-SECRET_KEY = secrets.token_hex(32)
+
+
+def _load_secret_key() -> str:
+    """Persist the session-cookie signing key across restarts.
+    Order: INFRA_SECRET_KEY env var > state/secret.key file > generate fresh.
+    """
+    env_val = os.environ.get("INFRA_SECRET_KEY")
+    if env_val:
+        return env_val
+    key_file = INFRA_ROOT / "state" / "secret.key"
+    key_file.parent.mkdir(parents=True, exist_ok=True)
+    if key_file.exists():
+        return key_file.read_text(encoding="utf-8").strip()
+    fresh = secrets.token_hex(32)
+    key_file.write_text(fresh, encoding="utf-8")
+    try:
+        os.chmod(str(key_file), 0o600)
+    except Exception:
+        pass
+    return fresh
+
+
+SECRET_KEY = _load_secret_key()
 SERIALIZER = URLSafeTimedSerializer(SECRET_KEY, salt="infra-session")
 SESSION_TTL = 60 * 60 * 24 * 7  # 7 days
 COOKIE_NAME = "infra_sess"
