@@ -3,5 +3,9 @@ __pycache__/
 state/*.log
 state/*.pid
 state/*.db*
+state/*.key
+state/secret.key
 pgdata/
 apps/*/data.db*
+.env
+credentials/
