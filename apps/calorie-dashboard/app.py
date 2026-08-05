@@ -47,11 +47,11 @@ def _rows(sql, args=()):
 
 
 def payload():
-    days = _rows("SELECT date, total_cal, protein_g, fat_g, carbs_g, stated_cal,"
-                 " estimated_cal, unparsed, computed_at, msg_count"
+    days = _rows("SELECT date, total_cal, preksha_cal, shape, note, protein_g, fat_g,"
+                 " carbs_g, stated_cal, estimated_cal, unparsed, computed_at, msg_count"
                  " FROM days ORDER BY date")
-    items = _rows("SELECT date, ts, food, qty, cal, protein, fat, carbs, basis"
-                  " FROM items ORDER BY date, ts")
+    items = _rows("SELECT date, ts, food, qty, cal, protein, fat, carbs, basis,"
+                  " person, day_label FROM items ORDER BY date, ts")
     return {"days": days, "items": items}
 
 
@@ -260,13 +260,20 @@ function weekKey(d){
   return dt.toISOString().slice(0,10);
 }
 
+/* Only 'live' days are real single-day totals. A 'bulk_multiday' row is a
+   retrospective dump (one message per weekday, several days posted at once); summing
+   it into its posting date would invent a 6,000-calorie Tuesday. Those are listed
+   separately instead. */
+const LIVE = DATA.days.filter(d=>(d.shape||"live")==="live");
+const BULK = DATA.days.filter(d=>(d.shape||"live")==="bulk_multiday");
+
 function aggregate(mode){
   const out={};
-  for(const d of DATA.days){
+  for(const d of LIVE){
     const k = mode==="week" ? weekKey(d.date) : d.date;
     const o = out[k] || (out[k]={key:k, n:0, cal:0, stated:0, est:0,
                                  protein:0, fat:0, carbs:0, unparsed:0});
-    o.n++; o.cal+=d.total_cal||0; o.stated+=d.stated_cal||0; o.est+=d.estimated_cal||0;
+    o.n++; o.cal+=d.preksha_cal||0; o.stated+=d.stated_cal||0; o.est+=d.estimated_cal||0;
     o.protein+=d.protein_g||0; o.fat+=d.fat_g||0; o.carbs+=d.carbs_g||0;
     o.unparsed+=d.unparsed||0;
   }
@@ -374,15 +381,18 @@ function table(date){
   if(!its.length){ $("#tbl").innerHTML='<div class=empty>No items.</div>'; return; }
   let h="<table><thead><tr><th>time</th><th>food</th><th>qty</th>"+
     "<th class=n>cal</th><th class=n>P</th><th class=n>F</th><th class=n>C</th>"+
-    "<th>basis</th></tr></thead><tbody>";
+    "<th>basis</th><th>who</th><th>day</th></tr></thead><tbody>";
   for(const i of its){
     const warn=(i.basis||"").indexOf("unparsed")>=0;
-    h+=`<tr><td>${i.ts||""}</td><td>${i.food||""}</td><td>${i.qty||""}</td>`+
+    const notHers=(i.person||"preksha")==="sahmoud";
+    h+=`<tr${notHers?' class=est':''}><td>${i.ts||""}</td><td>${i.food||""}</td>`+
+       `<td>${i.qty||""}</td>`+
        `<td class=n>${i.cal==null?"-":fmt(i.cal)}</td>`+
        `<td class=n>${fmt(i.protein)}</td><td class=n>${fmt(i.fat)}</td>`+
        `<td class=n>${fmt(i.carbs)}</td>`+
        `<td><span class=tag style="${warn?'color:var(--warn);border-color:var(--warn)':''}">`+
-       `${i.basis||""}</span></td></tr>`;
+       `${i.basis||""}</span></td>`+
+       `<td>${i.person||""}</td><td>${i.day_label||""}</td></tr>`;
   }
   $("#tbl").innerHTML=h+"</tbody></table>";
 }
@@ -407,9 +417,22 @@ function boot(){
   const ds=DATA.days.map(d=>d.date);
   const unp=DATA.days.reduce((s,d)=>s+(d.unparsed||0),0);
   $("#sub").textContent = ds.length
-    ? `${ds.length} days stored, ${ds[0]} to ${ds[ds.length-1]}`+
-      (unp?` - ${unp} entries could not be parsed (photo-only)`:"")
+    ? `${LIVE.length} tracked days, ${ds[0]} to ${ds[ds.length-1]}`+
+      (unp?` - ${unp} photo-only entries not counted`:"")+
+      (BULK.length?` - ${BULK.length} retrospective dumps excluded`:"")
     : "No days computed yet.";
+  if(BULK.length){
+    const b=document.createElement("div");
+    b.className="card";
+    b.innerHTML="<h2>Excluded from the charts</h2>"+
+      "<div class=sub style='margin:0 0 8px'>These dates are retrospective dumps: one "+
+      "message per weekday, several days written up in one sitting, and they log both "+
+      "people. Charting them as single-day totals would invent a 6,000-calorie day.</div>"+
+      BULK.map(d=>`<div class=pill>${d.date} - ${fmt(d.preksha_cal)} cal attributed to `+
+        `Preksha across ${d.note?d.note.replace(/^retrospective dump covering /,""):"several days"}</div>`)
+        .join("<br>");
+    $("#sub").after(b);
+  }
   $("#daysel").innerHTML=ds.slice().reverse().map(d=>`<option>${d}</option>`).join("");
   if(ds.length){ $("#from").value=ds[0]; $("#to").value=ds[ds.length-1]; }
   $("#agg").onchange=render;
