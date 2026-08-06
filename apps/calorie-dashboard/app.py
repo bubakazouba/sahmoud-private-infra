@@ -305,6 +305,23 @@ function stackedBars(host, rows, series, unit){
       const ttl=el("title"); ttl.textContent=`${r.key}\n${s.label}: ${fmt(v)} ${unit}`;
       rect.appendChild(ttl); svg.appendChild(rect); acc+=v;
     });
+    /* A day whose entries were mostly PHOTOS is not a low-calorie day, it is a day we
+       could not read. 2026-08-01 parsed to 400 cal with 4 of its 5 entries unparsed.
+       Drawing that as an ordinary short bar would be a lie of omission, so incomplete
+       days get a dashed red outline and say so on hover. */
+    if(r.unparsed>0){
+      const top=y(acc);
+      svg.appendChild(el("rect",{x:x-2,y:top-3,width:w+4,height:(H-pad.b)-top+3,
+        fill:"none",stroke:CSS("--warn"),"stroke-width":1.5,
+        "stroke-dasharray":"4 3",rx:3}));
+      const mk=el("text",{x:x+w/2,y:top-7,"text-anchor":"middle","font-size":11,
+        fill:CSS("--warn"),"font-weight":"700"});
+      mk.textContent="!";
+      const mt=el("title");
+      mt.textContent=`${r.key}: ${r.unparsed} entr${r.unparsed===1?"y":"ies"} were `+
+        `photo-only and could not be counted - this total is INCOMPLETE`;
+      mk.appendChild(mt); svg.appendChild(mk);
+    }
     if(rows.length<=32||i%Math.ceil(rows.length/24)===0){
       const t=el("text",{x:x+w/2,y:H-pad.b+16,"text-anchor":"middle","font-size":10,
         fill:CSS("--ink2"),transform:`rotate(-40 ${x+w/2} ${H-pad.b+16})`});
