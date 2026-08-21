@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Preksha's Recipes</title>
+<style>
+:root {
+  --bg: #fdf9f3;
+  --card: #ffffff;
+  --ink: #2a2421;
+  --muted: #847a73;
+  --accent: #e07856;
+  --accent-soft: #fae8de;
+  --green: #4f8b5b;
+  --line: #ece4d8;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.wrap { max-width: 1100px; margin: 0 auto; padding: 24px 18px; }
+h1 { margin: 0 0 4px; font-size: 28px; font-weight: 700; }
+.meta { color: var(--muted); font-size: 14px; margin-bottom: 22px; }
+.bar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
+.search { flex: 1; min-width: 220px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 999px; background: var(--card); color: var(--ink); font-size: 15px; outline: none; }
+.search:focus { border-color: var(--accent); }
+.filter { padding: 8px 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--card); color: var(--ink); font-size: 14px; cursor: pointer; }
+.filter:focus { outline: none; border-color: var(--accent); }
+.counts { color: var(--muted); font-size: 13px; margin-bottom: 14px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.12s, box-shadow 0.12s; }
+.card .body { padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+.card .img { width: 100%; aspect-ratio: 16/10; object-fit: cover; background: var(--accent-soft); display: block; border-bottom: 1px solid var(--line); }
+.card .img-placeholder { width: 100%; aspect-ratio: 16/10; background: linear-gradient(135deg, var(--accent-soft), var(--bg)); display: flex; align-items: center; justify-content: center; font-size: 38px; color: var(--accent); border-bottom: 1px solid var(--line); opacity: 0.6; }
+.card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.06); }
+.card .title { font-size: 16px; font-weight: 600; line-height: 1.25; margin: 0; }
+.card .title a { color: var(--ink); text-decoration: none; }
+.card .title a:hover { color: var(--accent); text-decoration: underline; }
+.card .ings { color: var(--muted); font-size: 13px; margin: 2px 0 0; line-height: 1.4; }
+.card .desc { color: var(--muted); font-size: 13px; margin-top: 4px; line-height: 1.4; max-height: 52px; overflow: hidden; }
+.tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+.tag { font-size: 11px; padding: 2px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-weight: 500; letter-spacing: 0.02em; }
+.tag.cat { background: #e8f1ec; color: var(--green); }
+.tag.cuisine { background: #f0e9f7; color: #6b4a8e; }
+.tag.health { background: transparent; color: var(--muted); padding: 2px 4px; }
+.health-dots { display: inline-block; letter-spacing: 1px; }
+.health-on { color: var(--green); }
+.health-off { color: var(--line); }
+.foot { color: var(--muted); font-size: 12px; margin-top: 32px; padding-top: 14px; border-top: 1px solid var(--line); text-align: center; }
+.section-h { font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin: 26px 0 10px; font-weight: 600; }
+.empty { color: var(--muted); font-style: italic; padding: 40px 20px; text-align: center; }
+@media (max-width: 600px) {
+  .wrap { padding: 16px 12px; }
+  h1 { font-size: 22px; }
+  .grid { grid-template-columns: 1fr; gap: 10px; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Preksha's Recipes</h1>
+  <div class="meta">vegetarian, healthy-first. pulled from TG <em>recipes</em> channel + todo app.</div>
+
+  <div class="bar">
+    <input id="q" class="search" type="search" placeholder="search recipes, ingredients, cuisine..." autocomplete="off">
+    <select id="cat" class="filter"><option value="">all categories</option></select>
+    <select id="cui" class="filter"><option value="">all cuisines</option></select>
+    <select id="health" class="filter">
+      <option value="">all health</option>
+      <option value="5">very healthy (5)</option>
+      <option value="4">healthy (4+)</option>
+      <option value="3">balanced (3+)</option>
+      <option value="2">indulgent (2+)</option>
+    </select>
+    <select id="sort" class="filter">
+      <option value="health">sort: healthiest first</option>
+      <option value="date">sort: newest first</option>
+      <option value="title">sort: A-Z</option>
+    </select>
+  </div>
+  <div id="counts" class="counts"></div>
+
+  <div class="section-h" id="best-h" style="display:none">★ Healthy mains & sides</div>
+  <div id="best" class="grid"></div>
+
+  <div class="section-h" id="rest-h" style="display:none">other recipes</div>
+  <div id="rest" class="grid"></div>
+
+  <div id="empty" class="empty" style="display:none">no recipes match those filters.</div>
+
+  <div class="foot">Updated <span id="upd"></span> · <span id="total"></span> recipes</div>
+</div>
+
+<script>
+let RECIPES = [];
+
+function dots(n) {
+  n = n || 0;
+  let s = '';
+  for (let i = 1; i <= 5; i++) s += i <= n ? '<span class="health-on">●</span>' : '<span class="health-off">●</span>';
+  return s;
+}
+
+const CAT_EMOJI = {Main:'🍽️',Side:'🥗',Snack:'🍿',Breakfast:'🥞','Dessert/Treat':'🍰',Drink:'🥤','Sauce/Condiment':'🥫',Other:'📝'};
+function card(r) {
+  const t = r.url
+    ? `<a href="${r.url}" target="_blank" rel="noopener">${escapeHtml(r.title)}</a>`
+    : escapeHtml(r.title);
+  const tags = [];
+  if (r.category) tags.push(`<span class="tag cat">${escapeHtml(r.category)}</span>`);
+  if (r.cuisine) tags.push(`<span class="tag cuisine">${escapeHtml(r.cuisine)}</span>`);
+  if (r.is_vegan) tags.push(`<span class="tag">vegan-friendly</span>`);
+  tags.push(`<span class="tag health">${dots(r.health_score)}</span>`);
+  const ings = r.key_ingredients ? `<p class="ings">${escapeHtml(r.key_ingredients)}</p>` : '';
+  const desc = r.desc ? `<p class="desc">${escapeHtml(r.desc)}</p>`
+                      : (r.text && r.text !== r.title ? `<p class="desc">${escapeHtml(r.text.slice(0, 180))}</p>` : '');
+  const hero = r.image
+    ? `<img class="img" src="${escapeHtml(r.image)}" alt="" loading="lazy" onerror="this.outerHTML='<div class=\\'img-placeholder\\'>${CAT_EMOJI[r.category]||'📝'}</div>'">`
+    : `<div class="img-placeholder">${CAT_EMOJI[r.category]||'📝'}</div>`;
+  return `<div class="card">${hero}<div class="body"><p class="title">${t}</p>${ings}${desc}<div class="tags">${tags.join('')}</div></div></div>`;
+}
+
+function escapeHtml(s) {
+  return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function apply() {
+  const q = document.getElementById('q').value.trim().toLowerCase();
+  const cat = document.getElementById('cat').value;
+  const cui = document.getElementById('cui').value;
+  const minH = parseInt(document.getElementById('health').value || '0', 10);
+  const sortBy = document.getElementById('sort').value;
+
+  let filtered = RECIPES.filter(r => {
+    if (cat && r.category !== cat) return false;
+    if (cui && r.cuisine !== cui) return false;
+    if (minH && (r.health_score || 0) < minH) return false;
+    if (q) {
+      const hay = [r.title, r.desc, r.text, r.cuisine, r.category, r.key_ingredients].join(' ').toLowerCase();
+      if (hay.indexOf(q) < 0) return false;
+    }
+    return true;
+  });
+
+  if (sortBy === 'health') filtered.sort((a, b) => (b.health_score || 0) - (a.health_score || 0) || (b.date || '').localeCompare(a.date || ''));
+  else if (sortBy === 'date') filtered.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+  else filtered.sort((a, b) => a.title.localeCompare(b.title));
+
+  // Split: "best" = mains/sides/breakfast with health >=3, "rest" = the rest
+  const isBestCat = c => ['Main', 'Side', 'Breakfast', 'Snack'].indexOf(c) >= 0;
+  const best = filtered.filter(r => isBestCat(r.category) && (r.health_score || 0) >= 3);
+  const rest = filtered.filter(r => !(isBestCat(r.category) && (r.health_score || 0) >= 3));
+
+  document.getElementById('best').innerHTML = best.map(card).join('');
+  document.getElementById('rest').innerHTML = rest.map(card).join('');
+  document.getElementById('best-h').style.display = best.length ? '' : 'none';
+  document.getElementById('rest-h').style.display = rest.length ? '' : 'none';
+  document.getElementById('empty').style.display = filtered.length ? 'none' : '';
+  document.getElementById('counts').textContent = `showing ${filtered.length} of ${RECIPES.length} · ${best.length} healthy main/side · ${rest.length} other`;
+}
+
+fetch('recipes.json?v=' + Date.now()).then(r => r.json()).then(data => {
+  RECIPES = data.recipes || [];
+  document.getElementById('total').textContent = RECIPES.length;
+  document.getElementById('upd').textContent = new Date().toLocaleDateString();
+
+  // Populate filter dropdowns
+  const cats = [...new Set(RECIPES.map(r => r.category).filter(Boolean))].sort();
+  const cuis = [...new Set(RECIPES.map(r => r.cuisine).filter(Boolean))].sort();
+  cats.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c; document.getElementById('cat').appendChild(o); });
+  cuis.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c; document.getElementById('cui').appendChild(o); });
+
+  ['q','cat','cui','health','sort'].forEach(id => document.getElementById(id).addEventListener('input', apply));
+  apply();
+});
+</script>
+</body>
+</html>

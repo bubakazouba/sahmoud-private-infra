@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>LLM Inference - Interactive Flowchart</title>
+<script src="https://unpkg.com/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://unpkg.com/dagre@0.8.5/dist/dagre.min.js"></script>
+<script src="https://unpkg.com/cytoscape-dagre@2.5.0/cytoscape-dagre.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0d1117; color: #c9d1d9; font-family: 'Segoe UI', system-ui, sans-serif; overflow: hidden; }
+
+  #header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: linear-gradient(135deg, #161b22, #0d1117);
+    border-bottom: 1px solid #30363d;
+    padding: 10px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  #header h1 { font-size: 16px; color: #f97316; }
+  #header .controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  #header button {
+    background: #21262d; border: 1px solid #30363d; color: #c9d1d9;
+    padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 12px;
+  }
+  #header button:hover { background: #30363d; }
+  #header button.active { background: #f97316; border-color: #f97316; color: #fff; }
+
+  .legend {
+    position: fixed; bottom: 20px; left: 20px; z-index: 100;
+    background: rgba(22,27,34,0.95); border: 1px solid #30363d;
+    border-radius: 8px; padding: 12px; font-size: 11px;
+    max-width: 220px;
+  }
+  .legend-item { display: flex; align-items: center; gap: 8px; margin: 4px 0; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+
+  #cy { width: 100%; height: 100vh; }
+
+  #popup {
+    display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    background: #161b22; border: 1px solid #30363d; border-radius: 12px;
+    padding: 24px; z-index: 200; max-width: 560px; width: 90%;
+    max-height: 80vh; overflow-y: auto; box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+  }
+  #popup .close-btn {
+    position: absolute; top: 10px; right: 14px; background: none; border: none;
+    color: #8b949e; font-size: 20px; cursor: pointer;
+  }
+  #popup h2 { color: #e6edf3; font-size: 16px; margin-bottom: 12px; padding-right: 30px; }
+  #popup .meta { color: #8b949e; font-size: 12px; margin-bottom: 8px; }
+  #popup .desc {
+    color: #c9d1d9; font-size: 13px; line-height: 1.6; margin-bottom: 12px;
+    background: #0d1117; padding: 12px; border-radius: 8px; border-left: 3px solid #f97316;
+  }
+  #popup .section-label {
+    color: #8b949e; font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.5px; margin-top: 12px; margin-bottom: 4px;
+  }
+  #popup ul { padding-left: 18px; font-size: 13px; line-height: 1.6; color: #c9d1d9; }
+  #popup .note { color: #8b949e; font-size: 12px; font-style: italic; margin-top: 8px; }
+  #popup code {
+    background: #0d1117; color: #f97316; padding: 1px 5px; border-radius: 3px;
+    font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12px;
+  }
+  #popup pre {
+    background: #0d1117; color: #c9d1d9; padding: 12px; border-radius: 8px;
+    font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12px;
+    overflow-x: auto; margin: 8px 0; line-height: 1.5; border: 1px solid #30363d;
+  }
+
+  #search-box {
+    background: #0d1117; border: 1px solid #30363d; color: #c9d1d9;
+    padding: 5px 10px; border-radius: 6px; font-size: 12px; width: 160px;
+  }
+  #search-box::placeholder { color: #484f58; }
+
+  @media (max-width: 768px) {
+    #header { flex-direction: column; gap: 8px; }
+    .legend { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="header">
+  <h1>LLM Inference -- Interactive Flowchart</h1>
+  <div class="controls">
+    <input type="text" id="search-box" placeholder="Search components..." />
+    <button onclick="filterByType('all')" class="active" id="btn-all">All</button>
+    <button onclick="filterByType('input')" id="btn-input">Input/Output</button>
+    <button onclick="filterByType('embedding')" id="btn-embedding">Embeddings</button>
+    <button onclick="filterByType('attention')" id="btn-attention">Attention</button>
+    <button onclick="filterByType('ffn')" id="btn-ffn">FFN/MLP</button>
+    <button onclick="filterByType('norm')" id="btn-norm">Normalization</button>
+    <button onclick="filterByType('sampling')" id="btn-sampling">Sampling</button>
+    <button onclick="filterByType('optimization')" id="btn-optimization">Optimizations</button>
+    <span style="color:#30363d;">|</span>
+    <button onclick="cy.fit(undefined, 40)">Reset View</button>
+  </div>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#3b82f6;"></div> Input / Output</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#8b5cf6;"></div> Embeddings</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ef4444;"></div> Attention</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#22c55e;"></div> FFN / MLP</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#eab308;"></div> Normalization / Residual</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#f97316;"></div> Sampling / Decoding</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#06b6d4;"></div> Optimizations</div>
+  <div style="margin-top:6px;border-top:1px solid #30363d;padding-top:6px;">
+    <div style="color:#484f58;font-size:10px;">Click any node for details.<br/>Scroll to zoom. Drag to pan.<br/>Dashed borders = repeated N times.</div>
+  </div>
+</div>
+
+<div id="cy"></div>
+
+<div id="popup">
+  <button class="close-btn" onclick="closePopup()">&times;</button>
+  <div id="popup-content"></div>
+</div>
+
+<script>
+// ===================== NODE DATA =====================
+const nodes = [
+  // === INPUT ===
+  {
+    id: 'input_text', type: 'input', label: 'Input Text\n(Prompt)',
+    title: 'Input Text / Prompt',
+    detail: {
+      desc: 'The raw text string provided by the user. This is the starting point of inference. For chat models, this includes the system prompt, conversation history, and the latest user message, formatted with special tokens.',
+      points: [
+        'Chat format: <code>&lt;|system|&gt;You are...&lt;|user|&gt;Hello&lt;|assistant|&gt;</code>',
+        'The full context (all previous turns) is sent on each request',
+        'Max length is bounded by the model\'s context window (e.g. 4K, 128K, 200K tokens)',
+      ],
+      math: null,
+      example: '"What is the capital of France?"',
+    }
+  },
+
+  // === TOKENIZATION ===
+  {
+    id: 'tokenizer', type: 'input', label: 'Tokenizer\n(BPE)',
+    title: 'Tokenization (Byte-Pair Encoding)',
+    detail: {
+      desc: 'Converts raw text into a sequence of integer token IDs using a learned vocabulary. Most modern LLMs use Byte-Pair Encoding (BPE) or SentencePiece. The tokenizer splits text into subword units -- common words become single tokens, rare words get split into pieces.',
+      points: [
+        'Vocabulary size: typically 32K-128K tokens (GPT-4: ~100K, Llama 3: 128K)',
+        'BPE starts with bytes/characters and iteratively merges the most frequent pairs',
+        '"unhappiness" might become <code>["un", "happiness"]</code> or <code>["un", "happ", "iness"]</code>',
+        'Special tokens: <code>&lt;BOS&gt;</code> (begin), <code>&lt;EOS&gt;</code> (end), <code>&lt;PAD&gt;</code>, chat role markers',
+        'Tokenization is deterministic and happens on CPU -- not a neural network operation',
+      ],
+      math: 'text -> [t_1, t_2, ..., t_n] where t_i are integer token IDs',
+      example: '"Hello world" -> [15496, 995] (GPT-2 tokenization)',
+    }
+  },
+
+  // === EMBEDDING ===
+  {
+    id: 'tok_embed', type: 'embedding', label: 'Token\nEmbedding\nLookup',
+    title: 'Token Embedding Table',
+    detail: {
+      desc: 'Each token ID indexes into a learned embedding matrix to produce a dense vector. This is a simple table lookup (no computation) that maps each of the ~100K token IDs to a vector of dimension d_model.',
+      points: [
+        'Embedding matrix shape: <code>[vocab_size, d_model]</code>',
+        'For Llama 3 70B: <code>[128,256 x 8,192]</code> -- over 1 billion parameters just for embeddings',
+        'Each token becomes a dense vector that captures semantic meaning',
+        'This is a learned matrix -- trained during pre-training via backpropagation',
+      ],
+      math: 'E = W_embed[t_i] where W_embed is [V x d_model]',
+      example: 'Token 15496 ("Hello") -> a 4096-dimensional vector of floats',
+    }
+  },
+  {
+    id: 'pos_encode', type: 'embedding', label: 'Positional\nEncoding\n(RoPE)',
+    title: 'Positional Encoding',
+    detail: {
+      desc: 'Injects position information into the embeddings, since the transformer architecture is otherwise permutation-invariant (it has no inherent sense of word order). Modern LLMs primarily use Rotary Position Embeddings (RoPE).',
+      points: [
+        '<strong>Sinusoidal</strong> (original transformer): fixed sin/cos waves at different frequencies added to embeddings',
+        '<strong>Learned absolute</strong> (GPT-2): a learned vector per position, added to embeddings',
+        '<strong>RoPE</strong> (Llama, most modern): rotates Q and K vectors by position-dependent angles. Encodes RELATIVE position via rotation, not absolute position',
+        '<strong>ALiBi</strong> (BLOOM): no positional encoding -- instead adds a linear bias to attention scores based on distance',
+        'RoPE enables context length extension by adjusting rotation frequencies',
+      ],
+      math: 'RoPE: q_m = R(m) * q, k_n = R(n) * k, where R(m) is a rotation matrix and attention becomes q_m^T k_n = q^T R(n-m) k (depends only on relative position)',
+    }
+  },
+
+  // === TRANSFORMER BLOCK (container concept) ===
+  {
+    id: 'transformer_block', type: 'norm', label: 'Transformer\nBlock\n(x N layers)',
+    title: 'Transformer Block (Repeated N Times)',
+    detail: {
+      desc: 'The core repeating unit of the model. Each block contains: (1) Pre-Norm, (2) Multi-Head Self-Attention + Residual, (3) Pre-Norm, (4) Feed-Forward Network + Residual. The block is repeated N times sequentially.',
+      points: [
+        'GPT-2: 12-48 layers, Llama 2 70B: 80 layers, GPT-4: rumored ~120 layers',
+        'Each layer has its own learned parameters (not shared)',
+        'Residual connections around both attention and FFN ensure gradient flow',
+        'Modern LLMs use Pre-LayerNorm (norm BEFORE attention/FFN) instead of Post-LayerNorm',
+        'Total parameter count for a block: ~12 * d_model^2 (attention + FFN)',
+      ],
+      math: 'x = x + Attention(LayerNorm(x))\nx = x + FFN(LayerNorm(x))\n(repeated N times)',
+    }
+  },
+
+  // === PRE-NORM 1 ===
+  {
+    id: 'pre_norm_attn', type: 'norm', label: 'RMSNorm\n(Pre-Attention)',
+    title: 'Pre-Attention Layer Normalization (RMSNorm)',
+    detail: {
+      desc: 'Normalizes the hidden state before feeding it into the attention mechanism. Modern LLMs use RMSNorm (Root Mean Square Normalization) instead of the original LayerNorm -- it skips the mean-centering step for efficiency.',
+      points: [
+        'RMSNorm: normalize by root-mean-square only, no mean subtraction',
+        'Has a learned scale parameter (gamma) per dimension, no bias',
+        'Stabilizes training and inference by keeping activations in a reasonable range',
+        'Pre-norm (normalize before sublayer) is more stable than post-norm (normalize after)',
+      ],
+      math: 'RMSNorm(x) = x / sqrt(mean(x^2) + eps) * gamma\nwhere gamma is a learned scale vector of dim d_model',
+    }
+  },
+
+  // === MULTI-HEAD ATTENTION ===
+  {
+    id: 'mha', type: 'attention', label: 'Multi-Head\nSelf-Attention',
+    title: 'Multi-Head Self-Attention (the core mechanism)',
+    detail: {
+      desc: 'The mechanism that allows each token to "look at" every previous token and decide what information to gather. The input is projected into Queries (Q), Keys (K), and Values (V) across multiple parallel "heads," each attending to different aspects of the representation.',
+      points: [
+        'Llama 3 70B: 64 attention heads, each with dimension 128',
+        'Each head learns different attention patterns (syntax, semantics, coreference, etc.)',
+        'All heads operate in parallel, then their outputs are concatenated',
+        'Total attention parameters per layer: <code>4 * d_model^2</code> (Q, K, V, Output projections)',
+      ],
+      math: 'MultiHead(X) = Concat(head_1, ..., head_h) * W_O\nwhere head_i = Attention(X*W_Q_i, X*W_K_i, X*W_V_i)',
+    }
+  },
+
+  // === QKV PROJECTIONS ===
+  {
+    id: 'qkv', type: 'attention', label: 'Q, K, V\nProjections',
+    title: 'Query, Key, Value Linear Projections',
+    detail: {
+      desc: 'Three separate linear transformations that project the normalized hidden state into Query, Key, and Value spaces. Conceptually: Q = "what am I looking for?", K = "what do I contain?", V = "what do I offer if selected?"',
+      points: [
+        '<strong>Query (Q)</strong>: what this token is looking for in other tokens',
+        '<strong>Key (K)</strong>: what this token advertises about itself to other tokens',
+        '<strong>Value (V)</strong>: the actual content this token provides when attended to',
+        'Each is a matrix multiply: <code>Q = X @ W_Q</code>, etc.',
+        'Shapes: W_Q is <code>[d_model, d_model]</code>, split across heads',
+      ],
+      math: 'Q = X * W_Q   [seq_len, d_model] x [d_model, d_model]\nK = X * W_K   (same shapes)\nV = X * W_V   (same shapes)\n\nThen reshape to [seq_len, n_heads, d_head]',
+    }
+  },
+
+  // === GQA ===
+  {
+    id: 'gqa', type: 'attention', label: 'Grouped-Query\nAttention\n(GQA)',
+    title: 'Grouped-Query Attention (GQA)',
+    detail: {
+      desc: 'An optimization where multiple query heads share the same key-value head. Instead of each of the 64 Q heads having its own K and V, groups of Q heads (e.g., 8 per group) share one K/V pair. This reduces KV cache size and memory bandwidth requirements.',
+      points: [
+        '<strong>MHA</strong>: 64 Q heads, 64 K heads, 64 V heads (original)',
+        '<strong>GQA</strong>: 64 Q heads, 8 K heads, 8 V heads (Llama 2 70B)',
+        '<strong>MQA</strong>: 64 Q heads, 1 K head, 1 V head (extreme case)',
+        'Reduces KV cache by 8x (for 8:1 grouping) with minimal quality loss',
+        'Used in Llama 2 70B, Llama 3, Mistral, Gemma',
+      ],
+      math: 'Standard MHA: n_kv_heads = n_heads\nGQA: n_kv_heads = n_heads / group_size\nMQA: n_kv_heads = 1',
+    }
+  },
+
+  // === SCALED DOT-PRODUCT ATTENTION ===
+  {
+    id: 'sdpa', type: 'attention', label: 'Scaled\nDot-Product\nAttention',
+    title: 'Scaled Dot-Product Attention',
+    detail: {
+      desc: 'The core attention computation. For each query, compute a similarity score against all keys (dot product), scale, apply a causal mask, softmax to get weights, then weighted-sum the values. This is where "tokens attend to other tokens."',
+      points: [
+        '<strong>Dot product</strong>: Q @ K^T gives raw attention scores (how similar each query is to each key)',
+        '<strong>Scaling</strong>: divide by sqrt(d_head) to prevent softmax saturation for large dimensions',
+        '<strong>Causal mask</strong>: set future positions to -inf (each token can only see previous tokens)',
+        '<strong>Softmax</strong>: converts scores to probability distribution (weights sum to 1)',
+        '<strong>Value aggregation</strong>: weighted sum of value vectors by attention weights',
+        'Complexity: O(n^2 * d) in sequence length -- the main bottleneck for long sequences',
+      ],
+      math: 'Attention(Q, K, V) = softmax(Q @ K^T / sqrt(d_k) + mask) @ V\n\nwhere mask[i,j] = 0 if j <= i, -inf if j > i (causal)',
+    }
+  },
+
+  // === CAUSAL MASK ===
+  {
+    id: 'causal_mask', type: 'attention', label: 'Causal Mask\n(Triangular)',
+    title: 'Causal (Autoregressive) Mask',
+    detail: {
+      desc: 'A lower-triangular mask that prevents each token from attending to future tokens. This enforces the autoregressive property: when predicting token t, the model can only use tokens 1 through t-1. Without this mask, the model could "cheat" by looking at the answer.',
+      points: [
+        'Shape: <code>[seq_len, seq_len]</code> lower triangular matrix',
+        'mask[i][j] = 0 if j <= i (allowed), -infinity if j > i (blocked)',
+        'Adding -inf before softmax makes those positions contribute 0 weight',
+        'During generation with KV cache, only the new token\'s row of the mask matters',
+        'This is what makes LLMs autoregressive (left-to-right) generation models',
+      ],
+      math: 'mask = [[0, -inf, -inf, -inf],\n        [0,    0, -inf, -inf],\n        [0,    0,    0, -inf],\n        [0,    0,    0,    0]]',
+    }
+  },
+
+  // === ATTENTION OUTPUT ===
+  {
+    id: 'attn_output', type: 'attention', label: 'Output\nProjection\n(W_O)',
+    title: 'Attention Output Projection',
+    detail: {
+      desc: 'After computing attention for all heads, the head outputs are concatenated and projected through a final linear layer W_O back to d_model dimensions. This mixes information across heads.',
+      points: [
+        'Concatenate all head outputs: <code>[seq_len, n_heads * d_head]</code> = <code>[seq_len, d_model]</code>',
+        'Multiply by W_O: <code>[d_model, d_model]</code>',
+        'This is the final attention output before the residual connection',
+      ],
+      math: 'output = Concat(head_1, ..., head_h) @ W_O\nShape: [seq_len, d_model]',
+    }
+  },
+
+  // === RESIDUAL 1 ===
+  {
+    id: 'residual_attn', type: 'norm', label: 'Residual\nConnection\n(+ input)',
+    title: 'Residual Connection (Post-Attention)',
+    detail: {
+      desc: 'Adds the attention output back to the original input (before normalization). This "skip connection" is critical for training deep networks -- it allows gradients to flow directly through the network and lets each layer learn a residual correction rather than a full transformation.',
+      points: [
+        'Formula: <code>x = x + Attention(Norm(x))</code>',
+        'Without residuals, training 80+ layer networks would be practically impossible',
+        'The "residual stream" is the main highway of information through the network',
+        'Each attention layer adds its contribution to this stream',
+        'Mechanistic interpretability views this as a "communication channel" that all layers read from and write to',
+      ],
+      math: 'x_out = x_in + MultiHeadAttention(RMSNorm(x_in))',
+    }
+  },
+
+  // === PRE-NORM 2 ===
+  {
+    id: 'pre_norm_ffn', type: 'norm', label: 'RMSNorm\n(Pre-FFN)',
+    title: 'Pre-FFN Layer Normalization (RMSNorm)',
+    detail: {
+      desc: 'Another RMSNorm applied before the feed-forward network. Same operation as pre-attention norm, normalizing the residual stream before the FFN sublayer.',
+      points: [
+        'Same learned parameters structure as pre-attention norm but different learned values',
+        'Each transformer block has two norm layers: one before attention, one before FFN',
+      ],
+      math: 'RMSNorm(x) = x / sqrt(mean(x^2) + eps) * gamma',
+    }
+  },
+
+  // === FEED-FORWARD NETWORK ===
+  {
+    id: 'ffn', type: 'ffn', label: 'Feed-Forward\nNetwork\n(SwiGLU MLP)',
+    title: 'Feed-Forward Network (SwiGLU MLP)',
+    detail: {
+      desc: 'A position-wise MLP applied independently to each token. This is where the model does most of its "thinking" -- storing factual knowledge and performing transformations. In modern LLMs, this uses the SwiGLU activation and is the largest component by parameter count.',
+      points: [
+        'Applied independently to each token position (no cross-token interaction)',
+        'Expands to a larger hidden dimension, applies nonlinearity, projects back down',
+        'Typically ~2/3 of total model parameters are in the FFN layers',
+        'Thought to store factual/world knowledge (as opposed to attention which routes information)',
+      ],
+      math: 'FFN(x) = (SiLU(x @ W_gate) * (x @ W_up)) @ W_down\n\nW_gate: [d_model, d_ff]\nW_up:   [d_model, d_ff]\nW_down: [d_ff, d_model]\nd_ff is typically 3.5x d_model',
+    }
+  },
+
+  // === UP PROJECTION ===
+  {
+    id: 'ffn_up', type: 'ffn', label: 'Gate + Up\nProjection',
+    title: 'FFN Gate and Up Projections',
+    detail: {
+      desc: 'Two parallel linear projections that expand the hidden dimension. The "gate" projection controls how much signal passes through (via SiLU activation), while the "up" projection provides the signal to be gated.',
+      points: [
+        'Gate: <code>x @ W_gate</code> -> apply SiLU activation',
+        'Up: <code>x @ W_up</code> -> linear (no activation)',
+        'Element-wise multiply: <code>SiLU(gate) * up</code>',
+        'This gating mechanism (SwiGLU) outperforms simple ReLU-based FFNs',
+        'd_ff = 8/3 * d_model (rounded to nearest multiple of 256 for efficiency)',
+        'For Llama 3 70B: d_model=8192, d_ff=28672',
+      ],
+      math: 'gate = SiLU(x @ W_gate)    [seq, d_model] x [d_model, d_ff] -> [seq, d_ff]\nup = x @ W_up              [seq, d_model] x [d_model, d_ff] -> [seq, d_ff]\nhidden = gate * up         element-wise [seq, d_ff]',
+    }
+  },
+
+  // === ACTIVATION ===
+  {
+    id: 'activation', type: 'ffn', label: 'SiLU / SwiGLU\nActivation',
+    title: 'SiLU Activation Function (SwiGLU)',
+    detail: {
+      desc: 'The nonlinear activation function. SiLU (Sigmoid Linear Unit, also called "swish") is x * sigmoid(x). Combined with the gating mechanism, this forms "SwiGLU" which has become the standard activation for modern LLMs.',
+      points: [
+        'SiLU(x) = x * sigmoid(x) = x * (1 / (1 + e^(-x)))',
+        'Smooth, non-monotonic -- unlike ReLU which has a hard zero cutoff',
+        'SwiGLU = SiLU applied to the gating path, element-wise multiplied with the ungated path',
+        'Introduced by Noam Shazeer (2020), used in PaLM, Llama, Mistral, etc.',
+        'The non-linearity is critical -- without it, stacking layers would collapse to a single linear transform',
+      ],
+      math: 'SiLU(x) = x * sigmoid(x)\nSwiGLU(x, W_gate, W_up) = SiLU(x @ W_gate) * (x @ W_up)',
+    }
+  },
+
+  // === DOWN PROJECTION ===
+  {
+    id: 'ffn_down', type: 'ffn', label: 'Down\nProjection',
+    title: 'FFN Down Projection',
+    detail: {
+      desc: 'Projects the expanded hidden representation back to d_model dimensions. This compresses the high-dimensional intermediate representation back to the model\'s working dimension.',
+      points: [
+        'Shape: <code>[d_ff, d_model]</code> e.g., <code>[28672, 8192]</code> for Llama 3 70B',
+        'This is the final output of the FFN sublayer',
+        'The down projection is where the FFN\'s "computation" gets written back to the residual stream',
+      ],
+      math: 'output = hidden @ W_down    [seq, d_ff] x [d_ff, d_model] -> [seq, d_model]',
+    }
+  },
+
+  // === RESIDUAL 2 ===
+  {
+    id: 'residual_ffn', type: 'norm', label: 'Residual\nConnection\n(+ input)',
+    title: 'Residual Connection (Post-FFN)',
+    detail: {
+      desc: 'Adds the FFN output back to the input (the residual stream after attention). This completes one transformer block.',
+      points: [
+        'Formula: <code>x = x + FFN(Norm(x))</code>',
+        'After this, x flows to the next transformer block (or to the final norm if this is the last layer)',
+        'The residual stream now contains contributions from both the attention and FFN sublayers of this block',
+      ],
+      math: 'x_out = x_in + FFN(RMSNorm(x_in))\n\nThis x_out becomes x_in for the next transformer block',
+    }
+  },
+
+  // === LOOP BACK ===
+  {
+    id: 'layer_loop', type: 'norm', label: 'Repeat for\nN layers',
+    title: 'Layer Repetition',
+    detail: {
+      desc: 'The transformer block (norm -> attention -> residual -> norm -> FFN -> residual) is repeated N times, where N depends on the model size. Each layer has its own independently learned parameters.',
+      points: [
+        'GPT-2 Small: 12 layers, GPT-2 XL: 48 layers',
+        'Llama 2 7B: 32 layers, Llama 2 70B: 80 layers',
+        'Llama 3 405B: 126 layers',
+        'GPT-4: rumored ~120 layers (unconfirmed)',
+        'Claude: architecture details not public',
+        'Each layer\'s parameters are separate -- NOT weight-shared',
+        'Earlier layers tend to learn syntax/local patterns; later layers learn semantics/abstractions',
+      ],
+      math: 'for layer in range(N):\n    x = x + layer.attention(layer.norm1(x))\n    x = x + layer.ffn(layer.norm2(x))',
+    }
+  },
+
+  // === FINAL NORM ===
+  {
+    id: 'final_norm', type: 'norm', label: 'Final\nRMSNorm',
+    title: 'Final Layer Normalization',
+    detail: {
+      desc: 'One last RMSNorm applied to the output of the final transformer block, before the language model head. Stabilizes the final hidden states.',
+      points: [
+        'Same RMSNorm operation, own learned parameters',
+        'Output shape: <code>[seq_len, d_model]</code>',
+        'This normalized output is the final hidden representation of each token',
+      ],
+      math: 'h_final = RMSNorm(x_after_all_layers)',
+    }
+  },
+
+  // === LM HEAD ===
+  {
+    id: 'lm_head', type: 'input', label: 'LM Head\n(Unembedding)',
+    title: 'Language Model Head (Unembedding)',
+    detail: {
+      desc: 'A linear projection from d_model to vocabulary size that produces a score (logit) for every token in the vocabulary. In many models, this shares weights with the token embedding matrix (weight tying).',
+      points: [
+        'Shape: <code>[d_model, vocab_size]</code> e.g., <code>[8192, 128256]</code>',
+        'For the LAST token position only (during generation), this produces the prediction for the next token',
+        'Weight tying: <code>W_unembed = W_embed^T</code> (used in many but not all models)',
+        'Output is raw logits (unnormalized scores), not probabilities yet',
+      ],
+      math: 'logits = h_final[-1] @ W_unembed    [d_model] x [d_model, V] -> [V]\nwhere V = vocab_size (~100K-128K)',
+    }
+  },
+
+  // === LOGITS ===
+  {
+    id: 'logits', type: 'sampling', label: 'Logits\n(Raw Scores)',
+    title: 'Logits: Raw Vocabulary Scores',
+    detail: {
+      desc: 'A vector of ~100K-128K raw scores, one per token in the vocabulary. Higher scores mean the model considers that token more likely to come next. These are NOT yet probabilities -- they need temperature scaling and softmax.',
+      points: [
+        'Shape: <code>[vocab_size]</code> -- one score per vocabulary token',
+        'Values can be any real number (positive or negative)',
+        'The highest logit corresponds to the model\'s "top prediction"',
+        'All sampling strategies operate on these logits',
+      ],
+      math: 'logits = [score_token_0, score_token_1, ..., score_token_V]\ne.g., logits["Paris"] = 15.3, logits["London"] = 8.1, logits["France"] = 7.9, ...',
+    }
+  },
+
+  // === TEMPERATURE ===
+  {
+    id: 'temperature', type: 'sampling', label: 'Temperature\nScaling',
+    title: 'Temperature Scaling',
+    detail: {
+      desc: 'Divides logits by a temperature value T before softmax. Controls the "sharpness" of the probability distribution. Lower temperature = more confident/deterministic. Higher temperature = more random/creative.',
+      points: [
+        'T = 0: always pick the highest logit (greedy, deterministic)',
+        'T = 1: standard softmax (model\'s natural distribution)',
+        'T > 1: flatter distribution (more random, "creative")',
+        'T < 1: sharper distribution (more focused, "conservative")',
+        'T -> infinity: uniform random (every token equally likely)',
+      ],
+      math: 'scaled_logits = logits / T\n\nT=0.7 (common for chat): sharpens distribution\nT=1.0: neutral\nT=1.5: more creative/random',
+    }
+  },
+
+  // === TOP-K / TOP-P ===
+  {
+    id: 'top_k_p', type: 'sampling', label: 'Top-K &\nTop-P (Nucleus)\nFiltering',
+    title: 'Top-K and Top-P (Nucleus) Sampling',
+    detail: {
+      desc: 'Filters the probability distribution to only consider the most likely tokens, then renormalizes. Prevents the model from sampling extremely unlikely tokens (which would produce nonsense).',
+      points: [
+        '<strong>Top-K</strong>: keep only the K most probable tokens, zero out the rest. E.g., K=50 means only the top 50 tokens are candidates.',
+        '<strong>Top-P (nucleus)</strong>: keep the smallest set of tokens whose cumulative probability >= P. E.g., P=0.9 means keep tokens until their probabilities sum to 90%.',
+        'Top-P is adaptive -- for confident predictions it considers fewer tokens, for uncertain predictions it considers more',
+        'Typically applied AFTER temperature scaling',
+        'Can combine both: apply Top-K first, then Top-P on the survivors',
+      ],
+      math: 'Top-K: keep tokens with rank <= K\nTop-P: sort by probability descending, keep until sum >= P\n\nCommon settings: top_k=50, top_p=0.9',
+    }
+  },
+
+  // === SOFTMAX ===
+  {
+    id: 'softmax_final', type: 'sampling', label: 'Softmax\n(-> Probabilities)',
+    title: 'Softmax: Convert Logits to Probabilities',
+    detail: {
+      desc: 'Converts the (possibly filtered/scaled) logits into a valid probability distribution. Each value becomes positive and they all sum to 1.',
+      points: [
+        'softmax makes large logits dominate and small logits vanish exponentially',
+        'The output IS the model\'s predicted probability distribution over next tokens',
+        'In greedy decoding, you skip softmax and just take argmax of logits',
+      ],
+      math: 'P(token_i) = exp(logit_i) / sum(exp(logit_j) for all j)\n\nAll P(token_i) >= 0 and sum to 1.0',
+    }
+  },
+
+  // === SAMPLING ===
+  {
+    id: 'sample', type: 'sampling', label: 'Sample\nToken',
+    title: 'Token Sampling (Random Draw)',
+    detail: {
+      desc: 'Draw one token from the probability distribution. This is where randomness enters -- the same prompt can produce different outputs. Alternatively, in greedy decoding, simply pick the argmax.',
+      points: [
+        '<strong>Greedy</strong>: always pick the most probable token (deterministic)',
+        '<strong>Sampling</strong>: randomly draw according to probabilities (stochastic)',
+        '<strong>Beam search</strong>: track top-B candidates in parallel (less common for LLMs now)',
+        'The "seed" / random number generator state determines the draw',
+        'Repetition penalty / frequency penalty can be applied here to discourage repeated tokens',
+      ],
+      math: 'next_token = categorical_sample(probability_distribution)\nor\nnext_token = argmax(logits)  // greedy',
+    }
+  },
+
+  // === DETOKENIZE ===
+  {
+    id: 'detokenize', type: 'input', label: 'Detokenize\n(-> Text)',
+    title: 'Detokenization: Token ID Back to Text',
+    detail: {
+      desc: 'Convert the sampled token ID back to its text representation and append to the output. This is a simple lookup in the tokenizer\'s vocabulary.',
+      points: [
+        'Token ID 3681 -> "Paris"',
+        'The text is streamed to the user as tokens are generated',
+        'Some tokens are partial words: multiple tokens may need to be decoded together',
+      ],
+      math: 'token_id -> tokenizer.decode(token_id) -> text fragment',
+    }
+  },
+
+  // === OUTPUT ===
+  {
+    id: 'output', type: 'input', label: 'Output Token\n(Append &\nLoop)',
+    title: 'Output: Append Token and Continue',
+    detail: {
+      desc: 'The generated token is appended to the sequence, and the process repeats autoregressively. Each new token becomes part of the context for generating the NEXT token. Generation stops when an EOS token is produced or the max length is reached.',
+      points: [
+        'Autoregressive: each token depends on ALL previous tokens',
+        'The new token is fed back as input for the next step',
+        'With KV cache, only the NEW token needs to be processed (not the full sequence)',
+        'Stop conditions: <code>&lt;EOS&gt;</code> token, max_tokens limit, stop sequence',
+        'This loop is why LLM generation is sequential and hard to parallelize',
+      ],
+      math: 'tokens = [t_1, ..., t_n]  // input\nfor step in range(max_tokens):\n    t_new = model(tokens)  // one forward pass\n    tokens.append(t_new)\n    if t_new == EOS: break',
+    }
+  },
+
+  // ========== OPTIMIZATIONS (side nodes) ==========
+
+  // === KV CACHE ===
+  {
+    id: 'kv_cache', type: 'optimization', label: 'KV Cache',
+    title: 'KV Cache: Avoiding Redundant Computation',
+    detail: {
+      desc: 'During autoregressive generation, each new token would require recomputing K and V for ALL previous tokens. The KV cache stores previously computed Key and Value tensors, so only the new token\'s K and V need to be computed. This is THE most important inference optimization.',
+      points: [
+        'Without KV cache: generating N tokens requires O(N^2) attention operations total',
+        'With KV cache: generating N tokens requires O(N) attention operations total',
+        'Cache shape per layer: <code>[batch, n_kv_heads, seq_len, d_head]</code>',
+        'Memory usage grows linearly with sequence length -- often the main memory bottleneck',
+        'For Llama 2 70B with 4K context: ~2.5 GB of KV cache in FP16',
+        'This is why GQA matters: fewer KV heads = smaller cache',
+      ],
+      math: 'Without cache: K = [k_1, ..., k_n] recomputed each step\nWith cache: K_cache.append(k_new), K = K_cache\n\nSpeedup: ~N/2x for generating N tokens',
+    }
+  },
+
+  // === PREFILL VS DECODE ===
+  {
+    id: 'prefill_decode', type: 'optimization', label: 'Prefill vs\nDecode Phases',
+    title: 'Prefill (Prompt Processing) vs Decode (Generation)',
+    detail: {
+      desc: 'Inference has two distinct phases with very different computational profiles. Prefill processes the entire prompt in parallel (compute-bound). Decode generates one token at a time (memory-bandwidth-bound).',
+      points: [
+        '<strong>Prefill</strong>: process all prompt tokens in parallel. Fills the KV cache. GPU-compute-bound (lots of matrix multiplies). Fast per-token.',
+        '<strong>Decode</strong>: generate one new token per step. Reads entire KV cache for attention. Memory-bandwidth-bound (loading weights + KV cache for a single token). Slow per-token.',
+        'Time to first token (TTFT) = prefill time. Inter-token latency (ITL) = decode time per step.',
+        'Prefill can be 10-100x faster per token than decode',
+        'This is why long prompts with short outputs are cheap, but short prompts with long outputs are expensive',
+      ],
+      math: 'Prefill: process [t_1, ..., t_prompt] in one forward pass (parallel)\nDecode: generate t_{prompt+1}, t_{prompt+2}, ... one at a time (sequential)',
+    }
+  },
+
+  // === FLASH ATTENTION ===
+  {
+    id: 'flash_attn', type: 'optimization', label: 'FlashAttention',
+    title: 'FlashAttention: IO-Aware Exact Attention',
+    detail: {
+      desc: 'An exact (not approximate) attention algorithm that is 2-4x faster and uses O(N) memory instead of O(N^2) by restructuring the computation to minimize reads/writes between GPU HBM (slow) and SRAM (fast). It computes attention in tiles without materializing the full N x N attention matrix.',
+      points: [
+        'Standard attention materializes an <code>[N, N]</code> attention matrix in HBM -- slow and memory-hungry',
+        'FlashAttention computes attention in blocks/tiles that fit in SRAM',
+        'Uses online softmax trick to avoid materializing the full matrix',
+        'Exact same result as standard attention -- not an approximation',
+        'FlashAttention-2: further optimizations, ~2x faster than v1',
+        'FlashAttention-3: uses FP8 and asynchronous operations on Hopper GPUs',
+        'Now the default attention implementation in all major LLM frameworks',
+      ],
+      math: 'Standard: O(N^2) memory for attention matrix\nFlashAttention: O(N) memory, same O(N^2) compute\n\nKey insight: fuse softmax + matmul into one kernel\nthat operates on SRAM-sized tiles',
+    }
+  },
+
+  // === QUANTIZATION ===
+  {
+    id: 'quantization', type: 'optimization', label: 'Quantization\n(FP16/INT8/INT4)',
+    title: 'Quantization: Reducing Precision for Speed',
+    detail: {
+      desc: 'Reducing the numerical precision of model weights and/or activations from FP32/FP16 to INT8 or INT4. Halves or quarters memory usage and increases throughput, with minimal quality loss.',
+      points: [
+        '<strong>FP32</strong>: 4 bytes/param (training default)',
+        '<strong>FP16/BF16</strong>: 2 bytes/param (standard inference)',
+        '<strong>INT8</strong> (W8A8): 1 byte/param (~5% memory, ~1% quality loss)',
+        '<strong>INT4</strong> (GPTQ, AWQ): 0.5 bytes/param -- 70B model fits in ~35GB',
+        'Llama 3 70B: 140GB in FP16, ~35GB in 4-bit quantization (fits on 1 GPU)',
+        'GGUF format: popular for local inference (llama.cpp)',
+      ],
+      math: 'FP16: 70B params x 2 bytes = 140 GB\nINT8: 70B params x 1 byte = 70 GB\nINT4: 70B params x 0.5 bytes = 35 GB',
+    }
+  },
+
+  // === CONTINUOUS BATCHING ===
+  {
+    id: 'batching', type: 'optimization', label: 'Continuous\nBatching',
+    title: 'Continuous Batching (Dynamic Batching)',
+    detail: {
+      desc: 'Process multiple requests simultaneously by batching them together. "Continuous" batching allows new requests to join a batch as soon as others finish, rather than waiting for the entire batch to complete.',
+      points: [
+        'Static batching: all requests must finish before any new one starts (wasteful)',
+        'Continuous batching: new requests can join mid-batch as slots free up',
+        'Increases GPU utilization from ~30% to ~90%+',
+        'Implemented in vLLM, TensorRT-LLM, TGI',
+        'Batch size is limited by GPU memory (weights + KV cache for all requests)',
+      ],
+      math: 'Static: throughput limited by longest request in batch\nContinuous: throughput ~= max_batch_size / avg_decode_time',
+    }
+  },
+
+  // === SPECULATIVE DECODING ===
+  {
+    id: 'spec_decode', type: 'optimization', label: 'Speculative\nDecoding',
+    title: 'Speculative Decoding',
+    detail: {
+      desc: 'Use a small, fast "draft" model to generate several candidate tokens quickly, then verify them in parallel with the large model. If the large model agrees with the draft, you get multiple tokens for the cost of one large-model forward pass.',
+      points: [
+        'Draft model generates K tokens autoregressively (cheap)',
+        'Target model verifies all K tokens in one parallel forward pass',
+        'Accept tokens that match; reject and resample from the first disagreement',
+        'Expected speedup: 2-3x for well-matched draft/target pairs',
+        'No quality loss -- the output distribution is identical to the target model',
+        'Used by Anthropic, Google, and others in production',
+      ],
+      math: 'Draft model: generate [d1, d2, d3, d4] (fast, ~4 steps)\nTarget model: verify all 4 in parallel (1 step)\nIf target agrees on d1, d2, d3 but not d4:\n  -> accept d1, d2, d3 and resample d4 from target',
+    }
+  },
+
+  // === PAGED ATTENTION ===
+  {
+    id: 'paged_attn', type: 'optimization', label: 'PagedAttention\n(vLLM)',
+    title: 'PagedAttention: Virtual Memory for KV Cache',
+    detail: {
+      desc: 'Inspired by OS virtual memory, PagedAttention stores KV cache in non-contiguous memory "pages" instead of requiring one contiguous block per sequence. This eliminates memory fragmentation and enables memory sharing across requests.',
+      points: [
+        'Standard KV cache: must pre-allocate max_seq_len contiguous memory (wasteful for short sequences)',
+        'PagedAttention: allocate small fixed-size blocks on demand',
+        'Reduces KV cache memory waste from ~60-80% to ~4%',
+        'Enables beam search and parallel sampling with shared prefixes (copy-on-write)',
+        'Core innovation behind vLLM, which achieves 2-4x higher throughput',
+      ],
+      math: 'Standard: allocate [max_seq_len, d_model] per request (mostly wasted)\nPaged: allocate blocks of [block_size, d_model] as needed',
+    }
+  },
+];
+
+// ===================== EDGES =====================
+const edges = [
+  // Main flow (top to bottom)
+  { source: 'input_text', target: 'tokenizer', label: 'raw text' },
+  { source: 'tokenizer', target: 'tok_embed', label: 'token IDs' },
+  { source: 'tok_embed', target: 'pos_encode', label: 'embeddings' },
+  { source: 'pos_encode', target: 'transformer_block', label: 'positioned embeddings' },
+  { source: 'transformer_block', target: 'pre_norm_attn', label: 'enter block' },
+  { source: 'pre_norm_attn', target: 'mha', label: 'normalized x' },
+
+  // Attention internals
+  { source: 'mha', target: 'qkv', label: 'projects to' },
+  { source: 'qkv', target: 'gqa', label: 'Q heads share K,V' },
+  { source: 'qkv', target: 'sdpa', label: 'Q, K, V' },
+  { source: 'gqa', target: 'sdpa', label: 'grouped K, V' },
+  { source: 'causal_mask', target: 'sdpa', label: 'applied to scores' },
+  { source: 'sdpa', target: 'attn_output', label: 'weighted values' },
+
+  // Post-attention
+  { source: 'attn_output', target: 'residual_attn', label: 'attention out' },
+  { source: 'residual_attn', target: 'pre_norm_ffn', label: 'x + attn' },
+
+  // FFN internals
+  { source: 'pre_norm_ffn', target: 'ffn', label: 'normalized x' },
+  { source: 'ffn', target: 'ffn_up', label: 'projects up' },
+  { source: 'ffn_up', target: 'activation', label: 'gate path' },
+  { source: 'activation', target: 'ffn_down', label: 'gated hidden' },
+  { source: 'ffn_down', target: 'residual_ffn', label: 'FFN out' },
+
+  // Loop
+  { source: 'residual_ffn', target: 'layer_loop', label: 'x + FFN' },
+  { source: 'layer_loop', target: 'pre_norm_attn', label: 'next layer' },
+
+  // Final output path
+  { source: 'layer_loop', target: 'final_norm', label: 'after all layers' },
+  { source: 'final_norm', target: 'lm_head', label: 'final hidden' },
+  { source: 'lm_head', target: 'logits', label: 'vocab scores' },
+  { source: 'logits', target: 'temperature', label: 'raw logits' },
+  { source: 'temperature', target: 'top_k_p', label: 'scaled logits' },
+  { source: 'top_k_p', target: 'softmax_final', label: 'filtered logits' },
+  { source: 'softmax_final', target: 'sample', label: 'probabilities' },
+  { source: 'sample', target: 'detokenize', label: 'token ID' },
+  { source: 'detokenize', target: 'output', label: 'text fragment' },
+
+  // Autoregressive loop
+  { source: 'output', target: 'tok_embed', label: 'next token (autoregressive loop)', type: 'loop' },
+
+  // Optimization connections
+  { source: 'kv_cache', target: 'sdpa', label: 'cached K, V' },
+  { source: 'kv_cache', target: 'prefill_decode', label: 'fills during prefill' },
+  { source: 'flash_attn', target: 'sdpa', label: 'optimizes' },
+  { source: 'paged_attn', target: 'kv_cache', label: 'manages memory' },
+  { source: 'quantization', target: 'ffn', label: 'compresses weights' },
+  { source: 'quantization', target: 'mha', label: 'compresses weights' },
+  { source: 'batching', target: 'prefill_decode', label: 'batches requests' },
+  { source: 'spec_decode', target: 'sample', label: 'accelerates generation' },
+  { source: 'prefill_decode', target: 'output', label: 'two-phase inference' },
+  { source: 'pos_encode', target: 'qkv', label: 'rotates Q, K (RoPE)' },
+];
+
+// ===================== COLOR MAP =====================
+const colorMap = {
+  input: '#3b82f6',
+  embedding: '#8b5cf6',
+  attention: '#ef4444',
+  ffn: '#22c55e',
+  norm: '#eab308',
+  sampling: '#f97316',
+  optimization: '#06b6d4',
+};
+
+const shapeMap = {
+  input: 'round-rectangle',
+  embedding: 'round-rectangle',
+  attention: 'round-rectangle',
+  ffn: 'round-rectangle',
+  norm: 'diamond',
+  sampling: 'round-rectangle',
+  optimization: 'round-rectangle',
+};
+
+// ===================== BUILD CYTOSCAPE =====================
+const cyElements = [];
+
+nodes.forEach(n => {
+  cyElements.push({
+    data: { id: n.id, label: n.label, type: n.type },
+    classes: n.type,
+  });
+});
+
+edges.forEach((e, i) => {
+  cyElements.push({
+    data: { id: 'e' + i, source: e.source, target: e.target, label: e.label || '' },
+    classes: e.type || '',
+  });
+});
+
+const cy = cytoscape({
+  container: document.getElementById('cy'),
+  elements: cyElements,
+  style: [
+    {
+      selector: 'node',
+      style: {
+        'label': 'data(label)',
+        'text-valign': 'center', 'text-halign': 'center',
+        'font-size': '9px', 'color': '#e6edf3',
+        'text-wrap': 'wrap', 'text-max-width': '95px',
+        'width': 100, 'height': 70,
+        'border-width': 2, 'border-color': '#30363d',
+        'background-opacity': 0.9, 'shape': 'round-rectangle',
+        'text-outline-width': 2, 'text-outline-color': '#0d1117', 'text-outline-opacity': 0.8,
+      },
+    },
+    ...Object.entries(colorMap).map(([type, color]) => ({
+      selector: `node.${type}`,
+      style: {
+        'background-color': color,
+        'border-color': color,
+      },
+    })),
+    {
+      selector: 'node.norm',
+      style: { 'shape': 'diamond', 'width': 110, 'height': 80 },
+    },
+    {
+      selector: 'node.optimization',
+      style: {
+        'border-style': 'dashed', 'border-width': 2,
+        'background-opacity': 0.7,
+      },
+    },
+    {
+      selector: 'edge',
+      style: {
+        'width': 1.5, 'line-color': '#30363d',
+        'target-arrow-color': '#30363d', 'target-arrow-shape': 'triangle',
+        'curve-style': 'bezier', 'arrow-scale': 0.8,
+        'label': 'data(label)', 'font-size': '7px', 'color': '#484f58',
+        'text-rotation': 'autorotate', 'text-margin-y': -8,
+        'text-outline-width': 2, 'text-outline-color': '#0d1117',
+      },
+    },
+    {
+      selector: 'edge.loop',
+      style: {
+        'line-color': '#f97316', 'target-arrow-color': '#f97316',
+        'line-style': 'dashed', 'width': 2,
+        'color': '#f97316',
+      },
+    },
+    {
+      selector: '.highlighted',
+      style: { 'opacity': 1 },
+    },
+    {
+      selector: '.faded',
+      style: { 'opacity': 0.12 },
+    },
+  ],
+  layout: {
+    name: 'dagre',
+    rankDir: 'TB',
+    nodeSep: 50,
+    rankSep: 70,
+    edgeSep: 20,
+    padding: 60,
+    animate: false,
+  },
+  minZoom: 0.15, maxZoom: 3,
+});
+
+// ===================== INTERACTIONS =====================
+let activeFilter = 'all';
+
+function filterByType(type) {
+  activeFilter = type;
+  document.querySelectorAll('#header button').forEach(b => {
+    if (b.id && b.id.startsWith('btn-')) b.classList.remove('active');
+  });
+  const btnId = 'btn-' + type;
+  const btn = document.getElementById(btnId);
+  if (btn) btn.classList.add('active');
+
+  cy.batch(() => {
+    cy.elements().removeClass('faded highlighted');
+    if (type === 'all') return;
+    cy.nodes().forEach(node => {
+      if (node.data('type') === type) { node.addClass('highlighted'); }
+      else { node.addClass('faded'); }
+    });
+    cy.edges().forEach(edge => {
+      const src = edge.source(); const tgt = edge.target();
+      if (src.hasClass('highlighted') || tgt.hasClass('highlighted')) {
+        edge.addClass('highlighted');
+      } else { edge.addClass('faded'); }
+    });
+  });
+}
+
+// Node click - highlight path
+cy.on('tap', 'node', function(evt) {
+  const node = evt.target;
+  const nodeId = node.data('id');
+  const nd = nodes.find(n => n.id === nodeId);
+  if (!nd) return;
+  showPopup(nd);
+
+  // Highlight connected
+  cy.batch(() => {
+    cy.elements().removeClass('faded highlighted');
+    const connected = node.neighborhood().add(node);
+    connected.addClass('highlighted');
+    cy.elements().not(connected).addClass('faded');
+  });
+});
+
+cy.on('tap', function(evt) {
+  if (evt.target === cy) {
+    closePopup();
+    cy.elements().removeClass('faded highlighted');
+  }
+});
+
+function showPopup(nd) {
+  const d = nd.detail;
+  let html = `<h2>${nd.title}</h2>`;
+  html += `<div class="meta"><strong>Component type:</strong> ${nd.type}</div>`;
+  if (d.desc) html += `<div class="desc">${d.desc}</div>`;
+  if (d.points && d.points.length) {
+    html += `<div class="section-label">Details</div><ul>`;
+    d.points.forEach(p => html += `<li>${p}</li>`);
+    html += `</ul>`;
+  }
+  if (d.math) html += `<div class="section-label">Math / Shapes</div><pre>${d.math}</pre>`;
+  if (d.example) html += `<div class="section-label">Example</div><div style="font-size:13px;color:#c9d1d9;"><code>${d.example}</code></div>`;
+  if (d.note) html += `<div class="note">${d.note}</div>`;
+  document.getElementById('popup-content').innerHTML = html;
+  document.getElementById('popup').style.display = 'block';
+}
+
+function closePopup() {
+  document.getElementById('popup').style.display = 'none';
+}
+
+// Search
+document.getElementById('search-box').addEventListener('input', function() {
+  const q = this.value.toLowerCase().trim();
+  if (!q) { cy.elements().removeClass('faded highlighted'); return; }
+  cy.batch(() => {
+    cy.elements().removeClass('faded highlighted');
+    cy.nodes().forEach(node => {
+      const nd = nodes.find(n => n.id === node.data('id'));
+      const text = [nd?.label, nd?.title, nd?.detail?.desc].join(' ').toLowerCase();
+      if (text.includes(q)) { node.addClass('highlighted'); }
+      else { node.addClass('faded'); }
+    });
+    cy.edges().forEach(edge => {
+      const src = edge.source(); const tgt = edge.target();
+      if (src.hasClass('highlighted') || tgt.hasClass('highlighted')) {
+        edge.addClass('highlighted');
+      } else { edge.addClass('faded'); }
+    });
+  });
+});
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closePopup(); });
+</script>
+</body>
+</html>

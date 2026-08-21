@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive Knowledge Charts</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0d1117; color: #c9d1d9;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    display: flex; align-items: center; justify-content: center;
+    min-height: 100vh; padding: 40px;
+  }
+  .container { max-width: 600px; width: 100%; }
+  h1 { color: #c084fc; font-size: 28px; margin-bottom: 8px; }
+  p.subtitle { color: #8b949e; font-size: 14px; margin-bottom: 40px; }
+  a.card {
+    display: block; text-decoration: none;
+    background: #161b22; border: 1px solid #30363d;
+    border-radius: 12px; padding: 24px 28px;
+    margin-bottom: 20px;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  a.card:hover { border-color: #c084fc; transform: translateY(-2px); }
+  a.card h2 { color: #e6edf3; font-size: 18px; margin-bottom: 6px; }
+  a.card p { color: #8b949e; font-size: 13px; line-height: 1.5; }
+  a.card .tag {
+    display: inline-block; font-size: 10px; font-weight: 600;
+    padding: 2px 8px; border-radius: 10px; margin-top: 10px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Interactive Knowledge Charts</h1>
+  <p class="subtitle">Interactive visualizations exploring ideas in philosophy, neuroscience, and more</p>
+
+  <a class="card" href="desire-flowchart.html">
+    <h2>Philosophy of Desire</h2>
+    <p>Interactive dependency graph of theories, objections, and responses in the philosophy of desire. Covers action-based, pleasure-based, good-based, and attention-based theories.</p>
+    <span class="tag" style="background:#3b82f622;color:#3b82f6;border:1px solid #3b82f6;">Interactive Graph</span>
+  </a>
+
+  <a class="card" href="consciousness-theories.html">
+    <h2>Theories of Consciousness</h2>
+    <p>Interactive dependency graph of competing theories of consciousness. Covers Global Workspace Theory, Integrated Information Theory, Higher-Order Theories, panpsychism, illusionism, predictive processing, and more.</p>
+    <span class="tag" style="background:#a855f722;color:#a855f7;border:1px solid #a855f7;">Interactive Graph</span>
+  </a>
+
+  <a class="card" href="llm-inference.html">
+    <h2>LLM Inference Flowchart</h2>
+    <p>Step-by-step interactive flowchart of how a large language model generates text. Every component from tokenization through sampling, plus optimizations like KV cache, FlashAttention, and speculative decoding.</p>
+    <span class="tag" style="background:#f9731622;color:#f97316;border:1px solid #f97316;">Flowchart</span>
+  </a>
+
+  <a class="card" href="philosophy-migrations.html">
+    <h2>Philosophy's Diaspora</h2>
+    <p>Where did philosophical questions go? A map of how subfields of philosophy were absorbed into psychology, physics, cognitive science, economics, computer science, and other modern disciplines.</p>
+    <span class="tag" style="background:#22c55e22;color:#22c55e;border:1px solid #22c55e;">Interactive Graph</span>
+  </a>
+
+  <a class="card" href="brain-connectivity.html">
+    <h2>The Brain</h2>
+    <p>Interactive connectivity and function map of the brain. Explore 35+ brain regions, their connections, what they're responsible for, and functional networks (Default Mode, Salience, Reward, Language, Motor, Visual, Memory, Fear).</p>
+    <span class="tag" style="background:#f472b622;color:#f472b6;border:1px solid #f472b6;">Interactive Graph</span>
+  </a>
+</div>
+</body>
+</html>

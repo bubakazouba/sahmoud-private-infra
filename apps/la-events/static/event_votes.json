@@ -1,0 +1,51 @@
+{
+  "liked": [
+    {
+      "title": "Grand Park 700-Drone Summer Block Party",
+      "date": "Sat 7/4"
+    },
+    {
+      "title": "Arcadia Patriotic Festival & Drone Show",
+      "date": "Sat 7/4"
+    },
+    {
+      "title": "America250 Block Party at the Coliseum",
+      "date": "Sat 7/4"
+    },
+    {
+      "title": "Hollywood Bowl July Fourth Fireworks Spectacular",
+      "date": "Sat 7/4"
+    },
+    {
+      "title": "Anime Expo 2026 (Final Days)",
+      "date": "Sat 7/4 - Sun 7/5"
+    },
+    {
+      "title": "Monster Jam",
+      "date": "Sat 7/18 - Sun 7/19"
+    }
+  ],
+  "disliked": [
+    {
+      "title": "Catalina Island: Dinghy Parade + Golf Cart Parade",
+      "date": "Fri 7/3 - Sat 7/4"
+    },
+    {
+      "title": "FoodieLand Food Festival",
+      "date": "Fri 7/3 - Sun 7/5"
+    },
+    {
+      "title": "LUCHA GOTH HAUS: 2 Year Anniversary",
+      "date": "Sat 7/18 - Sun 7/19"
+    },
+    {
+      "title": "31st Annual Glendale Cruise Night",
+      "date": "Sat 7/18"
+    },
+    {
+      "title": "Rose Bowl Flea Market",
+      "date": "Sun 8/9"
+    }
+  ],
+  "_doc": "Per-event thumbs from the dashboard cards. The weekly la-events refresh NEVER re-adds a 'disliked' event (purges by title) and treats 'liked' events as a strong signal to keep/seek-similar."
+}

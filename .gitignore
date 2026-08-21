@@ -9,3 +9,8 @@ pgdata/
 apps/*/data.db*
 .env
 credentials/
+
+# 2026-08-21: nightly_sync.py now backs this repo up automatically (git add -A).
+# .env is already ignored above; *.bak was not, so a stray .env.bak would have been
+# committed with live OAUTH_CLIENT_ID/SECRET on the first automated run.
+*.bak

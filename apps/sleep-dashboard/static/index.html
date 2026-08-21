@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sahmoud's Sleep (TG-inferred)</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #0d1525;
+  --panel: #15203a;
+  --ink: #e6ecff;
+  --muted: #8893b8;
+  --accent: #7aa2f7;
+  --gold: #e0af68;
+  --green: #9ece6a;
+  --line: #23304f;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.wrap { max-width: 1080px; margin: 0 auto; padding: 24px 18px; }
+h1 { margin: 0 0 4px; font-size: 26px; }
+.meta { color: var(--muted); font-size: 13px; margin-bottom: 18px; line-height: 1.5; }
+.note { background: var(--panel); border-left: 3px solid var(--accent); padding: 10px 14px; color: var(--muted); font-size: 12px; border-radius: 6px; margin-bottom: 20px; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 22px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+.card .label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+.card .val { font-size: 24px; font-weight: 600; margin-top: 4px; }
+.card .val .sub { font-size: 12px; color: var(--muted); margin-left: 6px; font-weight: 400; }
+.chart-wrap { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; margin-bottom: 16px; }
+.chart-title { font-size: 14px; color: var(--accent); margin: 0 0 12px; font-weight: 600; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
+@media (max-width: 720px) { .row2 { grid-template-columns: 1fr; } }
+canvas { max-height: 280px; }
+.foot { color: var(--muted); font-size: 11px; margin-top: 24px; text-align: center; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>😴 Sahmoud's Sleep <span style="color:var(--muted);font-size:14px;font-weight:400">(inferred from TG activity)</span></h1>
+  <div class="meta">
+    Bedtime = last outgoing message between 7pm–4am. Wake = first message between 4am–1pm. <br>
+    <span id="span">…</span>
+  </div>
+  <div class="note">
+    ⚠️ This is a <strong>proxy</strong>. If you went to bed but stayed on your phone scrolling, "bedtime" will look later. If you woke at 7am but didn't text till 9am, "wake" will look later. Trends across weekdays are still meaningful.
+  </div>
+
+  <div class="cards">
+    <div class="card"><div class="label">Avg sleep</div><div class="val" id="avg-sleep">…</div></div>
+    <div class="card"><div class="label">Avg bedtime</div><div class="val" id="avg-bed">…</div></div>
+    <div class="card"><div class="label">Avg wake</div><div class="val" id="avg-wake">…</div></div>
+    <div class="card"><div class="label">Nights of data</div><div class="val" id="nights">…</div></div>
+  </div>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Avg sleep hours, by weekday</div>
+    <canvas id="ch-sleep"></canvas>
+  </div>
+  <div class="row2">
+    <div class="chart-wrap">
+      <div class="chart-title">Avg bedtime, by weekday (PT)</div>
+      <canvas id="ch-bed"></canvas>
+    </div>
+    <div class="chart-wrap">
+      <div class="chart-title">Avg wake time, by weekday (PT)</div>
+      <canvas id="ch-wake"></canvas>
+    </div>
+  </div>
+  <div class="chart-wrap">
+    <div class="chart-title">Per-night sleep (most recent 60)</div>
+    <canvas id="ch-recent"></canvas>
+  </div>
+
+  <div class="foot" id="foot">…</div>
+</div>
+
+<script>
+function fmtTime(h) {
+  h = ((h % 24) + 24) % 24;
+  var H = Math.floor(h), M = Math.round((h - H) * 60);
+  if (M === 60) { H += 1; M = 0; }
+  var period = H < 12 ? 'AM' : 'PM';
+  var H12 = (H % 12) || 12;
+  return H12 + ':' + (M < 10 ? '0'+M : M) + ' ' + period;
+}
+
+Chart.defaults.color = '#8893b8';
+Chart.defaults.borderColor = '#23304f';
+Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, sans-serif';
+
+fetch('sleep.json?v=' + Date.now()).then(r => r.json()).then(d => {
+  document.getElementById('avg-sleep').innerHTML = d.overall.avg_sleep_hrs + 'h <span class="sub">/ night</span>';
+  document.getElementById('avg-bed').textContent = d.overall.bedtime_fmt;
+  document.getElementById('avg-wake').textContent = d.overall.wake_fmt;
+  document.getElementById('nights').innerHTML = d.n_nights + ' <span class="sub">/ ' + d.data_span_days + 'd span</span>';
+  document.getElementById('span').textContent = `${d.total_messages} outgoing messages over ${d.data_span_days} days; ${d.n_nights} nights with enough activity to infer both bedtime + wake.`;
+  document.getElementById('foot').textContent = `last updated ${new Date(d.generated_at_utc).toLocaleString()}`;
+
+  var labels = d.weekday.map(w => w.weekday);
+
+  // Sleep hours bar chart
+  new Chart(document.getElementById('ch-sleep'), {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Avg sleep (hrs)',
+        data: d.weekday.map(w => w.avg_sleep_hrs),
+        backgroundColor: '#7aa2f7',
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => c.parsed.y + 'h (n=' + d.weekday[c.dataIndex].n_nights + ')' } } },
+      scales: { y: { beginAtZero: false, suggestedMin: 6, suggestedMax: 12, ticks: { callback: v => v + 'h' } } }
+    }
+  });
+
+  // Bedtime chart — y-axis hours since midnight (19..28 range typical); display as time
+  new Chart(document.getElementById('ch-bed'), {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Avg bedtime',
+        data: d.weekday.map(w => w.avg_bedtime_hod),
+        backgroundColor: '#e0af68',
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => fmtTime(c.parsed.y) } } },
+      scales: { y: { suggestedMin: 22, suggestedMax: 28, ticks: { callback: v => fmtTime(v) } } }
+    }
+  });
+
+  // Wake chart
+  new Chart(document.getElementById('ch-wake'), {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Avg wake time',
+        data: d.weekday.map(w => w.avg_wake_hod),
+        backgroundColor: '#9ece6a',
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => fmtTime(c.parsed.y) } } },
+      scales: { y: { suggestedMin: 8, suggestedMax: 13, ticks: { callback: v => fmtTime(v) } } }
+    }
+  });
+
+  // Recent nights line chart (last 60)
+  var recent = d.nights.slice(-60);
+  new Chart(document.getElementById('ch-recent'), {
+    type: 'line',
+    data: {
+      labels: recent.map(n => n.date_woke.slice(5)),  // MM-DD
+      datasets: [{
+        label: 'Sleep hours',
+        data: recent.map(n => n.sleep_hrs),
+        borderColor: '#7aa2f7',
+        backgroundColor: 'rgba(122,162,247,0.18)',
+        pointRadius: 3,
+        pointBackgroundColor: '#7aa2f7',
+        tension: 0.25,
+        fill: true,
+      }]
+    },
+    options: {
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => c.parsed.y + 'h on ' + recent[c.dataIndex].weekday_woke } } },
+      scales: { y: { suggestedMin: 4, suggestedMax: 13, ticks: { callback: v => v + 'h' } } }
+    }
+  });
+});
+</script>
+</body>
+</html>

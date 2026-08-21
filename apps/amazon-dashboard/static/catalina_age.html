@@ -1,0 +1,38 @@
+<!DOCTYPE html><html lang=en><head><meta charset=UTF-8>
+<meta name=viewport content="width=device-width, initial-scale=1">
+<title>Catalina (Avalon) Age Distribution</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{--bg:#0e1116;--panel:#171b22;--line:#2a313d;--ink:#eef2f7;--mut:#9aa6b6;--accent:#60a5fa;--warn:#fbbf24;--bad:#f87171;--ok:#34d399}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:860px;margin:0 auto;padding:24px 18px 70px}
+h1{font-size:1.5rem;margin:0 0 4px}.sub{color:var(--mut);margin-bottom:20px;font-size:.95rem}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:18px}
+.chartbox{position:relative;height:320px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px}
+.kpi .n{font-size:1.5rem;font-weight:800}.kpi .l{color:var(--mut);font-size:.76rem;margin-top:4px}
+.kpi.warn .n{color:var(--warn)}.kpi.bad .n{color:var(--bad)}
+.note{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:10px;padding:14px 16px;margin-bottom:18px;font-size:.95rem}
+.foot{color:var(--mut);font-size:.82rem;margin-top:24px;border-top:1px solid var(--line);padding-top:14px}
+</style></head><body><div class=wrap>
+<h1>Catalina Island Age Distribution</h1>
+<div class=sub>Avalon, CA, the island's only city (~90%+ of residents). Most recent ACS estimates.</div>
+<div class=kpis>
+<div class=kpi warn><div class=n>~42</div><div class=l>median age (US ~38.5)</div></div>
+<div class=kpi><div class=n>23.2%</div><div class=l>under 18</div></div>
+<div class=kpi bad><div class=n>17.0%</div><div class=l>18-34 (young adults)</div></div>
+<div class=kpi warn><div class=n>23.9%</div><div class=l>65 and over</div></div>
+</div>
+<div class=note><b>The island skews older, and the young-adult bracket is thin.</b> Only 17% are 18-34 (well below the US ~23%), while 24% are 65+ (vs US ~17%). That dip in young adults lines up with the earlier point: graduates tend to leave for mainland college and jobs, so the island ages.</div>
+<div class=card><div class=chartbox><canvas id=c></canvas></div></div>
+<div class=foot>Source: U.S. Census ACS via DataUSA (shares are of the insured population, ~96.7% of residents, effectively the whole population). Median age from California Demographics / Census. Brackets shown are the 4 published groups; a finer 5-year age breakdown would need a direct Census ACS pull.</div>
+</div>
+<script>
+Chart.defaults.color='#9aa6b6';
+const L=['Under 18','18-34','35-64','65+'],V=[23.2,17.0,35.9,23.9],C=['#60a5fa','#f87171','#34d399','#fbbf24'];
+new Chart(document.getElementById('c'),{type:'bar',
+ data:{labels:L,datasets:[{label:'% of Avalon residents',data:V,backgroundColor:C}]},
+ options:{plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.parsed.y+'% of residents'}}},
+  scales:{y:{beginAtZero:true,max:40,grid:{color:'#2a313d'},title:{display:true,text:'% of population'},ticks:{callback:v=>v+'%'}},x:{grid:{display:false}}}}});
+</script></body></html>

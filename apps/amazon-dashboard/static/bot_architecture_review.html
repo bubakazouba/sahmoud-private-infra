@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PianoBot Architecture Review — 2026-07-02</title>
+<style>
+body{font-family:system-ui,sans-serif;margin:0;background:#0d1117;color:#e6edf3;line-height:1.55}
+.wrap{max-width:980px;margin:0 auto;padding:24px 20px 80px}
+h1{font-size:24px;margin:8px 0 2px} h2{font-size:19px;margin:34px 0 10px;color:#58a6ff;border-bottom:1px solid #21262d;padding-bottom:6px}
+h3{font-size:15px;margin:18px 0 6px;color:#d2a8ff}
+.sub{color:#8b949e;font-size:13px}
+table{width:100%;border-collapse:collapse;font-size:14px;margin:10px 0}
+td,th{padding:7px 10px;border-bottom:1px solid #21262d;vertical-align:top;text-align:left}
+th{color:#8b949e;font-weight:600;font-size:12px;text-transform:uppercase}
+.tag{display:inline-block;padding:1px 8px;border-radius:10px;font-size:11px;font-weight:600;margin-right:4px}
+.lo{background:#23863633;color:#56d364}.med{background:#9e6a0333;color:#e3b341}
+.keep{background:#8957e533;color:#d2a8ff}
+li{margin:5px 0} .src{color:#8b949e;font-size:12px}
+code{background:#161b22;padding:1px 5px;border-radius:4px;font-size:13px}
+.inc{background:#161b22;border-left:3px solid #f85149;padding:8px 12px;margin:8px 0;border-radius:0 6px 6px 0;font-size:14px}
+</style></head><body><div class=wrap>
+<h1>PianoBot — Architecture Review</h1>
+<div class=sub>2026-07-02 · internal incident analysis + external research (Hermes/OpenClaw/PAI patterns, reliability + memory + automation literature) · sources inline</div>
+
+<h2>1 · The system today</h2>
+<table>
+<tr><th>Layer</th><th>What runs</th></tr>
+<tr><td>Ingestion</td><td>unified_poller (TG long-poll, 1s) → sqlite inbox (WAL) + whisper transcription + vision descriptions + mem0 auto-recall tags. Separate reminder + mood pollers.</td></tr>
+<tr><td>Brain</td><td>Live Claude Code session (claude-fable-5, 1M ctx) woken by a Monitor tailing the poller log; replies via send_tg (outbound now logged too).</td></tr>
+<tr><td>Supervision</td><td>EnsurePoller/EnsureStack schtasks (5-min) restart procs; brain auto-relaunch via claude --resume + stored session id (SessionStart hook, double-guarded).</td></tr>
+<tr><td>Memory</td><td>3 tiers: curated markdown (nightly consolidation) · mem0/Chroma semantic (nightly Claude extraction w/ msg-id provenance + per-message recall) · sqlite inbox as episodic ground truth. All 3 DBs backed up in the private git repo nightly.</td></tr>
+<tr><td>Automation</td><td>CDP Chrome :9222; APIs-first (gmail/calendar/people tokens + silent reauth); hard-assert whatsapp_send driver; telethon for TG-as-you.</td></tr>
+<tr><td>Apps</td><td>~30 Flask apps behind Tailscale + OAuth control plane; todo app on solutionbanks:8000 (VPS).</td></tr>
+</table>
+
+<h2>2 · What is already right (externally validated — keep)</h2>
+<ul>
+<li><span class="tag keep">KEEP</span><b>Three-tier memory with human-readable, git-diffable files</b> — the exact converged 2026 pattern (OpenClaw ships literally MEMORY.md + logs + vector store). <span class=src>agentailor.com · danielmiessler.com/blog/personal-ai-infrastructure</span></li>
+<li><span class="tag keep">KEEP</span><b>Provenance on extracted facts</b> (msg-id pointers, shipped 7/02) — the literature calls this an OPEN research problem; we already do it. <span class=src>arxiv 2606.04990</span></li>
+<li><span class="tag keep">KEEP</span><b>sqlite over a broker</b> — correct at single-machine scale (100k+ ops/s WAL); Redis/NATS only pays off multi-machine. <span class=src>dev.to sqlite-queue</span></li>
+<li><span class="tag keep">KEEP</span><b>Hard-assert driver pattern</b> (whatsapp_send) = the literature "verify-before-act checkpoint" for side-effecting UI actions. <span class=src>digitalapplied.com · HalluClear arxiv</span></li>
+<li><span class="tag keep">KEEP</span><b>Long-poll over webhook</b> for a home machine (no public endpoint needed; TG rejects concurrent getUpdates anyway — see P1). <span class=src>gramio.dev · hostman.com</span></li>
+</ul>
+
+<h2>3 · Real failure modes (every one happened HERE, mostly 7/01-02)</h2>
+<div class=inc><b>Session-id clobbering, 3 holes:</b> cwd-only guard → reboot resumed a throwaway test session; env-marker inheritance → claude -p children stole the id twice more. Two holes patched; brain-spawned one-shots outside mem0_capture still inherit (→ P9).</div>
+<div class=inc><b>Watchers die with the session, silently:</b> the email-arc Monitor from an old session was gone; an OpenAI reply sat unread until Sahmoud noticed (→ P3). Matches the classic silent-gateway postmortem. <span class=src>hermes-agent.ai gateway troubleshooting</span></div>
+<div class=inc><b>Process-alive ≠ loop-healthy:</b> the brain check counts claude processes; a wedged brain looks identical to a healthy one (→ P2).</div>
+<div class=inc><b>Wrong-textbox automation:</b> WhatsApp search-typing landed in Preksha's composer → 2 stray sent messages + a stray draft; execCommand deletes silently no-op; tab indices reshuffle (2 misclicks); ad iframes match URL greps; a heavy SPA wedged its renderer for an hour (→ P5).</div>
+<div class=inc><b>Log = IPC coupling:</b> scrubbing 2 lines from the poller log flipped grep to binary mode and blinded the Monitor until restarted with -a (→ P8).</div>
+<div class=inc><b>Attribution:</b> relayed voice notes carry the sender ACCOUNT, not the speaker — Preksha's note recorded as his until corrected (→ P10).</div>
+<div class=inc><b>Message-loss window:</b> if the brain is down, messages get logged but nothing systematically REPLAYS unprocessed rows on wake (→ P1).</div>
+<div class=inc><b>Shell landmines:</b> PowerShell ate dollar signs in a reminder text; bash-vs-PS heredoc traps; missing git identity in subshells; ensure_poller 15s wrapper timeout reports failure on success.</div>
+
+<h2>4 · Ranked roadmap (merged: incidents + research)</h2>
+<table>
+<tr><th></th><th>Upgrade</th><th>Why / what</th><th>Effort</th></tr>
+<tr><td>P1</td><td><b>Ingest correctness pack</b></td><td>update_id dedup (restarts can replay getUpdates batches — idempotent-consumer pattern), replay-on-wake of processed=0 rows older than N min, atomic UPDATE…RETURNING claims. Turns the inbox into a real queue; closes the silent-loss window. <span class=src>milanjovanovic.tech · dev.to inbox-pattern</span></td><td><span class="tag lo">LOW</span></td></tr>
+<tr><td>P2</td><td><b>Liveness = respond-ability</b></td><td>Brain stamps a last-action heartbeat file; EnsureStack alerts/restarts when it goes stale while messages are pending; periodic end-to-end canary DM roundtrip.</td><td><span class="tag lo">LOW</span></td></tr>
+<tr><td>P3</td><td><b>Watcher registry</b></td><td>state/watchers.json (poller tail, email arcs, thread watchers); session-start recovery re-attaches ALL. Kills the died-with-session class for good.</td><td><span class="tag lo">LOW</span></td></tr>
+<tr><td>P4</td><td><b>External loop/budget guards</b></td><td>The $47k / $4.2k runaway-loop postmortem asserts, enforced outside the model: step caps + duplicate-call detection on subagents and cron claude -p jobs. <span class=src>dev.to 47k-postmortem · medium 4200-in-63h</span></td><td><span class="tag med">MED</span></td></tr>
+<tr><td>P5</td><td><b>Driver rollout</b></td><td>messenger_send.py on the whatsapp_send skeleton; shared driver lib; ad-hoc CDP typing stays banned. DOM-first, vision only as fallback (92% vs 78% task reliability). <span class=src>digitalapplied.com</span></td><td><span class="tag med">MED</span></td></tr>
+<tr><td>P6</td><td><b>Golden-case mini-suite</b></td><td>~15 replayable cases for the blast-radius paths (send_tg sanitization, reminder parsing, whatsapp dry-run, capture extraction), run before touching those scripts. <span class=src>tianpan.co shadow/golden rollout</span></td><td><span class="tag med">MED</span></td></tr>
+<tr><td>P7</td><td><b>Staging bot</b></td><td>A staging bot + sandbox chat so tests stop touching real chats (today's strays). Doubles as the template test rig for Aya's instance.</td><td><span class="tag lo">LOW</span></td></tr>
+<tr><td>P8</td><td><b>Log/IPC decoupling</b></td><td>Poller emits events to an append-only events stream consumed by the Monitor; the .log stays human-only. Scrubs/rewrites can never blind the brain again.</td><td><span class="tag lo">LOW</span></td></tr>
+<tr><td>P9</td><td><b>One-shot spawn hygiene</b></td><td>Shared run_claude_oneshot() helper: strips the brain marker, neutral cwd, timeout — used by every scripted claude -p. Closes the last session-id hole.</td><td><span class="tag lo">LOW</span></td></tr>
+<tr><td>P10</td><td><b>Speaker-ID at ingest</b></td><td>SpeechBrain ECAPA (pretrained, pip) tagging [voice: name confidence] per voice note. Approved in principle 7/02, awaiting go.</td><td><span class="tag lo">LOW</span></td></tr>
+</table>
+
+<h3>Considered and deliberately NOT recommended (for now)</h3>
+<ul>
+<li><b>Gateway rewrite</b> (OpenClaw-style single daemon owning all channels): the dominant industry pattern, but a full rewrite; P1+P2+P3 buy ~80% of its reliability for ~5% of the cost. Revisit if multi-platform inbound becomes real.</li>
+<li><b>Memory framework switch</b> (Zep/Letta): the mem0-vs-Zep benchmark fight is vendor marketing (49% vs 63.8% independent; 92-94% self-claimed; rebuttals both directions). Our Claude-extraction + provenance already addresses the actual quality complaint. Judge by our own recall misses, not their charts. <span class=src>particula.tech · blog.getzep.com · mem0.ai/blog</span></li>
+<li><b>Webhook migration</b>: needs a public HTTPS endpoint from a home machine; long-poll + P1 dedup is the right shape here.</li>
+</ul>
+</div></body></html>

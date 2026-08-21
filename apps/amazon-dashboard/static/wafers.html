@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Atkins Wafer Buying Habit</title>
+<style>
+  :root{
+    --bg:#0f1419; --panel:#1a212b; --panel2:#232b37; --border:#2d3744;
+    --text:#e6ecf3; --text-dim:#8b97a7; --accent:#ff9900; --choc:#a9744f; --lemon:#e6c84f;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:14px;line-height:1.5}
+  .container{max-width:980px;margin:0 auto;padding:18px}
+  header{padding:18px 0 6px}
+  h1{font-size:23px;margin:0 0 4px}
+  h1 span{color:var(--accent)}
+  .meta-line{color:var(--text-dim);font-size:13px}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:18px 0}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+  .card .num{font-size:26px;font-weight:700;color:var(--accent)}
+  .card .lbl{color:var(--text-dim);font-size:12px;margin-top:2px}
+  h2{font-size:16px;margin:26px 0 10px;border-bottom:1px solid var(--border);padding-bottom:6px}
+  /* weekly bars */
+  .bars{display:flex;align-items:flex-end;gap:6px;height:160px;padding:10px 4px;background:var(--panel);border:1px solid var(--border);border-radius:10px}
+  .bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+  .bar{width:100%;background:var(--accent);border-radius:4px 4px 0 0;min-height:3px;transition:.2s}
+  .bar.empty{background:#2d3744}
+  .bar-val{font-size:12px;color:var(--text);margin-bottom:3px;height:14px}
+  .bar-lbl{font-size:10px;color:var(--text-dim);margin-top:5px;text-align:center;line-height:1.2}
+  /* timeline */
+  table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+  th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--border);font-size:13px}
+  th{color:var(--text-dim);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.03em}
+  tr:last-child td{border-bottom:none}
+  .gap{color:var(--text-dim)}
+  .gap.fast{color:#ff6b6b} .gap.slow{color:#5fa8ff}
+  .pill{display:inline-block;padding:1px 8px;border-radius:20px;font-size:11px;font-weight:600}
+  .pill.choc{background:rgba(169,116,79,.25);color:var(--choc)}
+  .pill.lemon{background:rgba(230,200,79,.2);color:var(--lemon)}
+  .qty{font-weight:600}
+  .qty.multi{color:var(--accent);font-weight:800}
+  .qty.multi::after{content:" \1F4E6 multi-pack";font-size:11px;color:var(--text-dim);font-weight:400}
+  .note{color:var(--text-dim);font-size:12px;margin-top:8px}
+  footer{color:var(--text-dim);font-size:12px;margin:28px 0 10px;text-align:center}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>🍫 Atkins <span>Wafer</span> Buying Habit</h1>
+    <div class="meta-line" id="meta"></div>
+  </header>
+
+  <div class="cards" id="cards"></div>
+
+  <h2>Units per week</h2>
+  <div class="bars" id="bars"></div>
+  <div class="note">Bars = number of wafer <b>units</b> bought that week (multi-packs counted in full). Hover for the date range.</div>
+
+  <h2>Every order, newest first</h2>
+  <table id="tbl">
+    <thead><tr><th>Date</th><th>Flavor</th><th>Qty</th><th>Days since previous</th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+  <div class="note">"Days since previous" counts gaps between Chocolate Crème orders (your main repeat-buy). <span class="gap fast">red</span> = quicker than usual, <span class="gap slow">blue</span> = slower.</div>
+
+  <footer id="foot"></footer>
+</div>
+
+<script>
+// Real data: Amazon "Ordered:" confirmation emails (ahssahmoud@gmail.com), Atkins wafer products.
+const ORDERS = [
+  {date:"2026-04-09", qty:1, flavor:"Chocolate Crème"},
+  {date:"2026-04-11", qty:4, flavor:"Chocolate Crème"},
+  {date:"2026-04-25", qty:1, flavor:"Chocolate Crème"},
+  {date:"2026-04-27", qty:1, flavor:"Chocolate Crème"},
+  {date:"2026-04-30", qty:4, flavor:"Chocolate Crème"},
+  {date:"2026-05-06", qty:1, flavor:"Chocolate Crème"},
+  {date:"2026-05-10", qty:1, flavor:"Chocolate Crème"},
+  {date:"2026-05-17", qty:1, flavor:"Lemon"},
+  {date:"2026-05-17", qty:1, flavor:"Chocolate Crème"},
+  {date:"2026-05-21", qty:4, flavor:"Chocolate Crème"},
+  {date:"2026-05-30", qty:3, flavor:"Chocolate Crème"},
+];
+const D = s => new Date(s+"T00:00:00");
+const fmt = s => D(s).toLocaleDateString("en-US",{month:"short",day:"numeric"});
+const days = (a,b) => Math.round((D(b)-D(a))/864e5);
+
+const totalOrders = ORDERS.length;
+const totalUnits = ORDERS.reduce((s,o)=>s+o.qty,0);
+const first = ORDERS[0].date, last = ORDERS[ORDERS.length-1].date;
+const spanDays = days(first,last);
+
+// Chocolate Crème cadence (the main item, B0946R593C)
+const choc = ORDERS.filter(o=>o.flavor.startsWith("Chocolate"));
+const chocDates = [...new Set(choc.map(o=>o.date))].sort();
+const intervals = [];
+for(let i=1;i<chocDates.length;i++) intervals.push(days(chocDates[i-1],chocDates[i]));
+const avgInt = (intervals.reduce((s,x)=>s+x,0)/intervals.length);
+const sortedInt = [...intervals].sort((a,b)=>a-b);
+const medInt = sortedInt[Math.floor(sortedInt.length/2)];
+
+document.getElementById("meta").textContent =
+  `Atkins Chocolate Crème Protein Wafer Crisps (ASIN B0946R593C) + 1 Lemon · ${fmt(first)}–${fmt(last)} 2026 · source: Amazon order emails`;
+
+const multipacks = ORDERS.filter(o=>o.qty>=3);
+const cards = [
+  [totalOrders, "orders placed"],
+  [totalUnits, "units bought"],
+  [multipacks.length, "multi-packs (3-4 ea)"],
+  [avgInt.toFixed(1)+"d", "avg between orders"],
+  [medInt+"d", "typical gap (median)"],
+  [(totalUnits/totalOrders).toFixed(1), "units per order"],
+];
+document.getElementById("cards").innerHTML = cards.map(c=>
+  `<div class="card"><div class="num">${c[0]}</div><div class="lbl">${c[1]}</div></div>`).join("");
+
+// weekly bars (Mon-anchored weeks across the span)
+const start = D(first); start.setDate(start.getDate()-((start.getDay()+6)%7));
+const end = D(last);
+const weeks = [];
+for(let d=new Date(start); d<=end; d.setDate(d.getDate()+7)){
+  const ws=new Date(d), we=new Date(d); we.setDate(we.getDate()+6);
+  const cnt = ORDERS.filter(o=>D(o.date)>=ws && D(o.date)<=we).reduce((s,o)=>s+o.qty,0);
+  weeks.push({ws:new Date(ws),we:new Date(we),cnt});
+}
+const maxW = Math.max(...weeks.map(w=>w.cnt),1);
+document.getElementById("bars").innerHTML = weeks.map(w=>{
+  const h = w.cnt? (w.cnt/maxW*100):0;
+  const lbl = w.ws.toLocaleDateString("en-US",{month:"short",day:"numeric"});
+  return `<div class="bar-wrap" title="Week of ${lbl}: ${w.cnt} unit(s)">
+    <div class="bar-val">${w.cnt||""}</div>
+    <div class="bar ${w.cnt?'':'empty'}" style="height:${h}%"></div>
+    <div class="bar-lbl">${lbl}</div></div>`;
+}).join("");
+
+// table newest first, with choc-to-choc gaps
+const rev = [...ORDERS].reverse();
+let prevChoc = null;
+// build gap lookup for choc dates
+const gapByDate = {};
+for(let i=1;i<chocDates.length;i++) gapByDate[chocDates[i]] = days(chocDates[i-1],chocDates[i]);
+document.getElementById("rows").innerHTML = rev.map(o=>{
+  let gap="—", cls="";
+  if(o.flavor.startsWith("Chocolate") && gapByDate[o.date]!=null){
+    const g=gapByDate[o.date]; gap=g+" days";
+    cls = g<avgInt-1.5 ? "gap fast" : (g>avgInt+1.5 ? "gap slow":"gap");
+  } else if(o.flavor==="Lemon"){ gap="(other flavor)"; cls="gap"; }
+  const pill = o.flavor==="Lemon"?`<span class="pill lemon">Lemon</span>`:`<span class="pill choc">Chocolate Crème</span>`;
+  return `<tr><td>${fmt(o.date)}, 2026</td><td>${pill}</td><td class="qty ${o.qty>=3?'multi':''}">${o.qty}</td><td class="${cls}">${gap}</td></tr>`;
+}).join("");
+
+document.getElementById("foot").textContent =
+  `Bottom line: you reorder the chocolate wafers about every ${avgInt.toFixed(1)} days (median ${medInt}) — roughly ${(30/avgInt).toFixed(1)}× a month. Started buying them Apr 9, 2026.`;
+</script>
+</body>
+</html>

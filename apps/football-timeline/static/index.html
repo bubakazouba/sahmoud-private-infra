@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Major Football Tournaments — 2022 to 2026</title>
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --line:#30363d; --txt:#e6edf3; --muted:#8b949e;
+    --wc:#e3b341; --wcw:#bc8cff; --cont:#58a6ff; --copa:#3fb950; --oly:#39d3c3; --club:#ff9e64;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,Arial,sans-serif;line-height:1.45}
+  .wrap{max-width:1180px;margin:0 auto;padding:22px 18px 60px}
+  h1{font-size:26px;margin:0 0 4px}
+  .sub{color:var(--muted);font-size:14px;margin:0 0 22px}
+  h2{font-size:18px;margin:30px 0 12px;border-bottom:1px solid var(--line);padding-bottom:6px}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12.5px;color:var(--muted);margin:6px 0 18px}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .dot{width:11px;height:11px;border-radius:3px;display:inline-block}
+
+  /* vertical timeline */
+  .vt{position:relative;margin-left:8px;padding-left:26px}
+  .vt::before{content:"";position:absolute;left:8px;top:8px;bottom:8px;width:2px;background:var(--line)}
+  .vt-item{position:relative;padding:9px 0}
+  .vt-dot{position:absolute;left:-25px;top:13px;width:15px;height:15px;border-radius:50%;border:3px solid var(--bg);box-shadow:0 0 0 1px var(--line)}
+  .vt-date{font-size:11.5px;color:var(--muted);font-weight:600;letter-spacing:.2px}
+  .vt-name{font-size:15.5px;font-weight:700;margin:1px 0 1px;color:var(--txt)}
+  .vt-meta{font-size:12.5px;color:var(--muted)}
+  .vt-win{color:var(--wc);font-weight:600}
+  .vt-live{color:#f85149;font-weight:700}
+  .vt-tag{display:inline-block;font-size:9.5px;font-weight:700;color:#0d1117;border-radius:9px;padding:1px 7px;vertical-align:middle;margin-left:6px}
+  /* master gantt (legacy, unused) */
+  .gantt{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 14px 8px;overflow-x:auto}
+  .gantt-inner{position:relative;min-width:920px}
+  .axis{position:relative;height:22px;margin-left:0}
+  .ytick{position:absolute;top:0;font-size:11px;color:var(--muted);transform:translateX(-50%);white-space:nowrap}
+  .ygrid{position:absolute;top:22px;bottom:14px;width:1px;background:var(--line);opacity:.45}
+  .row{position:relative;height:30px}
+  .bar{position:absolute;height:16px;top:6px;border-radius:5px;cursor:default;box-shadow:0 0 0 1px rgba(0,0,0,.25)}
+  .blabel{position:absolute;font-size:11.5px;font-weight:600;color:var(--txt);white-space:nowrap;line-height:16px;text-shadow:0 1px 3px rgba(0,0,0,.85)}
+  .bwin{color:var(--muted);font-weight:500}
+  .today{position:absolute;top:22px;bottom:14px;width:2px;background:#f85149;z-index:5}
+  .today-lbl{position:absolute;top:0;font-size:10px;color:#f85149;transform:translateX(-50%);font-weight:700}
+
+  /* detail cards */
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}
+  .card .ttl{font-size:15px;font-weight:700;margin:0 0 2px;display:flex;align-items:center;gap:8px}
+  .pill{font-size:10px;font-weight:700;color:#0d1117;border-radius:10px;padding:1px 7px}
+  .meta{color:var(--muted);font-size:12.5px;margin:2px 0 10px}
+  .win{color:var(--wc);font-weight:600}
+  .ongoing{color:#f85149;font-weight:700}
+  /* phase track */
+  .phases{position:relative;height:46px;margin:6px 0 8px}
+  .ptrack{position:absolute;top:14px;left:0;right:0;height:3px;background:var(--line);border-radius:2px}
+  .pdot{position:absolute;top:9px;width:13px;height:13px;border-radius:50%;border:2px solid var(--panel);transform:translateX(-50%)}
+  .plab{position:absolute;top:24px;font-size:9.5px;color:var(--muted);transform:translateX(-50%);white-space:nowrap}
+  .pdate{position:absolute;top:-2px;font-size:9px;color:var(--muted);transform:translateX(-50%);white-space:nowrap}
+  .note{font-size:12px;color:var(--muted);margin-top:8px;border-top:1px dashed var(--line);padding-top:8px}
+  /* club finals */
+  .clubgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:720px){.clubgrid{grid-template-columns:1fr}}
+  .clubcol{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}
+  .clubcol h3{margin:0 0 10px;font-size:15px;display:flex;align-items:center;gap:8px}
+  .clubcol h3 .pill{font-size:10px}
+  .frow{display:grid;grid-template-columns:62px 1fr;gap:10px;padding:9px 0;border-top:1px solid var(--line)}
+  .frow:first-of-type{border-top:none}
+  .fssn{font-size:12px;color:var(--muted);font-weight:600}
+  .fwin{font-size:13.5px}
+  .fwin b{color:var(--wc)}
+  .fmeta{font-size:11px;color:var(--muted);margin-top:2px}
+  .foot{color:var(--muted);font-size:11.5px;margin-top:26px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>⚽ Major Football Tournaments</h1>
+  <p class="sub">Senior national-team & marquee events, Nov 2022 → Jul 2026 · all dates verified</p>
+
+  <div class="legend" id="legend"></div>
+
+  <h2>The 4-year timeline</h2>
+  <p class="sub" style="margin-top:-6px">Swipe horizontally if needed · each bar spans the tournament</p>
+  <div class="gantt"><div class="gantt-inner" id="gantt"></div></div>
+
+  <h2>Each tournament, phase by phase</h2>
+  <div class="cards" id="cards"></div>
+
+  <h2>European club finals — Champions League & Europa League</h2>
+  <p class="sub" style="margin-top:-6px">Annual club competitions (season finals), 2022 → 2026</p>
+  <div class="clubgrid" id="clubs"></div>
+
+  <p class="foot" id="foot"></p>
+</div>
+
+<script>
+const COLORS = {
+  "World Cup":"--wc","Women's World Cup":"--wcw","Continental":"--cont",
+  "Copa América":"--copa","Olympics":"--oly","Club":"--club"
+};
+function cvar(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
+
+const T = [
+ {name:"2022 FIFA World Cup", cat:"World Cup", hosts:"Qatar", start:"2022-11-20", end:"2022-12-18",
+  winner:"Argentina", runner:"France", status:"concluded",
+  phases:{"Group":"2022-11-20","R16":"2022-12-03","QF":"2022-12-09","SF":"2022-12-13","Final":"2022-12-18"},
+  note:"First World Cup in the Middle East. Argentina's 3rd title (first since 1986), 4–2 on pens vs France after 3–3."},
+ {name:"2023 FIFA Women's World Cup", cat:"Women's World Cup", hosts:"Australia & New Zealand", start:"2023-07-20", end:"2023-08-20",
+  winner:"Spain", runner:"England", status:"concluded",
+  phases:{"Group":"2023-07-20","R16":"2023-08-05","QF":"2023-08-11","SF":"2023-08-15","Final":"2023-08-20"},
+  note:"First co-hosted across two confederations & first 32-team Women's WC. Spain beat England 1–0 in Sydney."},
+ {name:"2023 AFC Asian Cup", cat:"Continental", hosts:"Qatar (played Jan 2024)", start:"2024-01-12", end:"2024-02-10",
+  winner:"Qatar", runner:"Jordan", status:"concluded",
+  phases:{"Group":"2024-01-12","R16":"2024-01-28","QF":"2024-02-02","SF":"2024-02-06","Final":"2024-02-10"},
+  note:"Qatar defended their title at home, 3–1 vs Jordan. Branded '2023' but played early 2024."},
+ {name:"2023 Africa Cup of Nations", cat:"Continental", hosts:"Ivory Coast (played Jan–Feb 2024)", start:"2024-01-13", end:"2024-02-11",
+  winner:"Ivory Coast", runner:"Nigeria", status:"concluded",
+  phases:{"Group":"2024-01-13","R16":"2024-01-27","QF":"2024-02-02","SF":"2024-02-07","Final":"2024-02-11"},
+  note:"Hosts Ivory Coast won their 3rd AFCON, 2–1 vs Nigeria — first host winner since Egypt 2006."},
+ {name:"UEFA Euro 2024", cat:"Continental", hosts:"Germany", start:"2024-06-14", end:"2024-07-14",
+  winner:"Spain", runner:"England", status:"concluded",
+  phases:{"Group":"2024-06-14","R16":"2024-06-29","QF":"2024-07-05","SF":"2024-07-09","Final":"2024-07-14"},
+  note:"Spain's record 4th European title, 2–1 vs England in Berlin. Georgia debuted."},
+ {name:"Copa América 2024", cat:"Copa América", hosts:"United States", start:"2024-06-20", end:"2024-07-14",
+  winner:"Argentina", runner:"Colombia", status:"concluded",
+  phases:{"Group":"2024-06-20","QF":"2024-07-04","SF":"2024-07-09","Final":"2024-07-14"},
+  note:"Argentina's record 16th title, 1–0 AET vs Colombia in Miami. 16 teams, no R16 (group → QF)."},
+ {name:"2024 Olympics — Men's Football", cat:"Olympics", hosts:"France (Paris)", start:"2024-07-24", end:"2024-08-09",
+  winner:"Spain", runner:"France", status:"concluded",
+  phases:{"Group":"2024-07-24","QF":"2024-08-02","SF":"2024-08-06","Final":"2024-08-09"},
+  note:"Spain took U-23 gold vs hosts France at Parc des Princes. Group → QF (no R16)."},
+ {name:"2025 FIFA Club World Cup", cat:"Club", hosts:"United States", start:"2025-06-14", end:"2025-07-13",
+  winner:"Chelsea", runner:"Paris Saint-Germain", status:"concluded",
+  phases:{"Group":"2025-06-14","R16":"2025-06-28","QF":"2025-07-04","SF":"2025-07-08","Final":"2025-07-13"},
+  note:"First expanded 32-team Club WC. Chelsea beat PSG 3–0 at MetLife (Cole Palmer x2)."},
+ {name:"2026 FIFA World Cup", cat:"World Cup", hosts:"USA · Canada · Mexico", start:"2026-06-11", end:"2026-07-19",
+  winner:null, runner:null, status:"ongoing",
+  phases:{"Group":"2026-06-11","R32":"2026-06-28","R16":"2026-07-04","QF":"2026-07-09","SF":"2026-07-14","Final":"2026-07-19"},
+  note:"First 48-team & first tri-nation World Cup. New round of 32. Final July 19 at MetLife, NJ. In progress."},
+];
+
+const AXIS_MIN = new Date("2022-10-01"), AXIS_MAX = new Date("2026-09-01");
+const SPAN = AXIS_MAX - AXIS_MIN;
+const pct = d => ((new Date(d) - AXIS_MIN) / SPAN) * 100;
+const catColor = c => cvar(COLORS[c] || "--cont");
+
+// legend
+const seen = {};
+document.getElementById("legend").innerHTML = T.map(t=>t.cat).filter(c=>!seen[c]&&(seen[c]=1))
+  .map(c=>`<span><i class="dot" style="background:${catColor(c)}"></i>${c}</span>`).join("");
+
+// horizontal timeline (Gantt) — readable light labels placed beside the bars
+const g = document.getElementById("gantt");
+let ghtml = `<div class="axis">`;
+for(let y=2023;y<=2026;y++){ const x=pct(`${y}-01-01`); ghtml+=`<div class="ytick" style="left:${x}%">${y}</div><div class="ygrid" style="left:${x}%"></div>`; }
+ghtml += `</div>`;
+T.forEach(t=>{
+  const x1=pct(t.start), x2=pct(t.end), w=Math.max(x2-x1,1.2);
+  const col=catColor(t.cat);
+  const short = t.name.replace(/^20\d\d\s/,'').replace('FIFA ','');
+  const res = t.status==="ongoing" ? `<span style="color:#f85149">● live</span>` : `🏆 ${t.winner}`;
+  const mid=(x1+x2)/2;
+  const lbl = mid<54 ? `left:calc(${x2}% + 9px)` : `right:calc(${100-x1}% + 9px);text-align:right`;
+  ghtml += `<div class="row"><div class="bar" style="left:${x1}%;width:${w}%;background:${col}" title="${t.name}: ${t.start} → ${t.end}"></div>`+
+           `<div class="blabel" style="top:6px;${lbl}">${short} <span class="bwin">${res}</span></div></div>`;
+});
+const tx = pct("2026-06-27");
+ghtml += `<div class="today" style="left:${tx}%"></div><div class="today-lbl" style="left:${tx}%;top:2px">today</div>`;
+g.innerHTML = ghtml;
+
+// per-tournament phase cards
+const phaseColor = {Group:"#8b949e",R32:"#58a6ff",R16:"#58a6ff",QF:"#3fb950",SF:"#e3b341",Final:"#f85149"};
+document.getElementById("cards").innerHTML = T.map(t=>{
+  const keys = Object.keys(t.phases);
+  const ds = keys.map(k=>new Date(t.phases[k]));
+  const mn = +ds[0], mx = +ds[ds.length-1], sp = Math.max(mx-mn,1);
+  const dots = keys.map(k=>{
+    const p = ((new Date(t.phases[k])-mn)/sp)*100;
+    const dd = new Date(t.phases[k]).toLocaleDateString('en-US',{month:'short',day:'numeric',timeZone:'UTC'});
+    return `<div class="pdot" style="left:${p}%;background:${phaseColor[k]||'#8b949e'}"></div>`+
+           `<div class="plab" style="left:${p}%">${k}</div>`+
+           `<div class="pdate" style="left:${p}%">${dd}</div>`;
+  }).join("");
+  const span = new Date(t.start).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric',timeZone:'UTC'})+
+               " → "+new Date(t.end).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric',timeZone:'UTC'});
+  const res = t.status==="ongoing"
+     ? `<span class="ongoing">● ongoing</span>`
+     : `<span class="win">🏆 ${t.winner}</span> <span style="color:var(--muted)">def. ${t.runner}</span>`;
+  return `<div class="card">
+     <div class="ttl"><span class="pill" style="background:${catColor(t.cat)}">${t.cat}</span>${t.name}</div>
+     <div class="meta">${t.hosts} · ${span}</div>
+     <div>${res}</div>
+     <div class="phases"><div class="ptrack"></div>${dots}</div>
+     <div class="note">${t.note}</div>
+   </div>`;
+}).join("");
+
+// European club finals (UCL + Europa League)
+const CLUB = {
+ "Champions League":[
+   {ssn:"2021-22", date:"2022-05-28", w:"Real Madrid", l:"Liverpool", sc:"1–0", v:"Stade de France, Paris"},
+   {ssn:"2022-23", date:"2023-06-10", w:"Manchester City", l:"Inter Milan", sc:"1–0", v:"Atatürk, Istanbul"},
+   {ssn:"2023-24", date:"2024-06-01", w:"Real Madrid", l:"Borussia Dortmund", sc:"2–0", v:"Wembley, London"},
+   {ssn:"2024-25", date:"2025-05-31", w:"Paris Saint-Germain", l:"Inter Milan", sc:"5–0", v:"Allianz Arena, Munich"},
+   {ssn:"2025-26", date:"2026-05-30", w:"Paris Saint-Germain", l:"Arsenal", sc:"1–1, 4–3 pens", v:"Puskás Aréna, Budapest"},
+ ],
+ "Europa League":[
+   {ssn:"2021-22", date:"2022-05-18", w:"Eintracht Frankfurt", l:"Rangers", sc:"1–1, 5–4 pens", v:"Sánchez-Pizjuán, Seville"},
+   {ssn:"2022-23", date:"2023-05-31", w:"Sevilla", l:"Roma", sc:"1–1, 4–1 pens", v:"Puskás Aréna, Budapest"},
+   {ssn:"2023-24", date:"2024-05-22", w:"Atalanta", l:"Bayer Leverkusen", sc:"3–0", v:"Aviva Stadium, Dublin"},
+   {ssn:"2024-25", date:"2025-05-21", w:"Tottenham Hotspur", l:"Manchester United", sc:"1–0", v:"San Mamés, Bilbao"},
+   {ssn:"2025-26", date:"2026-05-20", w:"Aston Villa", l:"SC Freiburg", sc:"3–0", v:"Beşiktaş Park, Istanbul"},
+ ],
+};
+const clubPill = {"Champions League":"#e3b341","Europa League":"#ff9e64"};
+document.getElementById("clubs").innerHTML = Object.keys(CLUB).map(comp=>{
+  const rows = CLUB[comp].slice().reverse().map(f=>{
+    const dd = new Date(f.date).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric',timeZone:'UTC'});
+    return `<div class="frow"><div class="fssn">${f.ssn}</div><div>
+        <div class="fwin">🏆 <b>${f.w}</b> def. ${f.l} <span style="color:var(--muted)">(${f.sc})</span></div>
+        <div class="fmeta">${dd} · ${f.v}</div></div></div>`;
+  }).join("");
+  return `<div class="clubcol"><h3><span class="pill" style="background:${clubPill[comp]}">UEFA</span>${comp}</h3>${rows}</div>`;
+}).join("");
+
+document.getElementById("foot").textContent =
+  "Dates verified against FIFA/UEFA/Wikipedia, June 2026. Continental = Euro / Copa / AFCON / Asian Cup. Club finals = UEFA Champions League & Europa League season finals.";
+</script>
+</body>
+</html>

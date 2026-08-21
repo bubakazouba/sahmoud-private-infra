@@ -1,0 +1,71 @@
+=== Ohana Drill-Down Data Builder ===
+Time: 2026-05-10T13:35:29.997703
+
+=== TASK 1: IMAGE CLASSIFICATION ===
+Resuming from 20 already classified images
+Loading message archive for metadata...
+Total photos in zip: 289
+Photos with metadata (in window): 300
+Photos to classify (in window): 289
+C:\users\bubakazouba\chat-assistant\scripts\ohana_drilldown_data.py:253: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
+  date_iso = datetime.datetime.utcfromtimestamp(ts / 1000).strftime('%Y-%m-%d') if ts else ''
+  [21/289] 892569460397552.jpg -> screenshot
+  [22/289] 1343596964478822.jpg -> scene
+  [23/289] 1411118597050653.jpg -> screenshot
+  [24/289] 25987876567495935.jpg -> other
+  [25/289] 2029690627890356.jpg -> other
+  [26/289] 1200192318324525.jpg -> group_photo
+  [27/289] 807802765053246.jpg -> scene
+  [28/289] 1205676508189699.jpg -> selfie
+  [29/289] 901684808867238.jpg -> screenshot
+  [30/289] 905705531804218.jpg -> other (saved progress)
+  [31/289] 1784307742280138.jpg -> selfie
+  [32/289] 1332715445567730.jpg -> group_photo
+  [33/289] 1376943953909411.jpg -> group_photo
+  [34/289] 1462775982229774.jpg -> selfie
+  [35/289] 1545700680060751.jpg -> selfie
+  [36/289] 1593554501638350.jpg -> kids
+  [37/289] 825148467191065.jpg -> other
+  [38/289] 1366845431572358.jpg -> other
+  [39/289] 848859431351144.jpg -> scene
+  [40/289] 2083720809134735.jpg -> other (saved progress)
+  [41/289] 1382152172854187.jpg -> kids
+  [42/289] 1250861813588872.jpg -> group_photo
+  [43/289] 701646349465647.jpg -> other
+  [44/289] 741035515714270.jpg -> scene
+  [45/289] 1614883936565685.jpg -> screenshot
+  [46/289] 772907925082384.jpg -> scene
+  [47/289] 1883583548912662.jpg -> other
+  [48/289] 1525559455168688.jpg -> other
+  [49/289] 25527405893554058.jpg -> other
+  [50/289] 887384514238256.jpg -> scene (saved progress)
+  [51/289] 1473339827097802.jpg -> other
+  [52/289] 25599070409731629.jpg -> other
+  [53/289] 1770141566996722.jpg -> group_photo
+  [54/289] 1882818562605134.jpg -> other
+  [55/289] 4210364189291778.jpg -> other
+  [56/289] 1318052533319796.jpg -> kids
+  [57/289] 838798095661615.jpg -> screenshot
+  [58/289] 1406105280921510.jpg -> other
+  [59/289] 3346534328832002.jpg -> religious
+  [60/289] 9670351956421950.jpg -> other (saved progress)
+  [61/289] 2373931649723955.jpg -> kids
+  [62/289] 1272903758190100.jpg -> other
+  [63/289] 786138367783210.jpg -> other
+  [64/289] 1546898776494216.jpg -> other
+  [65/289] 1465023398634837.jpg -> other
+  [66/289] 882112267590299.jpg -> kids
+  [67/289] 848385250911664.jpg -> food
+  [68/289] 817259887953614.jpg -> screenshot
+  [69/289] 878931458410866.jpg -> screenshot
+  [70/289] 1536535294239224.jpg -> kids (saved progress)
+  [71/289] 1403075184537665.jpg -> selfie
+  [72/289] 25956386953948024.jpg -> screenshot
+  [73/289] 1192486872801491.jpg -> screenshot
+  [74/289] 813050788386327.jpg -> screenshot
+  [75/289] 4320398041428192.jpg -> screenshot
+  [76/289] 1231761442127227.jpg -> kids
+  [77/289] 825022007161771.jpg -> scene
+  [78/289] 1988098095309246.jpg -> kids
+  FAILED to classify 848646197537624.jpg: CLI error: 
+  [79/289] 848646197537624.jpg -> other

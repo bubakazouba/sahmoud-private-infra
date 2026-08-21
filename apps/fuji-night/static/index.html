@@ -1,0 +1,896 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Night Photography Camera Guide — Budget Setups</title>
+<meta name="description" content="Curated camera + lens combos for night photography across every budget. Fuji-focused with film-aesthetic picks, plus Sony a6000 alternative, rental options, and used-market deals.">
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --paper: #f6f3ee;
+    --card: #ffffff;
+    --accent: #c84444;
+    --gold: #b8860b;
+    --green: #4a7c59;
+    --muted: #6e6660;
+    --line: #d8d2c8;
+    --dark: #2a2a2a;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Iowan Old Style', 'Georgia', 'Cambria', serif;
+    color: var(--ink);
+    background: var(--paper);
+    margin: 0;
+    padding: 28px 36px 60px;
+    line-height: 1.55;
+    font-size: 16px;
+  }
+  @media (max-width: 720px) {
+    body { padding: 20px 16px 40px; font-size: 15px; }
+  }
+  .header {
+    border-bottom: 3px double var(--ink);
+    padding-bottom: 18px;
+    margin-bottom: 24px;
+  }
+  .title {
+    font-size: 36px;
+    font-weight: 700;
+    margin: 0 0 6px;
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+  }
+  @media (max-width: 720px) {
+    .title { font-size: 28px; }
+  }
+  .subtitle {
+    font-size: 15px;
+    color: var(--muted);
+    font-style: italic;
+    margin: 0;
+  }
+  .stamp {
+    display: inline-block;
+    border: 2px solid var(--accent);
+    color: var(--accent);
+    padding: 3px 10px;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    transform: rotate(-2deg);
+    margin-top: 10px;
+    text-transform: uppercase;
+  }
+  .toc {
+    background: var(--card);
+    border: 1px solid var(--line);
+    padding: 14px 18px;
+    margin-bottom: 28px;
+    border-radius: 4px;
+    font-size: 13px;
+  }
+  .toc strong { display: block; margin-bottom: 6px; font-size: 11px; letter-spacing: 1.5px; color: var(--muted); text-transform: uppercase; font-family: 'Courier New', monospace; }
+  .toc a {
+    display: inline-block;
+    margin: 3px 12px 3px 0;
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--ink);
+  }
+  .toc a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+  .intro {
+    background: var(--card);
+    border-left: 4px solid var(--gold);
+    padding: 16px 20px;
+    margin-bottom: 32px;
+    font-size: 15px;
+  }
+  .intro b { color: var(--accent); }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+  }
+  @media (max-width: 880px) {
+    .grid { grid-template-columns: 1fr; gap: 16px; }
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 18px 22px;
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.05);
+    position: relative;
+  }
+  .tier {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  .card h2 {
+    margin: 4px 0 2px;
+    font-size: 22px;
+    line-height: 1.2;
+  }
+  .total {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 6px 0 12px;
+    font-family: 'Courier New', monospace;
+  }
+  .total .approx { font-size: 14px; color: var(--muted); font-weight: normal; margin-left: 4px; }
+  .gear {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 14px;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .gear li {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px dashed var(--line);
+    align-items: baseline;
+  }
+  .gear li:last-child { border-bottom: none; }
+  .gear .item-name { font-weight: 600; font-size: 14px; }
+  .gear .item-note {
+    display: block;
+    font-size: 12.5px;
+    color: var(--muted);
+    font-style: italic;
+    font-weight: normal;
+    margin-top: 2px;
+  }
+  .gear .price {
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .links {
+    font-size: 12.5px;
+    margin-bottom: 8px;
+  }
+  .links a {
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: 4px;
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid var(--accent);
+    padding-bottom: 1px;
+  }
+  .links a:hover { background: var(--accent); color: white; }
+  .why {
+    font-size: 13.5px;
+    color: var(--muted);
+    margin: 8px 0 0;
+    font-style: italic;
+    line-height: 1.5;
+  }
+  .why b { color: var(--ink); font-style: normal; }
+  .gallery {
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: #f1ece2;
+    border-left: 3px solid var(--gold);
+    font-size: 12.5px;
+  }
+  .gallery .label {
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 3px;
+  }
+  .gallery a { color: var(--ink); text-decoration: underline; }
+  .rental-info {
+    margin-top: 10px;
+    padding: 9px 12px;
+    background: #eef2ea;
+    border-left: 3px solid var(--green);
+    font-size: 12.5px;
+    line-height: 1.45;
+  }
+  .rental-info .label {
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 3px;
+  }
+  .rental-info .r-total {
+    font-weight: 700;
+    color: var(--green);
+    font-family: 'Courier New', monospace;
+  }
+  .rental-info .r-breakdown {
+    color: var(--muted);
+    font-style: italic;
+    display: block;
+    margin-top: 2px;
+    font-size: 11.5px;
+  }
+  .rental-info.unavailable {
+    background: #faf4e8;
+    border-left-color: var(--gold);
+  }
+  .rental-info a { color: var(--green); text-decoration: underline; }
+  .rental-info.unavailable a { color: var(--gold); }
+  .rental-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-top: 10px;
+  }
+  .rental-table th, .rental-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+  }
+  .rental-table th {
+    background: var(--dark);
+    color: var(--paper);
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-bottom: none;
+  }
+  .rental-table td.num {
+    font-family: 'Courier New', monospace;
+    text-align: right;
+  }
+  .rental-table tr:nth-child(even) { background: #faf7f1; }
+  .rental-table .na { color: var(--muted); font-style: italic; font-size: 12px; }
+  .rental-table-wrap { overflow-x: auto; }
+  .section {
+    margin-top: 36px;
+    background: var(--card);
+    padding: 22px 26px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+  }
+  @media (max-width: 720px) {
+    .section { padding: 18px 18px; }
+  }
+  .section h3 {
+    font-size: 20px;
+    margin: 0 0 14px;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 6px;
+  }
+  .section p, .section li { font-size: 14px; }
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+  }
+  @media (max-width: 720px) {
+    .two-col { grid-template-columns: 1fr; gap: 20px; }
+  }
+  .settings {
+    font-family: 'Courier New', monospace;
+    font-size: 12.5px;
+    background: var(--dark);
+    color: #d8d8d8;
+    padding: 14px;
+    border-radius: 3px;
+    line-height: 1.7;
+    overflow-x: auto;
+  }
+  .settings .key { color: #f0c674; }
+  .settings .v { color: #b5bd68; }
+  .footer {
+    margin-top: 38px;
+    text-align: center;
+    font-size: 11.5px;
+    color: var(--muted);
+    font-style: italic;
+    border-top: 1px solid var(--line);
+    padding-top: 16px;
+  }
+  .badge {
+    display: inline-block;
+    background: var(--gold);
+    color: white;
+    font-size: 10px;
+    padding: 2px 7px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-left: 6px;
+    font-family: 'Courier New', monospace;
+    vertical-align: middle;
+  }
+  .badge.green { background: var(--green); }
+  .badge.red { background: var(--accent); }
+  .badge.dark { background: var(--dark); }
+  .filmsim .pill {
+    display: inline-block;
+    background: var(--ink);
+    color: var(--paper);
+    font-size: 11.5px;
+    padding: 4px 10px;
+    margin: 3px 4px 3px 0;
+    border-radius: 12px;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.5px;
+  }
+  .rental-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-top: 12px;
+  }
+  @media (max-width: 720px) {
+    .rental-grid { grid-template-columns: 1fr; }
+  }
+  .rental-card {
+    background: #f1ece2;
+    border: 1px solid var(--line);
+    padding: 12px 14px;
+    border-radius: 3px;
+    font-size: 13px;
+  }
+  .rental-card h4 { margin: 0 0 4px; font-size: 14.5px; }
+  .rental-card .meta {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+  }
+  .rental-card a { color: var(--accent); }
+  .pick-callout {
+    background: linear-gradient(135deg, #fff 0%, #f1ece2 100%);
+    border: 2px solid var(--accent);
+    padding: 18px 22px;
+    margin-top: 36px;
+    border-radius: 4px;
+  }
+  .pick-callout h3 { color: var(--accent); margin-top: 0; border: none; padding: 0; }
+  .pick-callout .pick-line {
+    font-size: 17px;
+    margin: 10px 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1 class="title">Night Photography Camera Guide</h1>
+  <p class="subtitle">Budget-tiered camera + lens setups for low-light shooting. Fuji-focused (for that film aesthetic), with Sony a6000 alternative + rental options.</p>
+  <div class="stamp">For Preksha &middot; Apr 2026</div>
+</div>
+
+<div class="toc">
+  <strong>Jump to</strong>
+  <a href="#setups">Setups</a>
+  <a href="#sony">Sony a6000</a>
+  <a href="#rent">Try / Rent First</a>
+  <a href="#used">Used Market</a>
+  <a href="#filmsim">Film Simulations</a>
+  <a href="#settings">Settings</a>
+  <a href="#accessories">Accessories</a>
+  <a href="#pick">My Pick</a>
+</div>
+
+<div class="intro">
+  Night photography rewards three things: a <b>fast prime</b> (f/1.4 or wider) to pull in light, <b>IBIS</b> (in-body stabilization) so you can handhold at 1/30s, and a <b>recent sensor</b> for clean ISO 6400+. Fujifilm bodies all have IBIS (since X-T4) and ship with film simulations baked in &mdash; <b>Classic Chrome, Acros, Classic Neg</b> &mdash; that give JPEGs a finished film look straight out of camera, no editing needed. That's the "Fuji feel."
+</div>
+
+<h2 id="setups" style="font-size: 24px; margin: 40px 0 18px; border-bottom: 2px solid var(--ink); padding-bottom: 6px;">9 Setups, ranked from cheapest to most capable</h2>
+
+<div class="grid">
+
+  <!-- 1. ENTRY USED -->
+  <div class="card">
+    <div class="tier">#1 &middot; Cheapest viable Fuji <span class="badge dark">Used</span></div>
+    <h2>X-T30 II + Sigma 30mm f/1.4</h2>
+    <div class="total">~$1,000 <span class="approx">(used body)</span></div>
+    <ul class="gear">
+      <li>
+        <div>
+          <div class="item-name">Fujifilm X-T30 II (used body)</div>
+          <span class="item-note">26MP, no IBIS but small + light, classic dial layout</span>
+        </div>
+        <span class="price">~$650</span>
+      </li>
+      <li>
+        <div>
+          <div class="item-name">Sigma 30mm f/1.4 DC DN</div>
+          <span class="item-note">45mm-equiv, sharp wide open, bargain hero of X-mount</span>
+        </div>
+        <span class="price">$339</span>
+      </li>
+    </ul>
+    <div class="links">
+      <a href="https://www.mpb.com/en-us/product/fujifilm-x-t30-ii">X-T30 II used (MPB)</a>
+      <a href="https://www.bhphotovideo.com/c/product/1690331-REG/sigma_302974_30mm_f_1_4_dc_dn.html">Sigma 30mm (B&amp;H)</a>
+    </div>
+    <p class="why"><b>Why this combo:</b> the cheapest way into Fuji that still gives you a fast prime and proper film simulations. <b>Trade-off:</b> no IBIS &mdash; so you'll need shutter speed of 1/60s+ handheld. Pair with a tripod for long exposures.</p>
+    <div class="rental-info unavailable">
+      <span class="label">Rent?</span>
+      X-T30 II isn't in LensRentals' current fleet. At ~$1k used, <b>buying from <a href="https://www.mpb.com">MPB</a> with their 14-day return window is effectively a risk-free trial</b>. Or rent the newer X-S20 (setup #2) to test the Fuji experience before committing.
+    </div>
+  </div>
+
+  <!-- 2. BUDGET FUJI NEW -->
+  <div class="card">
+    <div class="tier">#2 &middot; Budget Fuji (new)</div>
+    <h2>X-S20 + Sigma 30mm f/1.4</h2>
+    <div class="total">$1,638</div>
+    <ul class="gear">
+      <li>
+        <div>
+          <div class="item-name">Fujifilm X-S20 (body)</div>
+          <span class="item-note">26MP, 5-axis IBIS, deep grip, great low-light AF</span>
+        </div>
+        <span class="price">$1,299</span>
+      </li>
+      <li>
+        <div>
+          <div class="item-name">Sigma 30mm f/1.4 DC DN</div>
+          <span class="item-note">45mm-equiv, sharp, $339 of pure value</span>
+        </div>
+        <span class="price">$339</span>
+      </li>
+    </ul>
+    <div class="links">
+      <a href="https://www.bhphotovideo.com/c/product/1765968-REG/fujifilm_16781852_x_s20_mirrorless_camera_black.html">X-S20 (B&amp;H)</a>
+      <a href="https://www.bhphotovideo.com/c/product/1690331-REG/sigma_302974_30mm_f_1_4_dc_dn.html">Sigma 30mm (B&amp;H)</a>
+    </div>
+    <p class="why"><b>Why this combo:</b> the cheapest Fuji setup with IBIS. X-S20 has a more DSLR-like grip (better if you have small hands), and crushes video too. Sigma 30mm + IBIS = sharp handheld at 1/15s.</p>
+    <div class="rental-info">
+      <span class="label">Rent from <a href="https://www.lensrentals.com/rent/fuji-x-s20">LensRentals</a></span>
+      <span class="r-total">$87 body + $31 lens = $118 / week</span>
+      <span class="r-breakdown">Or $65 + $23 = $88 for 4 days. Period: 1-90 days available, free return shipping.</span>
+    </div>
+  </div>
+
+  <!-- 3. SWEET SPOT -->
+  <div class="card">
+    <div class="tier">#3 &middot; Sweet spot <span class="badge red">Best Value</span></div>
+    <h2>X-T50 + Viltrox 27mm f/1.2 Pro</h2>
+    <div class="total">$1,948</div>
+    <ul class="gear">
+      <li>
+        <div>
+          <div class="item-name">Fujifilm X-T50 (body)</div>
+          <span class="item-note">40MP X-Trans 5 HR, 7-stop IBIS, dedicated film-sim dial</span>
+        </div>
+        <span class="price">$1,399</span>
+      </li>
+      <li>
+        <div>
+          <div class="item-name">Viltrox 27mm f/1.2 Pro</div>
+          <span class="item-note">40mm-equiv, weather sealed metal build, sharper than most native Fuji</span>
+        </div>
+        <span class="price">$549</span>
+      </li>
+    </ul>
+    <div class="links">
+      <a href="https://www.bhphotovideo.com/c/product/1899783-REG/fujifilm_16953974_x_t50_body_black_coo_japan.html">X-T50 (B&amp;H)</a>
+      <a href="https://www.bhphotovideo.com/c/product/1784022-REG/viltrox_af_27_1_2_xf_27mm_f_1_2_lens_for.html">Viltrox 27/1.2 (B&amp;H)</a>
+    </div>
+    <p class="why"><b>Why this combo:</b> the X-T50's <b>dedicated film-sim dial</b> is the most "Fuji feel" experience &mdash; flick between Classic Chrome, Acros, Reala mid-shoot. The Viltrox is widely considered the sharpest X-mount lens at any price. f/1.2 means you shoot at ISO 800 where most need 6400.</p>
+    <div class="gallery">
+      <span class="label">Real users shooting this</span>
+      <a href="https://www.snapsbyfox.com/blog/viltrox-27mm-f12-pro">Roman Fox review (sample shots)</a>
+    </div>
+    <div class="rental-info unavailable">
+      <span class="label">Rent (with a substitute lens)</span>
+      <b>Viltrox 27mm f/1.2 isn't in LensRentals' fleet.</b> Rent the X-T50 + XF 35mm f/1.4 R as closest substitute: <span class="r-total">$92 + $47 = $139 / week</span>.
+      <span class="r-breakdown">Or $69 + $35 = $104 for 4 days. If you specifically want to test the Viltrox, buy from B&amp;H (30-day returns) or try <a href="https://kitsplit.com/rentals/fujifilm">KitSplit</a> peer-to-peer.</span>
+    </div>
+  </div>
+
+  <!-- 4. CHARACTER LENS -->
+  <div class="card">
+    <div class="tier">#4 &middot; Cinematic / film character</div>
+    <h2>X-S20 + XF 35mm f/1.4 R</h2>
+    <div class="total">$1,898</div>
+    <ul class="gear">
+      <li>
+        <div>
+          <div class="item-name">Fujifilm X-S20 (body)</div>
+          <span class="item-note">26MP, IBIS, modern AF</span>
+        </div>
+        <span class="price">$1,299</span>
+      </li>
+      <li>
+        <div>
+          <div class="item-name">XF 35mm f/1.4 R</div>
+          <span class="item-note">52mm-equiv, the legendary Fuji prime &mdash; magic rendering, dreamy bokeh</span>
+        </div>
+        <span class="price">$599</span>
+      </li>
+    </ul>
+    <div class="links">
+      <a href="https://www.bhphotovideo.com/c/product/1765968-REG/fujifilm_16781852_x_s20_mirrorless_camera_black.html">X-S20 (B&amp;H)</a>
+      <a href="https://www.bhphotovideo.com/c/product/839139-REG/Fujifilm_16240755_35mm_F_1_4_XF_R.html">XF 35/1.4 R (B&amp;H)</a>
+    </div>
+    <p class="why"><b>Why this combo:</b> the XF 35mm f/1.4 is the lens that built Fuji's reputation. It's not the sharpest by spec sheet but it has <b>character</b> &mdash; the way it renders skin, neon, bokeh circles is unique. Slow motor (clicky AF), but that's part of the charm.</p>
+    <div class="rental-info">
+      <span class="label">Rent from LensRentals</span>
+      <span class="r-total">$87 body + $47 lens = $134 / week</span>
+      <span class="r-breakdown">Or $65 + $35 = $100 for 4 days. Try the legendary 35/1.4 rendering before the $599 commitment. <a href="https://www.lensrentals.com/rent/fuji-x-s20">Body</a> &middot; <a href="https://www.lensrentals.com/rent/fuji-xf-35mm-f1.4-r">Lens</a></span>
+    </div>
+  </div>
+
+  <!-- 5. PRO ALL-ROUNDER -->
+  <div class="card">
+    <div class="tier">#5 &middot; Pro / future-proof</div>
+    <h2>X-T5 + XF 23mm f/1.4 R LM WR</h2>
+    <div class="total">$2,598</div>
+    <ul class="gear">
+      <li>
+        <div>
+          <div class="item-name">Fujifilm X-T5 (body)</div>
+          <span class="item-note">40MP, 7-stop IBIS, weather sealed, classic dials</span>
+        </div>
+        <span class="price">$1,699</span>
+      </li>
+      <li>
+        <div>
+          <div class="item-name">XF 23mm f/1.4 R LM WR</div>
+          <span class="item-note">35mm-equiv, weather sealed, fast linear AF, near-perfect optic</span>
+        </div>
+        <span class="price">$899</span>
+      </li>
+    </ul>
+    <div class="links">
+      <a href="https://www.bhphotovideo.com/c/product/1899771-REG/fujifilm_16953857_x_t5_body_black_coo_japan.html">X-T5 (B&amp;H)</a>
+      <a href="https://www.bhphotovideo.com/c/product/1662372-REG/fujifilm_16746539_xf_23mm_f_1_4_lm.html">XF 23/1.4 (B&amp;H)</a>
+    </div>
+    <p class="why"><b>Why this combo:</b> the X-T5 is the photographer's body &mdash; physical ISO/SS/EV dials, beautiful viewfinder, fully weather sealed. The XF 23mm f/1.4 LM WR is the most-recommended Fuji prime ever &mdash; sharp from f/1.4, near-zero distortion, weather sealed to match the body. Buy once, shoot for a decade.</p>
+    <div class="gallery">
+      <span class="label">Real users shooting this</span>
+      <a href="https://www.flickr.com/groups/xt-5/pool/">X-T5 curated Flickr group</a> &middot;
+      <a href="https://www.dpreview.com/sample-galleries/0248558391/fujifilm-x-t5-review-sample-gallery">DPReview X-T5 gallery</a>
+    </div>
+    <div class="rental-info">
+      <span class="label">Rent from LensRentals</span>
+      <span class="r-total">$119 body + $62 lens = $181 / week</span>
+      <span class="r-breakdown">Or $89 + $47 = $136 for 4 days. Smart move before a $2,600 commitment. <a href="https://www.lensrentals.com/rent/fuji-x-t5-black">Body</a> &middot; <a href="https://www.lensrentals.com/rent/fuji-xf-23mm-f1.4-r-lm-wr">Lens</a></span>
+    </div>
+  </div>
+
+  <!-- 6. ASTRO -->
+  <div class="card">
+    <div class="tier">#6 &middot; Astrophotography / Milky Way</div>
+    <h2>X-T5 + XF 16mm f/1.4 R WR</h2>
+    <div class="total">$2,698</div>
+    <ul class="gear">
+      <li>
+        <div>
+          <div class="item-name">Fujifilm X-T5 (body)</div>
+          <span class="item-note">40MP, IBIS, weather sealed</span>
+        </div>
+        <span class="price">$1,699</span>
+      </li>
+      <li>
+        <div>
+          <div class="item-name">XF 16mm f/1.4 R WR</div>
+          <span class="item-note">24mm-equiv, the Fuji astro lens &mdash; wide, fast, weather sealed</span>
+        </div>
+        <span class="price">$999</span>
+      </li>
+    </ul>
+    <div class="links">
+      <a href="https://www.bhphotovideo.com/c/product/1899771-REG/fujifilm_16953857_x_t5_body_black_coo_japan.html">X-T5 (B&amp;H)</a>
+      <a href="https://www.bhphotovideo.com/c/product/1118811-REG/fujifilm_16463670_16mm_f_1_4_r_wr.html">XF 16/1.4 (B&amp;H)</a>
+    </div>
+    <p class="why"><b>Why this combo:</b> for shooting the Milky Way (Joshua Tree, Death Valley) or wide cityscapes at night, the 16mm f/1.4 is the standard Fuji recommendation. 24mm equiv is wide enough to fit the galactic arc, f/1.4 minimizes star trails by letting you shoot 8s instead of 30s exposures. <b>Budget alt:</b> Sigma 16mm f/1.4 DC DN at ~$449 saves you $550 if you can live without weather sealing.</p>
+    <div class="rental-info">
+      <span class="label">Rent from LensRentals &mdash; astro weekend = ideal use case</span>
+      <span class="r-total">$119 body + $69 lens = $188 / week</span>
+      <span class="r-breakdown">Or $89 + $52 = $141 for 4 days (perfect for a Joshua Tree trip). Sigma 16/1.4 rentable at $40/wk if you want the cheaper combo. <a href="https://www.lensrentals.com/rent/fuji-x-t5-black">Body</a> &middot; <a href="https://www.lensrentals.com/rent/fuji-xf-16mm-f1.4-r-wr">Fuji lens</a> &middot; <a href="https://www.lensrentals.com/rent/sigma-16mm-f1.4-dc-dn-contemporary-for-fuji-x">Sigma lens</a></span>
+    </div>
+  </div>
+
+  <!-- 7. CONCERT BEAST -->
+  <div class="card">
+    <div class="tier">#7 &middot; Concert / event low-light beast</div>
+    <h2>X-H2S + XF 18mm f/1.4 LM WR</h2>
+    <div class="total">$3,498</div>
+    <ul class="gear">
+      <li>
+        <div>
+          <div class="item-name">Fujifilm X-H2S (body)</div>
+          <span class="item-note">26MP stacked sensor, blackout-free shooting, best-in-class AF + low-light tracking</span>
+        </div>
+        <span class="price">$2,499</span>
+      </li>
+      <li>
+        <div>
+          <div class="item-name">XF 18mm f/1.4 LM WR</div>
+          <span class="item-note">27mm-equiv, fast linear AF, sharp at f/1.4, modern Fuji flagship prime</span>
+        </div>
+        <span class="price">$999</span>
+      </li>
+    </ul>
+    <div class="links">
+      <a href="https://www.bhphotovideo.com/c/search?Ntt=fujifilm+x-h2s">X-H2S (B&amp;H)</a>
+      <a href="https://www.bhphotovideo.com/c/search?Ntt=xf+18mm+f1.4">XF 18/1.4 (B&amp;H)</a>
+    </div>
+    <p class="why"><b>Why this combo:</b> the X-H2S has the fastest sensor readout in Fuji's lineup &mdash; tracks moving subjects in dark venues that the X-T5 misses. Overkill for street, perfect for concerts and weddings. The 18/1.4 is a modern beast: linear motor, almost no AF noise.</p>
+    <div class="rental-info">
+      <span class="label">Rent from LensRentals &mdash; best for one-off events</span>
+      <span class="r-total">$159 body + $69 lens = $228 / week</span>
+      <span class="r-breakdown">Or $119 + $52 = $171 for 4 days. At $3,500 to buy, renting for a single concert is a no-brainer. <a href="https://www.lensrentals.com/rent/fuji-x-h2s">Body</a> &middot; <a href="https://www.lensrentals.com/rent/fuji-xf-18mm-f1.4-r-lm-wr">Lens</a></span>
+    </div>
+  </div>
+
+  <!-- 8. ALL-IN-ONE -->
+  <div class="card">
+    <div class="tier">#8 &middot; All-in-one compact <span class="badge">Cult Favorite</span></div>
+    <h2>X100VI (fixed lens)</h2>
+    <div class="total">$1,799</div>
+    <ul class="gear">
+      <li>
+        <div>
+          <div class="item-name">Fujifilm X100VI</div>
+          <span class="item-note">40MP, 6-stop IBIS, built-in 23mm f/2 (35mm equiv), hybrid optical/EVF, built-in ND filter, pocketable</span>
+        </div>
+        <span class="price">$1,799</span>
+      </li>
+    </ul>
+    <div class="links">
+      <a href="https://www.bhphotovideo.com/c/product/1899777-REG/fujifilm_16953912_x100vi_digital_camera_silver_coo_japan.html">X100VI (B&amp;H)</a>
+      <a href="https://www.adorama.com/ifjx1006.html">Adorama (often in stock)</a>
+    </div>
+    <p class="why"><b>Why this option:</b> if you want one camera, no lens decisions, and the most "vintage Fuji film camera" feel possible &mdash; this is it. Fits in a coat pocket. f/2 isn't as fast as f/1.4 but IBIS + clean ISO 6400 closes the gap. <b>Caveat:</b> historically supply-constrained &mdash; check stock before celebrating.</p>
+    <div class="gallery">
+      <span class="label">Real users shooting this</span>
+      <a href="https://www.flickr.com/photos/cameralabs/albums/72177720314914966/">CameraLabs X100VI album</a> &middot;
+      <a href="https://www.flickr.com/photos/ricopfirstinger/albums/72177720314930839/">Rico Pfirstinger album (393 shots)</a>
+    </div>
+    <div class="rental-info">
+      <span class="label">Rent from LensRentals &mdash; especially smart given stock issues</span>
+      <span class="r-total">$124 / week (fixed-lens body, no separate lens)</span>
+      <span class="r-breakdown">Or $93 for 4 days. If you can't find one to buy, at least rent to confirm you love it. <a href="https://www.lensrentals.com/rent/fuji-x100vi-black">Rent X100VI</a></span>
+    </div>
+  </div>
+
+  <!-- 9. BOKEH PORTRAITS -->
+  <div class="card">
+    <div class="tier">#9 &middot; Night portraits / max bokeh</div>
+    <h2>X-T5 + XF 56mm f/1.2 R WR</h2>
+    <div class="total">$2,698</div>
+    <ul class="gear">
+      <li>
+        <div>
+          <div class="item-name">Fujifilm X-T5 (body)</div>
+          <span class="item-note">40MP, IBIS, weather sealed</span>
+        </div>
+        <span class="price">$1,699</span>
+      </li>
+      <li>
+        <div>
+          <div class="item-name">XF 56mm f/1.2 R WR</div>
+          <span class="item-note">85mm-equiv, the Fuji portrait lens &mdash; obliterates backgrounds at f/1.2</span>
+        </div>
+        <span class="price">$999</span>
+      </li>
+    </ul>
+    <div class="links">
+      <a href="https://www.bhphotovideo.com/c/product/1899771-REG/fujifilm_16953857_x_t5_body_black_coo_japan.html">X-T5 (B&amp;H)</a>
+      <a href="https://www.bhphotovideo.com/c/search?Ntt=xf+56mm+f1.2">XF 56/1.2 (B&amp;H)</a>
+    </div>
+    <p class="why"><b>Why this combo:</b> if your night photography is more "person under a streetlight, glowing background" than "wide city vista," this 56mm f/1.2 is unmatched. Bokeh balls galore. Tight framing, so less versatile for street &mdash; pair with one of the wider lens setups above for a 2-lens kit.</p>
+    <div class="rental-info">
+      <span class="label">Rent from LensRentals</span>
+      <span class="r-total">$119 body + $69 lens = $188 / week</span>
+      <span class="r-breakdown">Or $89 + $52 = $141 for 4 days. <a href="https://www.lensrentals.com/rent/fuji-x-t5-black">Body</a> &middot; <a href="https://www.lensrentals.com/rent/fuji-xf-56mm-f1.2-r-wr">Lens</a></span>
+    </div>
+  </div>
+
+</div>
+
+<!-- SONY A6000 SECTION -->
+<div class="section" id="sony">
+  <h3>Sony a6000 &mdash; the budget alternative <span class="badge dark" style="margin-left: 4px; vertical-align: middle;">Non-Fuji</span></h3>
+  <p>The a6000 came out in 2014 and is still recommended for night work because it's <b>cheap on the used market</b> and has decent low-light performance for the price.</p>
+  <div class="grid">
+    <div class="card" style="margin-top: 4px;">
+      <div class="tier">Sony budget night kit <span class="badge dark">Used</span></div>
+      <h2>Sony a6000 + Sigma 30mm f/1.4 DC DN (E-mount)</h2>
+      <div class="total">~$680 <span class="approx">used body</span></div>
+      <ul class="gear">
+        <li>
+          <div>
+            <div class="item-name">Sony a6000 (used body)</div>
+            <span class="item-note">24MP APS-C, decent AF, NO IBIS, NO film simulations</span>
+          </div>
+          <span class="price">~$340</span>
+        </li>
+        <li>
+          <div>
+            <div class="item-name">Sigma 30mm f/1.4 DC DN (E-mount)</div>
+            <span class="item-note">45mm-equiv, identical to the X-mount version, $339 new</span>
+          </div>
+          <span class="price">$339</span>
+        </li>
+      </ul>
+      <div class="links">
+        <a href="https://www.mpb.com/en-us/product/sony-a6000">a6000 used (MPB)</a>
+        <a href="https://www.bhphotovideo.com/c/product/1373415-REG/sigma_302965_30mm_f_1_4_dc_dn.html">Sigma 30mm E-mount (B&amp;H)</a>
+        <a href="https://www.amazon.com/Sony-SEL35F18-35mm-Prime-Fixed/dp/B0096W1P5W">Sony 35mm f/1.8 OSS alt (~$350)</a>
+      </div>
+      <p class="why"><b>The honest pros:</b> cheapest entry into mirrorless with a fast prime. Roughly half the cost of any Fuji setup. Perfectly sharp images.<br><b>The honest cons:</b><br>&bull; <b>No film simulations.</b> Sony's color science is more clinical/neutral &mdash; you'd need to apply VSCO presets, RNI Films, or shoot RAW + edit to get that "film look" Preksha is after.<br>&bull; <b>No IBIS.</b> Need 1/60s+ shutter handheld &mdash; or use the Sony 35mm f/1.8 <i>OSS</i> which has lens-based stabilization (~$350).<br>&bull; <b>Older sensor.</b> ISO 6400 is usable but noticeably noisier than modern Fuji.<br><b>Bottom line:</b> if budget is the dominant constraint and you're willing to edit photos, this is the right answer. If you want JPEGs that look finished out of camera, the Fuji setups above are worth the premium.</p>
+      <div class="rental-info unavailable">
+        <span class="label">Rent?</span>
+        <b>The a6000 is too old for LensRentals' fleet</b> (they stock the newer a6400/a6700 at ~$75/week). If you want to try specifically the a6000, use <a href="https://kitsplit.com/s?search=a6000">KitSplit</a> peer-to-peer (LA-local, ~$15-25/day). Or just buy used at MPB &mdash; at $340, a 14-day return-window trial is essentially free.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TRY BEFORE YOU BUY -->
+<div class="section" id="rent">
+  <h3>Try / rent before you buy &mdash; loaner options</h3>
+  <p style="font-style: italic; color: var(--muted); margin-top: 0;">Smart move. A weekend rental costs $50-100 and tells you more than 50 reviews. Especially worth it for the X100VI (you might love or hate the fixed lens).</p>
+  <div class="rental-grid">
+    <div class="rental-card">
+      <h4>LensRentals</h4>
+      <div class="meta">~$60-110/week &middot; ships nationwide</div>
+      <p>Best US rental house, ships to your door. Has every Fuji body + most lenses. <a href="https://www.lensrentals.com/rent/brands/fujifilm">lensrentals.com/rent/brands/fujifilm</a></p>
+    </div>
+    <div class="rental-card">
+      <h4>BorrowLenses</h4>
+      <div class="meta">~$50-100/week &middot; ships nationwide</div>
+      <p>Now part of LensRentals. Same inventory, slightly different pricing. <a href="https://www.borrowlenses.com">borrowlenses.com</a></p>
+    </div>
+    <div class="rental-card">
+      <h4>Samy's Camera (LA)</h4>
+      <div class="meta">In-person pickup &middot; Fairfax + Pasadena</div>
+      <p>Local LA option. Walk in, rent for the weekend, return Monday. Their Pasadena store is closest to you. <a href="https://www.samys.com">samys.com</a></p>
+    </div>
+    <div class="rental-card">
+      <h4>KitSplit</h4>
+      <div class="meta">Peer-to-peer &middot; LA local</div>
+      <p>Rent gear from other photographers in LA. Often cheapest, you meet the owner. <a href="https://kitsplit.com/rentals/fujifilm">kitsplit.com</a></p>
+    </div>
+    <div class="rental-card">
+      <h4>MPB / KEH</h4>
+      <div class="meta">Buy used + 14-day returns &middot; effectively a "try"</div>
+      <p>Both have 14-day no-questions return windows on used gear. Buy, shoot for two weeks, return for full refund if you don't love it. <a href="https://www.mpb.com">mpb.com</a> &middot; <a href="https://www.keh.com">keh.com</a></p>
+    </div>
+    <div class="rental-card">
+      <h4>Photo Rental Source</h4>
+      <div class="meta">Online rental &middot; more boutique</div>
+      <p>Smaller US rental house, sometimes has gear LensRentals is sold out of. <a href="https://www.photorentalsource.com/Fuji_c_38.html">photorentalsource.com</a></p>
+    </div>
+  </div>
+  <p style="margin-top: 14px; font-size: 13px; color: var(--muted);"><i>Note: Fujifilm's official "Try the Kit" 48-hour free loan program is <b>UK only</b> &mdash; not available in the US as of 2026.</i></p>
+
+  <h3 style="margin-top: 24px;">LensRentals price summary &mdash; all 9 setups</h3>
+  <p style="font-size: 13px; color: var(--muted); margin-top: 0;">All prices are LensRentals' base rate (no coverage add-on). Free return shipping included. Rental period: <b>1 to 90 days</b>, with 4-day and 7-day being the most common. Shipping takes 1-2 days each way &mdash; order early.</p>
+  <div class="rental-table-wrap">
+    <table class="rental-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Setup</th>
+          <th>Body</th>
+          <th>Lens</th>
+          <th class="num">7 days</th>
+          <th class="num">4 days</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>X-T30 II + Sigma 30/1.4</td><td colspan="4" class="na">Not in LensRentals fleet &mdash; buy used from MPB (14-day returns = free trial)</td></tr>
+        <tr><td>2</td><td>X-S20 + Sigma 30/1.4</td><td>$87</td><td>$31</td><td class="num"><b>$118</b></td><td class="num">$88</td></tr>
+        <tr><td>3</td><td>X-T50 + Viltrox 27/1.2</td><td colspan="4" class="na">Viltrox not rentable &mdash; sub X-T50 + XF 35/1.4 R: <b>$139 / 7d</b> ($104 / 4d)</td></tr>
+        <tr><td>4</td><td>X-S20 + XF 35/1.4</td><td>$87</td><td>$47</td><td class="num"><b>$134</b></td><td class="num">$100</td></tr>
+        <tr><td>5</td><td>X-T5 + XF 23/1.4 LM WR</td><td>$119</td><td>$62</td><td class="num"><b>$181</b></td><td class="num">$136</td></tr>
+        <tr><td>6</td><td>X-T5 + XF 16/1.4 (astro)</td><td>$119</td><td>$69</td><td class="num"><b>$188</b></td><td class="num">$141</td></tr>
+        <tr><td>7</td><td>X-H2S + XF 18/1.4</td><td>$159</td><td>$69</td><td class="num"><b>$228</b></td><td class="num">$171</td></tr>
+        <tr><td>8</td><td>X100VI (fixed lens)</td><td colspan="2" style="text-align:center">body only</td><td class="num"><b>$124</b></td><td class="num">$93</td></tr>
+        <tr><td>9</td><td>X-T5 + XF 56/1.2 (portraits)</td><td>$119</td><td>$69</td><td class="num"><b>$188</b></td><td class="num">$141</td></tr>
+        <tr style="background: #f1ece2;"><td></td><td><b>Sony a6000 + Sigma 30/1.4</b></td><td colspan="4" class="na">a6000 too old for LensRentals &mdash; try KitSplit peer-to-peer (~$15-25/day) or buy used w/ MPB returns</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size: 12.5px; color: var(--muted); margin-top: 10px; font-style: italic;">Add ~$15-35 each way for shipping depending on your zip. LensRentals is headquartered in TN, so East/Central US gets faster delivery; West Coast adds a day. BorrowLenses (same company) sometimes ships from CA warehouses &mdash; slightly faster for LA.</p>
+</div>
+
+<!-- USED MARKET -->
+<div class="section" id="used">
+  <h3>Used market deals worth hunting</h3>
+  <p>Save 25-40% via <b>MPB</b> and <b>KEH</b> &mdash; both reputable, both grade gear honestly, both ship with returns.</p>
+  <ul>
+    <li><b>X-T4 used</b> (~$700-900) &mdash; previous flagship, has IBIS, weather sealed. The single best used Fuji body deal.</li>
+    <li><b>X-S10 used</b> (~$700) &mdash; X-S20's predecessor, also has IBIS, slightly slower AF.</li>
+    <li><b>X-T30 II used</b> (~$650) &mdash; small, no IBIS, great pair with a stabilized lens.</li>
+    <li><b>X100V used</b> (~$1500-1800, often inflated) &mdash; cult predecessor of X100VI. Sometimes priced ABOVE the new X100VI due to scarcity. Don't pay over $1500.</li>
+    <li><b>XF 35mm f/1.4 R used</b> (~$350-450) &mdash; the legendary character lens at half MSRP.</li>
+    <li><b>XF 23mm f/1.4 R</b> (older, non-LM-WR version, used ~$450) &mdash; slower AF but optically excellent.</li>
+  </ul>
+</div>
+
+<!-- FILM SIMS -->
+<div class="section" id="filmsim">
+  <h3>The "Fuji feel" &mdash; film simulations to try first</h3>
+  <p>Every Fuji body above ships with these baked in. Set them in-camera; JPEGs come out finished, no Lightroom needed.</p>
+  <p>For night specifically:</p>
+  <ul>
+    <li><b>Classic Chrome</b> &mdash; slight desaturation, cinematic, perfect for neon-lit streets.</li>
+    <li><b>Classic Neg</b> &mdash; punchy contrast, magenta shadows, very film-like.</li>
+    <li><b>Acros + R/G/Y filter</b> &mdash; the legendary B&amp;W with film-grain emulation. Best for high-contrast night scenes.</li>
+    <li><b>Reala Ace</b> &mdash; new in X-T50/X100VI, balanced color, great for skin under mixed lighting.</li>
+    <li><b>Nostalgic Neg</b> &mdash; warm shadows, lifted blacks, dreamy.</li>
+  </ul>
+  <div class="filmsim" style="margin-top: 12px;">
+    <span class="pill">Classic Chrome</span>
+    <span class="pill">Classic Neg</span>
+    <span class="pill">Acros + R/G/Y</span>
+    <span class="pill">Reala Ace</span>
+    <span class="pill">Nostalgic Neg</span>
+    <span class="pill">Eterna</span>
+    <span class="pill">PRO Neg Hi</span>
+    <span class="pill">Velvia</span>
+  </div>
+  <p style="margin-top: 14px; font-size: 13px;">Want to go deeper? <a href="https://fujixweekly.com/recipes/" style="color: var(--accent);">Fuji X Weekly Recipes</a> publishes hundreds of community-tuned film-sim presets &mdash; "Kodak Portra 400," "Cinestill 800T," etc. You dial them in once and shoot.</p>
+</div>
+
+<!-- SETTINGS + ACCESSORIES -->
+<div class="section" id="settings">
+  <div class="two-col">
+    <div>
+      <h3>Starting settings for night</h3>
+      <div class="settings">
+        <div><span class="key">Mode:</span> <span class="v">Aperture priority (A)</span></div>
+        <div><span class="key">Aperture:</span> <span class="v">f/1.4 - f/2</span></div>
+        <div><span class="key">ISO:</span> <span class="v">Auto, max 6400</span></div>
+        <div><span class="key">Min shutter:</span> <span class="v">1/60s (handheld)</span></div>
+        <div><span class="key">Focus:</span> <span class="v">AF-S, single point</span></div>
+        <div><span class="key">Film sim:</span> <span class="v">Classic Chrome</span></div>
+        <div><span class="key">Highlight:</span> <span class="v">-1 (preserve neon)</span></div>
+        <div><span class="key">Shadow:</span> <span class="v">-1 or -2 (mood)</span></div>
+        <div><span class="key">NR:</span> <span class="v">-2 (keep texture)</span></div>
+        <div><span class="key">WB:</span> <span class="v">Auto, ambience priority</span></div>
+      </div>
+    </div>
+    <div id="accessories">
+      <h3>Smart accessories ($30-200)</h3>
+      <ul>
+        <li><b>Extra battery (NP-W126S or NP-W235)</b> &mdash; Fuji eats batteries fast in cold weather. ~$60 OEM, ~$25 third-party.</li>
+        <li><b>SD card: Sandisk Extreme Pro 128GB V30</b> &mdash; ~$30. The 40MP files are big &mdash; don't cheap out.</li>
+        <li><b>Peak Design Cuff or Leash</b> &mdash; wrist or neck strap, ~$30-50.</li>
+        <li><b>Compact tripod (Peak Design Travel or Sirui)</b> &mdash; ~$150-200, opens up long-exposure city scenes.</li>
+        <li><b>Variable ND filter (52mm or 58mm)</b> &mdash; only if you do long exposures of moving water/light trails.</li>
+        <li><b>SmallRig L-bracket</b> &mdash; ~$45, swap between tripod portrait and landscape orientation in 2 seconds.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- MY PICK -->
+<div class="pick-callout" id="pick">
+  <h3>My pick if I had to choose one</h3>
+  <p class="pick-line"><b>Setup #3: X-T50 + Viltrox 27mm f/1.2 Pro &mdash; ~$1,950 total.</b></p>
+  <p>The X-T50's dedicated film-sim dial is the most "Fuji feel" experience &mdash; literally turn a knob to swap looks. The Viltrox is sharper than most native Fuji glass and costs less. f/1.2 means you'll handhold city streets at ISO 400 instead of ISO 3200. The 40MP sensor crops like a 100MP camera so you can re-frame in post. If budget is tighter, drop to <b>#2 (X-S20 + Sigma 30/1.4)</b>; if weather sealing matters for travel, jump to <b>#5 (X-T5 + XF 23/1.4)</b>; if you'd rather not pick a lens at all, get the <b>X100VI (#8)</b>.</p>
+  <p style="font-size: 14px; color: var(--muted); margin-bottom: 0;"><b>Smart play:</b> Viltrox isn't in LensRentals' fleet, but you can <b>rent the X-T50 + XF 35/1.4 R for $104 (4 days) or $139 (7 days)</b> &mdash; same Fuji body experience, very close focal length. If you click with it, buy the actual Viltrox (used ~$400 on MPB). If not, try setup #5 or #8 next.</p>
+</div>
+
+<div class="footer">
+  Prices are MSRP / B&amp;H listed at time of writing (Apr 2026). Used market prices (MPB / KEH) typically save 25-40%. Generated for Preksha by PianoBot.
+</div>
+
+</body>
+</html>

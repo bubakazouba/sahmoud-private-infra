@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sheraton SD - Weekly Price Tracker</title>
+<style>
+  :root{--bg:#0f1419;--panel:#1a212b;--border:#2d3744;--text:#e6ecf3;--dim:#8b97a7;--wd:#5fa8ff;--we:#ff9900;--ref:#3ecf8e;--up:#ff5a3c;--down:#3ecf8e;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:14px}
+  .wrap{max-width:1120px;margin:0 auto;padding:20px}
+  h1{font-size:21px;margin:0 0 2px}
+  .sub{color:var(--dim);font-size:13px;margin-bottom:14px;line-height:1.5}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:11px;margin-bottom:18px}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:13px 15px}
+  .card .n{font-size:20px;font-weight:700;color:var(--wd)}
+  .card .l{color:var(--dim);font-size:12px;margin-top:3px}
+  .legend{display:flex;gap:16px;font-size:12px;color:var(--text);margin:2px 2px 12px;flex-wrap:wrap}
+  .sw{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:middle}
+  .chartbox{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px 10px 8px;margin-bottom:18px}
+  h2{font-size:15px;margin:16px 0 8px}
+  .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+  .dow{color:var(--dim);font-size:11px;text-align:center;padding:3px 0}
+  .cell{background:#141b24;border:1px solid var(--border);border-radius:7px;padding:6px 4px;min-height:58px;text-align:center}
+  .cell.we{border-color:#4a3a1f}
+  .cell.empty{background:transparent;border:none}
+  .cell .d{font-size:11px;color:var(--dim)}
+  .cell .a{font-size:14px;font-weight:700;margin-top:2px}
+  .cell.we .a{color:var(--we)}
+  .cell:not(.we) .a{color:var(--wd)}
+  .cell .r{font-size:9.5px;color:#5c6776;margin-top:1px}
+  .cell .chg{font-size:9.5px;font-weight:700;margin-top:1px}
+  .chg.up{color:var(--up)} .chg.down{color:var(--down)}
+  .lowtag{outline:2px solid var(--ref)}
+  .note{color:var(--dim);font-size:12px;line-height:1.6;margin-top:14px}
+  .stamp{color:var(--dim);font-size:11.5px;margin-bottom:14px}
+  .cell.dim{opacity:.12;filter:grayscale(1)}
+  .filterbox{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:18px}
+  .filterbox .top{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+  .filterbox .cap{font-size:15px;font-weight:700;color:var(--ref)}
+  .filterbox .hits{color:var(--dim);font-size:12.5px}
+  #slider{width:100%;-webkit-appearance:none;appearance:none;height:6px;border-radius:5px;outline:none;margin:2px 0 6px}
+  #slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:20px;height:20px;border-radius:50%;background:var(--ref);border:2px solid #0f1419;cursor:pointer;box-shadow:0 0 0 1px var(--ref)}
+  #slider::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--ref);border:2px solid #0f1419;cursor:pointer}
+  .filterbox .ends{display:flex;justify-content:space-between;color:var(--dim);font-size:11px}
+  .chips{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+  .chip{background:#141b24;border:1px solid var(--border);border-radius:20px;padding:5px 13px;font-size:12.5px;color:var(--text);cursor:pointer;user-select:none}
+  .chip:hover{border-color:var(--ref)}
+  .chip.active{background:var(--ref);color:#0f1419;border-color:var(--ref);font-weight:700}
+</style></head>
+<body><div class="wrap">
+  <h1>&#127976; Sheraton San Diego Resort &mdash; Weekly Price Tracker</h1>
+  <div class="sub">Every night's <b>all-in total</b> for the next ~3 months, refreshed weekly from marriott.com. All-in = room rate (incl. $44 resort fee) &times; SD hotel tax + parking. Calibrated to your real $385 receipt. Green outline = the cheapest night each month.</div>
+  <div class="stamp" id="stamp"></div>
+  <div class="cards" id="cards"></div>
+  <div class="filterbox">
+    <div class="top">
+      <span>Show nights at or under <span class="cap" id="capLabel">$400</span> all-in</span>
+      <span class="hits" id="hits"></span>
+    </div>
+    <input type="range" id="slider">
+    <div class="ends"><span id="sMin"></span><span id="sMax"></span></div>
+    <div class="chips" id="chips"></div>
+  </div>
+  <div class="legend">
+    <span><span class="sw" style="background:#5fa8ff"></span>Weekday (Sun-Thu)</span>
+    <span><span class="sw" style="background:#ff9900"></span>Weekend (Fri/Sat)</span>
+    <span><span class="sw" style="background:#3ecf8e"></span>Cheapest night / month</span>
+    <span style="color:#ff5a3c">&#9650; up since last wk</span>
+    <span style="color:#3ecf8e">&#9660; down since last wk</span>
+  </div>
+  <div id="months"></div>
+  <div class="note" id="note"></div>
+</div>
+<script>
+const DATA={"scraped_at": "2026-08-17T10:52:05", "signed_in": true, "tax_factor": 1.147, "parking": 55, "records": [{"date": "2026-08-17", "dow": "Mon", "weekend": false, "rate": 268, "allin": 362}, {"date": "2026-08-18", "dow": "Tue", "weekend": false, "rate": 268, "allin": 362}, {"date": "2026-08-19", "dow": "Wed", "weekend": false, "rate": 268, "allin": 362}, {"date": "2026-08-20", "dow": "Thu", "weekend": false, "rate": 268, "allin": 362}, {"date": "2026-08-21", "dow": "Fri", "weekend": true, "rate": 323, "allin": 425}, {"date": "2026-08-22", "dow": "Sat", "weekend": true, "rate": 315, "allin": 416}, {"date": "2026-08-23", "dow": "Sun", "weekend": true, "rate": 185, "allin": 267}, {"date": "2026-08-24", "dow": "Mon", "weekend": false, "rate": 210, "allin": 296}, {"date": "2026-08-25", "dow": "Tue", "weekend": false, "rate": 210, "allin": 296}, {"date": "2026-08-26", "dow": "Wed", "weekend": false, "rate": 210, "allin": 296}, {"date": "2026-08-27", "dow": "Thu", "weekend": false, "rate": 226, "allin": 314}, {"date": "2026-08-28", "dow": "Fri", "weekend": true, "rate": 221, "allin": 308}, {"date": "2026-08-29", "dow": "Sat", "weekend": true, "rate": 264, "allin": 358}, {"date": "2026-08-30", "dow": "Sun", "weekend": true, "rate": 343, "allin": 448}, {"date": "2026-08-31", "dow": "Mon", "weekend": false, "rate": 371, "allin": 481}, {"date": "2026-09-01", "dow": "Tue", "weekend": false, "rate": 371, "allin": 481}, {"date": "2026-09-02", "dow": "Wed", "weekend": false, "rate": 193, "allin": 276}, {"date": "2026-09-03", "dow": "Thu", "weekend": false, "rate": 193, "allin": 276}, {"date": "2026-09-04", "dow": "Fri", "weekend": true, "rate": 257, "allin": 350}, {"date": "2026-09-05", "dow": "Sat", "weekend": true, "rate": 320, "allin": 422}, {"date": "2026-09-06", "dow": "Sun", "weekend": true, "rate": 193, "allin": 276}, {"date": "2026-09-07", "dow": "Mon", "weekend": false, "rate": 193, "allin": 276}, {"date": "2026-09-08", "dow": "Tue", "weekend": false, "rate": 193, "allin": 276}, {"date": "2026-09-09", "dow": "Wed", "weekend": false, "rate": 219, "allin": 306}, {"date": "2026-09-10", "dow": "Thu", "weekend": false, "rate": 219, "allin": 306}, {"date": "2026-09-11", "dow": "Fri", "weekend": true, "rate": 214, "allin": 300}, {"date": "2026-09-12", "dow": "Sat", "weekend": true, "rate": 214, "allin": 300}, {"date": "2026-09-13", "dow": "Sun", "weekend": true, "rate": 974, "allin": 1172}, {"date": "2026-09-16", "dow": "Wed", "weekend": false, "rate": 425, "allin": 542}, {"date": "2026-09-17", "dow": "Thu", "weekend": false, "rate": 264, "allin": 358}, {"date": "2026-09-18", "dow": "Fri", "weekend": true, "rate": 257, "allin": 350}, {"date": "2026-09-19", "dow": "Sat", "weekend": true, "rate": 257, "allin": 350}, {"date": "2026-09-20", "dow": "Sun", "weekend": true, "rate": 264, "allin": 358}, {"date": "2026-09-21", "dow": "Mon", "weekend": false, "rate": 264, "allin": 358}, {"date": "2026-09-22", "dow": "Tue", "weekend": false, "rate": 447, "allin": 568}, {"date": "2026-09-23", "dow": "Wed", "weekend": false, "rate": 447, "allin": 568}, {"date": "2026-09-24", "dow": "Thu", "weekend": false, "rate": 371, "allin": 481}, {"date": "2026-09-25", "dow": "Fri", "weekend": true, "rate": 240, "allin": 330}, {"date": "2026-09-26", "dow": "Sat", "weekend": true, "rate": 304, "allin": 404}, {"date": "2026-09-27", "dow": "Sun", "weekend": true, "rate": 228, "allin": 317}, {"date": "2026-10-01", "dow": "Thu", "weekend": false, "rate": 281, "allin": 377}, {"date": "2026-10-02", "dow": "Fri", "weekend": true, "rate": 308, "allin": 408}, {"date": "2026-10-03", "dow": "Sat", "weekend": true, "rate": 308, "allin": 408}, {"date": "2026-10-04", "dow": "Sun", "weekend": true, "rate": 316, "allin": 417}, {"date": "2026-10-05", "dow": "Mon", "weekend": false, "rate": 316, "allin": 417}, {"date": "2026-10-06", "dow": "Tue", "weekend": false, "rate": 316, "allin": 417}, {"date": "2026-10-07", "dow": "Wed", "weekend": false, "rate": 299, "allin": 398}, {"date": "2026-10-08", "dow": "Thu", "weekend": false, "rate": 299, "allin": 398}, {"date": "2026-10-09", "dow": "Fri", "weekend": true, "rate": 257, "allin": 350}, {"date": "2026-10-10", "dow": "Sat", "weekend": true, "rate": 257, "allin": 350}, {"date": "2026-10-11", "dow": "Sun", "weekend": true, "rate": 246, "allin": 337}, {"date": "2026-10-12", "dow": "Mon", "weekend": false, "rate": 316, "allin": 417}, {"date": "2026-10-13", "dow": "Tue", "weekend": false, "rate": 316, "allin": 417}, {"date": "2026-10-14", "dow": "Wed", "weekend": false, "rate": 299, "allin": 398}, {"date": "2026-10-15", "dow": "Thu", "weekend": false, "rate": 264, "allin": 358}, {"date": "2026-10-16", "dow": "Fri", "weekend": true, "rate": 257, "allin": 350}, {"date": "2026-10-17", "dow": "Sat", "weekend": true, "rate": 397, "allin": 510}, {"date": "2026-10-18", "dow": "Sun", "weekend": true, "rate": 383, "allin": 494}, {"date": "2026-10-19", "dow": "Mon", "weekend": false, "rate": 383, "allin": 494}, {"date": "2026-10-20", "dow": "Tue", "weekend": false, "rate": 316, "allin": 417}, {"date": "2026-10-21", "dow": "Wed", "weekend": false, "rate": 264, "allin": 358}, {"date": "2026-10-22", "dow": "Thu", "weekend": false, "rate": 264, "allin": 358}, {"date": "2026-10-23", "dow": "Fri", "weekend": true, "rate": 291, "allin": 389}, {"date": "2026-10-24", "dow": "Sat", "weekend": true, "rate": 291, "allin": 389}, {"date": "2026-10-25", "dow": "Sun", "weekend": true, "rate": 219, "allin": 306}, {"date": "2026-10-26", "dow": "Mon", "weekend": false, "rate": 299, "allin": 398}, {"date": "2026-10-27", "dow": "Tue", "weekend": false, "rate": 299, "allin": 398}, {"date": "2026-10-28", "dow": "Wed", "weekend": false, "rate": 299, "allin": 398}, {"date": "2026-10-29", "dow": "Thu", "weekend": false, "rate": 299, "allin": 398}, {"date": "2026-10-30", "dow": "Fri", "weekend": true, "rate": 257, "allin": 350}, {"date": "2026-10-31", "dow": "Sat", "weekend": true, "rate": 291, "allin": 389}, {"date": "2026-11-01", "dow": "Sun", "weekend": true, "rate": 281, "allin": 377}, {"date": "2026-11-02", "dow": "Mon", "weekend": false, "rate": 281, "allin": 377}, {"date": "2026-11-03", "dow": "Tue", "weekend": false, "rate": 281, "allin": 377}, {"date": "2026-11-04", "dow": "Wed", "weekend": false, "rate": 281, "allin": 377}, {"date": "2026-11-05", "dow": "Thu", "weekend": false, "rate": 347, "allin": 453}, {"date": "2026-11-06", "dow": "Fri", "weekend": true, "rate": 338, "allin": 443}, {"date": "2026-11-07", "dow": "Sat", "weekend": true, "rate": 338, "allin": 443}, {"date": "2026-11-08", "dow": "Sun", "weekend": true, "rate": 228, "allin": 317}, {"date": "2026-11-09", "dow": "Mon", "weekend": false, "rate": 246, "allin": 337}, {"date": "2026-11-10", "dow": "Tue", "weekend": false, "rate": 246, "allin": 337}, {"date": "2026-11-11", "dow": "Wed", "weekend": false, "rate": 299, "allin": 398}, {"date": "2026-11-12", "dow": "Thu", "weekend": false, "rate": 316, "allin": 417}, {"date": "2026-11-13", "dow": "Fri", "weekend": true, "rate": 308, "allin": 408}, {"date": "2026-11-14", "dow": "Sat", "weekend": true, "rate": 308, "allin": 408}, {"date": "2026-11-15", "dow": "Sun", "weekend": true, "rate": 281, "allin": 377}, {"date": "2026-11-16", "dow": "Mon", "weekend": false, "rate": 281, "allin": 377}, {"date": "2026-11-17", "dow": "Tue", "weekend": false, "rate": 308, "allin": 408}, {"date": "2026-11-18", "dow": "Wed", "weekend": false, "rate": 308, "allin": 408}, {"date": "2026-11-19", "dow": "Thu", "weekend": false, "rate": 194, "allin": 278}, {"date": "2026-11-20", "dow": "Fri", "weekend": true, "rate": 189, "allin": 272}], "deltas": {"2026-08-30": 72, "2026-08-31": 132, "2026-09-01": 132, "2026-09-02": 26, "2026-09-03": 26, "2026-09-04": 73, "2026-09-05": 38, "2026-09-06": 5, "2026-09-07": 26, "2026-09-08": 26, "2026-09-09": 31, "2026-09-10": 31, "2026-09-11": 30, "2026-09-12": 30, "2026-09-13": 786, "2026-09-22": 71, "2026-09-23": 71, "2026-09-24": 71, "2026-09-27": -67, "2026-10-02": -65, "2026-10-03": -65, "2026-10-08": 45, "2026-10-15": 25, "2026-10-16": -17, "2026-10-17": 68, "2026-10-18": 67, "2026-10-19": 84, "2026-10-20": 17, "2026-10-21": -35, "2026-10-22": -35, "2026-10-25": -9}};
+const recs=DATA.records, deltas=DATA.deltas||{};
+const fmt=n=>'$'+n;
+// stamp
+const dt=new Date(DATA.scraped_at);
+document.getElementById('stamp').textContent=
+  'Last updated '+dt.toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})+
+  ' · '+(DATA.signed_in?'Bonvoy member rate':'public rate')+
+  ' · '+recs.length+' nights tracked';
+
+// cards: cheapest, typical wd, typical we, peak, your $385
+const all=recs.map(r=>r.allin);
+const wd=recs.filter(r=>!r.weekend).map(r=>r.allin);
+const we=recs.filter(r=>r.weekend).map(r=>r.allin);
+const med=a=>{a=[...a].sort((x,y)=>x-y);return a.length?a[Math.floor(a.length/2)]:0;};
+const cheapest=recs.reduce((m,r)=>r.allin<m.allin?r:m,recs[0]);
+const peak=recs.reduce((m,r)=>r.allin>m.allin?r:m,recs[0]);
+const niceDate=iso=>new Date(iso+'T12:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+document.getElementById('cards').innerHTML=[
+ ['$385','what you paid (incl. $55 parking)'],
+ [fmt(cheapest.allin),'cheapest night ('+niceDate(cheapest.date)+')'],
+ ['~'+fmt(med(wd)),'typical weekday all-in'],
+ ['~'+fmt(med(we)),'typical Fri/Sat all-in'],
+ [fmt(peak.allin),'priciest ('+niceDate(peak.date)+')'],
+].map(c=>`<div class="card"><div class="n">${c[0]}</div><div class="l">${c[1]}</div></div>`).join('');
+
+// group by month, render calendar grids
+const byMonth={};
+recs.forEach(r=>{const k=r.date.slice(0,7);(byMonth[k]=byMonth[k]||[]).push(r);});
+// cheapest per month for highlight
+const lowSet=new Set();
+Object.values(byMonth).forEach(arr=>{const lo=arr.reduce((m,r)=>r.rate<m.rate?r:m,arr[0]);lowSet.add(lo.date);});
+const DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const monthName=k=>new Date(k+'-01T12:00').toLocaleDateString('en-US',{month:'long',year:'numeric'});
+let html='';
+Object.keys(byMonth).sort().forEach(k=>{
+  const arr=byMonth[k]; const map={}; arr.forEach(r=>map[r.date]=r);
+  html+=`<h2>${monthName(k)}</h2><div class="chartbox"><div class="grid">`;
+  html+=DOW.map(d=>`<div class="dow">${d}</div>`).join('');
+  const first=new Date(k+'-01T12:00'); const lead=first.getDay();
+  const dim=new Date(first.getFullYear(),first.getMonth()+1,0).getDate();
+  for(let i=0;i<lead;i++) html+=`<div class="cell empty"></div>`;
+  for(let day=1;day<=dim;day++){
+    const iso=k+'-'+String(day).padStart(2,'0');
+    const r=map[iso];
+    if(!r){html+=`<div class="cell empty"></div>`;continue;}
+    const we=r.weekend?'we':'';
+    const low=lowSet.has(iso)?'lowtag':'';
+    let chg='';
+    if(deltas[iso]!==undefined){const v=deltas[iso];chg=`<div class="chg ${v>0?'up':'down'}">${v>0?'▲':'▼'}$${Math.abs(v)}</div>`;}
+    html+=`<div class="cell ${we} ${low}" data-allin="${r.allin}"><div class="d">${day} ${r.dow}</div><div class="a">$${r.allin}</div><div class="r">rm $${r.rate}</div>${chg}</div>`;
+  }
+  html+=`</div></div>`;
+});
+document.getElementById('months').innerHTML=html;
+
+// ── price slider filter ──────────────────────────────────────────────
+(function(){
+  const cells=[...document.querySelectorAll('.cell[data-allin]')];
+  const prices=cells.map(c=>+c.dataset.allin);
+  const lo=Math.floor(Math.min(...prices)/10)*10;
+  const hi=Math.ceil(Math.max(...prices)/10)*10;
+  const slider=document.getElementById('slider');
+  slider.min=lo; slider.max=hi; slider.step=10; slider.value=hi;
+  document.getElementById('sMin').textContent='$'+lo;
+  document.getElementById('sMax').textContent='$'+hi+' (all)';
+  const capLabel=document.getElementById('capLabel');
+  const hits=document.getElementById('hits');
+  function fillTrack(v){
+    const pct=(v-lo)/(hi-lo)*100;
+    slider.style.background=`linear-gradient(90deg,var(--ref) ${pct}%,var(--border) ${pct}%)`;
+  }
+  function apply(cap){
+    let shown=0;
+    cells.forEach(c=>{const ok=(+c.dataset.allin)<=cap;c.classList.toggle('dim',!ok);if(ok)shown++;});
+    capLabel.textContent = cap>=hi ? '$'+hi+' (all)' : '$'+cap;
+    hits.textContent = shown+' of '+cells.length+' nights'+(cap>=hi?'':' under $'+cap);
+    [...document.querySelectorAll('.chip')].forEach(ch=>ch.classList.toggle('active',+ch.dataset.cap===cap));
+    fillTrack(cap);
+  }
+  slider.addEventListener('input',()=>apply(+slider.value));
+  // quick-jump chips at handy thresholds within range
+  const chipVals=[300,350,400,450,500].filter(v=>v>lo&&v<hi);
+  chipVals.push(hi); // "All"
+  document.getElementById('chips').innerHTML=chipVals.map(v=>
+    `<span class="chip" data-cap="${v}">${v>=hi?'All':'&#8804; $'+v}</span>`).join('');
+  [...document.querySelectorAll('.chip')].forEach(ch=>ch.addEventListener('click',()=>{
+    slider.value=ch.dataset.cap; apply(+ch.dataset.cap);
+  }));
+  apply(hi); // start showing everything
+})();
+
+document.getElementById('note').innerHTML=
+ "<b>How the total is built:</b> confirmed marriott.com nightly rate (includes the $44 resort fee), &times; "+DATA.tax_factor+" San Diego hotel tax, + $"+DATA.parking+" parking. "+
+ "The big number on each day is the all-in total; \"rm $\" underneath is the base room rate. "+
+ "Refreshed automatically once a week; ▲/▼ shows how a night's room rate moved since the previous check. "+
+ "Event weeks (July 4, Comic-Con mid-July) spike well above the day-of-week pattern.";
+</script></body></html>

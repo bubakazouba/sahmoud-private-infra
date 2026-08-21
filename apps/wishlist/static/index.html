@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Our Wishlist</title>
+<style>
+:root{--bg:#0f1115;--card:#191c23;--card2:#21252e;--ink:#e8edf3;--mut:#8b94a3;--line:#2a2f3a;--accent:#f472b6;--accent2:#60a5fa;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:840px;margin:0 auto;padding:18px}
+h1{font-size:23px;margin:0 0 2px}
+.sub{color:var(--mut);font-size:13px;margin-bottom:16px}
+.add{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:18px;position:relative}
+.addrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+#search{flex:1;min-width:220px;padding:11px 13px;background:var(--card2);border:1px solid var(--line);border-radius:9px;color:var(--ink);font-size:15px}
+select,button{background:var(--card2);color:var(--ink);border:1px solid var(--line);border-radius:9px;padding:10px 12px;font-size:14px;cursor:pointer}
+button.primary{background:var(--accent);color:#161015;border-color:var(--accent);font-weight:700}
+.hint{font-size:11.5px;color:var(--mut);margin-top:8px}
+.dropdown{position:absolute;left:14px;right:14px;top:62px;background:var(--card2);border:1px solid var(--line);border-radius:10px;max-height:280px;overflow:auto;z-index:20;box-shadow:0 8px 30px rgba(0,0,0,.5)}
+.dd-item{padding:9px 13px;cursor:pointer;border-bottom:1px solid var(--line);font-size:14px;display:flex;justify-content:space-between;gap:10px}
+.dd-item:hover{background:#2c313c}
+.dd-item .fol{color:var(--mut);font-size:11.5px;white-space:nowrap}
+.dd-custom{padding:10px 13px;color:var(--accent2);font-size:13.5px;cursor:pointer;border-top:1px solid var(--line)}
+.dd-custom:hover{background:#2c313c}
+.section{margin-bottom:22px}
+.section h2{font-size:16px;margin:0 0 10px;display:flex;align-items:center;gap:8px;padding-bottom:7px;border-bottom:2px solid var(--line)}
+.section h2 .n{font-size:12px;color:var(--bg);background:var(--mut);border-radius:999px;padding:1px 9px;font-weight:700}
+.item{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:11px 13px;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.item .nm{flex:1;font-size:15px}
+.item .badge{font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:6px;white-space:nowrap}
+.b-todo{background:#1e3a5f;color:#93c5fd}.b-custom{background:#3b2f1e;color:#fcd34d}
+.item .fol{font-size:11px;color:var(--mut)}
+.item button{background:transparent;border:none;color:var(--mut);font-size:18px;padding:0 6px;cursor:pointer}
+.item button:hover{color:var(--accent)}
+.item .mv{font-size:11.5px;color:var(--accent2);background:transparent;border:1px solid var(--line);border-radius:6px;padding:3px 8px}
+.empty{color:var(--mut);font-size:13.5px;font-style:italic;padding:6px 2px}
+#status{font-size:12px;color:var(--mut);float:right}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>💖 Our Wishlist <span id="status"></span></h1>
+  <div class="sub">Things Sahmoud &amp; Preksha want to do. Add from the todo app or type your own.</div>
+
+  <div class="add">
+    <div class="addrow">
+      <input id="search" placeholder="Search the todo app, or type something new…" autocomplete="off">
+      <select id="horizon">
+        <option value="soon">🔜 Next few months</option>
+        <option value="year">📅 Throughout the year</option>
+      </select>
+    </div>
+    <div class="hint">Type to search your todo items → click one to add it. Or type anything and pick "add as new".</div>
+    <div class="dropdown" id="dropdown" style="display:none"></div>
+  </div>
+
+  <div class="section" id="sec-soon">
+    <h2>🔜 Next few months <span class="n" id="n-soon">0</span></h2>
+    <div id="list-soon"></div>
+  </div>
+  <div class="section" id="sec-year">
+    <h2>📅 Throughout the year <span class="n" id="n-year">0</span></h2>
+    <div id="list-year"></div>
+  </div>
+</div>
+
+<script>
+let TODO = [], WISH = [];
+const $ = id => document.getElementById(id);
+
+async function load(){
+  try { TODO = await (await fetch('api/todo-items')).json(); if(!Array.isArray(TODO)) TODO=[]; } catch(e){ TODO=[]; }
+  try { const w = await (await fetch('api/wishlist?_='+Date.now())).json(); WISH = w.items || []; } catch(e){ WISH=[]; }
+  render();
+}
+function uid(){ return 'w'+Math.max(0,...WISH.map(x=>+(x.id||'w0').slice(1)))+1; }
+async function save(){
+  $('status').textContent = 'saving…';
+  try{
+    await fetch('api/wishlist',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({items:WISH})});
+    $('status').textContent = 'saved ✓'; setTimeout(()=>$('status').textContent='',1500);
+  }catch(e){ $('status').textContent='save failed'; }
+}
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ---- search dropdown ----
+const search = $('search'), dd = $('dropdown');
+search.oninput = () => {
+  const q = search.value.trim().toLowerCase();
+  if(!q){ dd.style.display='none'; return; }
+  const matches = TODO.filter(t => (t.name+' '+t.folder).toLowerCase().includes(q)).slice(0,40);
+  let h = matches.map(t =>
+    `<div class="dd-item" data-id="${t.id}" data-name="${esc(t.name)}" data-fol="${esc(t.folder)}">
+       <span>${esc(t.name)}</span><span class="fol">${esc(t.folder)}</span></div>`).join('');
+  h += `<div class="dd-custom" data-custom="1">+ add "<b>${esc(search.value.trim())}</b>" as a new wish</div>`;
+  dd.innerHTML = h; dd.style.display='block';
+  dd.querySelectorAll('.dd-item').forEach(el => el.onclick = () =>
+    addItem({source:'todo', todo_id:+el.dataset.id, name:el.dataset.name, folder:el.dataset.fol}));
+  dd.querySelector('.dd-custom').onclick = () =>
+    addItem({source:'custom', name:search.value.trim()});
+};
+document.addEventListener('click', e => { if(!$('search').parentElement.contains(e.target)) dd.style.display='none'; });
+
+function addItem(base){
+  const horizon = $('horizon').value;
+  // de-dupe by name+horizon
+  if(WISH.some(w => w.name.toLowerCase()===base.name.toLowerCase() && w.horizon===horizon)){
+    search.value=''; dd.style.display='none'; return;
+  }
+  WISH.push(Object.assign({id:uid(), horizon}, base));
+  search.value=''; dd.style.display='none';
+  render(); save();
+}
+function removeItem(id){ WISH = WISH.filter(w => w.id!==id); render(); save(); }
+function moveItem(id){ const w = WISH.find(x=>x.id===id); if(w){ w.horizon = w.horizon==='soon'?'year':'soon'; render(); save(); } }
+
+function render(){
+  ['soon','year'].forEach(hz => {
+    const list = WISH.filter(w => (w.horizon||'soon')===hz);
+    $('n-'+hz).textContent = list.length;
+    const other = hz==='soon' ? 'Throughout the year' : 'Next few months';
+    $('list-'+hz).innerHTML = list.length ? list.map(w => `
+      <div class="item">
+        <span class="badge ${w.source==='todo'?'b-todo':'b-custom'}">${w.source==='todo'?'todo':'custom'}</span>
+        <span class="nm">${esc(w.name)}${w.folder?` <span class="fol">· ${esc(w.folder)}</span>`:''}</span>
+        <button class="mv" onclick="moveItem('${w.id}')" title="move">→ ${other.split(' ')[0]}</button>
+        <button onclick="removeItem('${w.id}')" title="remove">×</button>
+      </div>`).join('') : '<div class="empty">nothing here yet — add something above</div>';
+  });
+}
+window.removeItem = removeItem; window.moveItem = moveItem;
+load();
+</script>
+</body>
+</html>

@@ -1,0 +1,244 @@
+{
+  "meta": {
+    "gig_date": "2026-05-25 (Memorial Day, Mon)",
+    "gig_time": "7:00 PM – 10:00 PM (3 hrs)",
+    "location": "Pasadena 91106 (private home)",
+    "vibe": "solo jazz/lounge background piano",
+    "budget_ceiling_usd": 500,
+    "headcount": 15,
+    "keyboard_on_site": true,
+    "last_refreshed_pt": "2026-05-24 11:21 AM",
+    "platforms_fired": ["GigSalad (6)", "The Bash (2)", "Encore (1)", "GigSalad/Rex Perry (1)", "Craigslist (open call)"],
+    "note": "Prices shown include GigSalad/Bash service fees where applicable. Sort: quoted-under-budget first (asc by price), then quoted-over, then messaged, then silent, then failed."
+  },
+  "providers": [
+    {
+      "name": "Bosco",
+      "platform": "Craigslist",
+      "status": "quoted",
+      "price_total_usd": 150,
+      "rate": "$50/hr × 3 hr",
+      "available": "likely (responded to open call)",
+      "contact": "Text/call 760-239-9250",
+      "reviews": "(none surfaced — direct CL reply)",
+      "notes": "Says 'easy listening, smooth jazz'. Cheapest by far. No vetting via platform.",
+      "profile_url": null
+    },
+    {
+      "name": "Diamond / Ayumi Mori",
+      "platform": "Craigslist",
+      "status": "quoted",
+      "price_total_usd": 300,
+      "rate": "$100/hr × 3 hr",
+      "available": "yes (responded)",
+      "contact": "via Craigslist relay (anonymized email)",
+      "reviews": "(none surfaced — direct CL reply)",
+      "notes": "Alhambra-based professional. Jazz standards / classical / pop. Listed real name as Ayumi Mori.",
+      "profile_url": null
+    },
+    {
+      "name": "Vince Torbey (Pianist On Call)",
+      "platform": "The Bash (also direct email)",
+      "status": "quoted",
+      "price_total_usd": 400,
+      "rate": "$400 flat for 3 hr",
+      "available": "yes",
+      "contact": "(818) 681-5991 / PIANISTONCALL@yahoo.com",
+      "reviews": "100s of reviews at thebash.com/piano/pianist-on-call/feedback",
+      "notes": "Direct email response. Jazz + all styles + takes guest requests. Gig #5023763 on Bash matches same.",
+      "profile_url": "https://www.thebash.com/piano/pianist-on-call"
+    },
+    {
+      "name": "Bobby West",
+      "platform": "GigSalad",
+      "status": "quoted",
+      "price_total_usd": 443,
+      "rate": "~$400 + $43 fee",
+      "available": "yes",
+      "contact": "via GigSalad inbox",
+      "reviews": "(check GigSalad profile)",
+      "notes": "⚠ Quoted for 'Children's Birthday Party' event type (round-1 misclassification) — still same date/time/location. Confirm with Bobby before booking.",
+      "profile_url": "https://www.gigsalad.com/bobby_west_los_angeles"
+    },
+    {
+      "name": "Geoff Earley",
+      "platform": "The Bash",
+      "status": "quoted",
+      "price_total_usd": 500,
+      "rate": "$500 flat for 3 hr",
+      "available": "yes",
+      "contact": "via The Bash inbox (Gig #5023764)",
+      "reviews": "(check Bash profile)",
+      "notes": "Exact budget match.",
+      "profile_url": "https://www.thebash.com"
+    },
+    {
+      "name": "Sabine (Sabine Pothier)",
+      "platform": "GigSalad",
+      "status": "quoted",
+      "price_total_usd": 552,
+      "rate": "$500 + $52 GigSalad fee",
+      "available": "yes (7-10pm Mon confirmed)",
+      "contact": "213-268-0327 / sabinejazz.net",
+      "reviews": "5.0★ on GigSalad (small sample) + award-winning concert pianist: Liszt LA Intl, IBLA Italy, MTNA, Boston Conservatory. Plays Yoshi's, Blue Whale, Baked Potato, Velvet Note. Played w/ Scotty Barnhart Quintet.",
+      "notes": "⏰ Quote expires Sun 2026-05-24 7:59pm PT. Strongest credentials in pool. Wrote '$500 works for me' personal reply. Sample: youtu.be/nsiXk9D229s",
+      "profile_url": "https://www.gigsalad.com/sabine_los_angeles"
+    },
+    {
+      "name": "Patrick Boylan",
+      "platform": "GigSalad",
+      "status": "quoted",
+      "price_total_usd": 552,
+      "rate": "$500 + $52 GigSalad fee",
+      "available": "yes",
+      "contact": "via GigSalad inbox",
+      "reviews": "(check GigSalad profile)",
+      "notes": "Quote expires Mon 5/25 7:59pm PT.",
+      "profile_url": "https://www.gigsalad.com/patrick_boylan_los_angeles"
+    },
+    {
+      "name": "Rex Perry Music Artist",
+      "platform": "GigSalad",
+      "status": "messaged",
+      "price_total_usd": null,
+      "rate": "(no quote yet — sent a message instead)",
+      "available": "unknown",
+      "contact": "via GigSalad inbox",
+      "reviews": "Solo pianist + vocalist, 25+ yr exp. UCLA composition. Says jazz is his forte. GigSalad listing 'starts at $100'.",
+      "notes": "Pivoted here from his own contact form (Akismet-blocked). Replied 'You've got a new message' but no quote yet — likely wants more details before quoting.",
+      "profile_url": "https://www.gigsalad.com/rex_perry_music_artist_los_angeles"
+    },
+    {
+      "name": "Eli On Keys",
+      "platform": "GigSalad",
+      "status": "no_reply",
+      "price_total_usd": null,
+      "rate": "—",
+      "available": "—",
+      "contact": "—",
+      "reviews": "—",
+      "notes": "Quote-request fired ~10 hrs ago, no response.",
+      "profile_url": "https://www.gigsalad.com/eli_on_keys_los_angeles"
+    },
+    {
+      "name": "Michael Bogomolny",
+      "platform": "GigSalad",
+      "status": "no_reply",
+      "price_total_usd": null,
+      "rate": "—",
+      "available": "—",
+      "contact": "—",
+      "reviews": "Award-winning, Grammy Academy member.",
+      "notes": "Quote-request fired ~10 hrs ago, no response.",
+      "profile_url": "https://www.gigsalad.com/michael_bogomolny_los_angeles"
+    },
+    {
+      "name": "Eddie Smith",
+      "platform": "GigSalad",
+      "status": "no_reply",
+      "price_total_usd": null,
+      "rate": "—",
+      "available": "—",
+      "contact": "—",
+      "reviews": "—",
+      "notes": "Quote-request fired ~10 hrs ago, no response.",
+      "profile_url": "https://www.gigsalad.com/eddie_smith_jazz_pianist_los_angeles"
+    },
+    {
+      "name": "Hamid Pasha",
+      "platform": "Encore",
+      "status": "no_reply",
+      "price_total_usd": null,
+      "rate": "—",
+      "available": "—",
+      "contact": "via hamidpasha.com/contact",
+      "reviews": "—",
+      "notes": "Form submitted ~3 hrs ago. Encore is slower than GigSalad/Bash.",
+      "profile_url": "http://hamidpasha.com/contact"
+    },
+    {
+      "name": "Rex Perry (via own site)",
+      "platform": "Encore",
+      "status": "skipped",
+      "price_total_usd": null,
+      "rate": "—",
+      "available": "—",
+      "contact": "—",
+      "reviews": "—",
+      "notes": "Form had Akismet/server rejection even after captcha passed; pivoted to GigSalad (see above row).",
+      "profile_url": "https://rexperrymusic.com/rex-perry-pianist-vocalist/"
+    },
+    {
+      "name": "Steven Solomon",
+      "platform": "Encore",
+      "status": "skipped",
+      "price_total_usd": null,
+      "rate": "—",
+      "available": "—",
+      "contact": "—",
+      "reviews": "—",
+      "notes": "Squarespace contact form has broken phone-field validation (auto-prefixes +40 country code). Form rejected submit.",
+      "profile_url": "https://www.pianobysteven.com/inquiry"
+    },
+    {
+      "name": "Kevin Laurence",
+      "platform": "Encore",
+      "status": "skipped",
+      "price_total_usd": null,
+      "rate": "—",
+      "available": "—",
+      "contact": "—",
+      "reviews": "—",
+      "notes": "Miami-based, doesn't serve LA. Geography mismatch.",
+      "profile_url": "https://kevinlaurencemusic.com/"
+    },
+    {
+      "name": "Olivia Piano",
+      "platform": "Thumbtack",
+      "status": "failed",
+      "price_total_usd": null,
+      "rate": "—",
+      "available": "—",
+      "contact": "—",
+      "reviews": "—",
+      "notes": "Thumbtack estimate wizard returned generic error on Submit. Account also needed phone verification (a phone number we didn't have).",
+      "profile_url": null
+    },
+    {
+      "name": "Craigslist open call",
+      "platform": "Craigslist",
+      "status": "live_post",
+      "price_total_usd": null,
+      "rate": "—",
+      "available": "—",
+      "contact": "Bosco + Diamond have replied (see above rows); more may trickle in",
+      "reviews": "—",
+      "notes": "Post is live until ~May 31. 2 replies in 4 hrs. Live URL in 'notes' column.",
+      "profile_url": "https://losangeles.craigslist.org/sgv/muc/d/pasadena-looking-for-solo-jazz-pianist/7936395614.html"
+    }
+  ],
+  "summary": {
+    "fired_total": 10,
+    "submitted_successfully": 10,
+    "quoted": 7,
+    "messaged_only": 1,
+    "no_reply": 4,
+    "skipped_or_failed": 4,
+    "all_quotes_under_budget": [
+      {"name": "Bosco (CL)", "price": 150},
+      {"name": "Diamond/Ayumi (CL)", "price": 300},
+      {"name": "Vince Torbey (Bash)", "price": 400},
+      {"name": "Bobby West (GigSalad)", "price": 443},
+      {"name": "Geoff Earley (Bash)", "price": 500}
+    ],
+    "all_quotes_over_budget": [
+      {"name": "Sabine (GigSalad)", "price": 552, "over_by": 52},
+      {"name": "Patrick Boylan (GigSalad)", "price": 552, "over_by": 52}
+    ],
+    "recommendation_buckets": {
+      "best_credentials": "Sabine — concert-pianist pedigree, but $52 over budget (price the GigSalad fee, not Sabine's bid). Worth it if the gathering values polish.",
+      "best_value_with_vetting": "Vince Torbey (Pianist On Call) — $400, 100s of Bash reviews, also covers all styles + takes requests. Sweet spot of price + social proof.",
+      "best_value_without_vetting": "Bosco $150 or Ayumi/Diamond $300 — CL replies, no platform vetting, riskier."
+    }
+  }
+}

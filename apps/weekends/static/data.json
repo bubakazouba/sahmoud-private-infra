@@ -1,0 +1,1556 @@
+{
+  "generated": "2026-06-29T18:31:20",
+  "range": "Jan-Jun 2026",
+  "weekends": [
+    {
+      "id": "2026-01-03",
+      "label": "Jan 2-4",
+      "saturday": "2026-01-03",
+      "events": [
+        {
+          "id": "2026-01-02|iqim seminar",
+          "date": "2026-01-02",
+          "wd": "Fri",
+          "title": "iqim seminar",
+          "cal": "preksha",
+          "att": 0,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-01-03|family call",
+          "date": "2026-01-03",
+          "wd": "Sat",
+          "title": "Family Call",
+          "cal": "you",
+          "att": 5,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-01-03|kathak",
+          "date": "2026-01-03",
+          "wd": "Sat",
+          "title": "Kathak",
+          "cal": "preksha",
+          "att": 0,
+          "default": "excluded"
+        }
+      ]
+    },
+    {
+      "id": "2026-01-10",
+      "label": "Jan 9-11",
+      "saturday": "2026-01-10",
+      "events": [
+        {
+          "id": "2026-01-09|spiny sync",
+          "date": "2026-01-09",
+          "wd": "Fri",
+          "title": "SPINY Sync",
+          "cal": "you",
+          "att": 6,
+          "default": "social"
+        },
+        {
+          "id": "2026-01-09|iqim seminar",
+          "date": "2026-01-09",
+          "wd": "Fri",
+          "title": "iqim seminar",
+          "cal": "preksha",
+          "att": 0,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-01-10|family call",
+          "date": "2026-01-10",
+          "wd": "Sat",
+          "title": "Family Call",
+          "cal": "you",
+          "att": 5,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-01-10|in-store key/piano lesson",
+          "date": "2026-01-10",
+          "wd": "Sat",
+          "title": "In-Store Key/Piano Lesson",
+          "cal": "you",
+          "att": 1,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-01-11|intro to aerial with helen zhu - silks/hoop/hammock focus (veronica subbing 12/28) (the aerial house)",
+          "date": "2026-01-11",
+          "wd": "Sun",
+          "title": "Intro to Aerial with Helen Zhu - Silks/Hoop/Hammock Focus (Veronica subbing 12/28) (The Aerial House)",
+          "cal": "you",
+          "att": 2,
+          "default": "maybe"
+        }
+      ]
+    },
+    {
+      "id": "2026-01-17",
+      "label": "Jan 16-18",
+      "saturday": "2026-01-17",
+      "events": [
+        {
+          "id": "2026-01-16|iqim seminar",
+          "date": "2026-01-16",
+          "wd": "Fri",
+          "title": "iqim seminar",
+          "cal": "preksha",
+          "att": 0,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-01-17|family call",
+          "date": "2026-01-17",
+          "wd": "Sat",
+          "title": "Family Call",
+          "cal": "you",
+          "att": 5,
+          "default": "excluded"
+        }
+      ]
+    },
+    {
+      "id": "2026-01-24",
+      "label": "Jan 23-25",
+      "saturday": "2026-01-24",
+      "events": [
+        {
+          "id": "2026-01-23|reservation at spice affair beverly hills indian restaurant",
+          "date": "2026-01-23",
+          "wd": "Fri",
+          "title": "Reservation at Spice Affair Beverly Hills Indian Restaurant",
+          "cal": "you",
+          "att": 1,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-01-23|reservation at spice affair indian restaurant",
+          "date": "2026-01-23",
+          "wd": "Fri",
+          "title": "Reservation at Spice Affair Indian Restaurant",
+          "cal": "you",
+          "att": 1,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-01-23|iqim seminar",
+          "date": "2026-01-23",
+          "wd": "Fri",
+          "title": "iqim seminar",
+          "cal": "preksha",
+          "att": 0,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-01-24|family call",
+          "date": "2026-01-24",
+          "wd": "Sat",
+          "title": "Family Call",
+          "cal": "you",
+          "att": 5,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-01-25|sound bath",
+          "date": "2026-01-25",
+          "wd": "Sun",
+          "title": "sound bath",
+          "cal": "preksha",
+          "att": 2,
+          "default": "maybe"
+        }
+      ]
+    },
+    {
+      "id": "2026-01-31",
+      "label": "Jan 30-1",
+      "saturday": "2026-01-31",
+      "events": [
+        {
+          "id": "2026-01-30|iqim seminar",
+          "date": "2026-01-30",
+          "wd": "Fri",
+          "title": "iqim seminar",
+          "cal": "preksha",
+          "att": 0,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-01-30|flight to san francisco (ua 8255)",
+          "date": "2026-01-30",
+          "wd": "Fri",
+          "title": "Flight to San Francisco (UA 8255)",
+          "cal": "family",
+          "att": 0,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-01-31|family call",
+          "date": "2026-01-31",
+          "wd": "Sat",
+          "title": "Family Call",
+          "cal": "you",
+          "att": 5,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-01-31|ojai",
+          "date": "2026-01-31",
+          "wd": "Sat",
+          "title": "ojai",
+          "cal": "preksha",
+          "att": 2,
+          "default": "maybe"
+        }
+      ]
+    },
+    {
+      "id": "2026-02-07",
+      "label": "Feb 6-8",
+      "saturday": "2026-02-07",
+      "events": [
+        {
+          "id": "2026-02-06|iqim seminar",
+          "date": "2026-02-06",
+          "wd": "Fri",
+          "title": "iqim seminar",
+          "cal": "preksha",
+          "att": 0,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-02-07|family call",
+          "date": "2026-02-07",
+          "wd": "Sat",
+          "title": "Family Call",
+          "cal": "you",
+          "att": 5,
+          "default": "excluded"
+        }
+      ]
+    },
+    {
+      "id": "2026-02-14",
+      "label": "Feb 13-15",
+      "saturday": "2026-02-14",
+      "events": [
+        {
+          "id": "2026-02-13|mamy dr appt w/ noushin sheidaei",
+          "date": "2026-02-13",
+          "wd": "Fri",
+          "title": "mamy dr appt w/ Noushin Sheidaei",
+          "cal": "you",
+          "att": 4,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-02-13|pickleball lesson kibom",
+          "date": "2026-02-13",
+          "wd": "Fri",
+          "title": "pickleball lesson kibom",
+          "cal": "you",
+          "att": 4,
+          "default": "maybe"
+        },
+        {
+          "id": "2026-02-13|iqim seminar",
+          "date": "2026-02-13",
+          "wd": "Fri",
+          "title": "iqim seminar",
+          "cal": "preksha",
+          "att": 0,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-02-14|family call",
+          "date": "2026-02-14",
+          "wd": "Sat",
+          "title": "Family Call",
+          "cal": "you",
+          "att": 5,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-02-14|in-store key/piano lesson",
+          "date": "2026-02-14",
+          "wd": "Sat",
+          "title": "In-Store Key/Piano Lesson",
+          "cal": "you",
+          "att": 1,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-02-15|pickleball tournament!!",
+          "date": "2026-02-15",
+          "wd": "Sun",
+          "title": "pickleball tournament!!",
+          "cal": "you",
+          "att": 2,
+          "default": "social"
+        },
+        {
+          "id": "2026-02-15|in-store key/piano lesson",
+          "date": "2026-02-15",
+          "wd": "Sun",
+          "title": "In-Store Key/Piano Lesson",
+          "cal": "you",
+          "att": 1,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-02-15|jl",
+          "date": "2026-02-15",
+          "wd": "Sun",
+          "title": "JL",
+          "cal": "you",
+          "att": 0,
+          "default": "maybe"
+        }
+      ]
+    },
+    {
+      "id": "2026-02-21",
+      "label": "Feb 20-22",
+      "saturday": "2026-02-21",
+      "events": [
+        {
+          "id": "2026-02-20|iqim seminar",
+          "date": "2026-02-20",
+          "wd": "Fri",
+          "title": "iqim seminar",
+          "cal": "preksha",
+          "att": 0,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-02-20|iftar",
+          "date": "2026-02-20",
+          "wd": "Fri",
+          "title": "iftar",
+          "cal": "preksha",
+          "att": 0,
+          "default": "social"
+        },
+        {
+          "id": "2026-02-21|family call",
+          "date": "2026-02-21",
+          "wd": "Sat",
+          "title": "Family Call",
+          "cal": "you",
+          "att": 5,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-02-21|clean preksha room",
+          "date": "2026-02-21",
+          "wd": "Sat",
+          "title": "clean preksha room",
+          "cal": "you",
+          "att": 2,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-02-21|makeup appt",
+          "date": "2026-02-21",
+          "wd": "Sat",
+          "title": "makeup appt",
+          "cal": "preksha",
+          "att": 0,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-02-22|clean preksha room",
+          "date": "2026-02-22",
+          "wd": "Sun",
+          "title": "clean preksha room",
+          "cal": "you",
+          "att": 2,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-02-22|pickleball at fremont park",
+          "date": "2026-02-22",
+          "wd": "Sun",
+          "title": "pickleball at fremont park",
+          "cal": "you",
+          "att": 3,
+          "default": "maybe"
+        }
+      ]
+    },
+    {
+      "id": "2026-02-28",
+      "label": "Feb 27-1",
+      "saturday": "2026-02-28",
+      "events": [
+        {
+          "id": "2026-02-27|iqim seminar",
+          "date": "2026-02-27",
+          "wd": "Fri",
+          "title": "iqim seminar",
+          "cal": "preksha",
+          "att": 0,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-02-28|family call",
+          "date": "2026-02-28",
+          "wd": "Sat",
+          "title": "Family Call",
+          "cal": "you",
+          "att": 5,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-03-01|flight to burbank (wn 1716)",
+          "date": "2026-03-01",
+          "wd": "Sun",
+          "title": "Flight to Burbank (WN 1716)",
+          "cal": "you",
+          "att": 1,
+          "default": "excluded"
+        }
+      ]
+    },
+    {
+      "id": "2026-03-07",
+      "label": "Mar 6-8",
+      "saturday": "2026-03-07",
+      "events": [
+        {
+          "id": "2026-03-06|sahmoud do not schedule anything for this day",
+          "date": "2026-03-06",
+          "wd": "Fri",
+          "title": "SAHMOUD DO NOT SCHEDULE ANYTHING FOR THIS DAY",
+          "cal": "you",
+          "att": 2,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-03-06|preksha room and cooking",
+          "date": "2026-03-06",
+          "wd": "Fri",
+          "title": "preksha room and cooking",
+          "cal": "you",
+          "att": 2,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-03-06|iqim seminar",
+          "date": "2026-03-06",
+          "wd": "Fri",
+          "title": "iqim seminar",
+          "cal": "preksha",
+          "att": 0,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-03-07|[save the date] sahmoud meet prekshs parents",
+          "date": "2026-03-07",
+          "wd": "Sat",
+          "title": "[SAVE THE DATE] sahmoud meet prekshs parents",
+          "cal": "you",
+          "att": 2,
+          "default": "social"
+        },
+        {
+          "id": "2026-03-07|family call",
+          "date": "2026-03-07",
+          "wd": "Sat",
+          "title": "Family Call",
+          "cal": "you",
+          "att": 5,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-03-07|preksha family here",
+          "date": "2026-03-07",
+          "wd": "Sat",
+          "title": "preksha family here",
+          "cal": "preksha",
+          "att": 0,
+          "default": "social"
+        },
+        {
+          "id": "2026-03-08|[save the date] sahmoud meet preksha parents",
+          "date": "2026-03-08",
+          "wd": "Sun",
+          "title": "[SAVE THE DATE] sahmoud meet preksha parents",
+          "cal": "you",
+          "att": 2,
+          "default": "social"
+        }
+      ]
+    },
+    {
+      "id": "2026-03-14",
+      "label": "Mar 13-15",
+      "saturday": "2026-03-14",
+      "events": [
+        {
+          "id": "2026-03-13|iqim seminar",
+          "date": "2026-03-13",
+          "wd": "Fri",
+          "title": "iqim seminar",
+          "cal": "preksha",
+          "att": 0,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-03-14|family call",
+          "date": "2026-03-14",
+          "wd": "Sat",
+          "title": "Family Call",
+          "cal": "you",
+          "att": 5,
+          "default": "excluded"
+        }
+      ]
+    },
+    {
+      "id": "2026-03-21",
+      "label": "Mar 20-22",
+      "saturday": "2026-03-21",
+      "events": [
+        {
+          "id": "2026-03-20|iqim seminar",
+          "date": "2026-03-20",
+          "wd": "Fri",
+          "title": "iqim seminar",
+          "cal": "preksha",
+          "att": 0,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-03-21|family call",
+          "date": "2026-03-21",
+          "wd": "Sat",
+          "title": "Family Call",
+          "cal": "you",
+          "att": 5,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-03-21|divya's party",
+          "date": "2026-03-21",
+          "wd": "Sat",
+          "title": "Divya's party",
+          "cal": "preksha",
+          "att": 2,
+          "default": "social"
+        },
+        {
+          "id": "2026-03-22|flight to burbank (wn 4437)",
+          "date": "2026-03-22",
+          "wd": "Sun",
+          "title": "Flight to Burbank (WN 4437)",
+          "cal": "you",
+          "att": 1,
+          "default": "excluded"
+        }
+      ]
+    },
+    {
+      "id": "2026-03-28",
+      "label": "Mar 27-29",
+      "saturday": "2026-03-28",
+      "events": [
+        {
+          "id": "2026-03-27|pickleball with preksha",
+          "date": "2026-03-27",
+          "wd": "Fri",
+          "title": "Pickleball with Preksha",
+          "cal": "you",
+          "att": 0,
+          "default": "maybe"
+        },
+        {
+          "id": "2026-03-27|iqim seminar",
+          "date": "2026-03-27",
+          "wd": "Fri",
+          "title": "iqim seminar",
+          "cal": "preksha",
+          "att": 0,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-03-28|family call",
+          "date": "2026-03-28",
+          "wd": "Sat",
+          "title": "Family Call",
+          "cal": "you",
+          "att": 5,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-03-28|cynthia comedy whow",
+          "date": "2026-03-28",
+          "wd": "Sat",
+          "title": "cynthia comedy whow",
+          "cal": "preksha",
+          "att": 0,
+          "default": "social"
+        },
+        {
+          "id": "2026-03-29|sahmoud/preksha clean",
+          "date": "2026-03-29",
+          "wd": "Sun",
+          "title": "Sahmoud/Preksha Clean",
+          "cal": "you",
+          "att": 2,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-03-29|the matrix with preksha",
+          "date": "2026-03-29",
+          "wd": "Sun",
+          "title": "The Matrix with Preksha",
+          "cal": "you",
+          "att": 2,
+          "default": "maybe"
+        },
+        {
+          "id": "2026-03-29|the matrix?",
+          "date": "2026-03-29",
+          "wd": "Sun",
+          "title": "the matrix?",
+          "cal": "preksha",
+          "att": 0,
+          "default": "maybe"
+        }
+      ]
+    },
+    {
+      "id": "2026-04-04",
+      "label": "Apr 3-5",
+      "saturday": "2026-04-04",
+      "events": [
+        {
+          "id": "2026-04-03|viterbi admitted students breakfast - april 2026",
+          "date": "2026-04-03",
+          "wd": "Fri",
+          "title": "Viterbi Admitted Students Breakfast - April 2026",
+          "cal": "you",
+          "att": 0,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-04-03|iqim seminar",
+          "date": "2026-04-03",
+          "wd": "Fri",
+          "title": "iqim seminar",
+          "cal": "preksha",
+          "att": 0,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-04-03|preksha dance class",
+          "date": "2026-04-03",
+          "wd": "Fri",
+          "title": "preksha dance class",
+          "cal": "preksha",
+          "att": 0,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-04-04|family call",
+          "date": "2026-04-04",
+          "wd": "Sat",
+          "title": "Family Call",
+          "cal": "you",
+          "att": 5,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-04-04|a:k:h:a:s:p",
+          "date": "2026-04-04",
+          "wd": "Sat",
+          "title": "A:K:H:A:S:P",
+          "cal": "you",
+          "att": 6,
+          "default": "social"
+        },
+        {
+          "id": "2026-04-04|becky",
+          "date": "2026-04-04",
+          "wd": "Sat",
+          "title": "becky",
+          "cal": "preksha",
+          "att": 0,
+          "default": "social"
+        },
+        {
+          "id": "2026-04-05|cricket carnival",
+          "date": "2026-04-05",
+          "wd": "Sun",
+          "title": "cricket carnival",
+          "cal": "you",
+          "att": 2,
+          "default": "social"
+        }
+      ]
+    },
+    {
+      "id": "2026-04-11",
+      "label": "Apr 10-12",
+      "saturday": "2026-04-11",
+      "events": [
+        {
+          "id": "2026-04-10|arab & armenian film screening (arab heritage month)",
+          "date": "2026-04-10",
+          "wd": "Fri",
+          "title": "Arab & Armenian Film Screening (Arab Heritage Month)",
+          "cal": "you",
+          "att": 2,
+          "default": "social"
+        },
+        {
+          "id": "2026-04-10|iqim seminar",
+          "date": "2026-04-10",
+          "wd": "Fri",
+          "title": "iqim seminar",
+          "cal": "preksha",
+          "att": 0,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-04-10|dance class",
+          "date": "2026-04-10",
+          "wd": "Fri",
+          "title": "dance class",
+          "cal": "preksha",
+          "att": 0,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-04-11|family call",
+          "date": "2026-04-11",
+          "wd": "Sat",
+          "title": "Family Call",
+          "cal": "you",
+          "att": 5,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-04-11|preksha and sahmoud should do their taxes",
+          "date": "2026-04-11",
+          "wd": "Sat",
+          "title": "preksha and sahmoud should do their taxes",
+          "cal": "you",
+          "att": 2,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-04-11|dance workshop",
+          "date": "2026-04-11",
+          "wd": "Sat",
+          "title": "dance workshop",
+          "cal": "preksha",
+          "att": 0,
+          "default": "excluded"
+        }
+      ]
+    },
+    {
+      "id": "2026-04-18",
+      "label": "Apr 17-19",
+      "saturday": "2026-04-18",
+      "events": [
+        {
+          "id": "2026-04-17|catherine jurca health committee meeting",
+          "date": "2026-04-17",
+          "wd": "Fri",
+          "title": "catherine jurca health committee meeting",
+          "cal": "preksha",
+          "att": 0,
+          "default": "maybe"
+        },
+        {
+          "id": "2026-04-17|iqim seminar",
+          "date": "2026-04-17",
+          "wd": "Fri",
+          "title": "iqim seminar",
+          "cal": "preksha",
+          "att": 0,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-04-17|momy optometry",
+          "date": "2026-04-17",
+          "wd": "Fri",
+          "title": "Momy Optometry",
+          "cal": "family",
+          "att": 0,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-04-18|family call",
+          "date": "2026-04-18",
+          "wd": "Sat",
+          "title": "Family Call",
+          "cal": "you",
+          "att": 5,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-04-19|aya's birthday",
+          "date": "2026-04-19",
+          "wd": "Sun",
+          "title": "Aya's Birthday",
+          "cal": "you",
+          "att": 0,
+          "default": "social"
+        }
+      ]
+    },
+    {
+      "id": "2026-04-25",
+      "label": "Apr 24-26",
+      "saturday": "2026-04-25",
+      "events": [
+        {
+          "id": "2026-04-24|almost famous at 7:30 -- doors open at 6",
+          "date": "2026-04-24",
+          "wd": "Fri",
+          "title": "almost famous at 7:30 -- doors open at 6",
+          "cal": "you",
+          "att": 2,
+          "default": "maybe"
+        },
+        {
+          "id": "2026-04-24|international food fair (arab heritage month)",
+          "date": "2026-04-24",
+          "wd": "Fri",
+          "title": "International Food Fair (Arab Heritage Month)",
+          "cal": "you",
+          "att": 1,
+          "default": "social"
+        },
+        {
+          "id": "2026-04-24|iqim seminar",
+          "date": "2026-04-24",
+          "wd": "Fri",
+          "title": "iqim seminar",
+          "cal": "preksha",
+          "att": 0,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-04-25|deadline: register for kickball tournament (may 2)",
+          "date": "2026-04-25",
+          "wd": "Sat",
+          "title": "DEADLINE: Register for Kickball Tournament (May 2)",
+          "cal": "you",
+          "att": 0,
+          "default": "social"
+        },
+        {
+          "id": "2026-04-25|stay at hyatt house san diego/sorrento mesa",
+          "date": "2026-04-25",
+          "wd": "Sat",
+          "title": "Stay at Hyatt House San Diego/Sorrento Mesa",
+          "cal": "you",
+          "att": 0,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-04-25|deadline: register for flag football tournament (may 9)",
+          "date": "2026-04-25",
+          "wd": "Sat",
+          "title": "DEADLINE: Register for Flag Football Tournament (May 9)",
+          "cal": "you",
+          "att": 0,
+          "default": "social"
+        },
+        {
+          "id": "2026-04-25|world tai chi & qigong day — caltech",
+          "date": "2026-04-25",
+          "wd": "Sat",
+          "title": "World Tai Chi & Qigong Day — Caltech",
+          "cal": "you",
+          "att": 0,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-04-25|family call",
+          "date": "2026-04-25",
+          "wd": "Sat",
+          "title": "Family Call",
+          "cal": "you",
+          "att": 5,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-04-25|san diego",
+          "date": "2026-04-25",
+          "wd": "Sat",
+          "title": "san diego",
+          "cal": "you",
+          "att": 0,
+          "default": "maybe"
+        },
+        {
+          "id": "2026-04-26|relationship retrospective",
+          "date": "2026-04-26",
+          "wd": "Sun",
+          "title": "relationship retrospective",
+          "cal": "you",
+          "att": 2,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-04-26|san diego",
+          "date": "2026-04-26",
+          "wd": "Sun",
+          "title": "san diego",
+          "cal": "preksha",
+          "att": 2,
+          "default": "maybe"
+        }
+      ]
+    },
+    {
+      "id": "2026-05-02",
+      "label": "May 1-3",
+      "saturday": "2026-05-02",
+      "events": [
+        {
+          "id": "2026-05-01|couch delivery (scandinavian designs #55100924)",
+          "date": "2026-05-01",
+          "wd": "Fri",
+          "title": "Couch delivery (Scandinavian Designs #55100924)",
+          "cal": "you",
+          "att": 2,
+          "default": "maybe"
+        },
+        {
+          "id": "2026-05-01|heritage seminar (arab heritage month)",
+          "date": "2026-05-01",
+          "wd": "Fri",
+          "title": "Heritage Seminar (Arab Heritage Month)",
+          "cal": "you",
+          "att": 1,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-05-01|dance class",
+          "date": "2026-05-01",
+          "wd": "Fri",
+          "title": "dance class",
+          "cal": "preksha",
+          "att": 0,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-05-01|iqim seminar",
+          "date": "2026-05-01",
+          "wd": "Fri",
+          "title": "iqim seminar",
+          "cal": "preksha",
+          "att": 0,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-05-02|family call",
+          "date": "2026-05-02",
+          "wd": "Sat",
+          "title": "Family Call",
+          "cal": "you",
+          "att": 5,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-05-03|disassemble + return blackstone grill (walmart)",
+          "date": "2026-05-03",
+          "wd": "Sun",
+          "title": "Disassemble + return Blackstone grill (Walmart)",
+          "cal": "you",
+          "att": 2,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-05-03|relationship retrospective",
+          "date": "2026-05-03",
+          "wd": "Sun",
+          "title": "relationship retrospective",
+          "cal": "you",
+          "att": 2,
+          "default": "excluded"
+        }
+      ]
+    },
+    {
+      "id": "2026-05-09",
+      "label": "May 8-10",
+      "saturday": "2026-05-09",
+      "events": [
+        {
+          "id": "2026-05-08|dance class",
+          "date": "2026-05-08",
+          "wd": "Fri",
+          "title": "dance class",
+          "cal": "preksha",
+          "att": 0,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-05-08|iqim seminar",
+          "date": "2026-05-08",
+          "wd": "Fri",
+          "title": "iqim seminar",
+          "cal": "preksha",
+          "att": 0,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-05-09|caltech flag football tournament",
+          "date": "2026-05-09",
+          "wd": "Sat",
+          "title": "Caltech Flag Football Tournament",
+          "cal": "you",
+          "att": 0,
+          "default": "social"
+        },
+        {
+          "id": "2026-05-09|family call",
+          "date": "2026-05-09",
+          "wd": "Sat",
+          "title": "Family Call",
+          "cal": "you",
+          "att": 5,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-05-09|spiny sync",
+          "date": "2026-05-09",
+          "wd": "Sat",
+          "title": "SPINY Sync",
+          "cal": "you",
+          "att": 6,
+          "default": "social"
+        },
+        {
+          "id": "2026-05-09|dodgers vs braves — dodger stadium (first pitch 6:10 pm)",
+          "date": "2026-05-09",
+          "wd": "Sat",
+          "title": "Dodgers vs Braves — Dodger Stadium (first pitch 6:10 PM)",
+          "cal": "you",
+          "att": 1,
+          "default": "social"
+        },
+        {
+          "id": "2026-05-10|relationship retrospective",
+          "date": "2026-05-10",
+          "wd": "Sun",
+          "title": "relationship retrospective",
+          "cal": "you",
+          "att": 2,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-05-10|preksha in texas",
+          "date": "2026-05-10",
+          "wd": "Sun",
+          "title": "preksha in texas",
+          "cal": "preksha",
+          "att": 0,
+          "default": "maybe"
+        }
+      ]
+    },
+    {
+      "id": "2026-05-16",
+      "label": "May 15-17",
+      "saturday": "2026-05-16",
+      "events": [
+        {
+          "id": "2026-05-15|walmart return due date",
+          "date": "2026-05-15",
+          "wd": "Fri",
+          "title": "walmart return due date",
+          "cal": "you",
+          "att": 0,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-05-15|mamy flight: paris → cairo (af 0570)",
+          "date": "2026-05-15",
+          "wd": "Fri",
+          "title": "Mamy flight: Paris → Cairo (AF 0570)",
+          "cal": "you",
+          "att": 0,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-05-15|flight to cairo (af 570)",
+          "date": "2026-05-15",
+          "wd": "Fri",
+          "title": "Flight to Cairo (AF 570)",
+          "cal": "you",
+          "att": 1,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-05-15|iqim seminar",
+          "date": "2026-05-15",
+          "wd": "Fri",
+          "title": "iqim seminar",
+          "cal": "preksha",
+          "att": 0,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-05-15|mamy flight: sfo → paris (af 0081)",
+          "date": "2026-05-15",
+          "wd": "Fri",
+          "title": "Mamy flight: SFO → Paris (AF 0081)",
+          "cal": "family",
+          "att": 0,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-05-16|family call",
+          "date": "2026-05-16",
+          "wd": "Sat",
+          "title": "Family Call",
+          "cal": "you",
+          "att": 5,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-05-16|preksha at bur (time tbd)",
+          "date": "2026-05-16",
+          "wd": "Sat",
+          "title": "preksha at BUR (time TBD)",
+          "cal": "you",
+          "att": 0,
+          "default": "maybe"
+        },
+        {
+          "id": "2026-05-17|relationship retrospective",
+          "date": "2026-05-17",
+          "wd": "Sun",
+          "title": "relationship retrospective",
+          "cal": "you",
+          "att": 2,
+          "default": "excluded"
+        }
+      ]
+    },
+    {
+      "id": "2026-05-23",
+      "label": "May 22-24",
+      "saturday": "2026-05-23",
+      "events": [
+        {
+          "id": "2026-05-22|seattle - see isaac & yujie",
+          "date": "2026-05-22",
+          "wd": "Fri",
+          "title": "Seattle - See Isaac & Yujie",
+          "cal": "you",
+          "att": 2,
+          "default": "social"
+        },
+        {
+          "id": "2026-05-22|iqim seminar",
+          "date": "2026-05-22",
+          "wd": "Fri",
+          "title": "iqim seminar",
+          "cal": "preksha",
+          "att": 0,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-05-23|finance day with sahmoud",
+          "date": "2026-05-23",
+          "wd": "Sat",
+          "title": "finance day with sahmoud",
+          "cal": "you",
+          "att": 2,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-05-23|family call",
+          "date": "2026-05-23",
+          "wd": "Sat",
+          "title": "Family Call",
+          "cal": "you",
+          "att": 5,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-05-23|dress and suit shopping",
+          "date": "2026-05-23",
+          "wd": "Sat",
+          "title": "dress and suit shopping",
+          "cal": "you",
+          "att": 2,
+          "default": "maybe"
+        },
+        {
+          "id": "2026-05-24|relationship retrospective",
+          "date": "2026-05-24",
+          "wd": "Sun",
+          "title": "relationship retrospective",
+          "cal": "you",
+          "att": 2,
+          "default": "excluded"
+        }
+      ]
+    },
+    {
+      "id": "2026-05-30",
+      "label": "May 29-31",
+      "saturday": "2026-05-30",
+      "events": [
+        {
+          "id": "2026-05-29|pickleball league signup deadline",
+          "date": "2026-05-29",
+          "wd": "Fri",
+          "title": "Pickleball league signup DEADLINE",
+          "cal": "you",
+          "att": 0,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-05-29|preksha bahngra event",
+          "date": "2026-05-29",
+          "wd": "Fri",
+          "title": "preksha bahngra event",
+          "cal": "you",
+          "att": 0,
+          "default": "maybe"
+        },
+        {
+          "id": "2026-05-29|time travel event",
+          "date": "2026-05-29",
+          "wd": "Fri",
+          "title": "time travel event",
+          "cal": "you",
+          "att": 2,
+          "default": "maybe"
+        },
+        {
+          "id": "2026-05-29|iqim seminar",
+          "date": "2026-05-29",
+          "wd": "Fri",
+          "title": "iqim seminar",
+          "cal": "preksha",
+          "att": 0,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-05-30|family call",
+          "date": "2026-05-30",
+          "wd": "Sat",
+          "title": "Family Call",
+          "cal": "you",
+          "att": 5,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-05-30|return knee scooter to cas",
+          "date": "2026-05-30",
+          "wd": "Sat",
+          "title": "Return knee scooter to CAS",
+          "cal": "you",
+          "att": 1,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-05-30|flying trapeze - swingit trapeze (tentative)",
+          "date": "2026-05-30",
+          "wd": "Sat",
+          "title": "Flying Trapeze - SwingIt Trapeze (Tentative)",
+          "cal": "you",
+          "att": 2,
+          "default": "maybe"
+        },
+        {
+          "id": "2026-05-30|hoda:sahmoud",
+          "date": "2026-05-30",
+          "wd": "Sat",
+          "title": "Hoda:Sahmoud",
+          "cal": "you",
+          "att": 2,
+          "default": "social"
+        },
+        {
+          "id": "2026-05-30|grad student ball at caltech",
+          "date": "2026-05-30",
+          "wd": "Sat",
+          "title": "Grad Student Ball at Caltech",
+          "cal": "you",
+          "att": 0,
+          "default": "social"
+        },
+        {
+          "id": "2026-05-30|gsc formal",
+          "date": "2026-05-30",
+          "wd": "Sat",
+          "title": "gsc formal",
+          "cal": "preksha",
+          "att": 0,
+          "default": "social"
+        },
+        {
+          "id": "2026-05-31|hoda:sahmoud catchup and monies",
+          "date": "2026-05-31",
+          "wd": "Sun",
+          "title": "Hoda:Sahmoud catchup and monies",
+          "cal": "you",
+          "att": 2,
+          "default": "social"
+        },
+        {
+          "id": "2026-05-31|detailing",
+          "date": "2026-05-31",
+          "wd": "Sun",
+          "title": "Detailing",
+          "cal": "you",
+          "att": 2,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-05-31|dinner + barcade highland park",
+          "date": "2026-05-31",
+          "wd": "Sun",
+          "title": "dinner + barcade highland park",
+          "cal": "you",
+          "att": 0,
+          "default": "social"
+        },
+        {
+          "id": "2026-05-31|relationship retrospective",
+          "date": "2026-05-31",
+          "wd": "Sun",
+          "title": "relationship retrospective",
+          "cal": "you",
+          "att": 2,
+          "default": "excluded"
+        }
+      ]
+    },
+    {
+      "id": "2026-06-06",
+      "label": "Jun 5-7",
+      "saturday": "2026-06-06",
+      "events": [
+        {
+          "id": "2026-06-05|dance class (preksha)",
+          "date": "2026-06-05",
+          "wd": "Fri",
+          "title": "Dance class (Preksha)",
+          "cal": "you",
+          "att": 1,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-06-05|iqim seminar",
+          "date": "2026-06-05",
+          "wd": "Fri",
+          "title": "iqim seminar",
+          "cal": "preksha",
+          "att": 0,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-06-06|stay at sheraton san diego resort",
+          "date": "2026-06-06",
+          "wd": "Sat",
+          "title": "Stay at Sheraton San Diego Resort",
+          "cal": "you",
+          "att": 1,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-06-06|reservation at sheraton san diego resort, starts:06/06/26, ends: 06/07/26",
+          "date": "2026-06-06",
+          "wd": "Sat",
+          "title": "Reservation at Sheraton San Diego Resort, Starts:06/06/26, Ends: 06/07/26",
+          "cal": "you",
+          "att": 2,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-06-06|family call",
+          "date": "2026-06-06",
+          "wd": "Sat",
+          "title": "Family Call",
+          "cal": "you",
+          "att": 5,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-06-07|relationship retrospective",
+          "date": "2026-06-07",
+          "wd": "Sun",
+          "title": "relationship retrospective",
+          "cal": "you",
+          "att": 2,
+          "default": "excluded"
+        }
+      ]
+    },
+    {
+      "id": "2026-06-13",
+      "label": "Jun 12-14",
+      "saturday": "2026-06-13",
+      "events": [
+        {
+          "id": "2026-06-12|iqim seminar",
+          "date": "2026-06-12",
+          "wd": "Fri",
+          "title": "iqim seminar",
+          "cal": "preksha",
+          "att": 0,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-06-13|family call",
+          "date": "2026-06-13",
+          "wd": "Sat",
+          "title": "Family Call",
+          "cal": "you",
+          "att": 5,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-06-13|pragyna is here",
+          "date": "2026-06-13",
+          "wd": "Sat",
+          "title": "pragyna is here",
+          "cal": "you",
+          "att": 2,
+          "default": "social"
+        },
+        {
+          "id": "2026-06-14|relationship retrospective",
+          "date": "2026-06-14",
+          "wd": "Sun",
+          "title": "relationship retrospective",
+          "cal": "you",
+          "att": 2,
+          "default": "excluded"
+        }
+      ]
+    },
+    {
+      "id": "2026-06-20",
+      "label": "Jun 19-21",
+      "saturday": "2026-06-20",
+      "events": [
+        {
+          "id": "2026-06-19|spiros meeting",
+          "date": "2026-06-19",
+          "wd": "Fri",
+          "title": "spiros meeting",
+          "cal": "you",
+          "att": 0,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-06-19|iqim seminar",
+          "date": "2026-06-19",
+          "wd": "Fri",
+          "title": "iqim seminar",
+          "cal": "preksha",
+          "att": 0,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-06-20|family call",
+          "date": "2026-06-20",
+          "wd": "Sat",
+          "title": "Family Call",
+          "cal": "you",
+          "att": 5,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-06-20|626 market",
+          "date": "2026-06-20",
+          "wd": "Sat",
+          "title": "626 market",
+          "cal": "you",
+          "att": 0,
+          "default": "social"
+        }
+      ]
+    },
+    {
+      "id": "2026-06-27",
+      "label": "Jun 26-28",
+      "saturday": "2026-06-27",
+      "events": [
+        {
+          "id": "2026-06-26|fifa world cup party",
+          "date": "2026-06-26",
+          "wd": "Fri",
+          "title": "fifa world cup party",
+          "cal": "you",
+          "att": 2,
+          "default": "social"
+        },
+        {
+          "id": "2026-06-26|world cup party",
+          "date": "2026-06-26",
+          "wd": "Fri",
+          "title": "world cup party",
+          "cal": "you",
+          "att": 0,
+          "default": "social"
+        },
+        {
+          "id": "2026-06-26|iqim seminar",
+          "date": "2026-06-26",
+          "wd": "Fri",
+          "title": "iqim seminar",
+          "cal": "preksha",
+          "att": 0,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-06-27|altadena give back ceremony",
+          "date": "2026-06-27",
+          "wd": "Sat",
+          "title": "Altadena Give Back Ceremony",
+          "cal": "you",
+          "att": 0,
+          "default": "social"
+        },
+        {
+          "id": "2026-06-27|nils birthday",
+          "date": "2026-06-27",
+          "wd": "Sat",
+          "title": "nils birthday",
+          "cal": "you",
+          "att": 2,
+          "default": "social"
+        },
+        {
+          "id": "2026-06-27|family call",
+          "date": "2026-06-27",
+          "wd": "Sat",
+          "title": "Family Call",
+          "cal": "you",
+          "att": 5,
+          "default": "excluded"
+        },
+        {
+          "id": "2026-06-27|closet cleanout",
+          "date": "2026-06-27",
+          "wd": "Sat",
+          "title": "Closet cleanout",
+          "cal": "you",
+          "att": 0,
+          "default": "excluded"
+        }
+      ]
+    }
+  ]
+}

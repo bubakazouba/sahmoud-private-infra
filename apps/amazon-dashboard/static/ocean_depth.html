@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ocean Depth Heatmap</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  html,body{margin:0;height:100%;background:#0f1419;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+  #map{height:78vh;width:100%}
+  .hdr{color:#e6ecf3;padding:10px 16px}
+  .hdr h1{font-size:19px;margin:0 0 2px}
+  .hdr .s{color:#8b97a7;font-size:12.5px}
+  .legend{background:#1a212b;color:#e6ecf3;padding:8px 10px;border-radius:8px;font-size:11.5px;line-height:1.5;border:1px solid #2d3744}
+  .legend b{font-size:12px}
+  .bar{height:12px;width:200px;border-radius:3px;margin:4px 0;background:linear-gradient(90deg,#aee0ff,#3aa0e0,#1f63c0,#10357a,#06143d)}
+  .row{display:flex;justify-content:space-between;color:#8b97a7;font-size:10px}
+  .facts{color:#8b97a7;font-size:12px;padding:6px 16px 14px;line-height:1.6}
+</style></head>
+<body>
+<div class="hdr"><h1>🌊 Ocean Depth Heatmap (Bathymetry)</h1>
+<div class="s">Real data: EMODnet / GEBCO global bathymetric grid. Color = how deep the seafloor is. Lighter blue = shallow (continental shelves), dark navy = the deepest trenches.</div></div>
+<div id="map"></div>
+<div class="facts" id="facts"></div>
+<script>
+const map = L.map('map',{worldCopyJump:true}).setView([15,0], 2);
+// GEBCO global bathymetry (truly worldwide) as the base depth layer
+const gebco = L.tileLayer.wms('https://wms.gebco.net/mapserv',{
+  layers:'GEBCO_LATEST', format:'image/png', transparent:false, version:'1.3.0',
+  attribution:'GEBCO 2024 global grid', maxZoom:9
+}).addTo(map);
+// EMODnet high-res depth colour (Europe + some regions) as an optional overlay
+const emod = L.tileLayer.wms('https://ows.emodnet-bathymetry.eu/wms',{
+  layers:'emodnet:mean_multicolour', format:'image/png', transparent:true, version:'1.3.0',
+  attribution:'EMODnet Bathymetry', opacity:0.95
+});
+L.control.layers({'GEBCO global depth':gebco},
+  {'EMODnet hi-res (regional)':emod}).addTo(map);
+
+const legend = L.control({position:'bottomright'});
+legend.onAdd = function(){
+  const d = L.DomUtil.create('div','legend');
+  d.innerHTML = '<b>Depth</b><div class="bar"></div><div class="row"><span>0 m (shore)</span><span>~6,000 m</span><span>11,000 m</span></div>';
+  return d;
+};
+legend.addTo(map);
+
+document.getElementById('facts').innerHTML =
+  "Reference points: average ocean depth ≈ <b>3,700 m</b>; deepest point = Challenger Deep, Mariana Trench ≈ <b>10,935 m</b> (deeper than Everest is tall). The pale rims around continents are the shallow continental shelves (&lt;200 m); the vast dark blue is the abyssal plain (~3,000-6,000 m); the long mid-ocean ridges run slightly shallower down the middle of the Atlantic and around the Pacific; the very darkest streaks are subduction trenches (Mariana, Tonga, Philippine, Peru-Chile, Java). Source: EMODnet Bathymetry / GEBCO_2024 global grid.";
+</script></body></html>

@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Quantum Turán Paper, Visualized</title>
+<style>
+  :root{
+    --bg:#0d1117; --card:#161b22; --card2:#1c2330; --ink:#e6edf3; --mut:#9aa7b4;
+    --acc:#58a6ff; --acc2:#7ee787; --warn:#f0883e; --pink:#ff7b9c; --pur:#bc8cff;
+    --line:#30363d; --good:#3fb950;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font-family:'Segoe UI',-apple-system,Roboto,Helvetica,Arial,sans-serif;line-height:1.5}
+  .wrap{max-width:960px;margin:0 auto;padding:20px 16px 80px}
+  header{text-align:center;padding:18px 0 8px}
+  h1{font-size:26px;margin:0 0 6px;font-weight:800;letter-spacing:.2px}
+  .sub{color:var(--mut);font-size:15px;max-width:680px;margin:0 auto}
+  .eq{font-family:'Cambria Math','Georgia',serif;font-style:italic}
+  .big-eq{display:inline-block;margin:14px auto;padding:10px 22px;background:var(--card2);
+          border:1px solid var(--line);border-radius:12px;font-size:24px;color:var(--acc2)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;
+        padding:20px 18px;margin:22px 0;box-shadow:0 2px 14px rgba(0,0,0,.25)}
+  .card h2{margin:0 0 4px;font-size:19px;color:var(--acc)}
+  .card .lead{color:var(--mut);font-size:14px;margin:0 0 16px}
+  .cap{color:var(--mut);font-size:13.5px;margin-top:14px;border-top:1px dashed var(--line);padding-top:10px}
+  .cap b{color:var(--ink)}
+  /* flow boxes */
+  .flow{display:flex;flex-direction:column;gap:10px;align-items:stretch}
+  .box{background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:11px 13px;font-size:14px}
+  .box .t{font-weight:700;color:var(--ink)}
+  .box .d{color:var(--mut);font-size:12.5px;margin-top:2px}
+  .arrow{align-self:center;color:var(--acc);font-size:18px;line-height:1}
+  .pill{display:inline-block;font-size:11px;padding:1px 8px;border-radius:20px;border:1px solid;margin-left:6px;vertical-align:middle}
+  .pill.cited{color:var(--warn);border-color:var(--warn)}
+  .pill.new{color:var(--acc2);border-color:var(--acc2)}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:640px){.two{grid-template-columns:1fr}}
+  .lbl{font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px}
+  /* dimension bar */
+  .dimbar{display:flex;height:54px;border-radius:10px;overflow:hidden;border:1px solid var(--line);font-weight:700}
+  .dimbar .v{background:linear-gradient(135deg,#1f6feb,#388bfd);display:flex;align-items:center;justify-content:center;flex:0 0 82%;color:#fff}
+  .dimbar .w{background:linear-gradient(135deg,#d2691e,#f0883e);display:flex;align-items:center;justify-content:center;flex:1;color:#1a1a1a;font-size:13px}
+  /* matrix grid */
+  .matwrap{display:flex;gap:18px;flex-wrap:wrap;justify-content:center}
+  .mat{display:grid;grid-template-columns:repeat(6,18px);grid-template-rows:repeat(6,18px);gap:2px;
+       padding:8px;background:#0b0f15;border:1px solid var(--line);border-radius:8px}
+  .cell{background:#222b36;border-radius:2px}
+  .cell.on{background:var(--pur)}
+  .cell.f{background:var(--pink)}
+  .tree ul{list-style:none;margin:0;padding-left:18px;border-left:2px solid var(--line)}
+  .tree li{margin:8px 0;position:relative}
+  .tree li::before{content:'';position:absolute;left:-18px;top:13px;width:14px;height:2px;background:var(--line)}
+  .node{background:var(--card2);border:1px solid var(--line);border-radius:8px;padding:8px 11px;display:inline-block;font-size:13.5px}
+  .fail{color:var(--pink);font-weight:700}
+  .axgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+  @media(max-width:640px){.axgrid{grid-template-columns:1fr}}
+  .ax{background:var(--card2);border:1px solid var(--line);border-left:3px solid var(--warn);
+      border-radius:8px;padding:8px 10px;font-size:12.5px}
+  .ax b{color:var(--ink)}
+  .sink{background:linear-gradient(135deg,#13351f,#1a4429);border:1px solid var(--good);
+        border-radius:10px;padding:12px;text-align:center;margin-top:12px;font-weight:700;color:var(--acc2)}
+  code{background:#0b0f15;padding:1px 5px;border-radius:4px;font-size:12.5px;color:var(--acc2)}
+  .foot{text-align:center;color:var(--mut);font-size:12px;margin-top:30px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>The Quantum Turán Paper, Visualized</h1>
+  <div class="sub">A formally-verified proof that the quantum Turán function at <span class="eq">k = n−2</span> equals exactly <span class="eq">n²−6</span>. Here's the whole argument in a few pictures.</div>
+  <div class="big-eq">T<sup>↑</sup>(n, n−2) = n² − 6 &nbsp;&nbsp;(for all n ≥ 3)</div>
+</header>
+
+<!-- DIAGRAM 1: master map -->
+<div class="card" id="d1">
+  <h2>1 · The whole paper in one map</h2>
+  <p class="lead">The result is an equality, so it's proved by squeezing from both sides: a lower bound (an example) and a matching upper bound (the real work).</p>
+  <div class="flow">
+    <div class="box" style="border-color:var(--acc2)"><div class="t">Goal: T<sup>↑</sup>(n, n−2) = n²−6</div><div class="d">the largest operator system in M<sub>n</sub>(ℂ) with no quantum (n−1)-clique has dimension exactly n²−6</div></div>
+    <div class="two">
+      <div class="box" style="border-color:var(--warn)"><div class="t">LOWER ≥ n²−6 <span class="pill cited">cited</span></div><div class="d">Weaver's explicit example V<sub>Q</sub>: matrices whose bottom-right 3×3 block is scalar. Dimension n²−6, no clique.</div></div>
+      <div class="box" style="border-color:var(--acc2)"><div class="t">UPPER ≤ n²−6 <span class="pill new">the contribution</span></div><div class="d">Every clique-free V obeys dim V ≤ n²−6. Equivalently: dim V<sup>⊥</sup> ≥ 6.</div></div>
+    </div>
+    <div class="arrow">↓ the upper bound is a 4-step chain ↓</div>
+    <div class="box"><div class="t">① No quantum (n−1)-clique</div><div class="d">§4 — reformulate as a condition on the complement W = V<sup>⊥</sup></div></div>
+    <div class="arrow">⇕</div>
+    <div class="box"><div class="t">② Covering condition Cov<sub>ℂ</sub>(W)</div><div class="d">§5 — drop to the Hermitian part</div></div>
+    <div class="arrow">⇕</div>
+    <div class="box"><div class="t">③ Hermitian covering Cov<sub>ℂh</sub>(W<sub>h</sub>)</div><div class="d">§6 — show dim ≤ 5 can't cover</div></div>
+    <div class="arrow">↓</div>
+    <div class="box" style="border-color:var(--good)"><div class="t">④ dim<sub>ℝ</sub> W<sub>h</sub> ≥ 6 ⟹ dim V ≤ n²−6 ✓</div><div class="d">§7 — the squeeze closes</div></div>
+  </div>
+  <div class="cap"><b>Read it top to bottom:</b> the goal splits into two bounds; the lower one is a known example, the upper one is a chain of equivalences (⇕) ending in a dimension count. Everything below zooms into one rung.</div>
+</div>
+
+<!-- DIAGRAM 2: dimension complement -->
+<div class="card" id="d2">
+  <h2>2 · Why the magic number is 6</h2>
+  <p class="lead">Every subspace and its orthogonal complement split the whole matrix space: dim V + dim V<sup>⊥</sup> = n². So proving "V is small" is the same as proving "its complement is big."</p>
+  <div class="lbl">M<sub>n</sub>(ℂ) &nbsp;—&nbsp; total dimension n²</div>
+  <div class="dimbar">
+    <div class="v">V  &nbsp;(≤ n²−6)</div>
+    <div class="w">V<sup>⊥</sup> ≥ 6</div>
+  </div>
+  <div class="cap"><b>The entire upper bound is a hunt for 6 dimensions.</b> "dim V ≤ n²−6" ⟺ "dim V<sup>⊥</sup> ≥ 6". The proof never touches V directly again — it works entirely inside the small complement W = V<sup>⊥</sup> and shows it can't be squeezed below 6.</div>
+</div>
+
+<!-- DIAGRAM 3: clique + covering -->
+<div class="card" id="d3">
+  <h2>3 · Cliques and "covering"</h2>
+  <p class="lead">A quantum (n−1)-clique is a rank-(n−1) projection P<sub>e</sub> = I − ee* that "sees" the maximum (n−1)² dimensions of V under compression. The clever move: <i>not having</i> one is a positive statement about W.</p>
+  <div class="two">
+    <div>
+      <div class="lbl">Covering condition Cov(W)</div>
+      <svg viewBox="0 0 220 170" width="100%" height="160">
+        <circle cx="110" cy="85" r="62" fill="none" stroke="#30363d" stroke-width="1.5"/>
+        <ellipse cx="110" cy="85" rx="62" ry="20" fill="none" stroke="#30363d" stroke-width="1" opacity=".5"/>
+        <!-- direction vectors e -->
+        <g stroke="#ff7b9c" stroke-width="2">
+          <line x1="110" y1="85" x2="110" y2="28"/>
+          <line x1="110" y1="85" x2="162" y2="55"/>
+          <line x1="110" y1="85" x2="160" y2="120"/>
+          <line x1="110" y1="85" x2="60" y2="120"/>
+          <line x1="110" y1="85" x2="58" y2="55"/>
+        </g>
+        <g fill="#7ee787" font-size="10" font-family="Cambria Math,serif" font-style="italic">
+          <text x="106" y="22">A</text><text x="166" y="52">A</text><text x="164" y="128">A</text>
+          <text x="48" y="128">A</text><text x="44" y="55">A</text>
+        </g>
+        <circle cx="110" cy="85" r="4" fill="#58a6ff"/>
+        <text x="92" y="165" fill="#9aa7b4" font-size="10">every direction e is "killed"</text>
+      </svg>
+    </div>
+    <div>
+      <div class="lbl">What "killed" means</div>
+      <div class="box"><div class="t" style="color:var(--pink)">For every direction e ≠ 0</div><div class="d">there is a nonzero <span class="eq">A ∈ W</span> with<br><span class="eq">A e = 0</span> &nbsp;and&nbsp; <span class="eq">A* e = 0</span></div></div>
+      <div class="box" style="margin-top:10px;border-color:var(--acc)"><div class="t">The key equivalence (§4)</div><div class="d"><span class="eq">V</span> has <b>no</b> (n−1)-clique &nbsp;⟺&nbsp; <span class="eq">V<sup>⊥</sup></span> <b>covers</b> every direction</div></div>
+    </div>
+  </div>
+  <div class="cap"><b>Engine of the equivalence:</b> the compression by P<sub>e</sub> has range exactly (n−1)² (a clean rank-nullity count, §3). A clique would fill that range entirely, leaving no room for a covering element — and vice versa. Proved both directions.</div>
+</div>
+
+<!-- DIAGRAM 4: reduction ladder -->
+<div class="card" id="d4">
+  <h2>4 · Dropping from complex to real to a number</h2>
+  <p class="lead">Covering is a statement about complex matrices. Two equivalences strip it down to a pure dimension count.</p>
+  <div class="flow">
+    <div class="box"><div class="t">Cov<sub>ℂ</sub>(W) — complex covering</div></div>
+    <div class="arrow">⇕ &nbsp;split A = H + iK into Hermitian parts (§5)</div>
+    <div class="box"><div class="t">Cov<sub>ℂh</sub>(W<sub>h</sub>) — Hermitian covering</div><div class="d">now everything is real-symmetric: need H = H*, He = 0</div></div>
+    <div class="arrow">⇕ &nbsp;dimension bookkeeping</div>
+    <div class="box" style="border-color:var(--acc)"><div class="t">dim<sub>ℝ</sub> W<sub>h</sub> = dim<sub>ℂ</sub> W</div><div class="d">the real Hermitian part has the same dimension as the complex space</div></div>
+    <div class="arrow">↓ &nbsp;target</div>
+    <div class="box" style="border-color:var(--warn)"><div class="t">If dim<sub>ℝ</sub> W<sub>h</sub> ≤ 5, covering must FAIL</div><div class="d">that's §6 — the heart of the proof (next)</div></div>
+  </div>
+  <div class="cap"><b>Why bother:</b> Hermitian matrices are real objects, so the final step becomes real algebraic geometry / dimension counting. The bookkeeping lemma means "6 complex dimensions of W" = "6 real dimensions of W<sub>h</sub>" — so chasing 6 stays clean.</div>
+</div>
+
+<!-- DIAGRAM 5: case tree -->
+<div class="card" id="d5">
+  <h2>5 · The heart: why 5 dimensions can't cover</h2>
+  <p class="lead">Assume W<sub>h</sub> is traceless Hermitian, dim<sub>ℝ</sub> ≤ 5, and (for contradiction) that it covers. Split into cases on n — every branch dead-ends.</p>
+  <div class="tree">
+    <ul>
+      <li><span class="node"><b>n = 3</b> → Weaver's base case <span class="pill cited">axiom</span> → <span class="fail">covering fails</span></span></li>
+      <li><span class="node"><b>n ≥ 4, dim ≤ 4</b> → incidence variety has dim ≤ 2n−1, too small to hit every direction → <span class="fail">fails</span></span></li>
+      <li><span class="node"><b>n ≥ 4, dim = 5</b> → <i>rank forcing</i>: every H must have rank ≤ 2</span>
+        <ul>
+          <li><span class="node">bounded-rank dichotomy <span class="pill cited">axiom</span> ⟹ one of:</span>
+            <ul>
+              <li><span class="node">common <b>block</b> → <span class="fail">fails</span> (Lemma 6.7)</span></li>
+              <li><span class="node">common <b>vector</b> → <span class="fail">fails</span> (Lemma 6.8)</span></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  <div class="sink">every branch ⟹ covering fails ⟹ contradiction ⟹ dim<sub>ℝ</sub> W<sub>h</sub> ≥ 6 ✓</div>
+  <div class="cap"><b>The skew-symmetric escape hatch is closed:</b> the general bounded-rank theorem has a third "primitive" type (3×3 skew-symmetric), but skew (A*=−A) can never be Hermitian (A*=A), so only block / vector survive — and both are killed below.</div>
+</div>
+
+<!-- DIAGRAM 6: failure modes -->
+<div class="card" id="d6">
+  <h2>6 · The two ways covering dies</h2>
+  <p class="lead">Both surviving structures have an obvious direction they can't kill.</p>
+  <div class="two">
+    <div>
+      <div class="lbl">Common block — all mass in a 2×2 corner</div>
+      <div class="matwrap">
+        <div class="mat">
+          <div class="cell on"></div><div class="cell on"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+          <div class="cell on"></div><div class="cell on"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+          <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+          <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+          <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+          <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        </div>
+      </div>
+      <div class="box" style="margin-top:10px"><div class="d">Pick a direction <span class="eq">e</span> living in the empty coordinates (rows 3…n). Then <span class="eq">He = 0</span> forces <span class="eq">H = 0</span> — there's nothing in those columns to use. <span class="fail">Can't cover those e.</span></div></div>
+    </div>
+    <div>
+      <div class="lbl">Common vector — everything built from one f</div>
+      <div class="matwrap">
+        <svg viewBox="0 0 160 120" width="100%" height="120">
+          <text x="6" y="20" fill="#9aa7b4" font-size="12" font-family="Cambria Math,serif" font-style="italic">H = f g* + g f* + c·f f*</text>
+          <text x="6" y="58" fill="#e6edf3" font-size="13" font-family="Cambria Math,serif" font-style="italic">test e = f:</text>
+          <text x="6" y="84" fill="#7ee787" font-size="13" font-family="Cambria Math,serif" font-style="italic">H f = g + c f</text>
+          <text x="6" y="108" fill="#ff7b9c" font-size="12" font-family="Cambria Math,serif" font-style="italic">= 0 ⟹ c=0, g=0 ⟹ H=0</text>
+        </svg>
+      </div>
+      <div class="box" style="margin-top:10px"><div class="d">Test the very vector <span class="eq">f</span> it's built from. Since <span class="eq">g ⊥ f</span>, the equation <span class="eq">g + cf = 0</span> forces <span class="eq">c = 0</span> and <span class="eq">g = 0</span>, so <span class="eq">H = 0</span>. <span class="fail">Can't cover e = f.</span></div></div>
+    </div>
+  </div>
+  <div class="cap"><b>Same punchline, twice:</b> each structure leaves one specific direction with no nonzero matrix to kill it, so the covering condition collapses — exactly the contradiction the proof needs.</div>
+</div>
+
+<!-- DIAGRAM 7: the 8 axioms -->
+<div class="card" id="d7">
+  <h2>7 · Machine-checked, on 8 honest axioms</h2>
+  <p class="lead">The whole thing is verified in Lean 4 + Mathlib: ~1,900 lines, <b>zero</b> <code>sorry</code>. Only these 8 published / standard facts are assumed; everything else (~130 theorems) is machine-proved.</p>
+  <div class="axgrid">
+    <div class="ax"><b>1.</b> Lower bound n²−6 — Weaver [4]</div>
+    <div class="ax"><b>2.</b> Base case n=3 — Weaver [3]</div>
+    <div class="ax"><b>3.</b> Bounded-rank dichotomy — Atkinson [1], Eisenbud–Harris [2]</div>
+    <div class="ax"><b>4.</b> rank(P<sub>e</sub>) = n−1 for P<sub>e</sub> = I − ee*</div>
+    <div class="ax"><b>5.</b> Rank-1 projection = ee* form</div>
+    <div class="ax"><b>6.</b> rank(I−P) = 1 when rank P = n−1</div>
+    <div class="ax"><b>7.</b> dim<sub>ℝ</sub> W<sub>h</sub> = dim<sub>ℂ</sub> W for *-closed W</div>
+    <div class="ax"><b>8.</b> V ⊕ V<sup>⊥</sup> = M<sub>n</sub>(ℂ) (trace inner product)</div>
+  </div>
+  <div class="sink" style="background:linear-gradient(135deg,#1b2740,#22325a);border-color:var(--acc);color:var(--acc)">⟹ Lean 4 (v4.32.0) + Mathlib · ~1,900 lines · 0 sorry · ~130 theorems machine-verified</div>
+  <div class="cap"><b>Items 1–3</b> are genuine published results (the cited literature). <b>Items 4–8</b> are uncontroversial linear algebra taken as axioms only to avoid heavy Mathlib infrastructure — their math content is standard.</div>
+</div>
+
+<!-- ===================== PART II: OBJECTS & MAPS ===================== -->
+<div style="text-align:center;margin:46px 0 6px">
+  <div style="display:inline-block;padding:6px 18px;border:1px solid var(--pur);border-radius:30px;color:var(--pur);font-weight:700;letter-spacing:1px;font-size:13px">PART II · DEEP DIVE</div>
+  <h1 style="font-size:23px;margin:12px 0 4px">The objects and the maps between them</h1>
+  <div class="sub">Every step is a linear map between concrete spaces. Here are the actual arrows — domains, ranges, kernels — that do the work.</div>
+</div>
+
+<style>
+  .cd text{font-family:'Cambria Math','Georgia',serif}
+  .nlbl{font-family:'Cambria Math','Georgia',serif;font-style:italic}
+  .objcard{background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+  .objcard .nm{font-family:'Cambria Math',serif;font-style:italic;font-size:16px;color:var(--acc2);font-weight:700}
+  .objcard .sig{font-family:'Cambria Math',serif;font-style:italic;color:var(--acc);font-size:13px;margin:3px 0}
+  .objcard .ds{color:var(--mut);font-size:12.5px}
+  .objgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media(max-width:640px){.objgrid{grid-template-columns:1fr}}
+</style>
+
+<!-- DD1: cast of objects -->
+<div class="card" id="dd1">
+  <h2>8 · The cast (objects & their types)</h2>
+  <p class="lead">Seven objects carry the whole proof. Read each as "name : type — what it is."</p>
+  <div class="objgrid">
+    <div class="objcard"><div class="nm">e</div><div class="sig">∈ ℂⁿ, ‖e‖ = 1</div><div class="ds">a unit vector — a "direction" to be covered</div></div>
+    <div class="objcard"><div class="nm">P<sub>e</sub> = I − ee*</div><div class="sig">∈ M<sub>n</sub>(ℂ), rank n−1</div><div class="ds">orthogonal projection killing the e-line</div></div>
+    <div class="objcard"><div class="nm">Φ<sub>Pe</sub></div><div class="sig">M<sub>n</sub>(ℂ) → M<sub>n</sub>(ℂ),&nbsp; A ↦ P<sub>e</sub>A P<sub>e</sub></div><div class="ds">compression; dim range = (n−1)²</div></div>
+    <div class="objcard"><div class="nm">V</div><div class="sig">⊆ M<sub>n</sub>(ℂ), I∈V, *-closed</div><div class="ds">the operator system we measure</div></div>
+    <div class="objcard"><div class="nm">W = V<sup>⊥</sup></div><div class="sig">⊆ M<sub>n</sub>(ℂ), *-closed, traceless</div><div class="ds">complement w.r.t. ⟨A,B⟩ = tr(B*A)</div></div>
+    <div class="objcard"><div class="nm">W<sub>h</sub></div><div class="sig">{H ∈ W : H* = H}, ℝ-subspace</div><div class="ds">the Hermitian part of W</div></div>
+    <div class="objcard"><div class="nm">ev<sub>e</sub></div><div class="sig">W<sub>h</sub> → ℂⁿ,&nbsp; H ↦ He</div><div class="ds">evaluation; its kernel = covering witnesses</div></div>
+    <div class="objcard"><div class="nm">⟨ ·,· ⟩</div><div class="sig">M<sub>n</sub>(ℂ)×M<sub>n</sub>(ℂ) → ℂ,&nbsp; tr(B*A)</div><div class="ds">trace inner product (defines ⊥)</div></div>
+  </div>
+  <div class="cap">These reappear as nodes in every diagram below. The arrows between them are where the theorem lives.</div>
+</div>
+
+<!-- DD2: exact sequence / compression dimension -->
+<div class="card" id="dd2">
+  <h2>9 · The compression count, as an exact sequence (§3)</h2>
+  <p class="lead">Why is dim range(Φ<sub>Pe</sub>) exactly (n−1)²? Build a short exact sequence and read off the dimensions.</p>
+  <svg class="cd" viewBox="0 0 820 250" width="100%">
+    <defs><marker id="ah2" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#58a6ff"/></marker></defs>
+    <!-- nodes -->
+    <g font-size="14" fill="#e6edf3" text-anchor="middle">
+      <text x="40" y="95">0</text>
+      <rect x="92" y="62" width="150" height="62" rx="8" fill="#1c2330" stroke="#7ee787"/>
+      <text x="167" y="84" fill="#7ee787" font-style="italic">range(Φ<tspan font-style="normal">Pe</tspan>)</text>
+      <text x="167" y="102" font-size="11" fill="#9aa7b4">= ker L</text>
+      <text x="167" y="117" font-size="11" fill="#9aa7b4">dim (n−1)²</text>
+      <rect x="320" y="62" width="120" height="62" rx="8" fill="#1c2330" stroke="#30363d"/>
+      <text x="380" y="90" font-style="italic">M<tspan font-size="10" dy="3">n</tspan><tspan dy="-3">(ℂ)</tspan></text>
+      <text x="380" y="110" font-size="11" fill="#9aa7b4">dim n²</text>
+      <rect x="518" y="62" width="120" height="62" rx="8" fill="#1c2330" stroke="#30363d"/>
+      <text x="578" y="90" font-style="italic">ℂⁿ × ℂⁿ</text>
+      <text x="578" y="110" font-size="11" fill="#9aa7b4">dim 2n</text>
+      <rect x="712" y="62" width="58" height="62" rx="8" fill="#1c2330" stroke="#30363d"/>
+      <text x="741" y="90" font-style="italic">ℂ</text>
+      <text x="741" y="110" font-size="11" fill="#9aa7b4">dim 1</text>
+      <text x="800" y="95">0</text>
+    </g>
+    <!-- arrows -->
+    <g stroke="#58a6ff" stroke-width="1.6" marker-end="url(#ah2)">
+      <line x1="50" y1="93" x2="88" y2="93"/>
+      <line x1="244" y1="93" x2="316" y2="93"/>
+      <line x1="442" y1="93" x2="514" y2="93"/>
+      <line x1="640" y1="93" x2="708" y2="93"/>
+      <line x1="772" y1="93" x2="794" y2="93"/>
+    </g>
+    <g font-size="13" fill="#58a6ff" text-anchor="middle" font-style="italic">
+      <text x="280" y="55">↪</text>
+      <text x="478" y="55">L</text>
+      <text x="674" y="55">g</text>
+    </g>
+    <!-- definitions row -->
+    <g font-size="12.5" fill="#9aa7b4" font-style="italic">
+      <text x="20" y="175">L(C) = (Ce, e*C)   — row/column extraction</text>
+      <text x="20" y="198">g(u, v) = e*u − v e   — surjective onto ℂ</text>
+      <text x="20" y="225" fill="#7ee787">rank-nullity:  dim ker L = n² − (2n − 1) = (n−1)²</text>
+    </g>
+  </svg>
+  <div class="cap"><b>Exactness does the counting:</b> ker L = range(Φ<sub>Pe</sub>) and im L = ker g. Since g is onto ℂ, im L has dim 2n−1, so ker L has dim n²−(2n−1) = (n−1)². The alternating dimensions n² − 2n + 1 collapse to (n−1)².</div>
+</div>
+
+<!-- DD3: decomposition + collision -->
+<div class="card" id="dd3">
+  <h2>10 · Where compression lives, and how the witness self-destructs (§4)</h2>
+  <p class="lead">M<sub>n</sub>(ℂ) splits as V ⊕ W. The compression of V sits inside range(Φ<sub>Pe</sub>); a covering witness in W is forced to be both inside and orthogonal to it.</p>
+  <svg class="cd" viewBox="0 0 820 270" width="100%">
+    <defs><marker id="ah3" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#bc8cff"/></marker></defs>
+    <!-- M_n split -->
+    <rect x="40" y="30" width="360" height="48" rx="8" fill="none" stroke="#30363d"/>
+    <rect x="42" y="32" width="250" height="44" rx="6" fill="#1f6feb" opacity=".85"/>
+    <rect x="294" y="32" width="104" height="44" rx="6" fill="#d2691e" opacity=".9"/>
+    <text x="167" y="59" fill="#fff" font-size="14" text-anchor="middle" font-style="italic">V</text>
+    <text x="346" y="59" fill="#101418" font-size="13" text-anchor="middle" font-style="italic">W=V⊥</text>
+    <text x="220" y="22" fill="#9aa7b4" font-size="11" text-anchor="middle">M_n(ℂ) = V ⊕ W</text>
+    <!-- range Phi -->
+    <rect x="560" y="28" width="220" height="52" rx="8" fill="#1c2330" stroke="#7ee787"/>
+    <text x="670" y="50" fill="#7ee787" font-size="13" text-anchor="middle" font-style="italic">range(Φ Pe)</text>
+    <text x="670" y="68" fill="#9aa7b4" font-size="11" text-anchor="middle">dim (n−1)²</text>
+    <!-- arrow V -> rangePhi -->
+    <path d="M292 54 C 430 54, 440 54, 556 54" fill="none" stroke="#bc8cff" stroke-width="1.6" marker-end="url(#ah3)"/>
+    <text x="430" y="44" fill="#bc8cff" font-size="12" text-anchor="middle" font-style="italic">P e (·) P e  ⊆</text>
+    <!-- collision box -->
+    <rect x="40" y="120" width="740" height="120" rx="10" fill="#0b0f15" stroke="#ff7b9c" stroke-dasharray="4 3"/>
+    <text x="60" y="145" fill="#ff7b9c" font-size="13" font-style="italic">The covering witness A ∈ W  (with Ae = A*e = 0):</text>
+    <g font-size="12.5" fill="#e6edf3" font-style="italic">
+      <text x="74" y="170">• the kernel conditions force  P e A P e = A   ⟹   A ∈ range(Φ Pe)</text>
+      <text x="74" y="193">• trace cyclicity gives  A ⊥ P e V P e = range(Φ Pe)   (when P e is a clique)</text>
+      <text x="74" y="222" fill="#ff7b9c">⟹  A ∈ range(Φ Pe) ∩ range(Φ Pe)⊥ = {0}   ⟹   A = 0   (contradiction)</text>
+    </g>
+  </svg>
+  <div class="cap"><b>The pivot of §4:</b> a clique would make P<sub>e</sub>V P<sub>e</sub> fill the entire (n−1)²-dim range. Any covering witness is fixed by the compression, so it lands in that range — but it's also orthogonal to it. Non-degeneracy of ⟨·,·⟩ then kills it. Hence "no clique ⟺ covering."</div>
+</div>
+
+<!-- DD4: hermitian iso -->
+<div class="card" id="dd4">
+  <h2>11 · The real-ification isomorphism (§5)</h2>
+  <p class="lead">Split every A ∈ W into Hermitian + i·(Hermitian). That's a real-linear isomorphism — and it pins the dimensions together.</p>
+  <svg class="cd" viewBox="0 0 820 230" width="100%">
+    <defs><marker id="ah4" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#58a6ff"/></marker></defs>
+    <rect x="60" y="60" width="170" height="60" rx="8" fill="#1c2330" stroke="#30363d"/>
+    <text x="145" y="86" fill="#e6edf3" font-size="14" text-anchor="middle" font-style="italic">W  (*-closed)</text>
+    <text x="145" y="106" fill="#9aa7b4" font-size="11" text-anchor="middle">dim ℂ = d</text>
+    <rect x="540" y="60" width="220" height="60" rx="8" fill="#1c2330" stroke="#7ee787"/>
+    <text x="650" y="86" fill="#7ee787" font-size="13" text-anchor="middle" font-style="italic">W h × W h</text>
+    <text x="650" y="106" fill="#9aa7b4" font-size="11" text-anchor="middle">real iso ⟹ dim ℝ W h = d</text>
+    <line x1="232" y1="90" x2="536" y2="90" stroke="#58a6ff" stroke-width="1.6" marker-end="url(#ah4)"/>
+    <text x="384" y="80" fill="#58a6ff" font-size="13" text-anchor="middle" font-style="italic">φ  ≅</text>
+    <text x="384" y="108" fill="#9aa7b4" font-size="11.5" text-anchor="middle" font-style="italic">A ↦ ( (A+A*)/2 ,  (A−A*)/2i )</text>
+    <g font-size="12.5" fill="#9aa7b4" font-style="italic">
+      <text x="60" y="165">Write  A = H + iK   with  H, K Hermitian and in W.</text>
+      <text x="60" y="188" fill="#e6edf3">Decomposition lemma:   A e = A* e = 0   ⟺   H e = 0  and  K e = 0</text>
+      <text x="60" y="214" fill="#7ee787">so complex covering of W   ⟺   Hermitian covering of W h ,  with  dim ℝ W h = dim ℂ W</text>
+    </g>
+  </svg>
+  <div class="cap"><b>Why it matters:</b> the final obstruction is real algebraic geometry, so we need real objects. φ turns one complex space into a pair of real Hermitian ones without losing dimension — keeping the "hunt for 6" honest across the change of field.</div>
+</div>
+
+<!-- DD5: evaluation + incidence variety -->
+<div class="card" id="dd5">
+  <h2>12 · Evaluation, kernels, and the incidence variety (§6)</h2>
+  <p class="lead">Covering is exactly: "every direction has a witness." Package all (witness, direction) pairs into one geometric object and project it two ways.</p>
+  <svg class="cd" viewBox="0 0 820 260" width="100%">
+    <defs><marker id="ah5" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#58a6ff"/></marker></defs>
+    <!-- ev_e -->
+    <rect x="40" y="24" width="150" height="52" rx="8" fill="#1c2330" stroke="#30363d"/>
+    <text x="115" y="48" fill="#e6edf3" font-size="13" text-anchor="middle" font-style="italic">W h</text>
+    <rect x="300" y="24" width="120" height="52" rx="8" fill="#1c2330" stroke="#30363d"/>
+    <text x="360" y="55" fill="#e6edf3" font-size="13" text-anchor="middle" font-style="italic">ℂⁿ</text>
+    <line x1="192" y1="50" x2="296" y2="50" stroke="#58a6ff" stroke-width="1.6" marker-end="url(#ah5)"/>
+    <text x="244" y="40" fill="#58a6ff" font-size="12" text-anchor="middle" font-style="italic">ev e : H ↦ He</text>
+    <text x="244" y="74" fill="#9aa7b4" font-size="10.5" text-anchor="middle">ker = witnesses for e</text>
+    <!-- incidence variety -->
+    <rect x="300" y="120" width="220" height="58" rx="8" fill="#0b0f15" stroke="#bc8cff"/>
+    <text x="410" y="143" fill="#bc8cff" font-size="12.5" text-anchor="middle" font-style="italic">I = {(H,[e]) : He = 0}</text>
+    <text x="410" y="163" fill="#9aa7b4" font-size="10.5" text-anchor="middle">incidence variety,  dim ≤ 2n−1</text>
+    <rect x="60" y="200" width="180" height="46" rx="8" fill="#1c2330" stroke="#30363d"/>
+    <text x="150" y="228" fill="#e6edf3" font-size="12.5" text-anchor="middle" font-style="italic">W h \ {0}</text>
+    <rect x="560" y="200" width="200" height="46" rx="8" fill="#1c2330" stroke="#f0883e"/>
+    <text x="660" y="222" fill="#f0883e" font-size="12.5" text-anchor="middle" font-style="italic">ℂP ⁿ⁻¹</text>
+    <text x="660" y="238" fill="#9aa7b4" font-size="10" text-anchor="middle">all directions, dim 2n−2</text>
+    <!-- projections -->
+    <line x1="330" y1="178" x2="210" y2="200" stroke="#58a6ff" stroke-width="1.6" marker-end="url(#ah5)"/>
+    <text x="232" y="190" fill="#58a6ff" font-size="12" font-style="italic">π₁</text>
+    <line x1="490" y1="178" x2="600" y2="200" stroke="#58a6ff" stroke-width="1.6" marker-end="url(#ah5)"/>
+    <text x="556" y="190" fill="#58a6ff" font-size="12" font-style="italic">π₂</text>
+    <text x="410" y="258" fill="#7ee787" font-size="11.5" text-anchor="middle" font-style="italic">covering  ⟺  π₂ is onto ℂP ⁿ⁻¹  — too few dimensions when dim W h is small ⟹ fails</text>
+  </svg>
+  <div class="cap"><b>The dimension squeeze:</b> the fiber of π₂ over a direction [e] is the projectivized kernel ker(ev<sub>e</sub>)∩W<sub>h</sub>. For small W<sub>h</sub> the whole incidence variety I is too low-dimensional for π₂ to hit every direction in ℂP<sup>n−1</sup> — so some direction has no witness and covering fails. Combined with the rank-2 forcing + the block/vector dichotomy, this closes the n ≥ 4 cases.</div>
+</div>
+
+<div class="foot">Generated from <i>paper.pdf</i> — "The Quantum Turán Function at k = n−2". Diagrams summarize the paper's own argument; for exact statements see the source.</div>
+</div>
+</body>
+</html>

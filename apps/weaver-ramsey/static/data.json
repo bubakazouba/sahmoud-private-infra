@@ -1,0 +1,189 @@
+{
+  "paper": {
+    "title": "A \"quantum\" Ramsey theorem for operator systems",
+    "author": "Nik Weaver",
+    "affiliation": "Department of Mathematics, Washington University, Saint Louis, MO 63130",
+    "email": "nweaver@math.wustl.edu",
+    "arxiv": "1601.01259",
+    "arxiv_url": "https://arxiv.org/abs/1601.01259",
+    "pdf_url": "https://arxiv.org/pdf/1601.01259",
+    "venue": "Proceedings of the American Mathematical Society 145 (2017), pp. 4595-4605",
+    "doi": "10.1090/proc/13606",
+    "date": "Jan. 13, 2016 (v2)",
+    "abstract": "Let \\(\\mathcal V\\) be a linear subspace of \\(M_n(\\mathbb C)\\) which contains the identity matrix and is stable under the formation of Hermitian adjoints. We prove that if \\(n\\) is sufficiently large then there exists a rank \\(k\\) orthogonal projection \\(P\\) such that \\(\\dim(P\\mathcal V P) = 1\\) or \\(k^2\\).",
+    "context": "Posed as Severini's question — a quantum analogue of the classical Ramsey theorem. An operator system in finite dimensions is a unital, *-closed linear subspace \\(\\mathcal V \\subseteq M_n(\\mathbb C)\\). In quantum error correction, operator systems play the role classically played by confusability graphs."
+  },
+  "sections": [
+    {"id": 1, "title": "Background"},
+    {"id": 2, "title": "Examples"},
+    {"id": 3, "title": "Quantum 2-cliques"},
+    {"id": 4, "title": "The main theorem"},
+    {"id": 5, "title": "A generalization"}
+  ],
+  "items": [
+    {
+      "type": "Definition",
+      "number": "1.1",
+      "section": 1,
+      "page": 2,
+      "title": "Quantum k-clique / quantum k-anticlique",
+      "statement": "Let \\(\\mathcal V \\subseteq M_n\\) be an operator system. A <em>quantum k-clique</em> of \\(\\mathcal V\\) is an orthogonal projection \\(P \\in M_n\\) (i.e., \\(P = P^2 = P^*\\)) whose rank is \\(k\\), such that \\(P\\mathcal V P = \\{PAP : A \\in \\mathcal V\\}\\) is maximal; that is, \\(P\\mathcal V P = PM_nP \\cong M_k\\), or equivalently, \\(\\dim(P\\mathcal V P) = k^2\\). A <em>quantum k-anticlique</em> of \\(\\mathcal V\\) is a rank \\(k\\) projection \\(P\\) such that \\(P\\mathcal V P\\) is minimal; that is, \\(P\\mathcal V P = \\mathbb C\\cdot P \\cong M_1\\), or equivalently, \\(\\dim(P\\mathcal V P) = 1\\).",
+      "note": "The anticlique definition matches the quantum-error-correction notion of a code: the range of a projection \\(P\\) with \\(P\\mathcal V P = \\mathbb C\\cdot P\\) [3]."
+    },
+    {
+      "type": "Proposition",
+      "number": "2.1",
+      "section": 2,
+      "page": 3,
+      "title": "Diagonal system has no quantum anticlique (k ≥ 2)",
+      "statement": "\\(D_n\\) has no quantum \\(k\\)-anticlique for \\(k \\geq 2\\).",
+      "proof_sketch": "If \\(P\\) has rank \\(k \\geq 2\\), then since each \\(\\mathrm{rank}(E_{ii})=1\\), each \\(\\mathrm{rank}(PE_{ii}P) \\in \\{0,1\\}\\). They cannot all be zero (else \\(P = \\sum PE_{ii}P = 0\\)). Pick \\(i\\) with rank-1 \\(PE_{ii}P\\); it cannot lie in \\(\\mathbb C\\cdot P\\) (which has rank 0 or \\(k\\)), so \\(PD_nP \\neq \\mathbb C\\cdot P\\)."
+    },
+    {
+      "type": "Proposition",
+      "number": "2.2",
+      "section": 2,
+      "page": 3,
+      "title": "Diagonal system has a quantum k-clique when n is large",
+      "statement": "If \\(n \\geq k^2 + k - 1\\) then \\(D_n\\) has a quantum \\(k\\)-clique.",
+      "proof_sketch": "Take \\(n = k^2 + k - 1\\). Pick \\(k^2\\) vectors \\(v_1,\\ldots,v_{k^2} \\in \\mathbb C^k\\) whose rank-1 outer products \\(v_iv_i^*\\) span \\(M_k\\) (e.g. \\(e_i\\), \\(e_i+e_j\\), \\(e_i+ie_j\\)). Identify \\(\\mathbb C^n \\cong \\mathbb C^k \\oplus \\mathbb C^{k^2-1}\\) and extend each \\(v_i\\) to a mutually orthogonal \\(w_i \\in \\mathbb C^n\\) by appending a triangular block. Let \\(P\\) project onto \\(\\mathbb C^k\\); then \\(P D_n P\\) (relative to the basis \\(w_i/\\|w_i\\|\\)) contains \\(v_iv_i^*\\), so \\(\\dim(PD_nP) = k^2\\).",
+      "note": "Improved later in Lemma 4.3. Note \\(n \\geq k^2\\) is necessary since \\(\\dim(D_n)=n\\) but \\(\\dim(PD_nP) = k^2\\) is required."
+    },
+    {
+      "type": "Proposition",
+      "number": "2.3",
+      "section": 2,
+      "page": 3,
+      "title": "Arbitrarily large systems may lack quantum 3-cliques",
+      "statement": "Let \\(\\mathcal V_n = \\mathrm{span}\\{I_n, E_{11}, E_{12}, \\ldots, E_{1n}, E_{21}, \\ldots, E_{n1}\\} \\subseteq M_n\\). Then \\(\\mathcal V_n\\) has no quantum 3-cliques.",
+      "proof_sketch": "For any projection \\(P\\): if \\(Pe_1 = 0\\) then \\(PE_{1i}P = PE_{i1}P = 0\\) and \\(P\\) is an anticlique. Otherwise, in an orthonormal basis \\(f_1=Pe_1/\\|Pe_1\\|, f_2,\\ldots,f_k\\) of \\(\\mathrm{ran}(P)\\), the compression \\(P\\mathcal V_nP\\) is exactly \\(\\mathcal V_k \\subseteq M_k\\), of dimension \\(2k\\). For \\(k \\geq 3\\), \\(2k < k^2\\), so \\(P\\) is not a clique.",
+      "note": "Conjectured by M. Jury."
+    },
+    {
+      "type": "Lemma",
+      "number": "3.1",
+      "section": 3,
+      "page": 4,
+      "title": "Low-dimensional orthocomplement is spanned by rank-2 Hermitians",
+      "statement": "Let \\(\\mathcal V \\subseteq M_n\\) be an operator system and suppose \\(\\dim(\\mathcal V) \\leq 3\\). Then its Hilbert-Schmidt orthocomplement is spanned by rank-2 Hermitian matrices.",
+      "proof_sketch": "Work in \\(M_n^h\\). Suppose \\(B \\in \\mathcal V_0^\\perp\\) is Hermitian, nonzero, and orthogonal to the real span \\(\\mathcal W_0\\) of rank-2 Hermitians in \\(\\mathcal V_0^\\perp\\). Decompose \\(B = B_+ - B_-\\) (positive/negative parts), \\(\\alpha = \\mathrm{Tr}(B_+) = \\mathrm{Tr}(B_-)\\). By convexity of the joint numerical range of three Hermitian matrices [1], pick unit vectors \\(v, w\\) with \\(\\langle Av,v\\rangle = \\tfrac{1}{\\alpha}\\mathrm{Tr}(AB_+)\\) and \\(\\langle Aw,w\\rangle = \\tfrac{1}{\\alpha}\\mathrm{Tr}(AB_-)\\) for \\(A \\in \\{A_1, A_2, B\\}\\). Then \\(C = \\alpha(vv^* - ww^*)\\) is rank-2 Hermitian, lies in \\(\\mathcal W_0\\), and is not orthogonal to \\(B\\) — contradiction."
+    },
+    {
+      "type": "Lemma",
+      "number": "3.2",
+      "section": 3,
+      "page": 4,
+      "title": "Four-dimensional V ⊆ M₃ has a quantum 2-clique",
+      "statement": "Let \\(\\mathcal V \\subseteq M_3\\) be an operator system and suppose \\(\\dim(\\mathcal V) = 4\\). Then \\(\\mathcal V\\) has a quantum 2-clique.",
+      "proof_sketch": "Write \\(\\mathcal V = \\mathrm{span}\\{I_3, A_1, A_2, A_3\\}\\) with \\(A_i\\) Hermitian. Diagonalize \\(A_1\\) so it has the form \\(\\mathrm{diag}(0, 1, a)\\), and normalize \\(A_2, A_3\\) so their \\((i,i)\\)-entries vanish for \\(i \\leq 2\\). With \\(v = (1,\\alpha,0)^T\\), \\(w = (1,0,\\beta)^T\\), the \\(4\\times 4\\) matrix of inner products \\(\\langle A_iv,v\\rangle, \\langle A_iv,w\\rangle, \\langle A_iw,v\\rangle, \\langle A_iw,w\\rangle\\) has a nonzero determinant (polynomial in \\(\\alpha, \\beta\\)) unless one of \\(A_2, A_3\\) is a scalar multiple of the other."
+    },
+    {
+      "type": "Theorem",
+      "number": "3.3",
+      "section": 3,
+      "page": 5,
+      "title": "Quantum 2-cliques exist when dim(V) ≥ 4",
+      "statement": "Let \\(\\mathcal V \\subseteq M_n\\) be an operator system and suppose \\(\\dim(\\mathcal V) \\geq 4\\). Then \\(\\mathcal V\\) has a quantum 2-clique.",
+      "proof_sketch": "WLOG \\(\\dim(\\mathcal V) = 4\\), \\(\\mathcal V = \\mathrm{span}\\{I_n, A_1, A_2, A_3\\}\\). Find a rank-\\(\\leq 3\\) projection \\(P\\) so that \\(PI_nP, PA_1P, PA_2P\\) are linearly independent (split on whether \\(A_1, A_2\\) are jointly diagonalizable). Pick \\(B \\in M_n\\) making the compression 4-dimensional and apply Lemma 3.2 to get a rank-2 \\(Q \\leq P\\) with \\(\\{QI_nQ, QA_1Q, QA_2Q, QBQ\\}\\) independent. If \\(\\{QI_nQ, QA_1Q, QA_2Q, QA_3Q\\}\\) is also independent, done; otherwise use Lemma 3.1 to find a rank-2 Hermitian \\(C = vv^* - ww^*\\) detecting \\(A_3\\); extend \\(Q\\) by \\(v\\) (or \\(w\\)) to a rank-3 \\(Q'\\) on which the four compressions are independent, then re-apply Lemma 3.2.",
+      "note": "Sharp: the result fails for arbitrary 4-dim subspaces, e.g. \\(\\mathrm{span}\\{E_{11},E_{12},E_{13},E_{14}\\} \\subset M_4\\) has no rank-2 \\(P\\) with \\(\\dim(P\\mathcal V P) > 2\\)."
+    },
+    {
+      "type": "Lemma",
+      "number": "4.1",
+      "section": 4,
+      "page": 6,
+      "title": "Diagonal-contained systems: dimension thresholds for cliques/anticliques",
+      "statement": "Suppose the operator system \\(\\mathcal V\\) is contained in \\(D_n\\). If \\(\\dim(\\mathcal V) \\geq k^2 + k - 1\\) then \\(\\mathcal V\\) has a quantum \\(k\\)-clique. If \\(\\dim(\\mathcal V) \\leq \\frac{n-k}{k-1}\\) then \\(\\mathcal V\\) has a quantum \\(k\\)-anticlique. If \\(n \\geq k^3 - k + 1\\) then \\(\\mathcal V\\) has either a quantum \\(k\\)-clique or a quantum \\(k\\)-anticlique.",
+      "proof_sketch": "Clique case: choose \\(m = k^2+k-1\\) indices on which \\(\\mathcal V\\) compresses faithfully, then invoke Prop 2.2. Anticlique case: Tverberg's generalization of Radon's theorem [6, 7], packaged as in Theorem 4 of [4]. Combining the two cases gives the cubic-in-\\(k\\) threshold via a little algebra."
+    },
+    {
+      "type": "Lemma",
+      "number": "4.2",
+      "section": 4,
+      "page": 6,
+      "title": "Gramian-extension to make vectors orthonormal-of-equal-norm",
+      "statement": "Let \\(v_1, \\ldots, v_r \\in \\mathbb C^s\\). Then there are vectors \\(w_1, \\ldots, w_r \\in \\mathbb C^{r-1}\\) such that the vectors \\(v_i \\oplus w_i \\in \\mathbb C^{s+r-1}\\) are pairwise orthogonal and all have the same norm.",
+      "proof_sketch": "Let \\(G\\) be the Gramian of \\((v_i)\\). Since \\(\\mathrm{rank}(\\|G\\|I_r - G) \\leq r-1\\), one can realize \\(\\|G\\|I_r - G\\) as the Gramian of some \\(w_i \\in \\mathbb C^{r-1}\\). The Gramian of \\((v_i \\oplus w_i)\\) is then \\(\\|G\\|I_r\\).",
+      "note": "Improved by M. Jury."
+    },
+    {
+      "type": "Lemma",
+      "number": "4.3",
+      "section": 4,
+      "page": 6,
+      "title": "Quantum k-clique from upper-triangular-supported Hermitians (improves Prop 2.2)",
+      "statement": "Let \\(n = k^2 + k - 1\\) and suppose \\(A_1, \\ldots, A_{k^2}\\) are Hermitian matrices in \\(M_n\\) such that for each \\(i\\), \\(\\langle A_ie_i, e_i\\rangle = 1\\), and \\(\\langle A_ie_r, e_s\\rangle = 0\\) whenever \\(\\max\\{r,s\\} > i\\). Then \\(\\mathcal V = \\mathrm{span}\\{I, A_1, \\ldots, A_{k^2}\\}\\) has a quantum \\(k\\)-clique.",
+      "proof_sketch": "Inductively pick \\(v_1, \\ldots, v_{k^2} \\in \\mathbb C^k\\) so the compressions \\(A_i' = \\sum_{r,s \\leq i} a_{rs}^i v_r v_s^*\\) are linearly independent. The freedom \\(\\tilde u = u + v_i\\) in writing \\(A_i' = B' + \\tilde u\\tilde u^*\\) suffices because rank-1 updates span \\(M_k\\). Then use Lemma 4.2 to assemble an orthonormal-of-equal-norm extension \\(f_i = (v_i \\oplus w_i)/N\\), yielding the desired clique."
+    },
+    {
+      "type": "Lemma",
+      "number": "4.4",
+      "section": 4,
+      "page": 7,
+      "title": "Quantum k-clique from off-diagonal-supported matrices (technical)",
+      "statement": "Let \\(n = k^4 + k^3 + k - 1\\) and \\(\\mathcal V \\subseteq M_n\\) an operator system containing matrices \\(A_1, \\ldots, A_{k^4+k^3}\\) with \\(\\langle A_ie_i, e_{i+1}\\rangle \\neq 0\\) and \\(\\langle A_ie_r, e_s\\rangle = 0\\) when \\(\\max\\{r,s\\} > i+1\\) and \\(r \\neq s\\). Then \\(\\mathcal V\\) has a quantum \\(k\\)-clique.",
+      "proof_sketch": "Either some block of \\(k^2+k-1\\) matrices has linearly independent \\(r\\)-tails — then Lemma 4.1 gives a diagonal-style \\(k\\)-clique — or one can construct orthonormal \\(v_1, \\ldots, v_{k^2}\\) and Hermitian \\(B_1, \\ldots, B_{k^2} \\in \\mathcal V\\) whose compressions to \\(\\mathrm{span}\\{v_1,\\ldots,v_{k^2}, e_{k^4+k^3+1}, \\ldots, e_{k^4+k^3+k-1}\\}\\) satisfy the hypotheses of Lemma 4.3."
+    },
+    {
+      "type": "Theorem",
+      "number": "4.5",
+      "section": 4,
+      "page": 7,
+      "title": "MAIN THEOREM — quantum Ramsey for operator systems",
+      "headline": true,
+      "statement": "Every operator system in \\(M_{8k^{11}}\\) has either a quantum \\(k\\)-clique or a quantum \\(k\\)-anticlique.",
+      "proof_sketch": "Set \\(n = 8k^{11}\\). Iteratively pick unit vectors \\(v_1, v_2, \\ldots\\) so that \\(\\dim((\\mathcal V v_1)^\\perp \\cap \\cdots \\cap (\\mathcal V v_{r-1})^\\perp \\cap (\\mathcal V v_r)) < 8k^8\\). If the construction lasts \\(k^3\\) steps, the compression to \\(\\mathrm{span}\\{v_1,\\ldots,v_{k^3}\\} \\cong M_{k^3}\\) sits inside \\(D_{k^3}\\), so Lemma 4.1 supplies a clique or anticlique. Otherwise, in the residual subspace \\(F\\), build a chain \\(w_1, w_2, \\ldots, w_r\\) and matrices \\(A_1, \\ldots, A_{r-1} \\in \\mathcal V'\\) with \\(w_{r+1} = A_r w_r\\) orthogonal to \\(\\mathrm{span}\\{w_j, A_iw_j, A_i^* w_j : i<r, j\\leq r\\}\\) (dimension \\(\\leq 2r^2 - r\\)). For \\(r \\leq 2k^4\\), this fits in \\(8k^8\\). Compress to \\(\\mathrm{span}(w_i)\\) and apply Lemma 4.4 with \\(n = 2k^4\\).",
+      "note": "The constants can be improved only marginally. Determining optimal bounds on quantum Ramsey numbers is likely open-ended, as in the classical case."
+    },
+    {
+      "type": "Definition",
+      "number": "5.1",
+      "section": 5,
+      "page": 8,
+      "title": "Quantum graph on M (from [8, Def 2.6(d)])",
+      "statement": "Let \\(\\mathcal M\\) be a unital *-subalgebra of \\(M_n\\). A <em>quantum graph on \\(\\mathcal M\\)</em> is an operator system \\(\\mathcal V \\subseteq M_n\\) which satisfies \\(\\mathcal M' \\mathcal V \\mathcal M' = \\mathcal V\\).",
+      "note": "Representation-independent: ∗-isomorphic \\(\\mathcal M, \\mathcal N\\) give a natural correspondence of quantum graphs ([8, Thm 2.7])."
+    },
+    {
+      "type": "Definition",
+      "number": "5.2",
+      "section": 5,
+      "page": 9,
+      "title": "Quantum k-clique / k-anticlique relative to M",
+      "statement": "Let \\(\\mathcal M \\subseteq M_n\\) be a unital *-subalgebra and \\(\\mathcal V \\subseteq M_n\\) a quantum graph on \\(\\mathcal M\\). A rank \\(k\\) projection \\(P \\in \\mathcal M\\) is a <em>quantum k-clique</em> if \\(P\\mathcal V P = PM_nP\\), and a <em>quantum k-anticlique</em> if \\(P\\mathcal V P = P\\mathcal M'P\\).",
+      "note": "Crucially, \\(P\\) must belong to \\(\\mathcal M\\). When \\(\\mathcal M = M_n\\), this reduces to Definition 1.1; when \\(\\mathcal M = D_n\\), it reproduces the classical k-clique/k-anticlique notions."
+    },
+    {
+      "type": "Lemma",
+      "number": "5.3",
+      "section": 5,
+      "page": 9,
+      "title": "Quantum Ramsey for quantum graphs of the form M_n ⊗ I_d",
+      "statement": "Let \\(\\mathcal V \\subseteq M_{nd} \\cong M_n \\otimes M_d\\) be a quantum graph on \\(M_n \\otimes I_d\\). If \\(nd \\geq 8k^{11}\\) then there is a projection in \\(M_n \\otimes I_d\\) whose rank is at least \\(k\\) and which is either a quantum clique or a quantum anticlique of \\(\\mathcal V\\).",
+      "proof_sketch": "\\(\\mathcal V = \\mathcal W \\otimes M_d\\) for some operator system \\(\\mathcal W \\subseteq M_n\\). If \\(d=1\\), apply Thm 4.5. If \\(d \\geq k\\), any \\(P \\otimes I_d\\) with rank-1 \\(P\\) works. For \\(2 \\leq d < k\\): algebra shows \\(n \\geq 8\\lceil k/d \\rceil^{11}\\), so Thm 4.5 gives a quantum \\(\\lceil k/d\\rceil\\)-clique/anticlique \\(Q \\in M_n\\), and \\(Q \\otimes I_d\\) is the required object.",
+      "note": "Can only promise rank \\(\\geq k\\), since ranks in \\(M_n \\otimes I_d\\) are multiples of \\(d\\)."
+    },
+    {
+      "type": "Theorem",
+      "number": "5.4",
+      "section": 5,
+      "page": 10,
+      "title": "Common generalization of classical and quantum Ramsey theorems",
+      "headline": true,
+      "statement": "For every \\(k\\) there exists \\(n\\) such that if \\(\\mathcal M\\) is a unital *-subalgebra of \\(M_n\\) and \\(\\mathcal V \\subseteq M_n\\) is an operator system satisfying \\(\\mathcal M' \\mathcal V \\mathcal M' = \\mathcal V\\), then there is a projection \\(P \\in \\mathcal M\\) whose rank is at least \\(k\\) and such that \\(P\\mathcal V P = PM_nP\\) or \\(P\\mathcal M'P\\).",
+      "proof_sketch": "Take \\(n = 8k^{11} \\cdot R(k,k)\\) where \\(R(k,k)\\) is the classical Ramsey number. Write \\(\\mathcal M = \\bigoplus_{i=1}^r (M_{n_i} \\otimes I_{d_i})\\). If \\(r \\leq R(k,k)\\), some \\(n_i d_i \\geq 8k^{11}\\) and Lemma 5.3 applies to that block. If \\(r > R(k,k)\\), pick rank-1 \\(Q_i \\in M_{n_i}\\), let \\(Q = \\bigoplus Q_i \\otimes I_{d_i}\\); then \\(Q\\mathcal V Q\\) corresponds to a simple graph \\(G\\) on \\(\\{1,\\ldots,r\\}\\) by [8, Thm 2.7]; the classical Ramsey theorem applied to \\(G\\) yields the required diagonal projection.",
+      "note": "Recovers Thm 4.5 when \\(\\mathcal M = M_n\\), and the classical Ramsey theorem when \\(\\mathcal M = D_n\\) (both with worse constants). The gap between classical (exponential growth) and quantum (polynomial growth) Ramsey numbers is explained in the discussion: the classical bound's exponential dependence comes from needing \\(\\mathcal Wv\\) of small codimension rather than large dimension."
+    }
+  ],
+  "references": [
+    {"n": 1, "cite": "Y. H. Au-Yeung and Y. T. Poon, A remark on the convexity and positive definiteness concerning Hermitian matrices, Southeast Asian Bull. Math. 3 (1979), 85-92."},
+    {"n": 2, "cite": "R. Duan, S. Severini, and A. Winter, Zero-error communication via quantum channels, noncommutative graphs, and a quantum Lovász number, IEEE Trans. Inform. Theory 59 (2013), 1164-1174."},
+    {"n": 3, "cite": "E. Knill and R. Laflamme, Theory of quantum error-correcting codes, Phys. Rev. A 55 (1997), 900-911."},
+    {"n": 4, "cite": "E. Knill, R. Laflamme, and L. Viola, Theory of quantum error correction for general noise, Phys. Rev. Lett. 84 (2000), 2525-2528."},
+    {"n": 5, "cite": "D. Stahlke, Quantum source-channel coding and non-commutative graph theory, arXiv:1405.5254."},
+    {"n": 6, "cite": "H. Tverberg, A generalization of Radon's theorem, J. London Math. Soc. 41 (1966), 123-128."},
+    {"n": 7, "cite": "H. Tverberg, A generalization of Radon's theorem, II, Bull. Austral. Math. Soc. 24 (1981), 321-325."},
+    {"n": 8, "cite": "N. Weaver, Quantum relations, Mem. Amer. Math. Soc. 215 (2012), v-vi, 81-140."},
+    {"n": 9, "cite": "N. Weaver, Quantum graphs as quantum relations, arXiv:1506.03892."}
+  ]
+}

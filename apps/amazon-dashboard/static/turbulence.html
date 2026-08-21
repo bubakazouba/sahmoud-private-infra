@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Turbulence Serious Injuries</title>
+<style>
+  :root{--bg:#0f1419;--panel:#1a212b;--border:#2d3744;--text:#e6ecf3;--dim:#8b97a7;--crew:#ff9900;--pax:#5fa8ff;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:14px}
+  .wrap{max-width:1000px;margin:0 auto;padding:20px}
+  h1{font-size:22px;margin:0 0 2px}
+  .sub{color:var(--dim);font-size:13px;margin-bottom:16px}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:13px 15px}
+  .card .n{font-size:24px;font-weight:700;color:var(--crew)}
+  .card .l{color:var(--dim);font-size:12px;margin-top:2px}
+  .chart{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:18px 14px 8px}
+  .bars{display:flex;align-items:flex-end;gap:8px;height:300px}
+  .col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+  .stack{width:100%;display:flex;flex-direction:column;justify-content:flex-end;border-radius:3px 3px 0 0;overflow:hidden}
+  .seg-crew{background:var(--crew)} .seg-pax{background:var(--pax)}
+  .tot{font-size:11px;color:var(--text);margin-bottom:3px;font-weight:600}
+  .yr{font-size:10px;color:var(--dim);margin-top:5px;transform:rotate(-0deg)}
+  .legend{display:flex;gap:18px;margin:12px 4px 4px;font-size:12px;color:var(--dim)}
+  .sw{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:5px;vertical-align:middle}
+  .note{color:var(--dim);font-size:12px;margin-top:14px;line-height:1.5}
+</style></head>
+<body><div class="wrap">
+  <h1>✈️ Serious Turbulence Injuries, U.S. Airlines (2009–2024)</h1>
+  <div class="sub">FAA / NTSB serious injuries on U.S. Part 121 scheduled carriers · source: faa.gov/travelers/fly_safe/turbulence</div>
+  <div class="cards" id="cards"></div>
+  <div class="chart">
+    <div class="bars" id="bars"></div>
+    <div class="legend"><span><span class="sw" style="background:#ff9900"></span>Crew</span><span><span class="sw" style="background:#5fa8ff"></span>Passengers</span></div>
+  </div>
+  <div class="note" id="note"></div>
+</div>
+<script>
+// [year, total serious injuries] - FAA published per-year totals (authoritative; sum=207)
+const DATA=[["2009",18],["2010",12],["2011",18],["2012",14],["2013",5],["2014",6],["2015",13],["2016",13],["2017",13],["2018",10],["2019",13],["2020",5],["2021",6],["2022",18],["2023",20],["2024",23]];
+const totals=DATA.map(d=>d[1]);
+const maxT=Math.max(...totals);
+const sumTot=totals.reduce((a,b)=>a+b,0);
+document.getElementById("cards").innerHTML=[
+ [sumTot,"total serious injuries (2009-2024)"],
+ ["166 (~80%)","were crew (flight attendants)"],
+ ["40 (~20%)","were passengers"],
+ ["23","2024 — highest year on record"],
+ ["5","2020 low (COVID groundings)"],
+].map(c=>`<div class="card"><div class="n">${c[0]}</div><div class="l">${c[1]}</div></div>`).join("");
+document.getElementById("bars").innerHTML=DATA.map(d=>{
+ const tot=d[1]; const h=tot/maxT*100;
+ const recent=(+d[0]>=2022);
+ return `<div class="col"><div class="tot">${tot}</div>
+   <div class="stack" style="height:${h}%"><div class="seg-crew" style="height:100%;background:${recent?'#ff5a3c':'#ff9900'}"></div></div>
+   <div class="yr">${d[0]}</div></div>`;
+}).join("");
+document.getElementById("note").innerHTML=
+ "Each bar = total serious turbulence injuries that year. <b>~80% of victims are flight crew</b> (166 of ~207), "+
+ "they're up working the aisle while passengers are mostly belted in. The last 3 years (red) are the clear upward trend: "+
+ "<b>2024 set a record at 23</b>. 2020's low (5) was the COVID groundings. "+
+ "This is the longest <i>continuous annual</i> series publicly available (FAA, 2009-2024); the only earlier figure is an aggregate of 266 serious injuries for 1980-2004. "+
+ "U.S. scheduled airlines only (Part 121; excludes charter, private, most international). "+
+ "Minor source quirk: FAA's own table prints 2022 as total 18 but its passenger+crew split lists 17, so the split columns sum to 206 vs the 207 total.";
+</script></body></html>

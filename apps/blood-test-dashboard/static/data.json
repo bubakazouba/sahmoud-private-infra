@@ -1,0 +1,162 @@
+{
+  "meta": {
+    "panel_date": "2026-04-22",
+    "source": "Quest Diagnostics",
+    "source_file": "quest_full_results.txt",
+    "notebooklm_id": "fbd1ff97-0ef5-49b2-b773-553869722522",
+    "patient": "Abdulrahman Sahmoud (Egyptian descent)",
+    "disclaimer": "Not medical advice. Reference ranges shown are Quest's own US ranges as printed on the report. MENA-population overlay shown only where peer-reviewed evidence exists for an Egyptian-specific adjustment."
+  },
+  "sections": [
+    {
+      "name": "CBC with Differential",
+      "rows": [
+        {"name": "White Blood Cell Count", "value": 3.3, "units": "Thousand/uL", "range": "3.8–10.8", "status": "low", "mena_note": "Chronic baseline since 2019: 3.5 → 3.3 → 3.5 → 3.1 → 2.4 → 2.3 → 3.3. Benign Ethnic Neutropenia (BEN) is established for sub-Saharan African ancestry only and NOT validated for Egyptians. US range applies, but the 7-year stable pattern argues constitutional / idiopathic over acute pathology."},
+        {"name": "Red Blood Cell Count", "value": 5.64, "units": "Million/uL", "range": "4.20–5.80", "status": "ok"},
+        {"name": "Hemoglobin", "value": 15.3, "units": "g/dL", "range": "13.2–17.1", "status": "ok"},
+        {"name": "Hematocrit", "value": 46.7, "units": "%", "range": "39.4–51.1", "status": "ok"},
+        {"name": "MCV", "value": 82.8, "units": "fL", "range": "81.4–101.7", "status": "borderline", "mena_note": "1.4 above the low edge. Egyptian beta-thalassemia trait prevalence ≈ 9-10%. Low-normal MCV in Egyptian-descent male is the classic silent-thalassemia-trait picture. One-time hemoglobin electrophoresis would settle it. Mostly academic since Hb (15.3) is normal — relevant mainly for family planning."},
+        {"name": "MCH", "value": 27.1, "units": "pg", "range": "27.0–33.0", "status": "borderline", "mena_note": "Exactly at the low floor. Same thalassemia-trait prior as MCV."},
+        {"name": "MCHC", "value": 32.8, "units": "g/dL", "range": "31.6–35.4", "status": "ok"},
+        {"name": "RDW", "value": 12.8, "units": "%", "range": "11.0–15.0", "status": "ok"},
+        {"name": "Platelet Count", "value": 246, "units": "Thousand/uL", "range": "140–400", "status": "ok"},
+        {"name": "MPV", "value": 11.9, "units": "fL", "range": "7.5–12.5", "status": "ok"},
+        {"name": "Absolute Neutrophils", "value": 960, "units": "cells/uL", "range": "1500–7800", "status": "low", "mena_note": "Chronic low. Same BEN caveat as WBC: not validated for Egyptians. Stable across all priors (1.1k → 1.4k → 931 → 960), so likely your constitutional baseline."},
+        {"name": "Absolute Lymphocytes", "value": 1845, "units": "cells/uL", "range": "850–3900", "status": "ok"},
+        {"name": "Absolute Monocytes", "value": 376, "units": "cells/uL", "range": "200–950", "status": "ok"},
+        {"name": "Absolute Eosinophils", "value": 89, "units": "cells/uL", "range": "15–500", "status": "ok"},
+        {"name": "Absolute Basophils", "value": 30, "units": "cells/uL", "range": "0–200", "status": "ok"},
+        {"name": "Neutrophils %", "value": 29.1, "units": "%", "range": "(not established)", "status": "neutral"},
+        {"name": "Lymphocytes %", "value": 55.9, "units": "%", "range": "(not established)", "status": "neutral"},
+        {"name": "Monocytes %", "value": 11.4, "units": "%", "range": "(not established)", "status": "neutral"},
+        {"name": "Eosinophils %", "value": 2.7, "units": "%", "range": "(not established)", "status": "neutral"},
+        {"name": "Basophils %", "value": 0.9, "units": "%", "range": "(not established)", "status": "neutral"}
+      ]
+    },
+    {
+      "name": "Comprehensive Metabolic Panel (CMP)",
+      "rows": [
+        {"name": "Glucose", "value": 86, "units": "mg/dL", "range": "65–99", "status": "ok"},
+        {"name": "Urea Nitrogen (BUN)", "value": 19, "units": "mg/dL", "range": "7–25", "status": "ok"},
+        {"name": "Creatinine", "value": 1.00, "units": "mg/dL", "range": "0.60–1.24", "status": "ok"},
+        {"name": "eGFR", "value": 104, "units": "mL/min/1.73m²", "range": "≥ 60", "status": "ok"},
+        {"name": "Sodium", "value": 141, "units": "mmol/L", "range": "135–146", "status": "ok"},
+        {"name": "Potassium", "value": 4.5, "units": "mmol/L", "range": "3.5–5.3", "status": "ok"},
+        {"name": "Chloride", "value": 105, "units": "mmol/L", "range": "98–110", "status": "ok"},
+        {"name": "Carbon Dioxide", "value": 22, "units": "mmol/L", "range": "20–32", "status": "ok"},
+        {"name": "Calcium", "value": 9.5, "units": "mg/dL", "range": "8.6–10.3", "status": "ok"},
+        {"name": "Protein, Total", "value": 7.1, "units": "g/dL", "range": "6.1–8.1", "status": "ok"},
+        {"name": "Albumin", "value": 4.5, "units": "g/dL", "range": "3.6–5.1", "status": "ok"},
+        {"name": "Globulin", "value": 2.6, "units": "g/dL", "range": "1.9–3.7", "status": "ok"},
+        {"name": "Albumin/Globulin Ratio", "value": 1.7, "units": "(calc)", "range": "1.0–2.5", "status": "ok"},
+        {"name": "Bilirubin, Total", "value": 1.2, "units": "mg/dL", "range": "0.2–1.2", "status": "borderline", "mena_note": "At upper edge. Gilbert's syndrome is the most common benign explanation (no MENA-specific overlay)."},
+        {"name": "Alkaline Phosphatase", "value": 60, "units": "U/L", "range": "36–130", "status": "ok"},
+        {"name": "AST", "value": 18, "units": "U/L", "range": "10–40", "status": "ok"},
+        {"name": "ALT", "value": 13, "units": "U/L", "range": "9–46", "status": "ok"}
+      ]
+    },
+    {
+      "name": "Lipid Panel",
+      "rows": [
+        {"name": "Cholesterol, Total", "value": 167, "units": "mg/dL", "range": "< 200", "status": "ok"},
+        {"name": "HDL Cholesterol", "value": 57, "units": "mg/dL", "range": "≥ 40", "status": "ok"},
+        {"name": "Triglycerides", "value": 40, "units": "mg/dL", "range": "< 150", "status": "ok"},
+        {"name": "LDL Cholesterol", "value": 98, "units": "mg/dL", "range": "< 100", "status": "borderline", "mena_note": "Right under the cutoff (2 mg/dL margin). Trend-watch."},
+        {"name": "Chol/HDL Ratio", "value": 2.9, "units": "(calc)", "range": "< 5.0", "status": "ok"},
+        {"name": "Non-HDL Cholesterol", "value": 110, "units": "mg/dL", "range": "< 130", "status": "ok"}
+      ]
+    },
+    {
+      "name": "Thyroid Panel",
+      "rows": [
+        {"name": "TSH", "value": 1.17, "units": "mIU/L", "range": "0.40–4.50", "status": "ok"},
+        {"name": "T3 Uptake", "value": 32, "units": "%", "range": "22–35", "status": "ok"},
+        {"name": "T4 (Thyroxine), Total", "value": 9.2, "units": "mcg/dL", "range": "4.9–10.5", "status": "ok"},
+        {"name": "Free T4 Index (T7)", "value": 2.9, "units": "(index)", "range": "1.4–3.8", "status": "ok"}
+      ]
+    },
+    {
+      "name": "Vitamins, Hormones, Other",
+      "rows": [
+        {"name": "Vitamin D, 25-OH, Total", "value": 26, "units": "ng/mL", "range": "30–100", "status": "low", "mena_note": "ONE marker where Egyptian-specific data is solid. Egyptian/MENA adult-male cohort studies consistently show median serum 25-OH-D in the 15-25 ng/mL band (drivers: clothing coverage, limited dairy fortification, sun avoidance). Your 26 sits at-or-above the Egyptian peer median, even though US clinical cutoff flags it. Still worth supplementing to 30-40 by US standards."},
+        {"name": "Vitamin B12", "value": 495, "units": "pg/mL", "range": "200–1100", "status": "ok"},
+        {"name": "Folate, Serum", "value": 18.5, "units": "ng/mL", "range": "> 5.4", "status": "ok"},
+        {"name": "PSA, Total", "value": 0.95, "units": "ng/mL", "range": "≤ 4.00", "status": "ok"},
+        {"name": "Hemoglobin A1c", "value": 5.5, "units": "%", "range": "< 5.7", "status": "ok", "mena_note": "Egypt is in the global top-10 for adult diabetes prevalence (~21%). 5.5 is well below the diabetic cutoff, but familial/ethnic risk warrants yearly A1c monitoring."}
+      ]
+    }
+  ],
+  "trends": {
+    "wbc": {
+      "label": "WBC (Thousand/uL)",
+      "ref_low": 3.8,
+      "ref_high": 10.8,
+      "points": [
+        {"date": "2019-02-14", "value": 3.5},
+        {"date": "2020-07-09", "value": 3.3},
+        {"date": "2021-07-02", "value": 3.5},
+        {"date": "2022-04-06", "value": 3.1},
+        {"date": "2024-08-28", "value": 2.4},
+        {"date": "2024-09-24", "value": 2.3},
+        {"date": "2026-04-22", "value": 3.3}
+      ]
+    },
+    "anc": {
+      "label": "Absolute Neutrophils (cells/uL)",
+      "ref_low": 1500,
+      "ref_high": 7800,
+      "points": [
+        {"date": "2019-02-14", "value": 1100},
+        {"date": "2021-07-02", "value": 1400},
+        {"date": "2024-08-28", "value": 931},
+        {"date": "2026-04-22", "value": 960}
+      ]
+    },
+    "mcv": {
+      "label": "MCV (fL)",
+      "ref_low": 81.4,
+      "ref_high": 101.7,
+      "points": [
+        {"date": "2019-02-14", "value": 82},
+        {"date": "2021-07-02", "value": 83},
+        {"date": "2022-04-06", "value": 84},
+        {"date": "2024-08-28", "value": 84.6},
+        {"date": "2026-04-22", "value": 82.8}
+      ]
+    },
+    "tsh": {
+      "label": "TSH (mIU/L)",
+      "ref_low": 0.40,
+      "ref_high": 4.50,
+      "points": [
+        {"date": "2020-07-14", "value": 0.97},
+        {"date": "2021-07-08", "value": 1.54},
+        {"date": "2024-08-28", "value": 1.19},
+        {"date": "2026-04-22", "value": 1.17}
+      ]
+    },
+    "b12": {
+      "label": "Vitamin B12 (pg/mL)",
+      "ref_low": 200,
+      "ref_high": 1100,
+      "points": [
+        {"date": "2024-08-28", "value": 521},
+        {"date": "2026-04-22", "value": 495}
+      ]
+    },
+    "folate": {
+      "label": "Folate (ng/mL)",
+      "ref_low": 5.4,
+      "ref_high": null,
+      "points": [
+        {"date": "2024-08-28", "value": 20.0},
+        {"date": "2026-04-22", "value": 18.5}
+      ]
+    }
+  },
+  "summary": {
+    "flagged_low": ["WBC", "Absolute Neutrophils", "Vitamin D"],
+    "borderline": ["MCV", "MCH", "LDL", "Bilirubin (total)"],
+    "net_read": "Lab is in solid shape. The three flags split into: (a) chronic leukopenia/low ANC that's been the 7-year baseline across all priors — fits constitutional/idiopathic over acute pathology, but hematology consult could rule out causes if never done; (b) vitamin D mild-deficient by US ranges, at-or-above Egyptian peer median, easy to fix with supplementation. The low-normal MCV/MCH + Egyptian ancestry argues for one-time hemoglobin electrophoresis to confirm/rule out thalassemia trait (matters for family planning, not day-to-day)."
+  }
+}

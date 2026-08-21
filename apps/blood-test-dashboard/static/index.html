@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Blood Test Dashboard — Apr 22 2026</title>
+<style>
+  :root {
+    --bg: #0f1419;
+    --panel: #1a212b;
+    --panel2: #232b37;
+    --border: #2d3744;
+    --text: #e6ecf3;
+    --text-dim: #8b97a7;
+    --ok: #3fb950;
+    --ok-bg: rgba(63, 185, 80, 0.12);
+    --borderline: #d29922;
+    --borderline-bg: rgba(210, 153, 34, 0.15);
+    --low: #ff7b72;
+    --low-bg: rgba(255, 123, 114, 0.15);
+    --high: #ff8b67;
+    --high-bg: rgba(255, 139, 103, 0.15);
+    --neutral: #58a6ff;
+    --neutral-bg: rgba(88, 166, 255, 0.1);
+    --accent: #58a6ff;
+    --mena: #d29922;
+    --mena-bg: rgba(210, 153, 34, 0.08);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  .container { max-width: 980px; margin: 0 auto; padding: 16px; }
+  header { padding: 20px 0 8px; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  .meta-line { color: var(--text-dim); font-size: 13px; }
+  .disclaimer {
+    margin: 12px 0 20px; padding: 10px 12px;
+    background: var(--panel); border-left: 3px solid var(--accent);
+    border-radius: 4px; font-size: 13px; color: var(--text-dim);
+  }
+
+  .summary {
+    display: grid; grid-template-columns: 1fr; gap: 12px;
+    margin-bottom: 20px;
+  }
+  @media (min-width: 700px) { .summary { grid-template-columns: 1fr 1fr; } }
+  .sumcard {
+    padding: 14px; border-radius: 8px; background: var(--panel);
+    border: 1px solid var(--border);
+  }
+  .sumcard h3 { margin: 0 0 8px; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .sumcard.low h3 { color: var(--low); }
+  .sumcard.borderline h3 { color: var(--borderline); }
+  .sumcard ul { margin: 0; padding-left: 18px; font-size: 14px; }
+  .sumcard li { margin: 2px 0; }
+
+  .section {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+  .section-head {
+    padding: 12px 16px;
+    background: var(--panel2);
+    border-bottom: 1px solid var(--border);
+    font-size: 15px;
+    font-weight: 600;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .section-head .count {
+    font-size: 12px; color: var(--text-dim); font-weight: normal;
+  }
+
+  table.rows { width: 100%; border-collapse: collapse; }
+  table.rows td {
+    padding: 10px 12px;
+    border-top: 1px solid var(--border);
+    font-size: 14px;
+    vertical-align: middle;
+  }
+  table.rows tr:first-child td { border-top: none; }
+  table.rows .name { font-weight: 500; }
+  table.rows .value { font-variant-numeric: tabular-nums; font-weight: 600; text-align: right; white-space: nowrap; }
+  table.rows .units { color: var(--text-dim); font-size: 12px; white-space: nowrap; }
+  table.rows .range { color: var(--text-dim); font-size: 12px; white-space: nowrap; }
+  table.rows .chip {
+    display: inline-block;
+    padding: 2px 8px; border-radius: 999px;
+    font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .chip.ok { background: var(--ok-bg); color: var(--ok); }
+  .chip.borderline { background: var(--borderline-bg); color: var(--borderline); }
+  .chip.low { background: var(--low-bg); color: var(--low); }
+  .chip.high { background: var(--high-bg); color: var(--high); }
+  .chip.neutral { background: var(--neutral-bg); color: var(--neutral); }
+
+  tr.has-note { cursor: pointer; }
+  tr.has-note .name::after {
+    content: " ⓘ"; color: var(--mena); font-size: 11px; vertical-align: super;
+  }
+  tr.note-row td {
+    background: var(--mena-bg);
+    border-top: 1px dashed rgba(210, 153, 34, 0.3);
+    padding: 12px 16px;
+    color: var(--text);
+    font-size: 13px;
+    line-height: 1.55;
+  }
+  tr.note-row .mena-label {
+    display: inline-block; padding: 1px 6px; border-radius: 3px;
+    background: var(--mena); color: #1a1300;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.5px;
+    margin-right: 8px; text-transform: uppercase;
+  }
+
+  /* mobile: stack rows */
+  @media (max-width: 600px) {
+    table.rows td { padding: 8px 10px; font-size: 13px; }
+    table.rows .units, table.rows .range { font-size: 11px; }
+    table.rows .name { display: block; margin-bottom: 2px; }
+    .summary { grid-template-columns: 1fr; }
+  }
+
+  .trends-grid {
+    display: grid; grid-template-columns: 1fr; gap: 12px;
+  }
+  @media (min-width: 700px) { .trends-grid { grid-template-columns: 1fr 1fr; } }
+  .trend {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+    padding: 12px;
+  }
+  .trend h4 { margin: 0 0 8px; font-size: 13px; color: var(--text-dim); font-weight: 500; }
+  .trend svg { width: 100%; height: 110px; display: block; }
+  .trend .axis { stroke: var(--border); stroke-width: 1; }
+  .trend .refband { fill: rgba(63, 185, 80, 0.08); }
+  .trend .refline { stroke: rgba(63, 185, 80, 0.3); stroke-width: 1; stroke-dasharray: 2 3; }
+  .trend .line { stroke: var(--accent); stroke-width: 2; fill: none; }
+  .trend .pt { fill: var(--accent); }
+  .trend .pt.below { fill: var(--low); }
+  .trend .pt.above { fill: var(--high); }
+  .trend .ptlabel { fill: var(--text-dim); font-size: 9px; }
+
+  .net-read {
+    padding: 16px; background: var(--panel);
+    border: 1px solid var(--border); border-radius: 8px;
+    font-size: 14px; line-height: 1.6; margin-top: 16px;
+  }
+  .net-read h3 { margin: 0 0 8px; font-size: 15px; }
+
+  footer {
+    margin: 24px 0 32px; padding-top: 16px; border-top: 1px solid var(--border);
+    color: var(--text-dim); font-size: 12px; line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>Blood Test Dashboard</h1>
+    <div class="meta-line" id="meta-line"></div>
+  </header>
+
+  <div class="disclaimer" id="disclaimer"></div>
+
+  <div class="summary" id="summary"></div>
+
+  <div id="sections"></div>
+
+  <h2 style="margin-top:24px;font-size:18px;">Historical Trends</h2>
+  <p style="color:var(--text-dim);font-size:13px;margin-top:0;">Green band = US reference range. Red dot = outside range.</p>
+  <div class="trends-grid" id="trends"></div>
+
+  <div class="net-read" id="net-read"></div>
+
+  <footer>
+    Source: NotebookLM "Medical Notebook" / <code id="source-file"></code>. Built by your assistant on <span id="builtdate"></span>. To add a new panel: drop the lab text into the NotebookLM source + rerun the build.
+  </footer>
+</div>
+
+<script>
+const STATUS_LABEL = { ok: "in range", borderline: "borderline", low: "low", high: "high", neutral: "—" };
+
+async function load() {
+  const r = await fetch('data.json');
+  const d = await r.json();
+
+  document.getElementById('meta-line').textContent =
+    `${d.meta.panel_date} · ${d.meta.source} · ${d.meta.patient}`;
+  document.getElementById('disclaimer').textContent = d.meta.disclaimer;
+  document.getElementById('source-file').textContent = d.meta.source_file;
+  document.getElementById('builtdate').textContent = new Date().toISOString().slice(0,10);
+
+  // Summary cards
+  const sum = document.getElementById('summary');
+  sum.innerHTML = `
+    <div class="sumcard low">
+      <h3>Flagged Low (${d.summary.flagged_low.length})</h3>
+      <ul>${d.summary.flagged_low.map(x => `<li>${x}</li>`).join('')}</ul>
+    </div>
+    <div class="sumcard borderline">
+      <h3>Borderline (${d.summary.borderline.length})</h3>
+      <ul>${d.summary.borderline.map(x => `<li>${x}</li>`).join('')}</ul>
+    </div>
+  `;
+
+  // Sections
+  const secEl = document.getElementById('sections');
+  d.sections.forEach((sec, sIdx) => {
+    const flagged = sec.rows.filter(r => r.status === 'low' || r.status === 'high' || r.status === 'borderline').length;
+    const tbody = sec.rows.map((row, rIdx) => {
+      const hasNote = !!row.mena_note;
+      const rowHtml = `
+        <tr class="${hasNote ? 'has-note' : ''}" data-key="r-${sIdx}-${rIdx}">
+          <td class="name">${row.name}</td>
+          <td class="value">${row.value}<div class="units">${row.units}</div></td>
+          <td class="range">${row.range}</td>
+          <td><span class="chip ${row.status}">${STATUS_LABEL[row.status]}</span></td>
+        </tr>
+      `;
+      const noteHtml = hasNote ? `
+        <tr class="note-row" id="note-${sIdx}-${rIdx}" style="display:none;">
+          <td colspan="4"><span class="mena-label">MENA / Egyptian context</span>${row.mena_note}</td>
+        </tr>
+      ` : '';
+      return rowHtml + noteHtml;
+    }).join('');
+    secEl.innerHTML += `
+      <div class="section">
+        <div class="section-head">
+          <span>${sec.name}</span>
+          <span class="count">${sec.rows.length} markers · ${flagged} flagged/borderline</span>
+        </div>
+        <table class="rows"><tbody>${tbody}</tbody></table>
+      </div>
+    `;
+  });
+
+  // Toggle note rows
+  document.querySelectorAll('tr.has-note').forEach(tr => {
+    tr.addEventListener('click', () => {
+      const key = tr.dataset.key.replace('r-', 'note-');
+      const noteRow = document.getElementById(key);
+      if (noteRow) {
+        noteRow.style.display = noteRow.style.display === 'none' ? 'table-row' : 'none';
+      }
+    });
+  });
+
+  // Auto-expand all notes on flagged/borderline rows that have one
+  document.querySelectorAll('tr.has-note').forEach(tr => {
+    const chip = tr.querySelector('.chip');
+    if (chip && (chip.classList.contains('low') || chip.classList.contains('high') || chip.classList.contains('borderline'))) {
+      const key = tr.dataset.key.replace('r-', 'note-');
+      const noteRow = document.getElementById(key);
+      if (noteRow) noteRow.style.display = 'table-row';
+    }
+  });
+
+  // Trends
+  const trendsEl = document.getElementById('trends');
+  Object.entries(d.trends).forEach(([key, t]) => {
+    trendsEl.innerHTML += renderTrend(key, t);
+  });
+
+  // Net read
+  document.getElementById('net-read').innerHTML = `
+    <h3>Net Read</h3>
+    <p>${d.summary.net_read}</p>
+  `;
+}
+
+function renderTrend(key, t) {
+  const W = 360, H = 110, padL = 8, padR = 8, padT = 14, padB = 18;
+  const innerW = W - padL - padR, innerH = H - padT - padB;
+  const pts = t.points;
+  if (pts.length === 0) return '';
+  const vals = pts.map(p => p.value);
+  const refLow = t.ref_low, refHigh = t.ref_high;
+  let vmin = Math.min(...vals, refLow ?? Infinity);
+  let vmax = Math.max(...vals, refHigh ?? -Infinity);
+  if (!isFinite(vmin)) vmin = Math.min(...vals);
+  if (!isFinite(vmax)) vmax = Math.max(...vals);
+  const span = vmax - vmin || 1;
+  const pad = span * 0.15;
+  vmin -= pad; vmax += pad;
+  const span2 = vmax - vmin || 1;
+  const x = i => padL + (pts.length === 1 ? innerW/2 : (i / (pts.length - 1)) * innerW);
+  const y = v => padT + innerH - ((v - vmin) / span2) * innerH;
+  // ref band
+  let band = '';
+  if (refLow != null && refHigh != null) {
+    const yHi = y(refHigh), yLo = y(refLow);
+    band = `<rect class="refband" x="${padL}" y="${yHi}" width="${innerW}" height="${yLo - yHi}" />`;
+  } else if (refLow != null) {
+    const yLo = y(refLow);
+    band = `<line class="refline" x1="${padL}" y1="${yLo}" x2="${padL+innerW}" y2="${yLo}" />`;
+  }
+  // line
+  const path = pts.map((p, i) => `${i === 0 ? 'M' : 'L'} ${x(i)} ${y(p.value)}`).join(' ');
+  // points
+  const dots = pts.map((p, i) => {
+    let cls = 'pt';
+    if (refLow != null && p.value < refLow) cls += ' below';
+    if (refHigh != null && p.value > refHigh) cls += ' above';
+    const lbl = p.date.slice(2,7); // YY-MM
+    return `<circle class="${cls}" cx="${x(i)}" cy="${y(p.value)}" r="3" />
+            <text class="ptlabel" x="${x(i)}" y="${H-4}" text-anchor="middle">${lbl}</text>
+            <text class="ptlabel" x="${x(i)}" y="${y(p.value)-6}" text-anchor="middle">${p.value}</text>`;
+  }).join('');
+  return `
+    <div class="trend">
+      <h4>${t.label}${refLow != null ? ` · ref ${refLow}${refHigh != null ? '–' + refHigh : '+'}` : ''}</h4>
+      <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+        ${band}
+        <path class="line" d="${path}" />
+        ${dots}
+      </svg>
+    </div>
+  `;
+}
+
+load();
+</script>
+</body>
+</html>

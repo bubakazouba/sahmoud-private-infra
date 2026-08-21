@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>US Happiness Heat Map</title>
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
+<style>
+  :root{--bg:#0f1419;--panel:#1a212b;--border:#2d3744;--text:#e6ecf3;--dim:#8b97a7;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:14px}
+  .wrap{max-width:1000px;margin:0 auto;padding:20px}
+  h1{font-size:21px;margin:0 0 2px}
+  .sub{color:var(--dim);font-size:13px;margin-bottom:14px;line-height:1.5}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:11px;margin-bottom:14px}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px 15px}
+  .card .n{font-size:19px;font-weight:700;color:#3ecf8e}
+  .card .l{color:var(--dim);font-size:12px;margin-top:3px}
+  .mapbox{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:8px}
+  .stlab{font-size:9px;fill:#0f1419;font-weight:700;text-anchor:middle;pointer-events:none}
+  .stscore{font-size:7.5px;fill:#0f1419;text-anchor:middle;pointer-events:none}
+  .legend{display:flex;align-items:center;gap:8px;margin:6px 4px 2px;font-size:12px;color:var(--dim)}
+  .grad{height:12px;width:240px;border-radius:3px;background:linear-gradient(90deg,#d73027,#fee08b,#1a9850)}
+  .note{color:var(--dim);font-size:12px;line-height:1.6;margin-top:12px}
+</style></head>
+<body><div class="wrap">
+  <h1>&#127482;&#127480; US Happiness Heat Map &mdash; by State</h1>
+  <div class="sub">Real data: WalletHub <b>Happiest States in America</b> index (2025), via World Population Review. Score 0&ndash;100, built from 30 metrics across emotional &amp; physical wellbeing, work environment, and community. Greener = happier. <b>Note:</b> this is NOT the coastal/Mappiness study (that one is UK-only with no US data) &mdash; it's a separate, US-specific happiness index.</div>
+  <div class="cards" id="cards"></div>
+  <div class="mapbox"><svg id="map" viewBox="0 0 960 560" width="100%"></svg>
+    <div class="legend"><span>32 (least happy)</span><div class="grad"></div><span>66 (happiest)</span></div>
+  </div>
+  <div class="note" id="note"></div>
+</div>
+<script>
+const SCORES={
+ "Hawaii":65.50,"Maryland":64.13,"Nebraska":63.61,"New Jersey":63.42,"Connecticut":62.53,
+ "Utah":61.12,"California":60.09,"New Hampshire":59.56,"Massachusetts":59.19,"Idaho":58.31,
+ "Minnesota":58.21,"Delaware":56.07,"South Dakota":55.93,"Florida":55.86,"Virginia":55.45,
+ "Iowa":55.42,"New York":55.42,"Pennsylvania":54.73,"Georgia":53.88,"Wisconsin":53.62,
+ "North Dakota":53.43,"Illinois":53.38,"Arizona":52.89,"Washington":52.88,"South Carolina":52.82,
+ "Rhode Island":51.68,"Kansas":51.29,"North Carolina":50.97,"Vermont":49.93,"Wyoming":49.47,
+ "Missouri":48.31,"Montana":47.83,"Maine":47.64,"Indiana":47.36,"Michigan":47.06,
+ "Oklahoma":47.05,"Texas":46.41,"Ohio":45.67,"Oregon":44.93,"Nevada":44.82,
+ "Colorado":44.49,"Mississippi":43.90,"Kentucky":43.25,"New Mexico":43.08,"Tennessee":41.22,
+ "Alabama":40.69,"Alaska":40.69,"Arkansas":37.03,"Louisiana":34.26,"West Virginia":32.04
+};
+const ABBR={"Alabama":"AL","Alaska":"AK","Arizona":"AZ","Arkansas":"AR","California":"CA","Colorado":"CO","Connecticut":"CT","Delaware":"DE","Florida":"FL","Georgia":"GA","Hawaii":"HI","Idaho":"ID","Illinois":"IL","Indiana":"IN","Iowa":"IA","Kansas":"KS","Kentucky":"KY","Louisiana":"LA","Maine":"ME","Maryland":"MD","Massachusetts":"MA","Michigan":"MI","Minnesota":"MN","Mississippi":"MS","Missouri":"MO","Montana":"MT","Nebraska":"NE","Nevada":"NV","New Hampshire":"NH","New Jersey":"NJ","New Mexico":"NM","New York":"NY","North Carolina":"NC","North Dakota":"ND","Ohio":"OH","Oklahoma":"OK","Oregon":"OR","Pennsylvania":"PA","Rhode Island":"RI","South Carolina":"SC","South Dakota":"SD","Tennessee":"TN","Texas":"TX","Utah":"UT","Vermont":"VT","Virginia":"VA","Washington":"WA","West Virginia":"WV","Wisconsin":"WI","Wyoming":"WY"};
+const color=d3.scaleSequential().domain([32,66]).interpolator(d3.interpolateRdYlGn);
+
+const entries=Object.entries(SCORES).sort((a,b)=>b[1]-a[1]);
+document.getElementById('cards').innerHTML=[
+ ["Hawaii","happiest state ("+SCORES["Hawaii"].toFixed(1)+")"],
+ ["West Virginia","least happy ("+SCORES["West Virginia"].toFixed(1)+")"],
+ ["California","#7, 60.1"],
+ ["50 states","WalletHub 2025 index"],
+].map(c=>`<div class="card"><div class="n">${c[0]}</div><div class="l">${c[1]}</div></div>`).join("");
+
+d3.json("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json").then(us=>{
+  const states=topojson.feature(us,us.objects.states).features;
+  const proj=d3.geoAlbersUsa().fitSize([940,540],topojson.feature(us,us.objects.states));
+  const path=d3.geoPath(proj);
+  const svg=d3.select("#map");
+  const g=svg.append("g").attr("transform","translate(10,10)");
+  g.selectAll("path").data(states).join("path")
+    .attr("d",path)
+    .attr("fill",d=>{const s=SCORES[d.properties.name];return s?color(s):"#2d3744";})
+    .attr("stroke","#0f1419").attr("stroke-width",0.6);
+  g.selectAll("text.lab").data(states).join("text")
+    .attr("class","stlab")
+    .attr("transform",d=>{const c=path.centroid(d);return `translate(${c[0]},${c[1]-2})`;})
+    .text(d=>ABBR[d.properties.name]||"");
+  g.selectAll("text.sc").data(states).join("text")
+    .attr("class","stscore")
+    .attr("transform",d=>{const c=path.centroid(d);return `translate(${c[0]},${c[1]+7})`;})
+    .text(d=>{const s=SCORES[d.properties.name];return s?s.toFixed(0):"";});
+}).catch(e=>{document.getElementById('map').outerHTML='<div style="color:#ff5a3c;padding:20px">Map failed to load: '+e+'</div>';});
+
+document.getElementById('note').innerHTML=
+ "Happiest cluster: Hawaii, the Mid-Atlantic (Maryland, New Jersey, Connecticut) and the Plains/Mountain West (Nebraska, Utah, Idaho, the Dakotas). Least happy: the Deep South and Appalachia (West Virginia, Louisiana, Arkansas, Alabama), plus Alaska. "+
+ "<b>Source:</b> WalletHub, 'Happiest States in America' 2025 (30 metrics: depression rate, life satisfaction, income, sleep, job security, etc.), via World Population Review. This is a state-wellbeing index, a different and US-specific dataset, not the UK coastal/Mappiness study from the earlier chart.";
+</script></body></html>

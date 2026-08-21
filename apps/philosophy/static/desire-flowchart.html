@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Philosophy of Desire - Interactive Graph v3</title>
+<script src="https://unpkg.com/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://unpkg.com/layout-base/layout-base.js"></script>
+<script src="https://unpkg.com/cose-base/cose-base.js"></script>
+<script src="https://unpkg.com/cytoscape-fcose@2.2.0/cytoscape-fcose.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0d1117; color: #c9d1d9; font-family: 'Segoe UI', system-ui, sans-serif; overflow: hidden; }
+
+  #header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: linear-gradient(135deg, #161b22, #0d1117);
+    border-bottom: 1px solid #30363d;
+    padding: 10px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  #header h1 { font-size: 16px; color: #e94560; }
+  #header .controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  #header button {
+    background: #21262d; border: 1px solid #30363d; color: #c9d1d9;
+    padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 12px;
+  }
+  #header button:hover { background: #30363d; }
+  #header button.active { background: #e94560; border-color: #e94560; color: #fff; }
+
+  #progress-bar {
+    position: fixed; top: 47px; left: 0; right: 0; height: 3px;
+    background: #161b22; z-index: 99;
+  }
+  #progress-fill {
+    height: 100%; background: linear-gradient(90deg, #e94560, #22c55e);
+    transition: width 0.4s ease; width: 0%;
+  }
+  #progress-text {
+    position: fixed; top: 50px; right: 20px; z-index: 100;
+    font-size: 11px; color: #8b949e; padding: 4px 10px;
+    background: #161b22cc; border-radius: 0 0 6px 6px;
+  }
+
+  .legend {
+    position: fixed; bottom: 15px; left: 15px; z-index: 100;
+    background: #161b22ee; border: 1px solid #30363d; border-radius: 8px;
+    padding: 10px 14px; font-size: 11px; line-height: 1.8;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+
+  #cy { width: 100vw; height: 100vh; padding-top: 50px; }
+
+  #popup {
+    display: none; position: fixed; z-index: 200;
+    background: #161b22; border: 1px solid #e94560;
+    border-radius: 10px; padding: 16px 20px;
+    max-width: 420px; min-width: 280px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+    font-size: 13px; line-height: 1.6;
+    pointer-events: auto;
+    max-height: 70vh; overflow-y: auto;
+  }
+  #popup .popup-title {
+    font-size: 15px; font-weight: 700; margin-bottom: 8px;
+    padding-bottom: 8px; border-bottom: 1px solid #30363d;
+  }
+  #popup .popup-type {
+    display: inline-block; font-size: 10px; font-weight: 600;
+    padding: 2px 8px; border-radius: 10px; margin-bottom: 8px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  #popup .popup-section { margin-top: 10px; }
+  #popup .popup-section h4 { font-size: 11px; color: #8b949e; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  #popup .popup-section p, #popup .popup-section li { color: #c9d1d9; font-size: 12px; }
+  #popup .popup-section ul { padding-left: 16px; }
+  #popup .close-btn {
+    position: absolute; top: 8px; right: 12px;
+    background: none; border: none; color: #8b949e;
+    font-size: 18px; cursor: pointer; line-height: 1;
+  }
+  #popup .close-btn:hover { color: #e94560; }
+
+  #popup .read-toggle {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin-top: 12px; padding: 6px 14px; border-radius: 6px;
+    cursor: pointer; font-size: 12px; font-weight: 600;
+    border: 1px solid #30363d; background: #21262d; color: #c9d1d9;
+    transition: all 0.2s;
+  }
+  #popup .read-toggle:hover { background: #30363d; }
+  #popup .read-toggle.is-read { background: #22c55e22; border-color: #22c55e; color: #22c55e; }
+
+  #search-box {
+    background: #0d1117; border: 1px solid #30363d; color: #c9d1d9;
+    padding: 5px 10px; border-radius: 6px; font-size: 12px; width: 160px;
+  }
+  #search-box::placeholder { color: #484f58; }
+</style>
+</head>
+<body>
+
+<div id="header">
+  <h1>Philosophy of Desire — Interactive Dependency Graph</h1>
+  <div class="controls">
+    <input type="text" id="search-box" placeholder="Search nodes..." />
+    <button onclick="filterByType('all')" class="active" id="btn-all">All</button>
+    <button onclick="filterByType('theory')" id="btn-theory">Theories</button>
+    <button onclick="filterByType('premise')" id="btn-premise">Premises</button>
+    <button onclick="filterByType('objection')" id="btn-objection">Objections</button>
+    <button onclick="filterByType('response')" id="btn-response">Responses</button>
+    <button onclick="filterByType('consequence')" id="btn-consequence">Consequences</button>
+    <span style="color:#30363d;">|</span>
+    <button onclick="filterByRead('unread')" id="btn-unread">Unread Only</button>
+    <button onclick="filterByRead('read')" id="btn-read-only">Read Only</button>
+    <button onclick="markAllRead()" id="btn-mark-all">Mark All Read</button>
+    <button onclick="markAllUnread()" id="btn-mark-unread">Clear All</button>
+    <button onclick="cy.fit(undefined, 40)">Reset View</button>
+  </div>
+</div>
+
+<div id="progress-bar"><div id="progress-fill"></div></div>
+<div id="progress-text">0 / 0 read</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#3b82f6;"></div> Core Theory / Claim</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#22c55e;"></div> Premise / Support</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ef4444;"></div> Objection / Attack</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#a855f7;"></div> Response / Defense</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#eab308;"></div> Consequence / Implication</div>
+  <div style="margin-top:6px;border-top:1px solid #30363d;padding-top:6px;">
+    <div class="legend-item"><div class="legend-dot" style="background:#0d1117;border:2px solid #22c55e;display:flex;align-items:center;justify-content:center;font-size:8px;color:#22c55e;">&#10003;</div> Read (checkmark on node)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#0d1117;border:2px dashed #484f58;"></div> Unread (default)</div>
+  </div>
+  <div style="margin-top:6px;color:#484f58;font-size:10px;">Click node for details + mark read/unread.<br/>Scroll to zoom. Drag to pan.</div>
+</div>
+
+<div id="cy"></div>
+
+<div id="popup">
+  <button class="close-btn" onclick="closePopup()">&times;</button>
+  <div id="popup-content"></div>
+</div>
+
+<script>
+// ===================== READ STATE (localStorage) =====================
+const STORAGE_KEY = 'desire_graph_read_state';
+
+function getReadState() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; }
+}
+function saveReadState(state) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+function isRead(nodeId) {
+  return !!getReadState()[nodeId];
+}
+function toggleRead(nodeId) {
+  const state = getReadState();
+  if (state[nodeId]) { delete state[nodeId]; } else { state[nodeId] = true; }
+  saveReadState(state);
+  updateNodeVisuals(nodeId);
+  updateProgress();
+  // Update popup button if open
+  const btn = document.getElementById('read-toggle-btn');
+  if (btn && btn.dataset.nodeId === nodeId) {
+    updateReadButton(nodeId);
+  }
+}
+function markAllRead() {
+  const state = getReadState();
+  nodes.forEach(n => { state[n.id] = true; });
+  saveReadState(state);
+  nodes.forEach(n => updateNodeVisuals(n.id));
+  updateProgress();
+}
+function markAllUnread() {
+  saveReadState({});
+  nodes.forEach(n => updateNodeVisuals(n.id));
+  updateProgress();
+}
+
+// ===================== NODE DATA =====================
+const nodes = [
+  // ===== SECTION 1: THEORIES =====
+  {
+    id: 'abt', type: 'theory', section: 'Theories',
+    label: 'Action-Based\nTheory',
+    title: 'Action-Based Theory of Desire',
+    detail: {
+      philosophers: 'Anscombe (foundational), conservative tradition',
+      thesis: 'For an organism to desire p is for the organism to be disposed to act so as to bring about p.',
+      premises: ['Anscombe\'s principle: "The primitive sign of wanting is trying to get"', 'Dispositions explain desire without requiring actual action'],
+      example: 'Janet\'s mango desire explains her behavior via disposition, even when shopping is inconvenient.'
+    }
+  },
+  {
+    id: 'abt_smith', type: 'theory', section: 'Theories',
+    label: 'Smith\'s\nRefinement',
+    title: 'Smith\'s Sophisticated Action-Based Theory (1994)',
+    detail: {
+      philosophers: 'Michael Smith (1987, 1994)',
+      thesis: 'For an organism to desire p is for the organism to be disposed to take whatever actions it believes are likely to bring about p.',
+      premises: ['Avoids attributing desires based on mere behavioral tics', 'Incorporates rational belief about means-end relations'],
+      example: 'John\'s desire for Janet\'s love = disposition toward actions he believes will achieve it.'
+    }
+  },
+  {
+    id: 'anscombe', type: 'premise', section: 'Theories',
+    label: 'Anscombe:\n"Wanting = trying"',
+    title: 'Anscombe\'s Foundational Premise',
+    detail: {
+      philosophers: 'G.E.M. Anscombe',
+      thesis: '"The primitive sign of wanting is trying to get." Desire is fundamentally linked to action-attempts.',
+      premises: ['Observation of animal and human behavior', 'Linguistic analysis of desire-talk'],
+    }
+  },
+  {
+    id: 'obj_stampe', type: 'objection', section: 'Theories',
+    label: 'Stampe\'s Tennis\nPlayer Objection',
+    title: 'Stampe\'s Objection: The Nervous Tennis Player',
+    detail: {
+      philosophers: 'Dennis Stampe (1986)',
+      thesis: 'A nervous tennis player disposed to double-fault, who believes this disposition will cause double-faults, does NOT thereby desire to double-fault.',
+      premises: ['The player has the disposition (to double-fault)', 'The player has the belief (that this causes faults)', 'Yet intuitively: no desire to double-fault exists'],
+      consequence: 'Shows action-based theories are too permissive — they count non-desires as desires.'
+    }
+  },
+  {
+    id: 'obj_moral', type: 'objection', section: 'Theories',
+    label: 'Moral Judgment\nObjection',
+    title: 'McDowell/Scanlon: Moral Judgments Motivate Without Being Desires',
+    detail: {
+      philosophers: 'McDowell (1978), Scanlon (1998), Davis (1986), Marks (1986)',
+      thesis: 'Judgments of goodness independently motivate action; not all motivation is desire. Action-based theory conflates two distinct motivational states.',
+      premises: ['Moral judgments dispose agents to act', 'But moral judgments are ontologically different from desires', 'Both produce action-dispositions but have different natures'],
+      consequence: 'Two distinct types of motivational states exist — desire is not the only one.'
+    }
+  },
+  {
+    id: 'resp_func', type: 'response', section: 'Theories',
+    label: 'Functional Purpose\nResponse',
+    title: 'Millikan/Papineau: Desires Have the FUNCTION of Producing Action',
+    detail: {
+      philosophers: 'Millikan (1984), Papineau (1987)',
+      thesis: 'Modify action-based theory: desires have the biological/teleological function of producing action, not merely the disposition.',
+      premises: ['Double-faulting is not the function of nervousness — handles Stampe case', 'Function is a stricter criterion than disposition'],
+      limitation: 'Still vulnerable to the moral judgment objection: moral judgments might also have action-producing functions.'
+    }
+  },
+  {
+    id: 'obj_imposs', type: 'objection', section: 'Theories',
+    label: 'Impossible Desires\nObjection',
+    title: 'Schroeder/Wall: Desires for the Impossible',
+    detail: {
+      philosophers: 'Schroeder (2004), Wall (2009)',
+      thesis: 'Some desires have no possible action that could fulfill them, yet they are genuine desires.',
+      premises: ['Desire that pi be rational — no action can make this happen', 'Desire never to have been born — logically impossible to act on', 'Desire for committee decisions regardless of one\'s own actions'],
+      consequence: 'Action-based theories cannot account for these desires.'
+    }
+  },
+  {
+    id: 'resp_wish', type: 'response', section: 'Theories',
+    label: 'Response:\n"Just wishes"',
+    title: 'Response: Impossible "Desires" Are Merely Wishes',
+    detail: {
+      philosophers: 'Defenders of action-based theories',
+      thesis: 'These are not true desires but merely "wishes" or related but distinct attitudes.',
+      limitation: 'Debatable whether the wish/desire distinction holds up under scrutiny.'
+    }
+  },
+  {
+    id: 'pbt', type: 'theory', section: 'Theories',
+    label: 'Pleasure-Based\nTheory',
+    title: 'Pleasure-Based Theory of Desire',
+    detail: {
+      philosophers: 'Schueler (1995), Vadas (1984), Davis (1986)',
+      thesis: 'For an organism to desire p is for the organism to be disposed to take pleasure in it seeming that p, and displeasure in it seeming that not-p.',
+      premises: ['Distinguishes desires from moral judgments (pleasure-linked vs. not)', 'Desire requires affective/hedonic response; moral judgment need not'],
+      advantage: 'Handles the moral judgment objection: moral judgments don\'t involve pleasure dispositions.'
+    }
+  },
+  {
+    id: 'pbt_straw', type: 'premise', section: 'Theories',
+    label: 'Strawson:\nConsciousness\nArgument',
+    title: 'Strawson\'s Defense: Intentionality Requires Consciousness',
+    detail: {
+      philosophers: 'Galen Strawson (1994)',
+      thesis: 'Pleasure is essential to desire because intentionality requires consciousness, and pleasure/displeasure are the conscious states closest to desire.',
+      premises: ['P1: Intentionality (aboutness) requires consciousness', 'P2: Pleasure/displeasure are states of consciousness closest to desire', 'Conclusion: Pleasure is essential to desire'],
+      thought_experiment: 'Beings without action capacity but WITH pleasure dispositions would still have desires — showing pleasure, not action, is essential.'
+    }
+  },
+  {
+    id: 'pbt_morillo', type: 'premise', section: 'Theories',
+    label: 'Morillo:\nNeuroscience\nArgument',
+    title: 'Morillo\'s Neuroscientific Defense',
+    detail: {
+      philosophers: 'Carolyn Morillo (1990)',
+      thesis: 'Desires ARE episodes of pleasure, identified with dopamine release in the reward system.',
+      premises: ['P1: Desires must be ontologically independent from action (non-trivial explainers)', 'P2: Dopamine release in reward system = episodes of pleasure (empirical claim)', 'P3: This neural event is the causal origin of action', 'Conclusion: Desires are episodes of pleasure'],
+      dependency: 'Requires the identity theory: pleasure = specific neural events in the reward system.'
+    }
+  },
+  {
+    id: 'obj_causal', type: 'objection', section: 'Theories',
+    label: 'Causal Independence\nObjection',
+    title: 'Davis/Schroeder: Pleasure Results FROM Desire, Not IS Desire',
+    detail: {
+      philosophers: 'Davis (1982), Schroeder (2004)',
+      thesis: 'Pleasure results from desire satisfaction — it doesn\'t constitute desire itself.',
+      premises: ['Causal chain: desire -> satisfaction -> pleasure', 'If pleasure is an EFFECT of desire satisfaction, it cannot BE the desire', 'Desires must be ontologically distinct from their effects'],
+      consequence: 'Pleasure-based theories confuse cause and effect.'
+    }
+  },
+  {
+    id: 'gbt', type: 'theory', section: 'Theories',
+    label: 'Good-Based\n(Socratic) Theory',
+    title: 'Good-Based (Socratic) Theory of Desire',
+    detail: {
+      philosophers: 'Attributed to Socrates',
+      thesis: 'For an organism to desire p is for it to believe p is good.',
+      premises: ['If judging p good -> motivation', 'And motivation -> desire', 'Then judging p good -> desire'],
+      note: 'The strongest version: desire just IS belief in goodness.'
+    }
+  },
+  {
+    id: 'obj_lewis_dt', type: 'objection', section: 'Theories',
+    label: 'Lewis\'s Decision\nTheory Objection',
+    title: 'Lewis: Formal Inconsistency in Decision Theory',
+    detail: {
+      philosophers: 'David Lewis (1988, 1996)',
+      thesis: 'The "Desire As Belief" thesis leads to formal inconsistencies within decision theory.',
+      premises: ['P1: Rational belief revision and rational desire revision follow DIFFERENT principles in decision theory', 'P2: If desire = belief in goodness, the SAME revision principles should apply', 'P3: They don\'t apply identically', 'Conclusion: Desires != beliefs in goodness'],
+      note: 'A technical/formal argument, not based on intuition pumps.'
+    }
+  },
+  {
+    id: 'resp_lewis', type: 'response', section: 'Theories',
+    label: 'Price/Byrne-Hajek\nReformulation',
+    title: 'Defenders Reformulate to Avoid Lewis\'s Inconsistency',
+    detail: {
+      philosophers: 'Price (1989), Byrne & Hajek (1997), Broome (1991)',
+      thesis: 'The good-based thesis can be saved by reformulating it within decision theory or by challenging whether decision theory formalizes the right principles.',
+      premises: ['Strategy 1 (Price/Byrne-Hajek): Reformulate the thesis to fit the formal framework', 'Strategy 2 (Broome): Challenge whether decision theory captures the correct principles of rational revision'],
+    }
+  },
+  {
+    id: 'gbt_percept', type: 'theory', section: 'Theories',
+    label: 'Perceptual\nGood-Based Theory',
+    title: 'Stampe/Oddie: Desire as Appearance of Goodness',
+    detail: {
+      philosophers: 'Dennis Stampe (1987), Graham Oddie (2005)',
+      thesis: 'For an organism to desire p is for p to APPEAR good to the organism (not believe/judge).',
+      premises: ['Appearance of goodness != judgment/belief that good', 'Like perceiving resemblance — complex, high-level perception', 'You can desire something while believing it not good (appearance vs belief)'],
+      advantage: 'Handles cases where you desire what you believe is bad (weakness of will / akrasia).'
+    }
+  },
+  {
+    id: 'obj_animal', type: 'objection', section: 'Theories',
+    label: 'Animal Desires\nPuzzle',
+    title: 'Can Animals Desire Without Goodness-Concepts?',
+    detail: {
+      philosophers: 'General philosophical concern',
+      thesis: 'Rats desire escape from cats but lack goodness-concepts. Either rats lack desires, or goodness-representation isn\'t necessary for desire.',
+      premises: ['P1: Rats seem to desire escape from cats', 'P2: Rats seem to lack concepts of goodness', 'P3: Therefore either rats lack desires OR goodness-representation isn\'t necessary'],
+      consequence: 'Good-based theories (including perceptual variants) struggle with non-human animal desires.'
+    }
+  },
+  {
+    id: 'attn', type: 'theory', section: 'Theories',
+    label: 'Attention-Based\nTheory',
+    title: 'Scanlon\'s Directed-Attention Theory',
+    detail: {
+      philosophers: 'T.M. Scanlon (1998)',
+      thesis: 'For an organism to desire p is for the thought of p to keep occurring to the organism in a favorable light, so that its attention is directed insistently toward considerations that present themselves as counting in favor of p.',
+      premises: ['Evaluative element enters through reasons (considerations counting in favor)', 'Desires -> attention to reasons; reasons are what count in favor'],
+      limitation: 'Characterizes occurrent desires better than standing desires.'
+    }
+  },
+  {
+    id: 'obj_attn', type: 'objection', section: 'Theories',
+    label: 'Limited Focus\nObjection',
+    title: 'Attention-Based Theory Is Incomplete',
+    detail: {
+      philosophers: 'Raised within the article',
+      thesis: 'Attention to reasons is only ONE attentional effect of desire. Desire also directs attention to information about the desired state, opportunities, relevant people, etc.',
+      premises: ['Desire draws attention to more than just reasons', 'Information-seeking, opportunity-spotting, social awareness all follow from desire', 'Theory privileges one attention-type over equally important ones'],
+      consequence: 'The theory incompletely captures desire\'s nature.'
+    }
+  },
+  {
+    id: 'lbt', type: 'theory', section: 'Theories',
+    label: 'Learning-Based\nTheory',
+    title: 'Schroeder\'s Reward-Based Learning Theory',
+    detail: {
+      philosophers: 'Timothy Schroeder (2004); preceded by Fred Dretske (1988)',
+      thesis: 'For an organism to desire p is for it to use representations of p to drive reward-based learning.',
+      premises: ['Identified via natural-kind methodology (like water = H2O)', 'Dopamine reward system is the unique common cause of action, pleasure, thought, and attention effects', 'Pleasure is an EFFECT of the reward system, not identical to it'],
+      advantage: 'Handles desire strength, impossible desires, animal desires, and intrinsic desire acquisition.'
+    }
+  },
+  {
+    id: 'lbt_neuro', type: 'premise', section: 'Theories',
+    label: 'Empirical:\nDopamine Reward\nSystem',
+    title: 'Neuroscientific Evidence for Learning-Based Theory',
+    detail: {
+      philosophers: 'Schroeder (2004), citing neuroscience literature',
+      thesis: 'The dopamine reward system is the unique common cause of all desire-like effects: action-disposition, pleasure, directed thought, and attention.',
+      premises: ['Same neural structure responsible for contingency-based/reward-based learning', 'Reward signal drives learning about what leads to satisfaction', 'This is empirically identifiable and measurable'],
+    }
+  },
+  {
+    id: 'dispute_morillo', type: 'objection', section: 'Theories',
+    label: 'Realize vs Cause\nDispute',
+    title: 'Does Dopamine REALIZE or Merely CAUSE Pleasure?',
+    detail: {
+      philosophers: 'Schroeder vs. Morillo — ongoing empirical dispute',
+      thesis: 'Central disagreement: is the dopamine reward system identical to pleasure (realizes it) or does it merely cause pleasure downstream?',
+      premises: ['Pro-realizes (Morillo): stimulation-induced pleasure, temporal correlation', 'Pro-causes (Schroeder): alternative pleasure-causing drugs exist, dopamine-deprived rats still taste gustatory pleasure, downstream neural candidates exist'],
+      consequence: 'If realizes: pleasure-based theory wins. If merely causes: learning-based theory wins.'
+    }
+  },
+  {
+    id: 'obj_apriori', type: 'objection', section: 'Theories',
+    label: 'A Priori\nIntuitions Objection',
+    title: 'Learning-Based Theory Violates Intuitions About Desire',
+    detail: {
+      philosophers: 'Bratman (1990), Brook (2006), Latham (2006)',
+      thesis: 'The theory allows desires in creatures that can\'t move or feel — violating a priori intuitions about desire\'s connection to action and affect.',
+      premises: ['Learning-based theory allows desires in immobile, affectless creatures', 'Nobody learns about desire through learning about reward-based learning', 'Our concept of desire seems to require action/affect connections'],
+      counterargument: 'Either reject a priori constraints on natural kinds, or accept desire may lack typical features (like how water can lack typical "water" features).'
+    }
+  },
+  {
+    id: 'cons_pleas_effect', type: 'consequence', section: 'Theories',
+    label: 'Pleasure is EFFECT,\nnot identical to desire',
+    title: 'Learning-Based Implication: Pleasure != Desire',
+    detail: {
+      philosophers: 'Schroeder (2004)',
+      thesis: 'If desire = reward-learning-signal, then pleasure is a downstream effect of that signal, not the desire itself.',
+      consequence: 'Directly undermines the pleasure-based theory of desire.'
+    }
+  },
+  {
+    id: 'holt', type: 'theory', section: 'Theories',
+    label: 'Holistic Theory\n(Functionalist /\nInterpretationist)',
+    title: 'Holistic Theory: No Single Feature Is Essential',
+    detail: {
+      philosophers: 'David Lewis (1972) — functionalist; Donald Davidson (1980) — interpretationist; Agnieszka Jaworska (2007) — caring variant',
+      thesis: 'No single feature is essential to desire. Having a sufficient cluster of desire-like features constitutes desire.',
+      premises: ['Feature 1: Action disposition', 'Feature 2: Pleasure disposition', 'Feature 3: Belief in goodness', 'Feature 4: Attention to reasons', 'Feature 5: Tend to desire what is good', 'Feature 6: Tend to desire what aids survival', 'Feature 7: Desire pleasure, averse to pain', 'Feature 8: Attend to desire-relevant information'],
+      advantage: 'Solves the manifestation/strength problem. Accommodates all the intuitions that individual theories capture.'
+    }
+  },
+  {
+    id: 'strength_prob', type: 'objection', section: 'Theories',
+    label: 'Manifestation\nProblem',
+    title: 'The Manifestation Problem for Single-Feature Theories',
+    detail: {
+      philosophers: 'General concern across theories',
+      thesis: 'Desire strength seems constant while single-feature effects vary independently. Parental desire for child\'s welfare feels equally strong whether happy or sad, awake or sleepy — yet action-dispositions and affective responses fluctuate.',
+      premises: ['If strength = manifestation strength of ONE feature, variance suggests strength-change', 'But intuitively, the desire doesn\'t change strength', 'Creates "meaningless" fluctuations under single-feature theories'],
+      consequence: 'Single-feature theories (action, pleasure, good, attention) all fail here. Learning-based and holistic theories succeed because strength != any single manifestation.'
+    }
+  },
+
+  // ===== SECTION 2: VARIETIES =====
+  {
+    id: 'prop', type: 'theory', section: 'Varieties',
+    label: 'Propositional\nContent View',
+    title: 'All Desires Are for States of Affairs',
+    detail: {
+      philosophers: 'Standard/majority view among philosophers',
+      thesis: 'All desires are for conceivable states of affairs. "Desire for tea" = "desire THAT I drink some tea."',
+      premises: ['Makes logical relations between beliefs/desires/intentions transparent', 'Allows precise specification of satisfaction conditions'],
+    }
+  },
+  {
+    id: 'obj_d', type: 'theory', section: 'Varieties',
+    label: 'Object-Desire\nAlternative',
+    title: 'Some Desires Target Objects Directly',
+    detail: {
+      philosophers: 'Various; motivated by ordinary language and animal cognition',
+      thesis: 'Some or all desires target objects, not states of affairs. "I desire tea" — no proposition needed.',
+      premises: ['Natural language: "I desire tea" more natural than "I desire that I have tea"', 'Non-human animals have desires without grasping propositions'],
+    }
+  },
+  {
+    id: 'resp_sat', type: 'response', section: 'Varieties',
+    label: 'Satisfaction Problem\n(favors propositional)',
+    title: 'Which State Satisfies "Desire for Tea"?',
+    detail: {
+      philosophers: 'Pro-propositional theorists',
+      thesis: 'Multiple possible states could satisfy "desire for tea" — and there IS a fact of the matter about which one does. This proves propositional structure is genuine.',
+      premises: ['1. Possess but don\'t drink tea soon?', '2. Possess but don\'t drink tea ever?', '3. Drink tea soon?', '4. Drink tea ever?', 'A fact of the matter exists -> desire has propositional content specifying which'],
+    }
+  },
+  {
+    id: 'obj_lycan', type: 'objection', section: 'Varieties',
+    label: 'Lycan\'s\nUnderspecification',
+    title: 'Lycan: Even Propositional Content Is Underspecified',
+    detail: {
+      philosophers: 'Lycan (2012)',
+      thesis: 'Even specifying "desire to drink tea" faces complications. Nora might refuse satisfaction if the tea is stale, poisoned, or delivered by a robber.',
+      consequence: 'The fine-grained state that actually satisfies a desire is hard to pin down even propositionally.'
+    }
+  },
+  {
+    id: 'intrinsic', type: 'theory', section: 'Varieties',
+    label: 'Intrinsic\nDesire',
+    title: 'Intrinsic Desire: Wanted for Its Own Sake',
+    detail: {
+      philosophers: 'Standard philosophical category',
+      thesis: 'Desires for states of affairs wanted for themselves (at least partially). Examples: pleasure, children\'s welfare, justice.',
+      note: '"Intrinsic" doesn\'t mean "exclusively for own sake" — a father desires child\'s welfare intrinsically AND instrumentally.'
+    }
+  },
+  {
+    id: 'instrumental', type: 'theory', section: 'Varieties',
+    label: 'Instrumental\nDesire',
+    title: 'Instrumental Desire: Wanted as Means to an End',
+    detail: {
+      philosophers: 'Standard philosophical category',
+      thesis: 'Desire merely as means to other ends; not wanted for its own sake.',
+      premises: ['Presupposes an intrinsic desire as the ultimate end', 'Example: desiring a dentist visit (instrumental to healthy teeth, ultimately to intrinsic goods)'],
+    }
+  },
+  {
+    id: 'realizer', type: 'theory', section: 'Varieties',
+    label: 'Realizer\nDesire',
+    title: 'Realizer Desire: Wanted as Instance of Intrinsic Desire',
+    detail: {
+      philosophers: 'Arpaly & Schroeder (2014), Schmidtz (1994)',
+      thesis: 'Desires for ends that count as instances (realizations) of intrinsic desires. Not instrumental (not means-to-end) but constitutive (part-of-end).',
+      example: 'Refraining from yelling is not a MEANS to civility — it IS civility. So the desire not to yell is a realizer of the intrinsic desire for civility.'
+    }
+  },
+  {
+    id: 'frankfurt', type: 'theory', section: 'Varieties',
+    label: 'Frankfurt:\n2nd-Order Desires',
+    title: 'Frankfurt: Second-Order Desires Define Personhood',
+    detail: {
+      philosophers: 'Harry Frankfurt (1971, 1999)',
+      thesis: 'Second-order desires (desires about desires) make us persons with cares, loves, and free will.',
+      premises: ['First-order: ordinary desires (snacks, team winning)', 'Second-order: desires about first-order desires (desire not to yell at reveler)', 'Second-order desires are usually instrumental (not yelling -> no rocks thrown -> windows safe)'],
+    }
+  },
+  {
+    id: 'lewis_2nd', type: 'objection', section: 'Varieties',
+    label: 'Lewis: 2nd-order\nmust be intrinsic?',
+    title: 'Lewis\'s Complication: Second-Order Desires Must Be Intrinsic for Valuing',
+    detail: {
+      philosophers: 'David Lewis (1989)',
+      thesis: 'Lewis\'s account of valuing requires second-order desires to be intrinsic, not merely instrumental.',
+      premises: ['If you intrinsically desire civility, then not-yelling is an INSTANCE of civility', 'Not a means to civility but a realization of it', 'This triggers the "realizer desire" category'],
+      consequence: 'Blurs the line between instrumental and realizer desires at the second-order level.'
+    }
+  },
+  {
+    id: 'occurrent', type: 'theory', section: 'Varieties',
+    label: 'Occurrent\nDesire',
+    title: 'Occurrent Desire: Currently Active',
+    detail: {
+      philosophers: 'Standard distinction',
+      thesis: 'Desires currently playing an active psychic role — either consciously or unconsciously.',
+      premises: ['Doesn\'t require controlling action', 'Desire to laze in bed is occurrent even while getting up', 'Can manifest as longing thoughts, partial action, conscious awareness, or unconscious causation'],
+    }
+  },
+  {
+    id: 'standing', type: 'theory', section: 'Varieties',
+    label: 'Standing\nDesire',
+    title: 'Standing Desire: Persistent but Not Currently Active',
+    detail: {
+      philosophers: 'Standard distinction',
+      thesis: 'Desires not playing an active psychic role currently. "Lies in back of mind," occasionally generating thoughts/feelings/actions.',
+      example: 'Ben\'s desire for new skates — present for months but not manifesting most of the time.'
+    }
+  },
+  {
+    id: 'elim', type: 'objection', section: 'Varieties',
+    label: 'Eliminativism:\nOnly occurrent\ndesires are real',
+    title: 'Eliminativism About Standing Desires',
+    detail: {
+      philosophers: 'Some philosophers (position described in article)',
+      thesis: 'Only occurrent desires are real desires. Standing desires are merely dispositions to generate occurrent desires — not desires themselves.',
+    }
+  },
+  {
+    id: 'resp_expl', type: 'response', section: 'Varieties',
+    label: 'Explanatory value\nof standing desires',
+    title: 'Standing Desires Have Real Explanatory Power',
+    detail: {
+      philosophers: 'Defenders of standing desires',
+      thesis: 'Standing desires serve good explanatory purposes that disposition-talk doesn\'t capture.',
+      example: 'Nora\'s standing desire for tea knowledge explains why a tin in her boyfriend\'s kitchen catches her attention. The standing-desire explanation is more natural than "disposition to form occurrent desire."'
+    }
+  },
+  {
+    id: 'cons_q', type: 'consequence', section: 'Varieties',
+    label: 'All occurrent desires\n= conscious?',
+    title: 'Disputed: Are All Occurrent Desires Conscious?',
+    detail: {
+      philosophers: 'Oddie (2005), Stampe (1987), Strawson (1994) say yes',
+      thesis: 'Some philosophers argue all occurrent desires are elements of conscious life — like seeing red (capacity not exercised until in consciousness).',
+      note: 'Supported by pleasure/seeming-based theories where qualitative character of desire is an aspect of consciousness.'
+    }
+  },
+  {
+    id: 'obj_fit', type: 'objection', section: 'Varieties',
+    label: 'Direction-of-Fit\nIncompatibility',
+    title: 'Hulse/Read/Schroeder: Desires Can\'t Be Consciousness Elements',
+    detail: {
+      philosophers: 'Hulse, Read, & Schroeder (2004)',
+      thesis: 'Desires have a world-to-mind direction of fit. Consciousness has a mind-to-world direction. These are incompatible — so desires cannot be consciousness elements.',
+      premises: ['Desires: how things SHOULD be (world-to-mind)', 'Consciousness: how things ARE (mind-to-world)', 'Incompatible directional properties -> incompatible categories'],
+    }
+  },
+
+  // ===== SECTION 3: CONTROVERSIES =====
+  {
+    id: 'dof', type: 'theory', section: 'Controversies',
+    label: 'Direction\nof Fit',
+    title: 'Anscombe\'s Direction-of-Fit Doctrine',
+    detail: {
+      philosophers: 'Anscombe (2000), with many interpreters',
+      thesis: 'Beliefs are like declarative sentences (fit the world); desires are like imperatives (the world should fit them).',
+      note: '"Little sign of a consensus emerging in foreseeable future" — the exact literal meaning is still contested.'
+    }
+  },
+  {
+    id: 'dof_should', type: 'premise', section: 'Controversies',
+    label: 'Interpretation 1:\n"Should" asymmetry',
+    title: 'Gregory: Direction of Fit as Normative "Should"',
+    detail: {
+      philosophers: 'Gregory (2012)',
+      thesis: 'Beliefs SHOULD conform to the world. The world SHOULD conform to desires.',
+    }
+  },
+  {
+    id: 'dof_causal', type: 'premise', section: 'Controversies',
+    label: 'Interpretation 2:\nCausal asymmetry',
+    title: 'Causal Interpretation of Direction of Fit',
+    detail: {
+      philosophers: 'Various',
+      thesis: 'The world tends to CAUSE satisfied (true) beliefs. Desires tend to CAUSE a desire-satisfying world. Causation runs in different directions.',
+    }
+  },
+  {
+    id: 'besire', type: 'objection', section: 'Controversies',
+    label: '"Besires":\nBelief-Desire\nHybrids',
+    title: 'Besires: States With Both Directions of Fit',
+    detail: {
+      philosophers: 'Smith (1994, ch. 4), Zangwill (2008)',
+      thesis: 'Some mental states ("besires") might have BOTH belief-like and desire-like directions of fit simultaneously.',
+      consequence: 'Challenges the neat dichotomy between belief-fit and desire-fit.'
+    }
+  },
+  {
+    id: 'orig_inst', type: 'theory', section: 'Controversies',
+    label: 'Instrumental Desire\nGeneration\n(uncontroversial)',
+    title: 'How Instrumental/Realizer Desires Are Generated',
+    detail: {
+      philosophers: 'Uncontroversial across traditions',
+      thesis: 'Conscious or unconscious reasoning: if you desire q, and believe p makes q likely, you automatically generate a desire for p.',
+      premises: ['Strength of new desire increases with strength of intrinsic desire for q', 'Strength increases with apparent usefulness of p toward q'],
+    }
+  },
+  {
+    id: 'hedon', type: 'theory', section: 'Controversies',
+    label: 'Psychological\nHedonism',
+    title: 'Pollock: Only One Intrinsic Desire — Pleasure',
+    detail: {
+      philosophers: 'John Pollock (2006)',
+      thesis: 'Only one intrinsic desire exists: the desire for pleasure. This desire is innate. All other desires are instrumental or realizer desires derived from it.',
+      consequence: 'Simplest theory of intrinsic desire origins, but highly restrictive.'
+    }
+  },
+  {
+    id: 'smith_acq', type: 'theory', section: 'Controversies',
+    label: 'Smith: Rationality-\nBased Acquisition',
+    title: 'Smith: Intrinsic Desires From Rational Reflection',
+    detail: {
+      philosophers: 'Michael Smith (1994)',
+      thesis: 'Believing "were I rational, I\'d desire p" automatically generates the intrinsic desire for p in rational agents.',
+      premises: ['Departs from Humean tradition (Hume: beliefs can\'t dictate intrinsic desires)', 'Aligns with Richardson (1997): reasoning can set "final ends"'],
+      example: 'Believing rational agents desire to give to the Third World -> generates your intrinsic desire to give.'
+    }
+  },
+  {
+    id: 'obj_eval', type: 'objection', section: 'Controversies',
+    label: 'Evaluability\nProblem',
+    title: 'Is the New Desire Intrinsic or Realizer?',
+    detail: {
+      philosophers: 'General concern',
+      thesis: 'When Smith\'s mechanism generates a new desire, it\'s hard to tell if it\'s genuinely intrinsic or just a realizer of an existing desire (e.g., desire to be rational/moral).',
+      consequence: 'Makes Smith\'s theory empirically difficult to evaluate.'
+    }
+  },
+  {
+    id: 'learn_acq', type: 'theory', section: 'Controversies',
+    label: 'Learning-Based\nAcquisition',
+    title: 'Schroeder: Reward Learning Generates New Intrinsic Desires',
+    detail: {
+      philosophers: 'Schroeder (2004)',
+      thesis: 'Reward-based learning generates new intrinsic desires without requiring rationality or awareness.',
+      example: 'Child intrinsically desires dry bottom and full stomach. Mother\'s presence presages satisfaction. Via reward learning: child acquires intrinsic desire for mother\'s presence — without ever consciously reasoning about the connection.',
+      advantage: 'Works for non-rational creatures (infants, animals). Doesn\'t require awareness of instrumental relationship.'
+    }
+  },
+  {
+    id: 'pref_basic', type: 'theory', section: 'Controversies',
+    label: 'Preferences\nas Basic',
+    title: 'Traditional View: Pairwise Preferences Are Fundamental',
+    detail: {
+      philosophers: 'von Neumann & Morgenstern (1944)',
+      thesis: 'Basic psychological facts are simple pairwise preferences (A over B), because these are readily introspected and acted upon.',
+      quote: '"Every measurement...ultimately based on some immediate sensation...of preference" — von Neumann & Morgenstern (1944, 16)',
+    }
+  },
+  {
+    id: 'des_basic', type: 'theory', section: 'Controversies',
+    label: 'Desires\nas Basic',
+    title: 'Alternative: Desires With Strengths Are Fundamental',
+    detail: {
+      philosophers: 'Pollock (2006) and others',
+      thesis: 'If desires are basic and have strengths, preferences follow derivatively. More parsimonious in terms of basic facts needed.',
+    }
+  },
+  {
+    id: 'pollock_comp', type: 'premise', section: 'Controversies',
+    label: 'Pollock:\nParsimony Argument',
+    title: 'Pollock\'s Computational Parsimony Argument',
+    detail: {
+      philosophers: 'John Pollock (2006)',
+      thesis: 'Preferences-as-basic requires ~billion billions of pairwise preference facts. Same information derivable from ~300 basic desire facts.',
+      premises: ['Basic psychological facts must physically realize in the brain', '300 facts is far more brain-realistic than billions of billions', 'Therefore desires more likely to be basic than preferences'],
+    }
+  },
+  {
+    id: 'pref_constr', type: 'objection', section: 'Controversies',
+    label: 'Preference\nConstruction Effect',
+    title: 'Lichtenstein & Slovic: Preferences Are Context-Dependent',
+    detail: {
+      philosophers: 'Lichtenstein & Slovic (1971, 2006)',
+      thesis: 'Preferences are subject to powerful contextual influences — they are "constructed" not "revealed."',
+      premises: ['Classic study: two bets with ~identical expected value ($4)', 'Choice condition: subjects prefer bet A', 'Bidding condition: SAME subjects bid more for bet B', 'Implication: preference "reversal" — no stable preference-facts independent of framing'],
+      consequence: 'Challenges whether a small number of stable basic preferences exist.'
+    }
+  },
+  {
+    id: 'hume_pos', type: 'theory', section: 'Controversies',
+    label: 'Humean Position:\nReasons need desires',
+    title: 'Humeanism: Reasons to Act Depend on Desires',
+    detail: {
+      philosophers: 'Neo-Humean tradition',
+      thesis: 'The existence of reasons to act depends on the agent\'s desires. My reason to drink hot chocolate depends on my desire to.',
+      note: 'Two versions: Identity (reason = having the desire) vs Relational (reason = non-desire fact that reasons-via-relation to a desire).'
+    }
+  },
+  {
+    id: 'will_def', type: 'premise', section: 'Controversies',
+    label: 'Williams\'s\nDefense',
+    title: 'Williams: If Reason Exists, Agent Must Be Able to Act on It',
+    detail: {
+      philosophers: 'Bernard Williams (1981)',
+      thesis: 'P1: If a reason to act exists, the agent can act for that reason. P2: This is guaranteed only if reason-having involves desire. Conclusion: Reasons require desires.',
+    }
+  },
+  {
+    id: 'anti_moral', type: 'objection', section: 'Controversies',
+    label: 'Anti-Humean:\nMoral reasons need\nno desires',
+    title: 'Moral Requirements Give Desire-Independent Reasons',
+    detail: {
+      philosophers: 'Various moral philosophers',
+      thesis: 'Moral requirements give reasons to act independently of the agent\'s desires. You have reason to help a stranger regardless of your desires about strangers.',
+      consequence: 'Counterexample to universal desire-dependence of reasons.'
+    }
+  },
+  {
+    id: 'korsg', type: 'objection', section: 'Controversies',
+    label: 'Korsgaard:\nAsymmetric\nSkepticism',
+    title: 'Korsgaard: Humean Skepticism Is Unjustified',
+    detail: {
+      philosophers: 'Christine Korsgaard (1997)',
+      thesis: 'P1: If reason to act on desires exists, this is a fundamental evaluative fact. P2: If so, no reason to deny other fundamental evaluative facts. P3: Other such facts might entail reasons independent of desires. Conclusion: Skepticism about non-desire reasons is unjustified.',
+      note: 'Key move: Humeanism requires an asymmetrical skepticism that Korsgaard challenges as unprincipled.'
+    }
+  },
+  {
+    id: 'wb', type: 'theory', section: 'Controversies',
+    label: 'Desire-Based\nWell-Being',
+    title: 'Well-Being = Satisfaction of Desires',
+    detail: {
+      philosophers: 'Standard view in consequentialist ethics',
+      thesis: 'A person\'s well-being stems from satisfaction of their desires. Actual states of affairs matter, not perceptions.',
+      example: 'If an Olympian is deceived into falsely believing they won gold, well-being is NOT increased. Only actual gold increases well-being.'
+    }
+  },
+  {
+    id: 'obj_prob', type: 'objection', section: 'Controversies',
+    label: 'Problematic\nDesires',
+    title: 'Some Desires\' Satisfaction != Well-Being',
+    detail: {
+      philosophers: 'General concern',
+      thesis: 'Desires from ignorance or neurosis — satisfying them wouldn\'t contribute to well-being. Theory is overinclusive.',
+    }
+  },
+  {
+    id: 'brandt', type: 'response', section: 'Controversies',
+    label: 'Brandt\'s Filter:\nSurviving\nPsychotherapy',
+    title: 'Brandt: Only "Cognitively Psychotherapy-Surviving" Desires Count',
+    detail: {
+      philosophers: 'Richard Brandt (1979)',
+      thesis: 'Well-being derives only from desires that would survive cognitive psychotherapy — a hypothetical process that removes desires based on factual ignorance and psychological dysfunction.',
+    }
+  },
+  {
+    id: 'obj_pleas_wb', type: 'objection', section: 'Controversies',
+    label: 'Feldman:\nPleasure matters\nin its own right',
+    title: 'Feldman: Mental State (Pleasure) Matters for Well-Being',
+    detail: {
+      philosophers: 'Fred Feldman (2004)',
+      thesis: 'The desire-based theory is insufficiently attentive to the individual\'s mental state. Pleasure-experience matters for well-being in its own right.',
+    }
+  },
+  {
+    id: 'obj_flour', type: 'objection', section: 'Controversies',
+    label: 'Nussbaum:\nObjective\nFlourishing',
+    title: 'Nussbaum: Well-Being Requires Objective Conditions',
+    detail: {
+      philosophers: 'Martha Nussbaum (2000, ch. 1)',
+      thesis: 'Human flourishing requires objective conditions independent of mental states. Education\'s value isn\'t exhausted by the desires it satisfies.',
+    }
+  },
+  {
+    id: 'kant', type: 'theory', section: 'Controversies',
+    label: 'Kantian:\nDuty, not desire',
+    title: 'Kant: Praiseworthiness Requires Acting From Duty',
+    detail: {
+      philosophers: 'Immanuel Kant (1964), Barbara Herman (1993, ch. 1)',
+      thesis: 'A person is praiseworthy for right action ONLY if motivated by duty, not by inclination/desire.',
+      premises: ['True moral worth requires acting from intellectual grasp of duty', 'Inclination-based motivation is unreliable and non-moral'],
+    }
+  },
+  {
+    id: 'arpaly', type: 'theory', section: 'Controversies',
+    label: 'Arpaly: Desire\nfor good required',
+    title: 'Arpaly: Praiseworthiness Requires Desiring What\'s Good',
+    detail: {
+      philosophers: 'Nomy Arpaly (2002), Arpaly & Schroeder (2014)',
+      thesis: 'Praiseworthiness actually requires acting on certain desires — specifically, desires for what\'s good (kindness, justice).',
+      premises: ['Suppose agent acts from duty but duty-conception is mistaken', 'Agent performs right action only accidentally', 'Accidental rightness is not praiseworthy', 'Therefore: duty alone is insufficient; desire for the right content is needed'],
+    }
+  },
+  {
+    id: 'obj_kant', type: 'objection', section: 'Controversies',
+    label: 'Mistaken Duty\nObjection',
+    title: 'If Duty-Conception Is Wrong, Right Action Is Accidental',
+    detail: {
+      philosophers: 'Arpaly (2002)',
+      thesis: 'An agent acting from a mistaken duty-conception performs right actions only by accident. Accidental rightness shouldn\'t count as praiseworthy.',
+      consequence: 'Undermines Kant — duty alone is insufficient. Content of desire matters.'
+    }
+  },
+  {
+    id: 'virtue', type: 'theory', section: 'Controversies',
+    label: 'Virtue Ethics:\nDesire + Knowledge',
+    title: 'Virtue Ethics: Both Desire and Knowledge Required',
+    detail: {
+      philosophers: 'Rosalind Hursthouse (1999), possibly Aristotle (1999)',
+      thesis: 'BOTH desire for the right AND knowledge of the right are required for praiseworthiness.',
+    }
+  },
+];
+
+// ===================== EDGE DATA =====================
+const edges = [
+  { source: 'anscombe', target: 'abt', label: 'grounds' },
+  { source: 'abt', target: 'abt_smith', label: 'refined by' },
+  { source: 'abt_smith', target: 'obj_stampe', label: 'fails for', etype: 'attack' },
+  { source: 'abt', target: 'obj_moral', label: 'conflates', etype: 'attack' },
+  { source: 'obj_stampe', target: 'resp_func', label: 'addressed by' },
+  { source: 'resp_func', target: 'obj_moral', label: 'still vulnerable', etype: 'attack' },
+  { source: 'abt', target: 'obj_imposs', label: 'fails for', etype: 'attack' },
+  { source: 'obj_imposs', target: 'resp_wish', label: 'deflected by' },
+  { source: 'pbt_straw', target: 'pbt', label: 'supports' },
+  { source: 'pbt_morillo', target: 'pbt', label: 'supports' },
+  { source: 'pbt', target: 'obj_causal', label: 'undermined by', etype: 'attack' },
+  { source: 'gbt', target: 'obj_lewis_dt', label: 'refuted by', etype: 'attack' },
+  { source: 'obj_lewis_dt', target: 'resp_lewis', label: 'challenged by' },
+  { source: 'gbt', target: 'gbt_percept', label: 'weakened to' },
+  { source: 'gbt', target: 'obj_animal', label: 'fails for', etype: 'attack' },
+  { source: 'gbt_percept', target: 'obj_animal', label: 'also challenged', etype: 'attack' },
+  { source: 'gbt', target: 'attn', label: 'Scanlon narrows' },
+  { source: 'attn', target: 'obj_attn', label: 'incomplete', etype: 'attack' },
+  { source: 'lbt_neuro', target: 'lbt', label: 'supports' },
+  { source: 'pbt_morillo', target: 'dispute_morillo', label: 'contested by', etype: 'attack' },
+  { source: 'lbt', target: 'dispute_morillo', label: 'contested by', etype: 'attack' },
+  { source: 'lbt', target: 'obj_apriori', label: 'challenged by', etype: 'attack' },
+  { source: 'lbt', target: 'cons_pleas_effect', label: 'implies' },
+  { source: 'cons_pleas_effect', target: 'pbt', label: 'undermines', etype: 'attack' },
+  { source: 'abt', target: 'holt', label: 'feature 1' },
+  { source: 'pbt', target: 'holt', label: 'feature 2' },
+  { source: 'gbt', target: 'holt', label: 'feature 3' },
+  { source: 'attn', target: 'holt', label: 'feature 4' },
+  { source: 'abt', target: 'strength_prob', label: 'fails', etype: 'attack' },
+  { source: 'pbt', target: 'strength_prob', label: 'fails', etype: 'attack' },
+  { source: 'gbt', target: 'strength_prob', label: 'fails', etype: 'attack' },
+  { source: 'attn', target: 'strength_prob', label: 'fails', etype: 'attack' },
+  { source: 'lbt', target: 'strength_prob', label: 'solves' },
+  { source: 'holt', target: 'strength_prob', label: 'solves' },
+  { source: 'obj_d', target: 'resp_sat', label: 'challenged by' },
+  { source: 'resp_sat', target: 'prop', label: 'supports' },
+  { source: 'prop', target: 'obj_lycan', label: 'complicated by', etype: 'attack' },
+  { source: 'intrinsic', target: 'instrumental', label: 'presupposed by' },
+  { source: 'intrinsic', target: 'realizer', label: 'instantiated by' },
+  { source: 'frankfurt', target: 'instrumental', label: 'typically' },
+  { source: 'frankfurt', target: 'lewis_2nd', label: 'complicated by', etype: 'attack' },
+  { source: 'lewis_2nd', target: 'realizer', label: 'triggers' },
+  { source: 'standing', target: 'elim', label: 'denied by', etype: 'attack' },
+  { source: 'elim', target: 'resp_expl', label: 'countered by' },
+  { source: 'occurrent', target: 'cons_q', label: 'some argue' },
+  { source: 'cons_q', target: 'obj_fit', label: 'undermined by', etype: 'attack' },
+  { source: 'dof_should', target: 'dof', label: 'interprets' },
+  { source: 'dof_causal', target: 'dof', label: 'interprets' },
+  { source: 'dof', target: 'besire', label: 'challenged by', etype: 'attack' },
+  { source: 'hedon', target: 'orig_inst', label: 'only pleasure innate' },
+  { source: 'smith_acq', target: 'obj_eval', label: 'complicated by', etype: 'attack' },
+  { source: 'learn_acq', target: 'smith_acq', label: 'advantage over' },
+  { source: 'lbt', target: 'learn_acq', label: 'enables' },
+  { source: 'pollock_comp', target: 'des_basic', label: 'supports' },
+  { source: 'pref_basic', target: 'pref_constr', label: 'undermined by', etype: 'attack' },
+  { source: 'will_def', target: 'hume_pos', label: 'supports' },
+  { source: 'hume_pos', target: 'anti_moral', label: 'challenged by', etype: 'attack' },
+  { source: 'hume_pos', target: 'korsg', label: 'challenged by', etype: 'attack' },
+  { source: 'wb', target: 'obj_prob', label: 'challenged by', etype: 'attack' },
+  { source: 'obj_prob', target: 'brandt', label: 'addressed by' },
+  { source: 'wb', target: 'obj_pleas_wb', label: 'insufficient per', etype: 'attack' },
+  { source: 'wb', target: 'obj_flour', label: 'insufficient per', etype: 'attack' },
+  { source: 'kant', target: 'obj_kant', label: 'undermined by', etype: 'attack' },
+  { source: 'obj_kant', target: 'arpaly', label: 'supports' },
+  { source: 'kant', target: 'virtue', label: 'modified by' },
+  { source: 'arpaly', target: 'virtue', label: 'modified by' },
+  { source: 'dof', target: 'obj_fit', label: 'constrains consciousness debate' },
+  { source: 'hume_pos', target: 'abt', label: 'reasons need desires' },
+  { source: 'wb', target: 'gbt', label: 'well-being needs desire theory' },
+  { source: 'pbt', target: 'obj_pleas_wb', label: 'aligns with' },
+];
+
+// ===================== BUILD CYTOSCAPE =====================
+const typeColors = {
+  theory: '#3b82f6',
+  premise: '#22c55e',
+  objection: '#ef4444',
+  response: '#a855f7',
+  consequence: '#eab308',
+};
+
+const cyNodes = nodes.map(n => ({
+  data: {
+    id: n.id,
+    label: n.label,
+    nodeType: n.type,
+    section: n.section,
+    color: typeColors[n.type],
+    isRead: isRead(n.id),
+  }
+}));
+
+const cyEdges = edges.map((e, i) => ({
+  data: {
+    id: 'e' + i,
+    source: e.source,
+    target: e.target,
+    label: e.label || '',
+    etype: e.etype || 'support',
+  }
+}));
+
+const cy = cytoscape({
+  container: document.getElementById('cy'),
+  elements: [...cyNodes, ...cyEdges],
+  style: [
+    {
+      selector: 'node',
+      style: {
+        'label': 'data(label)',
+        'text-wrap': 'wrap',
+        'text-max-width': '140px',
+        'font-size': '10px',
+        'color': '#e6edf3',
+        'text-valign': 'center',
+        'text-halign': 'center',
+        'background-color': 'data(color)',
+        'background-opacity': 0.6,
+        'border-width': 2,
+        'border-color': 'data(color)',
+        'width': 'label',
+        'height': 'label',
+        'padding': '14px',
+        'shape': 'round-rectangle',
+        'text-outline-color': '#0d1117',
+        'text-outline-width': 1,
+        'min-width': '80px',
+        'min-height': '40px',
+        'transition-property': 'opacity, border-color, border-width, background-opacity',
+        'transition-duration': '0.2s',
+      }
+    },
+    {
+      selector: 'node.read-node',
+      style: {
+        'background-opacity': 1,
+        'border-width': 3,
+        'border-color': '#22c55e',
+        'border-style': 'solid',
+      }
+    },
+    {
+      selector: 'node.unread-node',
+      style: {
+        'background-opacity': 0.5,
+        'border-style': 'dashed',
+      }
+    },
+    {
+      selector: 'node:active, node:selected',
+      style: {
+        'border-width': 3,
+        'border-color': '#fff',
+      }
+    },
+    {
+      selector: 'edge',
+      style: {
+        'width': 1.5,
+        'line-color': '#30363d',
+        'target-arrow-color': '#30363d',
+        'target-arrow-shape': 'triangle',
+        'curve-style': 'bezier',
+        'arrow-scale': 0.8,
+        'label': 'data(label)',
+        'font-size': '8px',
+        'color': '#6e7681',
+        'text-rotation': 'autorotate',
+        'text-outline-color': '#0d1117',
+        'text-outline-width': 1,
+        'transition-property': 'opacity, line-color',
+        'transition-duration': '0.2s',
+      }
+    },
+    {
+      selector: 'edge[etype="attack"]',
+      style: {
+        'line-color': '#6e2a2a',
+        'target-arrow-color': '#6e2a2a',
+        'line-style': 'dashed',
+      }
+    },
+    {
+      selector: '.dimmed',
+      style: { 'opacity': 0.12 }
+    },
+    {
+      selector: '.highlighted',
+      style: {
+        'opacity': 1,
+        'border-width': 3,
+        'border-color': '#fff',
+      }
+    },
+    {
+      selector: 'edge.highlighted',
+      style: {
+        'opacity': 1,
+        'width': 2.5,
+        'line-color': '#58a6ff',
+        'target-arrow-color': '#58a6ff',
+      }
+    },
+    {
+      selector: 'edge.highlighted[etype="attack"]',
+      style: {
+        'line-color': '#f85149',
+        'target-arrow-color': '#f85149',
+      }
+    },
+    {
+      selector: '.search-match',
+      style: {
+        'border-width': 4,
+        'border-color': '#ffd700',
+        'z-index': 999,
+      }
+    },
+    {
+      selector: '.filter-hidden',
+      style: { 'display': 'none' }
+    }
+  ],
+  layout: {
+    name: 'fcose',
+    quality: 'proof',
+    randomize: true,
+    animate: false,
+    nodeDimensionsIncludeLabels: true,
+    idealEdgeLength: 160,
+    nodeRepulsion: 12000,
+    edgeElasticity: 0.1,
+    gravity: 0.3,
+    gravityRange: 2.0,
+    numIter: 5000,
+    padding: 60,
+  },
+  minZoom: 0.15,
+  maxZoom: 3,
+  wheelSensitivity: 0.3,
+});
+
+// ===================== READ/UNREAD VISUALS =====================
+function updateNodeVisuals(nodeId) {
+  const cyNode = cy.getElementById(nodeId);
+  if (!cyNode.length) return;
+  if (isRead(nodeId)) {
+    cyNode.addClass('read-node').removeClass('unread-node');
+    cyNode.data('isRead', true);
+  } else {
+    cyNode.addClass('unread-node').removeClass('read-node');
+    cyNode.data('isRead', false);
+  }
+}
+
+function updateReadButton(nodeId) {
+  const btn = document.getElementById('read-toggle-btn');
+  if (!btn) return;
+  if (isRead(nodeId)) {
+    btn.classList.add('is-read');
+    btn.innerHTML = '&#10003; Read — click to mark unread';
+  } else {
+    btn.classList.remove('is-read');
+    btn.innerHTML = 'Mark as read';
+  }
+}
+
+function updateProgress() {
+  const state = getReadState();
+  const readCount = nodes.filter(n => state[n.id]).length;
+  const total = nodes.length;
+  const pct = total > 0 ? (readCount / total * 100) : 0;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = readCount + ' / ' + total + ' read (' + Math.round(pct) + '%)';
+}
+
+// Initialize all node visuals
+nodes.forEach(n => updateNodeVisuals(n.id));
+updateProgress();
+
+// ===================== POPUP =====================
+const popup = document.getElementById('popup');
+const popupContent = document.getElementById('popup-content');
+let currentPopupNodeId = null;
+
+function buildPopupHTML(nodeData) {
+  const n = nodes.find(x => x.id === nodeData.id);
+  if (!n) return '';
+  const d = n.detail || {};
+  const typeLabel = n.type.charAt(0).toUpperCase() + n.type.slice(1);
+  const typeColor = typeColors[n.type];
+  const read = isRead(n.id);
+
+  let html = `<div class="popup-type" style="background:${typeColor}33;color:${typeColor};border:1px solid ${typeColor};">${typeLabel} — ${n.section}</div>`;
+  html += `<div class="popup-title" style="color:${typeColor};">${n.title || n.label.replace(/\n/g, ' ')}</div>`;
+
+  if (d.philosophers) html += `<div class="popup-section"><h4>Philosopher(s)</h4><p>${d.philosophers}</p></div>`;
+  if (d.thesis) html += `<div class="popup-section"><h4>Core Claim</h4><p>${d.thesis}</p></div>`;
+  if (d.premises && d.premises.length) {
+    html += `<div class="popup-section"><h4>Premises / Support</h4><ul>${d.premises.map(p => `<li>${p}</li>`).join('')}</ul></div>`;
+  }
+  if (d.example) html += `<div class="popup-section"><h4>Example</h4><p>${d.example}</p></div>`;
+  if (d.thought_experiment) html += `<div class="popup-section"><h4>Thought Experiment</h4><p>${d.thought_experiment}</p></div>`;
+  if (d.consequence) html += `<div class="popup-section"><h4>Consequence</h4><p>${d.consequence}</p></div>`;
+  if (d.advantage) html += `<div class="popup-section"><h4>Advantage</h4><p>${d.advantage}</p></div>`;
+  if (d.limitation) html += `<div class="popup-section"><h4>Limitation</h4><p>${d.limitation}</p></div>`;
+  if (d.dependency) html += `<div class="popup-section"><h4>Dependency</h4><p>${d.dependency}</p></div>`;
+  if (d.counterargument) html += `<div class="popup-section"><h4>Counterargument</h4><p>${d.counterargument}</p></div>`;
+  if (d.note) html += `<div class="popup-section"><h4>Note</h4><p>${d.note}</p></div>`;
+  if (d.quote) html += `<div class="popup-section"><h4>Quote</h4><p style="font-style:italic;">${d.quote}</p></div>`;
+
+  // Connections
+  const incoming = edges.filter(e => e.target === n.id).map(e => {
+    const src = nodes.find(x => x.id === e.source);
+    return `<li><span style="color:${typeColors[src?.type]}">${src?.label.replace(/\n/g, ' ')}</span> &rarr; <em>${e.label}</em></li>`;
+  });
+  const outgoing = edges.filter(e => e.source === n.id).map(e => {
+    const tgt = nodes.find(x => x.id === e.target);
+    return `<li><em>${e.label}</em> &rarr; <span style="color:${typeColors[tgt?.type]}">${tgt?.label.replace(/\n/g, ' ')}</span></li>`;
+  });
+  if (incoming.length) html += `<div class="popup-section"><h4>Incoming Connections</h4><ul>${incoming.join('')}</ul></div>`;
+  if (outgoing.length) html += `<div class="popup-section"><h4>Outgoing Connections</h4><ul>${outgoing.join('')}</ul></div>`;
+
+  // Read toggle button
+  const readClass = read ? 'is-read' : '';
+  const readText = read ? '&#10003; Read — click to mark unread' : 'Mark as read';
+  html += `<button class="read-toggle ${readClass}" id="read-toggle-btn" data-node-id="${n.id}" onclick="toggleRead('${n.id}')">${readText}</button>`;
+
+  return html;
+}
+
+function showPopup(nodeData, position) {
+  currentPopupNodeId = nodeData.id;
+  popupContent.innerHTML = buildPopupHTML(nodeData);
+  popup.style.display = 'block';
+
+  const pw = popup.offsetWidth || 380;
+  const ph = popup.offsetHeight || 300;
+  let left = position.x + 20;
+  let top = position.y - 20;
+  if (left + pw > window.innerWidth - 20) left = position.x - pw - 20;
+  if (top + ph > window.innerHeight - 20) top = window.innerHeight - ph - 20;
+  if (top < 60) top = 60;
+  if (left < 10) left = 10;
+
+  popup.style.left = left + 'px';
+  popup.style.top = top + 'px';
+}
+
+function closePopup() {
+  popup.style.display = 'none';
+  currentPopupNodeId = null;
+  cy.elements().removeClass('dimmed highlighted');
+}
+
+// ===================== INTERACTIONS =====================
+cy.on('tap', 'node', function(evt) {
+  const node = evt.target;
+  const renderedPos = node.renderedPosition();
+
+  cy.elements().addClass('dimmed');
+  const neighborhood = node.neighborhood().add(node);
+  neighborhood.removeClass('dimmed').addClass('highlighted');
+
+  showPopup(node.data(), { x: renderedPos.x, y: renderedPos.y });
+});
+
+cy.on('tap', function(evt) {
+  if (evt.target === cy) closePopup();
+});
+
+cy.on('mouseover', 'node', function(evt) {
+  const node = evt.target;
+  if (!currentPopupNodeId) {
+    cy.elements().addClass('dimmed');
+    node.neighborhood().add(node).removeClass('dimmed').addClass('highlighted');
+  }
+  document.getElementById('cy').style.cursor = 'pointer';
+});
+
+cy.on('mouseout', 'node', function(evt) {
+  if (!currentPopupNodeId) {
+    cy.elements().removeClass('dimmed highlighted');
+  }
+  document.getElementById('cy').style.cursor = 'default';
+});
+
+// ===================== FILTER BY TYPE =====================
+let currentTypeFilter = 'all';
+let currentReadFilter = 'all';
+
+function applyFilters() {
+  cy.nodes().forEach(n => {
+    let show = true;
+    if (currentTypeFilter !== 'all' && n.data('nodeType') !== currentTypeFilter) show = false;
+    if (currentReadFilter === 'unread' && isRead(n.data('id'))) show = false;
+    if (currentReadFilter === 'read' && !isRead(n.data('id'))) show = false;
+
+    if (show) {
+      n.removeClass('filter-hidden');
+    } else {
+      n.addClass('filter-hidden');
+    }
+  });
+  // Hide edges where either endpoint is hidden
+  cy.edges().forEach(e => {
+    if (e.source().hasClass('filter-hidden') || e.target().hasClass('filter-hidden')) {
+      e.addClass('filter-hidden');
+    } else {
+      e.removeClass('filter-hidden');
+    }
+  });
+}
+
+function filterByType(type) {
+  currentTypeFilter = type;
+  document.querySelectorAll('#header button').forEach(b => b.classList.remove('active'));
+  document.getElementById('btn-' + type)?.classList.add('active');
+  applyFilters();
+  closePopup();
+}
+
+function filterByRead(mode) {
+  if (currentReadFilter === mode) {
+    currentReadFilter = 'all';
+    document.getElementById('btn-unread')?.classList.remove('active');
+    document.getElementById('btn-read-only')?.classList.remove('active');
+  } else {
+    currentReadFilter = mode;
+    document.getElementById('btn-unread')?.classList.remove('active');
+    document.getElementById('btn-read-only')?.classList.remove('active');
+    if (mode === 'unread') document.getElementById('btn-unread')?.classList.add('active');
+    if (mode === 'read') document.getElementById('btn-read-only')?.classList.add('active');
+  }
+  applyFilters();
+  closePopup();
+}
+
+// ===================== SEARCH =====================
+const searchBox = document.getElementById('search-box');
+let searchTimeout;
+searchBox.addEventListener('input', function() {
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => {
+    const q = searchBox.value.toLowerCase().trim();
+    cy.nodes().removeClass('search-match');
+
+    if (!q) {
+      cy.elements().removeClass('dimmed highlighted');
+      return;
+    }
+
+    cy.elements().addClass('dimmed');
+    cy.nodes().forEach(n => {
+      const nd = nodes.find(x => x.id === n.data('id'));
+      const searchable = [
+        nd?.label, nd?.title, nd?.detail?.thesis, nd?.detail?.philosophers,
+        nd?.detail?.example, nd?.detail?.note
+      ].filter(Boolean).join(' ').toLowerCase();
+
+      if (searchable.includes(q)) {
+        n.removeClass('dimmed').addClass('highlighted search-match');
+        n.neighborhood().removeClass('dimmed');
+      }
+    });
+  }, 200);
+});
+
+// Escape to close
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closePopup();
+});
+</script>
+</body>
+</html>

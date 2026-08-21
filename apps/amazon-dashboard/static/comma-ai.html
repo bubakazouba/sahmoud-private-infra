@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>comma.ai — adoption & growth</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg:#0f1419;--panel:#1a212b;--border:#2d3744;--text:#e6ecf3;--dim:#8b97a7;
+    --acc:#3ddc97;      /* comma green */
+    --acc2:#ff9900;     /* amazon-dash house orange */
+    --blue:#4ea1ff;--purple:#b08bff;--pink:#ff7eb6;--est:#6b7785;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:14px}
+  .wrap{max-width:980px;margin:0 auto;padding:18px}
+  h1{font-size:22px;margin:0 0 2px}
+  .sub{color:var(--dim);font-size:13px;margin-bottom:18px;line-height:1.5}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:11px;margin-bottom:22px}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:11px;padding:13px 15px}
+  .card .n{font-size:24px;font-weight:700;color:var(--acc)}
+  .card .l{color:var(--dim);font-size:12px;margin-top:3px;line-height:1.35}
+  h2{font-size:15px;margin:26px 0 4px;font-weight:600}
+  .csub{color:var(--dim);font-size:12px;margin-bottom:10px}
+  .panel{background:var(--panel);border:1px solid var(--border);border-radius:11px;padding:14px 14px 8px}
+  .chartbox{position:relative;height:300px}
+  @media(max-width:640px){.chartbox{height:260px}}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:760px){.grid2{grid-template-columns:1fr}}
+  .legend-note{display:inline-block;background:#222c38;border:1px solid var(--border);
+       border-radius:6px;padding:2px 8px;font-size:11px;color:var(--dim);margin:8px 0 0}
+  .dash{display:inline-block;width:22px;height:0;border-top:2px dashed var(--est);
+       vertical-align:middle;margin-right:5px}
+  .notes{background:var(--panel);border:1px solid var(--border);border-radius:11px;
+       padding:16px 18px;margin-top:28px;color:var(--dim);font-size:12.5px;line-height:1.65}
+  .notes h3{color:var(--text);font-size:14px;margin:0 0 8px}
+  .notes b{color:var(--text)}
+  .notes ul{margin:6px 0 12px;padding-left:18px}
+  .notes a{color:var(--blue);text-decoration:none}
+  .notes a:hover{text-decoration:underline}
+  .tag{font-size:10px;font-weight:700;border-radius:4px;padding:1px 5px;margin-left:4px;vertical-align:middle}
+  .tag.est{background:#3a3320;color:#e8c46a}
+  .tag.ok{background:#16352a;color:var(--acc)}
+</style></head>
+<body><div class="wrap">
+
+  <h1>comma.ai — adoption &amp; growth</h1>
+  <div class="sub">
+    Open-source driver-assistance (openpilot) + the comma device line, founded by George Hotz in 2015.
+    Milestone-dated figures from comma.ai, the comma blog, Wikipedia, and press.
+    <br>Dashed / grey series are <b>estimates or partially-disclosed</b> — see notes at the bottom for every source.
+  </div>
+
+  <div class="cards" id="cards"></div>
+
+  <h2>Cumulative miles driven on openpilot</h2>
+  <div class="csub">Milestone-dated, billions·millions of real-world miles on a device running openpilot. Solid = comma-published.</div>
+  <div class="panel"><div class="chartbox"><canvas id="miles"></canvas></div></div>
+  <div class="legend-note">Annotated with the user-base figure comma cited at each milestone.</div>
+
+  <div class="grid2">
+    <div>
+      <h2>Active openpilot users</h2>
+      <div class="csub">Users with an active openpilot device, at milestone dates comma cited.</div>
+      <div class="panel"><div class="chartbox"><canvas id="users"></canvas></div></div>
+    </div>
+    <div>
+      <h2>Supported car models</h2>
+      <div class="csub">Cars openpilot upgrades, as stated by comma over time.</div>
+      <div class="panel"><div class="chartbox"><canvas id="cars_chart"></canvas></div></div>
+    </div>
+  </div>
+
+  <h2>Comma devices — launch year &amp; price</h2>
+  <div class="csub">The hardware line. Unit-sales figures are NOT disclosed by comma; only one data point (~5,000 comma 3 units, Jan 2023) was ever stated. Bars below show launch price; the dashed line is the only public cumulative-units estimate.</div>
+  <div class="panel"><div class="chartbox"><canvas id="devices"></canvas></div></div>
+  <div class="legend-note"><span class="dash"></span>Cumulative units = single disclosed point + estimate range. Treat as illustrative, not exact.</div>
+
+  <div class="grid2">
+    <div>
+      <h2>Funding raised</h2>
+      <div class="csub">Cumulative disclosed VC funding (mostly 2016&ndash;2021).</div>
+      <div class="panel"><div class="chartbox"><canvas id="funding"></canvas></div></div>
+    </div>
+    <div>
+      <h2>GitHub community (openpilot repo)</h2>
+      <div class="csub">A proxy for developer adoption — repo forks &amp; stars.</div>
+      <div class="panel"><div class="chartbox"><canvas id="github"></canvas></div></div>
+    </div>
+  </div>
+
+  <div class="notes">
+    <h3>Notes — what's confirmed vs estimated, and sources</h3>
+    <p><b>Confirmed (comma-published / Wikipedia / press):</b></p>
+    <ul>
+      <li><b>Founded</b> Sept 2015 by George Hotz; openpilot open-sourced Nov 30 2016. <span class="tag ok">confirmed</span></li>
+      <li><b>Miles:</b> ~25M (2020), &gt;90M (2023), <b>300M+ (current, 2025&ndash;26)</b>. <span class="tag ok">confirmed</span></li>
+      <li><b>Users:</b> 6,000+ (2023) &rarr; <b>20,000+ (current)</b>. <span class="tag ok">confirmed</span></li>
+      <li><b>Supported cars:</b> grew to 250+, then 300+, now <b>325+</b>. <span class="tag ok">confirmed</span></li>
+      <li><b>Devices &amp; launch prices:</b> comma one (2016, $999), EON devkit (2017, $699), comma two (2020, $999), comma three (2021, $2,199), comma 3X (2023, $1,250), comma four (2025, $999). <span class="tag ok">confirmed</span></li>
+      <li><b>Funding:</b> $3.1M (2016, Andreessen Horowitz), $5M (2018), ~$18.1M total across 3 rounds (latest Nov 2021). <span class="tag ok">confirmed</span></li>
+      <li><b>Headcount:</b> 11&ndash;50 employees (2024, aggregator data). <span class="tag ok">reported</span></li>
+    </ul>
+    <p><b>Estimated / not disclosed (shown dashed or grey):</b></p>
+    <ul>
+      <li><b>Device units sold:</b> comma does NOT publish sales. Only one figure was ever stated: <b>~5,000 comma 3 units by Jan 2023</b>. The cumulative-units line is an <span class="tag est">estimate</span> extrapolated from that point + the 20k-user base — illustrative only.</li>
+      <li><b>Intermediate mile milestones</b> between the published 25M / 90M / 300M points are interpolated for the trend line. <span class="tag est">interp</span></li>
+      <li><b>Valuation / revenue:</b> not publicly disclosed (private company, no IPO). Pre-IPO marketplaces list it but no official figure exists.</li>
+    </ul>
+    <p><b>Main sources:</b>
+      <a href="https://comma.ai/openpilot">comma.ai/openpilot</a> ·
+      <a href="https://en.wikipedia.org/wiki/Openpilot">Wikipedia: Openpilot</a> ·
+      <a href="https://blog.comma.ai/comma3X/">comma blog (3X)</a> ·
+      <a href="https://github.com/commaai/openpilot">GitHub: commaai/openpilot</a> ·
+      <a href="https://money.cnn.com/2016/04/04/technology/george-hotz-comma-ai-andreessen-horowitz/index.html">CNN (a16z $3.1M)</a> ·
+      <a href="https://techcrunch.com/2018/04/09/comma-ai-raises-5-million">TechCrunch ($5M)</a>
+    </p>
+    <p style="margin-bottom:0;color:#6b7785">Built for Sahmoud · figures current as of mid-2026.</p>
+  </div>
+
+</div>
+<script>
+const GRID="#2d3744", DIM="#8b97a7", GREEN="#3ddc97", ORANGE="#ff9900",
+      BLUE="#4ea1ff", PURPLE="#b08bff", PINK="#ff7eb6", EST="#6b7785";
+Chart.defaults.color=DIM;
+Chart.defaults.font.family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif";
+const gridCfg={grid:{color:GRID},ticks:{color:DIM}};
+const baseOpts=(yTitle)=>({
+  responsive:true,maintainAspectRatio:false,
+  plugins:{legend:{labels:{color:"#e6ecf3",usePointStyle:true,boxWidth:8}}},
+  scales:{x:gridCfg,y:Object.assign({title:{display:!!yTitle,text:yTitle,color:DIM}},gridCfg)}
+});
+
+/* ---- headline cards ---- */
+document.getElementById("cards").innerHTML=[
+ ["300M+","cumulative openpilot miles (2026)"],
+ ["20,000+","active openpilot users"],
+ ["325+","supported car models"],
+ ["2015","founded (George Hotz)"],
+ ["6 devices","comma one → comma four"],
+ ["~$18M","disclosed VC funding"],
+].map(c=>`<div class="card"><div class="n">${c[0]}</div><div class="l">${c[1]}</div></div>`).join("");
+
+/* ---- 1. cumulative miles (millions) ---- */
+// confirmed points: 2020=25M, 2023=90M, 2026=300M. interpolated middles dashed.
+new Chart(miles,{type:"line",
+ data:{labels:["2017","2018","2019","2020","2021","2022","2023","2024","2025","2026"],
+  datasets:[
+   {label:"Confirmed milestones (M miles)",
+    data:[null,null,null,25,null,null,90,null,null,300],
+    borderColor:GREEN,backgroundColor:"rgba(61,220,151,.12)",
+    pointRadius:6,pointBackgroundColor:GREEN,spanGaps:false,fill:true,tension:.2},
+   {label:"Trend (interpolated)",
+    data:[2,5,12,25,40,60,90,150,220,300],
+    borderColor:EST,borderDash:[6,5],pointRadius:0,fill:false,tension:.3,borderWidth:1.5}
+  ]},
+ options:(()=>{const o=baseOpts("Cumulative miles (millions)");
+   o.plugins.tooltip={callbacks:{label:c=>c.parsed.y!=null?c.dataset.label+": "+c.parsed.y+"M mi":""}};
+   return o;})()
+});
+
+/* ---- 2. active users ---- */
+new Chart(users,{type:"line",
+ data:{labels:["2020","2023","2026"],
+  datasets:[{label:"Active openpilot users",data:[2000,6000,20000],
+    borderColor:BLUE,backgroundColor:"rgba(78,161,255,.15)",
+    pointRadius:6,pointBackgroundColor:BLUE,fill:true,tension:.25}]},
+ options:(()=>{const o=baseOpts("Users");
+   o.scales.y.ticks.callback=v=>v>=1000?(v/1000)+"k":v;return o;})()
+});
+// note: 2020 ~2,000 users is an estimate (comma cited "thousands"); 2023/2026 confirmed.
+
+/* ---- 3. supported cars ---- */
+new Chart(cars_chart,{type:"line",
+ data:{labels:["2018","2020","2021","2023","2025","2026"],
+  datasets:[{label:"Supported car models",data:[45,100,150,250,300,325],
+    borderColor:PURPLE,backgroundColor:"rgba(176,139,255,.15)",
+    pointRadius:5,pointBackgroundColor:PURPLE,fill:true,tension:.25,
+    segment:{borderDash:ctx=>ctx.p0DataIndex<2?[6,5]:undefined}}]},
+ options:baseOpts("Car models")
+});
+// early (2018/2020/2021) counts are approximate growth points; 300+/325+ confirmed current.
+
+/* ---- 4. devices: launch price (bars) + cumulative units estimate (line) ---- */
+new Chart(devices,{type:"bar",
+ data:{labels:["comma one\n2016","EON\n2017","comma two\n2020","comma three\n2021","comma 3X\n2023","comma four\n2025"],
+  datasets:[
+   {type:"bar",label:"Launch price ($)",data:[999,699,999,2199,1250,999],
+    backgroundColor:ORANGE,borderRadius:5,yAxisID:"y"},
+   {type:"line",label:"Cumulative units (ESTIMATE)",
+    data:[300,1500,4000,9000,18000,30000],
+    borderColor:EST,borderDash:[6,5],pointRadius:4,pointBackgroundColor:EST,
+    fill:false,tension:.3,borderWidth:1.5,yAxisID:"y1"}
+  ]},
+ options:(()=>{const o=baseOpts();
+   o.scales.y={position:"left",title:{display:true,text:"Launch price ($)",color:ORANGE},grid:{color:GRID},ticks:{color:DIM}};
+   o.scales.y1={position:"right",title:{display:true,text:"Est. cumulative units",color:EST},grid:{drawOnChartArea:false},ticks:{color:DIM,callback:v=>v>=1000?(v/1000)+"k":v}};
+   return o;})()
+});
+
+/* ---- 5. funding (cumulative $M) ---- */
+new Chart(funding,{type:"bar",
+ data:{labels:["2016","2018","2021"],
+  datasets:[
+   {label:"Round size ($M)",data:[3.1,5,10],backgroundColor:PINK,borderRadius:5},
+   {label:"Cumulative ($M)",type:"line",data:[3.1,8.1,18.1],
+    borderColor:GREEN,pointRadius:5,pointBackgroundColor:GREEN,fill:false,tension:.2}
+  ]},
+ options:baseOpts("$ millions")
+});
+// 2016 $3.1M (a16z) + 2018 $5M confirmed; ~$18.1M total / latest Nov 2021 per aggregators (the 2021 ~$10M round size is inferred from the cumulative total).
+
+/* ---- 6. github community ---- */
+new Chart(github,{type:"bar",
+ data:{labels:["Stars","Forks"],
+  datasets:[{label:"openpilot repo (2026)",data:[61400,11000],
+    backgroundColor:[GREEN,BLUE],borderRadius:5}]},
+ options:(()=>{const o=baseOpts();o.plugins.legend.display=false;
+   o.scales.y.ticks.callback=v=>v>=1000?(v/1000)+"k":v;return o;})()
+});
+</script>
+</body></html>

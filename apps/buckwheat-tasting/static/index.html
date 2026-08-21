@@ -1,0 +1,892 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Buckwheat Spectator — The Definitive Guide to Fagopyrum Connoisseurship</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Cormorant+SC:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>/* page-local overrides */
+  :root {
+    --cream: #f8f4ec;
+    --parchment: #ede8db;
+    --burgundy: #4a1529;
+    --burgundy-light: #6b2040;
+    --gold: #b8860b;
+    --gold-light: #d4a017;
+    --gold-pale: #e8d5a3;
+    --ink: #1c1208;
+    --ink-mid: #3a2e1f;
+    --ink-light: #6b5e4a;
+    --rule: #c9b98a;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'EB Garamond', 'Garamond', Georgia, serif;
+    font-size: 18px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    margin: 0;
+    background: var(--cream);
+  }
+
+  /* ── MASTHEAD ── */
+  .masthead {
+    background: var(--burgundy);
+    color: var(--gold-pale);
+    text-align: center;
+    padding: 0.4rem 1rem;
+    font-family: 'Cormorant SC', serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    font-weight: 400;
+  }
+  .masthead a { color: var(--gold-pale); text-decoration: none; }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--cream);
+    border-bottom: 2px solid var(--gold);
+    border-top: 1px solid var(--rule);
+    text-align: center;
+    padding: 0.55rem 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  nav a {
+    font-family: 'Cormorant SC', serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    color: var(--burgundy);
+    text-decoration: none;
+    margin: 0 1.1rem;
+    font-weight: 600;
+  }
+  nav a:hover { color: var(--gold); }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--burgundy);
+    color: var(--cream);
+    text-align: center;
+    padding: 5rem 2rem 4.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-botanical {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    opacity: 0.08;
+    pointer-events: none;
+  }
+  .hero-kicker {
+    font-family: 'Cormorant SC', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    color: var(--gold-pale);
+    margin-bottom: 1.2rem;
+  }
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    font-weight: 300;
+    letter-spacing: 0.03em;
+    color: var(--cream);
+    margin: 0 0 0.6rem;
+    line-height: 1.15;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--gold-pale);
+  }
+  .hero-subtitle {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 1.15rem;
+    color: var(--gold-pale);
+    max-width: 640px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.6;
+  }
+  .hero-rule {
+    width: 80px;
+    border: none;
+    border-top: 1px solid var(--gold);
+    margin: 0 auto 2rem;
+  }
+  .hero-quote {
+    max-width: 600px;
+    margin: 0 auto;
+    border-left: 3px solid var(--gold);
+    padding-left: 1.4rem;
+    text-align: left;
+  }
+  .hero-quote blockquote {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    color: var(--cream);
+    margin: 0 0 0.5rem;
+    line-height: 1.6;
+  }
+  .hero-quote cite {
+    font-family: 'Cormorant SC', serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    color: var(--gold-pale);
+    font-style: normal;
+  }
+
+  /* ── SECTION SHELL ── */
+  section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+  }
+  section.full-bleed {
+    max-width: none;
+    padding: 0;
+  }
+  .section-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+  }
+  .alt-bg {
+    background: var(--parchment);
+  }
+
+  h2.section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 2.2rem;
+    letter-spacing: 0.04em;
+    color: var(--burgundy);
+    margin: 0 0 0.3rem;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 0.6rem;
+  }
+  .section-label {
+    font-family: 'Cormorant SC', serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.25em;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+  .section-intro {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    color: var(--ink-light);
+    font-size: 1rem;
+    margin: 0.8rem 0 2.5rem;
+    max-width: 680px;
+  }
+
+  /* ── CULTIVAR GRID ── */
+  .cultivar-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+    gap: 2px;
+    background: var(--rule);
+    border: 2px solid var(--rule);
+  }
+  .cultivar-card {
+    background: var(--cream);
+    padding: 1.6rem 1.5rem 1.4rem;
+    position: relative;
+  }
+  .cultivar-card.prestige {
+    background: #fdf8f0;
+    border-top: 3px solid var(--gold);
+  }
+  .card-score {
+    position: absolute;
+    top: 1.4rem;
+    right: 1.4rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.9rem;
+    font-weight: 700;
+    color: var(--burgundy);
+    line-height: 1;
+  }
+  .card-score.legendary {
+    color: var(--gold);
+  }
+  .card-score small {
+    font-size: 0.6em;
+    font-weight: 400;
+    color: var(--ink-light);
+    display: block;
+    text-align: center;
+  }
+  .card-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--burgundy);
+    margin: 0 0 0.1rem;
+    padding-right: 3rem;
+    line-height: 1.2;
+  }
+  .card-vintage-region {
+    font-family: 'Cormorant SC', serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    color: var(--ink-light);
+    margin-bottom: 0.8rem;
+  }
+  .card-tasting {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--ink-mid);
+    margin-bottom: 0.9rem;
+    font-style: italic;
+  }
+  .card-tasting strong {
+    font-style: normal;
+    font-size: 0.72rem;
+    font-family: 'Cormorant SC', serif;
+    letter-spacing: 0.1em;
+    color: var(--burgundy);
+  }
+  .card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-top: 1px solid var(--rule);
+    padding-top: 0.7rem;
+    margin-top: 0.5rem;
+  }
+  .card-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .card-price small {
+    font-weight: 400;
+    font-size: 0.75rem;
+    color: var(--ink-light);
+  }
+  .card-badge {
+    font-family: 'Cormorant SC', serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    padding: 0.15rem 0.55rem;
+    background: var(--parchment);
+    border: 1px solid var(--rule);
+    color: var(--ink-light);
+  }
+  .card-badge.prestige-badge {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: #fff;
+  }
+  .card-badge.legendary-badge {
+    background: var(--burgundy);
+    border-color: var(--burgundy);
+    color: var(--gold-pale);
+  }
+
+  /* ── FLAVOR WHEEL ── */
+  .wheel-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  .wheel-svg-wrap {
+    width: 100%;
+    max-width: 560px;
+  }
+  .wheel-legend {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 0.6rem 1.5rem;
+    width: 100%;
+    max-width: 780px;
+    margin-top: 0.5rem;
+  }
+  .wheel-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Cormorant SC', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    color: var(--ink-mid);
+  }
+  .wheel-swatch {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── VINTAGE CHART ── */
+  .vintage-table-wrap {
+    overflow-x: auto;
+  }
+  table.vintage-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+  }
+  .vintage-table th {
+    font-family: 'Cormorant SC', serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    color: var(--cream);
+    background: var(--burgundy);
+    padding: 0.6rem 0.8rem;
+    text-align: left;
+    font-weight: 600;
+  }
+  .vintage-table td {
+    padding: 0.55rem 0.8rem;
+    border-bottom: 1px solid var(--rule);
+    color: var(--ink-mid);
+    font-family: 'EB Garamond', serif;
+    vertical-align: top;
+    line-height: 1.45;
+  }
+  .vintage-table tr:nth-child(even) td {
+    background: var(--parchment);
+  }
+  .vintage-table td.year {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    color: var(--burgundy);
+    font-size: 1.05rem;
+    white-space: nowrap;
+  }
+  .score-cell {
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    white-space: nowrap;
+  }
+  .score-excellent { color: var(--burgundy); }
+  .score-outstanding { color: var(--gold); }
+  .score-legendary { color: #8b0000; }
+  .vintage-note {
+    font-style: italic;
+    color: var(--ink-light);
+    font-size: 0.83rem;
+  }
+
+  /* ── PAIRINGS ── */
+  .pairings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.8rem;
+    margin-top: 0.5rem;
+  }
+  .pairing-card {
+    border: 1px solid var(--rule);
+    padding: 1.5rem 1.5rem 1.3rem;
+    background: var(--cream);
+    position: relative;
+  }
+  .pairing-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--gold);
+  }
+  .pairing-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--burgundy);
+    margin: 0 0 0.6rem;
+    line-height: 1.3;
+  }
+  .pairing-body {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.92rem;
+    font-style: italic;
+    color: var(--ink-mid);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  /* ── CERTIFICATION ── */
+  .cert-ladder {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    border: 2px solid var(--rule);
+  }
+  .cert-tier {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .cert-tier:last-child { border-bottom: none; }
+  .cert-tier.header {
+    background: var(--burgundy);
+  }
+  .cert-tier.header .cert-cell {
+    font-family: 'Cormorant SC', serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    color: var(--cream);
+    font-weight: 600;
+    border-color: rgba(255,255,255,0.15);
+  }
+  .cert-cell {
+    padding: 1.1rem 1.2rem;
+    border-right: 1px solid var(--rule);
+    font-family: 'EB Garamond', serif;
+    font-size: 0.9rem;
+    color: var(--ink-mid);
+  }
+  .cert-cell:last-child { border-right: none; }
+  .cert-tier:nth-child(even) .cert-cell { background: var(--parchment); }
+  .cert-tier.elite .cert-cell { background: #fdf5e8; }
+  .cert-tier.elite .cert-cell:first-child .cert-name { color: var(--gold); }
+  .cert-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--burgundy);
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+  .cert-abbrev {
+    font-family: 'Cormorant SC', serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    color: var(--ink-light);
+  }
+  .cert-locations {
+    font-style: italic;
+    font-size: 0.8rem;
+    color: var(--ink-light);
+    margin-top: 0.4rem;
+    display: block;
+  }
+  .cert-stat {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--burgundy);
+    display: block;
+  }
+  .cert-stat.danger { color: #8b0000; }
+  .cert-stat.gold-stat { color: var(--gold); }
+
+  /* ── EVENTS ── */
+  .events-list {
+    display: grid;
+    gap: 1.5rem;
+  }
+  .event-card {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 1.5rem;
+    border: 1px solid var(--rule);
+    padding: 1.4rem 1.5rem;
+    background: var(--cream);
+    align-items: start;
+  }
+  .event-date-block {
+    text-align: center;
+    border-right: 1px solid var(--rule);
+    padding-right: 1.5rem;
+  }
+  .event-month {
+    font-family: 'Cormorant SC', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    color: var(--gold);
+    display: block;
+  }
+  .event-day {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--burgundy);
+    line-height: 1;
+    display: block;
+  }
+  .event-year {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.8rem;
+    color: var(--ink-light);
+  }
+  .event-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 1.15rem;
+    color: var(--burgundy);
+    margin: 0 0 0.3rem;
+  }
+  .event-meta {
+    font-family: 'Cormorant SC', serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    color: var(--ink-light);
+    margin-bottom: 0.5rem;
+  }
+  .event-desc {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 0.9rem;
+    color: var(--ink-mid);
+    margin: 0 0 0.8rem;
+    line-height: 1.55;
+  }
+  .event-price {
+    display: inline-block;
+    background: var(--burgundy);
+    color: var(--gold-pale);
+    font-family: 'Cormorant SC', serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    padding: 0.2rem 0.7rem;
+  }
+  .event-enquire {
+    display: inline-block;
+    border: 1px solid var(--rule);
+    color: var(--ink-mid);
+    font-family: 'Cormorant SC', serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    padding: 0.2rem 0.7rem;
+    margin-left: 0.5rem;
+    cursor: pointer;
+    background: none;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--burgundy);
+    color: var(--gold-pale);
+    padding: 3.5rem 2rem;
+    text-align: center;
+  }
+  .footer-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    font-weight: 300;
+    letter-spacing: 0.08em;
+    color: var(--cream);
+    margin: 0 0 0.3rem;
+  }
+  .footer-strap {
+    font-family: 'Cormorant SC', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.22em;
+    color: var(--gold-pale);
+    margin-bottom: 2rem;
+  }
+  .footer-rule {
+    border: none;
+    border-top: 1px solid rgba(255,255,255,0.15);
+    margin: 2rem auto;
+    max-width: 400px;
+  }
+  .footer-links {
+    margin-bottom: 1.5rem;
+  }
+  .footer-links a {
+    font-family: 'Cormorant SC', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    color: var(--gold-pale);
+    text-decoration: none;
+    margin: 0 1rem;
+    opacity: 0.85;
+  }
+  .footer-links a:hover { opacity: 1; }
+  .footer-masthead {
+    font-family: 'Cormorant SC', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    color: rgba(232,213,163,0.55);
+    line-height: 2;
+  }
+  .footer-copyright {
+    margin-top: 2rem;
+    font-size: 0.75rem;
+    color: rgba(232,213,163,0.4);
+    font-family: 'Cormorant SC', serif;
+    letter-spacing: 0.08em;
+  }
+
+  @media (max-width: 640px) {
+    .cert-tier { grid-template-columns: 1fr 1fr; }
+    .cert-tier.header .cert-cell:nth-child(3),
+    .cert-tier.header .cert-cell:nth-child(4) { display: none; }
+    .cert-cell:nth-child(3), .cert-cell:nth-child(4) { display: none; }
+    .event-card { grid-template-columns: 1fr; }
+    .event-date-block { border-right: none; border-bottom: 1px solid var(--rule); padding-right: 0; padding-bottom: 0.8rem; text-align: left; display: flex; gap: 0.5rem; align-items: baseline; }
+    nav a { margin: 0 0.5rem; font-size: 0.7rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- MASTHEAD -->
+<div class="masthead">
+  Buckwheat Spectator &nbsp;&middot;&nbsp; Est. 1987 &nbsp;&middot;&nbsp;
+  <a href="#">Vol. XXXVIII, No. 4</a> &nbsp;&middot;&nbsp; The International Journal of Fagopyrum Scholarship
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="active">Home</a>
+  <a href="cultivars.html">Cultivars</a>
+  <a href="regions.html">Regions</a>
+  <a href="aromas.html">Aromas</a>
+  <a href="vintages.html">Vintages</a>
+  <a href="pairings.html">Pairings</a>
+  <a href="certification.html">Certification</a>
+  <a href="critics.html">Critics</a>
+  <a href="events.html">Events</a>
+  <a href="visit.html">Visit</a>
+  <a href="reserve.html">Reserve</a>
+  <a href="concours.html">Concours</a>
+  <a href="about.html">About</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <!-- Botanical SVG watermark -->
+  <svg class="hero-botanical" viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <!-- Buckwheat plant silhouette — stylized botanical illustration -->
+    <g fill="none" stroke="#f8f4ec" stroke-width="1.2">
+      <!-- Main stem -->
+      <path d="M400,480 C398,420 402,380 395,300 C390,230 410,160 405,80"/>
+      <!-- Branch 1 -->
+      <path d="M400,320 C370,300 340,280 310,250 C285,225 260,195 240,160"/>
+      <!-- Branch 1 leaves -->
+      <ellipse cx="280" cy="270" rx="28" ry="12" transform="rotate(-35,280,270)" stroke-width="0.9"/>
+      <ellipse cx="245" cy="235" rx="22" ry="9" transform="rotate(-40,245,235)" stroke-width="0.9"/>
+      <!-- Branch 2 right -->
+      <path d="M398,260 C430,238 462,220 490,195 C515,175 540,148 565,120"/>
+      <ellipse cx="450" cy="228" rx="26" ry="11" transform="rotate(30,450,228)" stroke-width="0.9"/>
+      <ellipse cx="510" cy="182" rx="20" ry="8" transform="rotate(28,510,182)" stroke-width="0.9"/>
+      <!-- Flower clusters at tips -->
+      <circle cx="405" cy="80" r="4"/>
+      <circle cx="395" cy="72" r="3"/>
+      <circle cx="413" cy="74" r="3"/>
+      <circle cx="400" cy="65" r="2.5"/>
+      <circle cx="240" cy="160" r="3.5"/>
+      <circle cx="230" cy="152" r="2.5"/>
+      <circle cx="248" cy="153" r="2.5"/>
+      <circle cx="565" cy="120" r="3.5"/>
+      <circle cx="555" cy="112" r="2.5"/>
+      <circle cx="572" cy="112" r="2.5"/>
+      <!-- Root system -->
+      <path d="M400,480 C385,490 370,495 355,492"/>
+      <path d="M400,480 C415,490 428,496 442,494"/>
+      <path d="M398,478 C390,488 382,498 375,502"/>
+    </g>
+    <!-- Second plant, offset -->
+    <g fill="none" stroke="#f8f4ec" stroke-width="0.9" opacity="0.6" transform="translate(-180, 60) scale(0.75)">
+      <path d="M400,480 C398,420 402,380 395,300 C390,230 410,160 405,80"/>
+      <path d="M400,320 C370,300 340,280 310,250 C285,225 260,195 240,160"/>
+      <path d="M398,260 C430,238 462,220 490,195 C515,175 540,148 565,120"/>
+      <circle cx="405" cy="80" r="4"/><circle cx="240" cy="160" r="3.5"/><circle cx="565" cy="120" r="3.5"/>
+    </g>
+    <!-- Third plant, right -->
+    <g fill="none" stroke="#f8f4ec" stroke-width="0.9" opacity="0.45" transform="translate(280, 100) scale(0.65)">
+      <path d="M400,480 C398,420 402,380 395,300 C390,230 410,160 405,80"/>
+      <path d="M400,320 C370,300 340,280 310,250"/>
+      <path d="M398,260 C430,238 462,220 490,195 C515,175 540,148 565,120"/>
+      <circle cx="405" cy="80" r="4"/><circle cx="565" cy="120" r="3.5"/>
+    </g>
+  </svg>
+
+  <div style="position:relative;z-index:1;">
+    <p class="hero-kicker">Est. 1987 &nbsp;&middot;&nbsp; Authoritative Since the First Harvest</p>
+    <h1>The Definitive Guide to<br><em>Fagopyrum</em> Connoisseurship</h1>
+    <p class="hero-subtitle">Provenance, terroir, and the unhurried pursuit of exceptional buckwheat — from the volcanic loam of the Tartary highlands to the mineral-laced alluvial plains of the Volga basin.</p>
+    <hr class="hero-rule">
+    <div class="hero-quote">
+      <blockquote>"Unambiguously transcendent. The 2019 Mancan Reserve from the Allegheny Plateau delivers a palate of uncommon depth and intellectual rigour that this critic has not encountered in three decades of serious groat study. Compelling, even humbling. One pours slowly, and says nothing."</blockquote>
+      <cite>Margaux Estienne-Beauvoir &nbsp;&mdash;&nbsp; Buckwheat Spectator, 98 pts &nbsp;&middot;&nbsp; December 2019</cite>
+    </div>
+  </div>
+</div>
+
+<!-- HERO PHOTO BAND -->
+<div class="hero-photo-band">
+  <img src="img/hero-buckwheat-field.jpg" alt="Wheat field at golden hour, rolling amber grain under late sun">
+  <p class="hero-photo-caption">Photo: Joshua Humpfer / Unsplash</p>
+</div>
+
+<!-- FEATURED CULTIVAR OF THE MONTH -->
+<section class="full-bleed" style="background:var(--parchment);border-bottom:2px solid var(--rule);">
+  <div class="section-inner">
+    <span class="section-label">Featured Cultivar of the Month</span>
+    <h2 class="section-title" style="margin-bottom:0.4rem;">Domaine Mancan Reserve 2019</h2>
+    <p style="font-family:'Cormorant SC',serif;font-size:0.72rem;letter-spacing:0.14em;color:var(--ink-light);margin-bottom:1.6rem;">ALLEGHENY PLATEAU, PENNSYLVANIA &nbsp;&middot;&nbsp; SCORE: 98 PTS &nbsp;&middot;&nbsp; ESTIENNE-BEAUVOIR SCALE</p>
+    <div style="display:grid;grid-template-columns:200px 1fr;gap:2.5rem;align-items:start;">
+      <div style="text-align:center;background:var(--burgundy);color:var(--gold-pale);padding:2.5rem 1rem;border-radius:2px;">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:4.5rem;font-weight:700;line-height:1;color:var(--gold-light);">98</div>
+        <div style="font-family:'Cormorant SC',serif;font-size:0.65rem;letter-spacing:0.2em;margin-top:0.4rem;">POINTS</div>
+        <hr style="border:none;border-top:1px solid rgba(255,255,255,0.2);margin:1rem auto;max-width:80px;">
+        <div style="font-family:'Cormorant SC',serif;font-size:0.6rem;letter-spacing:0.12em;opacity:0.75;">LEGENDARY</div>
+      </div>
+      <div>
+        <p style="font-family:'EB Garamond',serif;font-size:1.05rem;line-height:1.7;margin-top:0;"><strong>Nose:</strong> Roasted hazelnut, warm beeswax, and a precise sliver of dried apricot — elusive and persistent. The aromatic complexity unfolds over three to four minutes in the vessel, rewarding patience with successive layers of dried meadow grass and faint volcanic mineral.</p>
+        <p style="font-family:'EB Garamond',serif;font-size:1.05rem;line-height:1.7;"><strong>Palate:</strong> Assertive nuttiness yields to malted earth and iron-rich mineral depth; the finish lingers for over forty seconds with notes of toasted barley and grey slate. A cultivar of uncommon intellectual rigour.</p>
+        <p style="font-family:'EB Garamond',serif;font-size:1.05rem;line-height:1.7;font-style:italic;color:var(--ink-mid);">"One of the most significant groats of the decade. This critic recommends unhurried consumption in considered company — or alone, beside a south-facing window." &nbsp;&mdash;&nbsp; <span style="font-style:normal;">Margaux Estienne-Beauvoir</span></p>
+        <figure class="gallery-frame" style="margin:1.2rem 0 0.8rem;">
+          <img src="img/cultivar-featured-grains.jpg" alt="Ceramic vessel with pomegranate seeds and whole grains — editorial close-up" style="height:160px;">
+          <figcaption>Whole grain composition, Leica M — Unsplash</figcaption>
+        </figure>
+        <a href="cultivars/mancan.html" style="display:inline-block;margin-top:0.8rem;font-family:'Cormorant SC',serif;font-size:0.72rem;letter-spacing:0.14em;color:var(--burgundy);border-bottom:1px solid var(--gold);padding-bottom:0.15rem;text-decoration:none;">Read Full Assessment &rarr;</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LATEST REVIEWS -->
+<section class="full-bleed">
+  <div class="section-inner">
+    <span class="section-label">Latest Reviews</span>
+    <h2 class="section-title">From the Tasting Panel</h2>
+    <div class="home-grid">
+
+      <div class="home-review-card">
+        <div class="home-review-score">95 <small style="font-size:1rem;font-weight:400;color:var(--ink-light);">pts</small></div>
+        <div class="home-review-name">Tartary Black Reserve — Kagoshima Prefecture, Japan</div>
+        <div class="home-review-byline">2021 &nbsp;&middot;&nbsp; Reviewed by Yuki Nakamura-Estienne MBA &nbsp;&middot;&nbsp; March 2026</div>
+        <div class="home-review-excerpt">"The volcanic basalt soils of southern Kyushu produce a tartary of extraordinary precision. The nose delivers white sesame, toasted nori, and a crystalline minerality that has no parallel in the European canon. The palate is disciplined, almost severe — until the finish opens into a long, meditative warmth. Exceptional."</div>
+        <a href="cultivars.html" style="display:inline-block;margin-top:1rem;font-family:'Cormorant SC',serif;font-size:0.68rem;letter-spacing:0.12em;color:var(--burgundy);text-decoration:none;border-bottom:1px solid var(--rule);">View in Cultivar Registry &rarr;</a>
+      </div>
+
+      <div class="home-review-card">
+        <div class="home-review-score">93 <small style="font-size:1rem;font-weight:400;color:var(--ink-light);">pts</small></div>
+        <div class="home-review-name">Volga Basin Reserve Cru — Saratov Oblast</div>
+        <div class="home-review-byline">2020 &nbsp;&middot;&nbsp; Reviewed by Anastasia Volkov-Brennan ABS &nbsp;&middot;&nbsp; February 2026</div>
+        <div class="home-review-excerpt">"The alluvial minerality of the Volga's lower basin manifests here with uncommon clarity. River silt, wet limestone, and a note of preserved walnut characterise the nose; the palate is broad and generous, with a mid-palate weight that anchors the otherwise ethereal aromatic profile. A groat of serious regional distinction."</div>
+        <a href="regions.html" style="display:inline-block;margin-top:1rem;font-family:'Cormorant SC',serif;font-size:0.68rem;letter-spacing:0.12em;color:var(--burgundy);text-decoration:none;border-bottom:1px solid var(--rule);">Explore Volga Basin Region &rarr;</a>
+      </div>
+
+      <div class="home-review-card">
+        <div class="home-review-score">91 <small style="font-size:1rem;font-weight:400;color:var(--ink-light);">pts</small></div>
+        <div class="home-review-name">Breton Sarrasin Vieilles Souches — Finistère</div>
+        <div class="home-review-byline">2022 &nbsp;&middot;&nbsp; Reviewed by François-Xavier Morin-Duhamel &nbsp;&middot;&nbsp; January 2026</div>
+        <div class="home-review-excerpt">"These old-strain plants, cultivated on the granite escarpments of Finistère since the seventeenth century, produce a groat of austere beauty. The nose is restrained — sea air, grey flint, a whisper of dried kelp — but the palate rewards those who wait: an unexpected warmth of buckwheat honey emerges at forty seconds and remains. Distinctly Breton. Distinctly serious."</div>
+        <a href="cultivars.html" style="display:inline-block;margin-top:1rem;font-family:'Cormorant SC',serif;font-size:0.68rem;letter-spacing:0.12em;color:var(--burgundy);text-decoration:none;border-bottom:1px solid var(--rule);">View in Cultivar Registry &rarr;</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SECTION NAVIGATOR -->
+<section class="full-bleed" style="background:var(--parchment);border-top:2px solid var(--rule);">
+  <div class="section-inner">
+    <span class="section-label">The Publication</span>
+    <h2 class="section-title">Explore the Spectator</h2>
+    <div class="home-nav-tiles">
+      <a href="cultivars.html" class="home-nav-tile">
+        <span class="home-nav-tile-title">Cultivars</span>
+        <span class="home-nav-tile-desc">20 scored cultivars from the world's foremost appellations</span>
+      </a>
+      <a href="regions.html" class="home-nav-tile">
+        <span class="home-nav-tile-title">Regions</span>
+        <span class="home-nav-tile-desc">Appellation profiles, terroir maps, and tasting notes by geography</span>
+      </a>
+      <a href="aromas.html" class="home-nav-tile">
+        <span class="home-nav-tile-title">Aromas</span>
+        <span class="home-nav-tile-desc">The buckwheat aroma wheel — 72 descriptors across 8 families</span>
+      </a>
+      <a href="vintages.html" class="home-nav-tile">
+        <span class="home-nav-tile-title">Vintages</span>
+        <span class="home-nav-tile-desc">Harvest-year assessments from 2010 to the present</span>
+      </a>
+      <a href="pairings.html" class="home-nav-tile">
+        <span class="home-nav-tile-title">Pairings</span>
+        <span class="home-nav-tile-desc">The canonical guide to groat-compatible foods and silences</span>
+      </a>
+      <a href="certification.html" class="home-nav-tile">
+        <span class="home-nav-tile-title">Certification</span>
+        <span class="home-nav-tile-desc">ABS, MB, and the Institut Fagopyrum credential hierarchy</span>
+      </a>
+      <a href="critics.html" class="home-nav-tile">
+        <span class="home-nav-tile-title">Critics</span>
+        <span class="home-nav-tile-desc">Editorial board biographies and scoring philosophies</span>
+      </a>
+      <a href="events.html" class="home-nav-tile">
+        <span class="home-nav-tile-title">Events</span>
+        <span class="home-nav-tile-desc">Tastings, symposia, and examination sittings worldwide</span>
+      </a>
+      <a href="visit.html" class="home-nav-tile">
+        <span class="home-nav-tile-title">Visit</span>
+        <span class="home-nav-tile-desc">The Sulphur Mountain Estate, Upper Ojai, California</span>
+      </a>
+      <a href="reserve.html" class="home-nav-tile">
+        <span class="home-nav-tile-title">Reserve</span>
+        <span class="home-nav-tile-desc">Book a private tasting at the estate — from $145 per head</span>
+      </a>
+      <a href="concours.html" class="home-nav-tile">
+        <span class="home-nav-tile-title">Concours</span>
+        <span class="home-nav-tile-desc">Annual international competition — entries open for 2026</span>
+      </a>
+      <a href="about.html" class="home-nav-tile">
+        <span class="home-nav-tile-title">About</span>
+        <span class="home-nav-tile-desc">The history and editorial standards of the Buckwheat Spectator</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-title">Buckwheat Spectator</div>
+  <div class="footer-strap">The International Journal of Fagopyrum Scholarship &nbsp;&middot;&nbsp; Established 1987</div>
+
+  <div class="footer-links">
+    <a href="cultivars.html">Cultivar Registry</a>
+    <a href="regions.html">Regions</a>
+    <a href="events.html">Events</a>
+    <a href="reserve.html">Reserve a Tasting</a>
+    <a href="concours.html">Concours</a>
+    <a href="about.html">About</a>
+  </div>
+
+  <hr class="footer-rule">
+
+  <div class="footer-masthead">
+    <strong style="font-size:0.72rem;color:rgba(232,213,163,0.75);letter-spacing:0.2em;">EDITORIAL BOARD</strong><br>
+    Margaux Estienne-Beauvoir &nbsp;&middot;&nbsp; Editor-in-Chief &amp; Senior Critic<br>
+    Henrik Solberg-Ostrowski MB &nbsp;&middot;&nbsp; Master of Buckwheat, Eastern European Affairs<br>
+    Yuki Nakamura-Estienne MBA &nbsp;&middot;&nbsp; Asia-Pacific Bureau Chief<br>
+    Anastasia Volkov-Brennan ABS &nbsp;&middot;&nbsp; Volga Basin Correspondent<br>
+    Fran&ccedil;ois-Xavier Morin-Duhamel &nbsp;&middot;&nbsp; Brittany &amp; Northern France<br>
+    Patrick Czernowitz-Hale ABS &nbsp;&middot;&nbsp; North American Field Editor
+  </div>
+
+  <div class="footer-copyright">
+    &copy; 2026 Buckwheat Spectator, a publication of the Institut Fagopyrum Group.<br>
+    All groat scores are the independent opinion of the tasting panel and do not constitute investment advice.<br>
+    Reproduction without attribution is prohibited under the International Cereal Press Convention.
+  </div>
+</footer>
+
+</body>
+</html>

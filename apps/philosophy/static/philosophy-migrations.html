@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Philosophy's Diaspora - Where Philosophical Questions Went</title>
+<script src="https://unpkg.com/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://unpkg.com/layout-base/layout-base.js"></script>
+<script src="https://unpkg.com/cose-base/cose-base.js"></script>
+<script src="https://unpkg.com/cytoscape-fcose@2.2.0/cytoscape-fcose.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0d1117; color: #c9d1d9; font-family: 'Segoe UI', system-ui, sans-serif; overflow: hidden; }
+
+  #header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: linear-gradient(135deg, #161b22, #0d1117);
+    border-bottom: 1px solid #30363d;
+    padding: 10px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  #header h1 { font-size: 15px; color: #c084fc; }
+  #header .subtitle { font-size: 11px; color: #8b949e; margin-left: 12px; }
+  #header .controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  #header button {
+    background: #21262d; border: 1px solid #30363d; color: #c9d1d9;
+    padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 12px;
+  }
+  #header button:hover { background: #30363d; }
+  #header button.active { background: #c084fc; border-color: #c084fc; color: #fff; }
+
+  .legend {
+    position: fixed; bottom: 15px; left: 15px; z-index: 100;
+    background: #161b22ee; border: 1px solid #30363d; border-radius: 8px;
+    padding: 12px 16px; font-size: 11px; line-height: 1.9;
+  }
+  .legend-title { font-weight: 700; color: #c084fc; margin-bottom: 4px; font-size: 12px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+  .legend-line { width: 20px; height: 2px; flex-shrink: 0; }
+
+  #cy { width: 100vw; height: 100vh; padding-top: 50px; }
+
+  #popup {
+    display: none; position: fixed; z-index: 200;
+    background: #161b22; border: 1px solid #c084fc;
+    border-radius: 10px; padding: 16px 20px;
+    max-width: 460px; min-width: 300px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+    font-size: 13px; line-height: 1.6;
+    pointer-events: auto;
+    max-height: 70vh; overflow-y: auto;
+  }
+  #popup .popup-title {
+    font-size: 15px; font-weight: 700; margin-bottom: 8px;
+    padding-bottom: 8px; border-bottom: 1px solid #30363d;
+  }
+  #popup .popup-type {
+    display: inline-block; font-size: 10px; font-weight: 600;
+    padding: 2px 8px; border-radius: 10px; margin-bottom: 8px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  #popup .popup-section { margin-top: 10px; }
+  #popup .popup-section h4 { font-size: 11px; color: #8b949e; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  #popup .popup-section p, #popup .popup-section li { color: #c9d1d9; font-size: 12px; }
+  #popup .popup-section ul { padding-left: 16px; }
+  #popup .close-btn {
+    position: absolute; top: 8px; right: 12px;
+    background: none; border: none; color: #8b949e;
+    font-size: 18px; cursor: pointer; line-height: 1;
+  }
+  #popup .close-btn:hover { color: #c084fc; }
+
+  #search-box {
+    background: #0d1117; border: 1px solid #30363d; color: #c9d1d9;
+    padding: 5px 10px; border-radius: 6px; font-size: 12px; width: 160px;
+  }
+  #search-box::placeholder { color: #484f58; }
+
+  #timeline {
+    position: fixed; bottom: 15px; right: 15px; z-index: 100;
+    background: #161b22ee; border: 1px solid #30363d; border-radius: 8px;
+    padding: 12px 16px; font-size: 11px; max-width: 220px;
+  }
+  #timeline .tl-title { font-weight: 700; color: #c084fc; margin-bottom: 6px; font-size: 12px; }
+  #timeline .tl-item { display: flex; gap: 8px; margin-bottom: 4px; color: #8b949e; }
+  #timeline .tl-era { color: #f59e0b; font-weight: 600; min-width: 60px; }
+</style>
+</head>
+<body>
+
+<div id="header">
+  <div style="display:flex;align-items:baseline;">
+    <h1>Philosophy's Diaspora</h1>
+    <span class="subtitle">Where philosophical questions migrated to other fields</span>
+  </div>
+  <div class="controls">
+    <input type="text" id="search-box" placeholder="Search nodes..." />
+    <button onclick="filterByType('all')" class="active" id="btn-all">All</button>
+    <button onclick="filterByType('question')" id="btn-question">Questions</button>
+    <button onclick="filterByType('field')" id="btn-field">Modern Fields</button>
+    <button onclick="filterByType('bridge')" id="btn-bridge">Key Figures</button>
+    <button onclick="filterByType('origin')" id="btn-origin">Phil. Origins</button>
+    <span style="color:#30363d;">|</span>
+    <button onclick="cy.fit(undefined, 40)">Reset View</button>
+  </div>
+</div>
+
+<div class="legend">
+  <div class="legend-title">Node Types</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#f97316;"></div> Philosophical Origin</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#38bdf8;"></div> Philosophical Question</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#22c55e;"></div> Modern Field (Absorbed Into)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#f59e0b;"></div> Key Transitional Figure</div>
+  <div style="margin-top:8px;border-top:1px solid #30363d;padding-top:6px;">
+    <div class="legend-title">Edge Types</div>
+    <div class="legend-item"><div class="legend-line" style="background:#22c55e;"></div> Absorbed into</div>
+    <div class="legend-item"><div class="legend-line" style="background:#f97316;"></div> Originated from</div>
+    <div class="legend-item"><div class="legend-line" style="background:#f59e0b; border-top: 2px dashed #f59e0b; height:0;"></div> Catalyzed by</div>
+  </div>
+  <div style="margin-top:6px;color:#484f58;font-size:10px;">Click node for details. Scroll to zoom. Drag to pan.</div>
+</div>
+
+<div id="timeline">
+  <div class="tl-title">Major Exodus Waves</div>
+  <div class="tl-item"><span class="tl-era">1600s</span> Natural Philosophy --> Physics</div>
+  <div class="tl-item"><span class="tl-era">1800s</span> Logic --> Mathematics</div>
+  <div class="tl-item"><span class="tl-era">~1879</span> Psychology splits off</div>
+  <div class="tl-item"><span class="tl-era">~1900</span> Formal Logic --> CS</div>
+  <div class="tl-item"><span class="tl-era">~1950s</span> Linguistics separates</div>
+  <div class="tl-item"><span class="tl-era">~1970s</span> Cognitive Science forms</div>
+  <div class="tl-item"><span class="tl-era">~2000s</span> Experimental Philosophy</div>
+</div>
+
+<div id="cy"></div>
+
+<div id="popup">
+  <button class="close-btn" onclick="closePopup()">&times;</button>
+  <div id="popup-content"></div>
+</div>
+
+<script>
+const nodes = [
+  // ===== PHILOSOPHICAL ORIGINS (parent domains in philosophy) =====
+  {
+    id: 'nat_phil', type: 'origin', label: 'Natural\nPhilosophy',
+    title: 'Natural Philosophy',
+    detail: {
+      era: 'Ancient Greece - 18th century',
+      description: 'The study of nature and the physical universe. For over 2000 years, what we now call "science" was simply a branch of philosophy.',
+      key_questions: ['What is the world made of?', 'What governs change and motion?', 'What is the structure of the cosmos?'],
+      philosophers: 'Aristotle, Descartes, Newton (called himself a "natural philosopher")'
+    }
+  },
+  {
+    id: 'phil_mind', type: 'origin', label: 'Philosophy\nof Mind',
+    title: 'Philosophy of Mind',
+    detail: {
+      era: 'Ancient - Present (greatly narrowed)',
+      description: 'Once encompassed all questions about the mental: perception, consciousness, emotion, cognition, behavior. Now largely ceded empirical questions to psychology and cognitive science.',
+      key_questions: ['What is consciousness?', 'How does perception work?', 'What is the nature of thought?', 'How do mind and body relate?'],
+      philosophers: 'Descartes, Locke, Hume, James (straddled both)'
+    }
+  },
+  {
+    id: 'moral_phil', type: 'origin', label: 'Moral\nPhilosophy',
+    title: 'Moral Philosophy',
+    detail: {
+      era: 'Ancient - Present (partially absorbed)',
+      description: 'Questions about how humans ought to behave, the nature of virtue, justice, and social organization. Empirical aspects migrated to social sciences.',
+      key_questions: ['What is justice?', 'How should society be organized?', 'What motivates moral behavior?', 'What makes an action right?'],
+      philosophers: 'Aristotle, Hume, Kant, Mill, Rawls'
+    }
+  },
+  {
+    id: 'epistemology', type: 'origin', label: 'Epistemology',
+    title: 'Epistemology (Theory of Knowledge)',
+    detail: {
+      era: 'Ancient - Present (partially absorbed)',
+      description: 'The study of knowledge, belief, justification. Empirical questions about HOW we actually reason migrated to cognitive science and psychology.',
+      key_questions: ['What is knowledge?', 'How do we form beliefs?', 'What makes reasoning valid?', 'Can we trust our senses?'],
+      philosophers: 'Plato, Descartes, Hume, Kant, Quine'
+    }
+  },
+  {
+    id: 'logic_phil', type: 'origin', label: 'Formal\nLogic',
+    title: 'Logic (as Philosophy)',
+    detail: {
+      era: 'Aristotle - ~1900 (then migrated)',
+      description: 'For over 2000 years, logic was a core branch of philosophy. Frege, Russell, and Godel transformed it into a mathematical discipline, and it became foundational to computer science.',
+      key_questions: ['What makes an argument valid?', 'How do we formalize reasoning?', 'What are the limits of formal systems?'],
+      philosophers: 'Aristotle, Leibniz, Boole, Frege, Russell, Godel'
+    }
+  },
+  {
+    id: 'phil_lang', type: 'origin', label: 'Philosophy\nof Language',
+    title: 'Philosophy of Language',
+    detail: {
+      era: '~1900 - Present (partially absorbed)',
+      description: 'Questions about meaning, reference, truth, and speech acts. Much of the empirical side was absorbed into linguistics after Chomsky.',
+      key_questions: ['How do words mean?', 'What is the structure of language?', 'How do speech acts work?', 'What is the relationship between language and thought?'],
+      philosophers: 'Frege, Russell, Wittgenstein, Austin, Chomsky (bridge figure)'
+    }
+  },
+  {
+    id: 'pol_phil', type: 'origin', label: 'Political\nPhilosophy',
+    title: 'Political Philosophy',
+    detail: {
+      era: 'Ancient - Present (partially absorbed)',
+      description: 'Theories of the state, justice, rights, power. Empirical aspects absorbed into political science, economics, and sociology.',
+      key_questions: ['What legitimizes a state?', 'What is the social contract?', 'How should wealth be distributed?'],
+      philosophers: 'Plato, Hobbes, Locke, Rousseau, Marx, Rawls'
+    }
+  },
+
+  // ===== PHILOSOPHICAL QUESTIONS =====
+  // --> Psychology
+  {
+    id: 'q_behavior', type: 'question', label: 'Why do\nhumans behave\nas they do?',
+    title: 'The Nature of Human Behavior',
+    detail: {
+      original_field: 'Moral Philosophy / Philosophy of Mind',
+      question: 'What drives human behavior? What are our motivations, habits, and dispositions?',
+      phil_treatment: 'Aristotle\'s virtue ethics, Hume on passions vs. reason, associationist theories of the mind.',
+      when_absorbed: '1879 (Wundt\'s lab) - late 1800s',
+      what_remained: 'Philosophy retains normative questions (how SHOULD we behave?) while psychology took the descriptive/empirical questions.'
+    }
+  },
+  {
+    id: 'q_perception', type: 'question', label: 'How does\nperception\nwork?',
+    title: 'The Nature of Perception',
+    detail: {
+      original_field: 'Philosophy of Mind / Epistemology',
+      question: 'How do we perceive the external world? Are our senses reliable? What is the relationship between sensation and perception?',
+      phil_treatment: 'Locke\'s primary/secondary qualities, Berkeley\'s idealism, Kant\'s categories of understanding.',
+      when_absorbed: 'Late 1800s - early 1900s into experimental psychology, then perceptual science',
+      what_remained: 'Philosophy retains questions about the phenomenal character of experience and whether perception is direct or representational.'
+    }
+  },
+  {
+    id: 'q_moral_dev', type: 'question', label: 'How do humans\ndevelop moral\njudgment?',
+    title: 'Moral Development & Moral Psychology',
+    detail: {
+      original_field: 'Moral Philosophy',
+      question: 'How do humans come to have moral intuitions? How does moral reasoning develop? Are moral sentiments innate or learned?',
+      phil_treatment: 'Hume\'s moral sentiments, Kant\'s moral development, Aristotle on habituation of virtue.',
+      when_absorbed: 'Piaget (1932), Kohlberg (1950s-60s), Haidt (2001) - progressively absorbed into developmental & social psychology',
+      what_remained: 'Philosophy retains questions about what moral judgments SHOULD be, not how they empirically develop.'
+    }
+  },
+  {
+    id: 'q_emotion', type: 'question', label: 'What are\nemotions?',
+    title: 'The Nature of Emotions',
+    detail: {
+      original_field: 'Philosophy of Mind',
+      question: 'What are emotions? Are they judgments, feelings, bodily states, or something else? How do they relate to reason?',
+      phil_treatment: 'Stoics: emotions as judgments. Hume: passions vs. reason. Descartes: passions of the soul. Spinoza: affects.',
+      when_absorbed: 'William James (1884) "What is an Emotion?" - moved into psychology. Now also affective neuroscience.',
+      what_remained: 'Philosophy retains debates about whether emotions are cognitive (judgments) or non-cognitive (feelings), and normative questions about emotional rationality.'
+    }
+  },
+  // --> Cognitive Science / Neuroscience
+  {
+    id: 'q_consciousness', type: 'question', label: 'What is\nconsciousness?',
+    title: 'The Problem of Consciousness',
+    detail: {
+      original_field: 'Philosophy of Mind',
+      question: 'What is it like to be a conscious being? How does subjective experience arise from physical matter?',
+      phil_treatment: 'Descartes\' dualism, Leibniz\'s mill argument, Nagel\'s "What is it like to be a bat?" (1974), Chalmers\' "hard problem" (1995).',
+      when_absorbed: 'Partially absorbed into cognitive science and neuroscience from the 1990s onward ("Decade of the Brain"). But this is the question philosophy has been LEAST willing to let go of.',
+      what_remained: 'The "hard problem" (why there is subjective experience at all) is still considered genuinely philosophical. Science studies neural correlates; philosophy asks why correlates produce experience.'
+    }
+  },
+  {
+    id: 'q_representation', type: 'question', label: 'How does the\nmind represent\nthe world?',
+    title: 'Mental Representation',
+    detail: {
+      original_field: 'Philosophy of Mind / Epistemology',
+      question: 'How do internal mental states represent external reality? What is the format of thought?',
+      phil_treatment: 'Locke\'s ideas as representations, Kant\'s categories, Brentano\'s intentionality, Fodor\'s language of thought.',
+      when_absorbed: 'Cognitive revolution of 1950s-60s. Became central to cognitive science, AI, and computational neuroscience.',
+      what_remained: 'Philosophy retains debates about the nature of intentionality and whether computation can truly explain meaning.'
+    }
+  },
+  {
+    id: 'q_freewill', type: 'question', label: 'Do we have\nfree will?',
+    title: 'Free Will and Determinism',
+    detail: {
+      original_field: 'Metaphysics / Philosophy of Mind',
+      question: 'Are human decisions free, or determined by prior causes? What is the nature of voluntary action?',
+      phil_treatment: 'Epicurus\' swerve, Augustine, Hume\'s compatibilism, Kant\'s transcendental freedom, Frankfurt cases.',
+      when_absorbed: 'Partially: Libet experiments (1983), neuroscience of decision-making, Wegner\'s "The Illusion of Conscious Will" (2002). Psychology of volition.',
+      what_remained: 'The conceptual/normative question remains philosophical: even if decisions are determined, does that matter for moral responsibility? Compatibilism vs. incompatibilism is still a live debate.'
+    }
+  },
+  // --> Physics
+  {
+    id: 'q_matter', type: 'question', label: 'What is\nmatter made of?',
+    title: 'The Composition of Matter',
+    detail: {
+      original_field: 'Natural Philosophy',
+      question: 'What are the fundamental building blocks of reality? What is the nature of substance?',
+      phil_treatment: 'Thales (water), Empedocles (four elements), Democritus (atoms), Aristotle (hylomorphism).',
+      when_absorbed: 'Gradually from 1600s. Boyle, Dalton, and modern atomic theory made this entirely empirical by the 1800s.',
+      what_remained: 'Philosophy of physics retains questions about the interpretation of quantum mechanics and the nature of substance at the metaphysical level.'
+    }
+  },
+  {
+    id: 'q_spacetime', type: 'question', label: 'What is the\nnature of space\nand time?',
+    title: 'The Nature of Space and Time',
+    detail: {
+      original_field: 'Natural Philosophy / Metaphysics',
+      question: 'Is space absolute or relational? Does time flow? What is the geometry of the universe?',
+      phil_treatment: 'Newton vs. Leibniz debate (absolute vs. relational space), Kant (space and time as forms of intuition), McTaggart (unreality of time).',
+      when_absorbed: 'Einstein\'s relativity (1905/1915) made this primarily a physics question. Space and time became spacetime, a mathematical object.',
+      what_remained: 'Philosophy of physics: interpretation of relativity, the direction of time (arrow of time), presentism vs. eternalism.'
+    }
+  },
+  {
+    id: 'q_cosmos', type: 'question', label: 'What is the\nstructure of\nthe cosmos?',
+    title: 'Cosmology',
+    detail: {
+      original_field: 'Natural Philosophy',
+      question: 'What is the large-scale structure of the universe? Is it finite or infinite? Did it have a beginning?',
+      phil_treatment: 'Aristotle\'s geocentric cosmos, Ptolemy, medieval cosmological arguments, Kant\'s antinomies of reason.',
+      when_absorbed: 'Copernicus (1543), Galileo, Newton - progressively. By the 20th century (Hubble, Big Bang theory), entirely physics/astronomy.',
+      what_remained: 'Philosophy retains the question of why there is something rather than nothing, and fine-tuning arguments.'
+    }
+  },
+  {
+    id: 'q_causation', type: 'question', label: 'What is\ncausation?',
+    title: 'The Nature of Causation',
+    detail: {
+      original_field: 'Metaphysics / Natural Philosophy',
+      question: 'What makes one event cause another? Is causation a real feature of the world or just a mental habit?',
+      phil_treatment: 'Aristotle\'s four causes, Hume\'s skepticism about necessary connection, Kant\'s response.',
+      when_absorbed: 'Partially: statistics (causal inference, Pearl\'s do-calculus), physics (deterministic laws), epidemiology. Judea Pearl\'s "Causality" (2000) formalized much of this.',
+      what_remained: 'Metaphysics of causation remains active. Counterfactual theories, powers-based theories, and the question of whether causation is fundamental or derivative.'
+    }
+  },
+  // --> Biology
+  {
+    id: 'q_teleology', type: 'question', label: 'Is there\npurpose in\nnature?',
+    title: 'Teleology / Purpose in Nature',
+    detail: {
+      original_field: 'Natural Philosophy / Metaphysics',
+      question: 'Do natural things have purposes or goals? Why do organisms have the features they do?',
+      phil_treatment: 'Aristotle\'s final causes (the acorn\'s telos is to become an oak), Paley\'s design argument, Kant\'s teleological judgment.',
+      when_absorbed: 'Darwin (1859) provided a non-teleological explanation for apparent purpose: natural selection. Function replaced purpose.',
+      what_remained: 'Philosophy of biology: whether biological function-talk is genuinely teleological or merely metaphorical. Also: design arguments in philosophy of religion.'
+    }
+  },
+  {
+    id: 'q_species', type: 'question', label: 'What are\nnatural kinds?',
+    title: 'Natural Kinds & Classification',
+    detail: {
+      original_field: 'Metaphysics',
+      question: 'Does nature divide into natural categories (species, elements)? Or are classifications human impositions?',
+      phil_treatment: 'Plato\'s Forms (carving nature at its joints), Aristotle\'s categories, Locke\'s nominal vs. real essences.',
+      when_absorbed: 'Linnaeus (taxonomy), Darwin (species as populations), modern chemistry (periodic table). Classification became empirical.',
+      what_remained: 'Philosophy retains the meta-question: are natural kinds real features of the world? The species problem is still partly philosophical.'
+    }
+  },
+  // --> Linguistics
+  {
+    id: 'q_meaning', type: 'question', label: 'How do words\nhave meaning?',
+    title: 'The Nature of Linguistic Meaning',
+    detail: {
+      original_field: 'Philosophy of Language',
+      question: 'How do words and sentences come to mean what they mean? What is the relationship between language, thought, and reality?',
+      phil_treatment: 'Frege\'s sense/reference, Russell\'s definite descriptions, Wittgenstein\'s picture theory (then language games), Grice\'s meaning-as-intention.',
+      when_absorbed: 'Chomsky (1957+) launched linguistics as an autonomous science. Formal semantics (Montague 1970s) brought logical tools to empirical study of meaning.',
+      what_remained: 'Philosophy retains foundational questions: what IS meaning? Is meaning in the head? Reference and truth-conditions vs. use-based theories.'
+    }
+  },
+  {
+    id: 'q_grammar', type: 'question', label: 'What is the\nstructure of\nlanguage?',
+    title: 'Grammar and Language Structure',
+    detail: {
+      original_field: 'Philosophy of Language / Logic',
+      question: 'What are the rules governing language? Is there a universal grammar? How does syntax relate to meaning?',
+      phil_treatment: 'Aristotle\'s categories as linguistic categories, Port-Royal Grammar (1660), Frege\'s formal language, Carnap\'s logical syntax.',
+      when_absorbed: 'Chomsky\'s "Syntactic Structures" (1957) and the cognitive revolution. Linguistics became a science with its own methods.',
+      what_remained: 'Philosophy of linguistics: nativism vs. empiricism about language acquisition, the Sapir-Whorf hypothesis at the conceptual level.'
+    }
+  },
+  // --> Computer Science
+  {
+    id: 'q_computation', type: 'question', label: 'What can be\ncomputed?',
+    title: 'Computability and Formal Systems',
+    detail: {
+      original_field: 'Logic / Philosophy of Mathematics',
+      question: 'What are the limits of formal reasoning? Can all truths be proven? What can be mechanically calculated?',
+      phil_treatment: 'Leibniz\'s calculus ratiocinator, Hilbert\'s program, Russell & Whitehead\'s Principia Mathematica.',
+      when_absorbed: 'Godel\'s incompleteness (1931), Turing\'s computability (1936), Church\'s lambda calculus. Became theoretical computer science.',
+      what_remained: 'Philosophy retains questions about the Church-Turing thesis, hypercomputation, and whether the mind is a computer.'
+    }
+  },
+  {
+    id: 'q_ai', type: 'question', label: 'Can machines\nthink?',
+    title: 'Artificial Intelligence / Machine Thought',
+    detail: {
+      original_field: 'Philosophy of Mind / Logic',
+      question: 'Can a machine genuinely think, understand, or be conscious? What would count as machine intelligence?',
+      phil_treatment: 'Descartes (animals as automata), Hobbes (reasoning is computation), Turing\'s test (1950), Searle\'s Chinese Room (1980), Dreyfus\'s critique.',
+      when_absorbed: 'Dartmouth conference (1956) launched AI as a field. Now machine learning, deep learning, and LLMs are primarily CS/engineering.',
+      what_remained: 'Philosophy retains: the hard problem for AI (can machines be conscious?), alignment/ethics, Searle\'s syntax vs. semantics distinction.'
+    }
+  },
+  // --> Economics / Decision Theory
+  {
+    id: 'q_rational', type: 'question', label: 'What is\nrational\nchoice?',
+    title: 'Rational Choice & Decision Theory',
+    detail: {
+      original_field: 'Epistemology / Moral Philosophy',
+      question: 'What does it mean to choose rationally? How should we make decisions under uncertainty?',
+      phil_treatment: 'Aristotle\'s practical syllogism, Pascal\'s wager, Hume (reason as slave of passions), Kant (pure practical reason).',
+      when_absorbed: 'Von Neumann & Morgenstern (1944) game theory, Arrow\'s impossibility theorem (1951), Kahneman & Tversky (1979). Became economics, game theory, behavioral economics.',
+      what_remained: 'Philosophy retains foundational questions about utility, the normativity of rationality, and whether rational choice theory describes how we SHOULD or DO decide.'
+    }
+  },
+  {
+    id: 'q_justice', type: 'question', label: 'How should\nwealth be\ndistributed?',
+    title: 'Distributive Justice',
+    detail: {
+      original_field: 'Political Philosophy / Moral Philosophy',
+      question: 'What is a just distribution of resources? What do we owe each other?',
+      phil_treatment: 'Aristotle\'s distributive justice, Locke on property, Marx on exploitation, Rawls\'s "A Theory of Justice" (1971).',
+      when_absorbed: 'Partially into welfare economics, public policy, development economics. Piketty\'s empirical approach (2014).',
+      what_remained: 'Philosophy retains the normative core: WHAT is just? Rawls, Nozick, Sen continue to be debated philosophically.'
+    }
+  },
+  // --> Sociology / Political Science
+  {
+    id: 'q_social', type: 'question', label: 'What holds\nsociety\ntogether?',
+    title: 'Social Organization & Social Order',
+    detail: {
+      original_field: 'Political Philosophy / Moral Philosophy',
+      question: 'What makes society possible? How do social institutions arise and persist? What is the basis of social order?',
+      phil_treatment: 'Hobbes\'s Leviathan, Rousseau\'s social contract, Hegel\'s philosophy of right, Marx\'s historical materialism.',
+      when_absorbed: 'Comte coined "sociology" (1838), Durkheim, Weber, and Simmel established it as an empirical discipline in late 1800s.',
+      what_remained: 'Philosophy retains normative political philosophy, ideal theory, and conceptual questions about social ontology.'
+    }
+  },
+  {
+    id: 'q_power', type: 'question', label: 'What is\npower?',
+    title: 'The Nature of Power',
+    detail: {
+      original_field: 'Political Philosophy',
+      question: 'What is political power? What legitimizes authority? How does power operate in society?',
+      phil_treatment: 'Machiavelli, Hobbes (sovereign power), Marx (class power), Nietzsche (will to power).',
+      when_absorbed: 'Weber\'s sociology of domination, Foucault (straddled both), modern political science, IR theory.',
+      what_remained: 'Philosophy retains conceptual analysis of power, legitimacy, and authority. Foucault\'s work is claimed by both sides.'
+    }
+  },
+  // --> Mathematics
+  {
+    id: 'q_logic_math', type: 'question', label: 'What are the\nfoundations of\nvalid reasoning?',
+    title: 'Foundations of Logic',
+    detail: {
+      original_field: 'Logic (Philosophy)',
+      question: 'What are the fundamental laws of thought? How do we formalize valid inference?',
+      phil_treatment: 'Aristotle\'s syllogistic (Prior Analytics), Stoic propositional logic, medieval logic, Leibniz\'s dream of a universal calculus.',
+      when_absorbed: 'Boole (1854), Frege (1879 Begriffsschrift), Russell & Whitehead. Mathematical logic became a branch of mathematics, not philosophy.',
+      what_remained: 'Philosophy retains philosophical logic (modal, deontic, epistemic logic), and meta-logical questions about the nature of logical truth.'
+    }
+  },
+
+  // ===== MODERN FIELDS (what absorbed the questions) =====
+  {
+    id: 'f_psychology', type: 'field', label: 'Psychology',
+    title: 'Psychology',
+    detail: {
+      established: '1879 (Wundt\'s Leipzig lab)',
+      absorbed_from: 'Philosophy of Mind, Moral Philosophy, Epistemology',
+      key_moment: 'Wilhelm Wundt established the first psychology laboratory, declaring that questions about the mind could be studied experimentally, not just through armchair reflection.',
+      irony: 'Psychology literally means "study of the soul" (psyche + logos) - a philosophical term repurposed for empirical science.'
+    }
+  },
+  {
+    id: 'f_cogsci', type: 'field', label: 'Cognitive\nScience',
+    title: 'Cognitive Science',
+    detail: {
+      established: '1950s-1970s (interdisciplinary)',
+      absorbed_from: 'Philosophy of Mind, Epistemology',
+      key_moment: 'The cognitive revolution (Chomsky, Miller, Newell & Simon) united psychology, linguistics, AI, neuroscience, and philosophy into a new field focused on the mind as an information-processing system.',
+      irony: 'Philosophy is officially one of the "six disciplines" of cognitive science, but is increasingly marginal in practice.'
+    }
+  },
+  {
+    id: 'f_neurosci', type: 'field', label: 'Neuroscience',
+    title: 'Neuroscience',
+    detail: {
+      established: '1960s-1970s as a unified field',
+      absorbed_from: 'Philosophy of Mind',
+      key_moment: 'Advances in brain imaging (fMRI, 1990s) and the "Decade of the Brain" (1990s) gave neuroscience tools to investigate consciousness, free will, and perception empirically.',
+      irony: 'Many neuroscientists dismiss philosophical questions as "not even wrong" while implicitly adopting philosophical positions (usually naive materialism).'
+    }
+  },
+  {
+    id: 'f_physics', type: 'field', label: 'Physics',
+    title: 'Physics',
+    detail: {
+      established: 'Gradual, 1600s-1800s',
+      absorbed_from: 'Natural Philosophy',
+      key_moment: 'Newton\'s Principia (1687) was titled "Mathematical Principles of Natural Philosophy." The word "scientist" wasn\'t coined until 1833 (Whewell). The split was complete by the mid-1800s.',
+      irony: 'Newton, Leibniz, and even Bohr and Heisenberg saw themselves as engaged in philosophical inquiry. Modern physics departments would not hire them based on their philosophical writings.'
+    }
+  },
+  {
+    id: 'f_biology', type: 'field', label: 'Evolutionary\nBiology',
+    title: 'Evolutionary Biology',
+    detail: {
+      established: '1859 (Origin of Species)',
+      absorbed_from: 'Natural Philosophy, Metaphysics (teleology)',
+      key_moment: 'Darwin\'s theory of natural selection provided a mechanistic explanation for apparent design in nature, replacing Aristotelian teleology and Paley\'s design argument.',
+      irony: 'The question "why does this organ exist?" went from being theological/philosophical to biological overnight. Same question, radically different methodology.'
+    }
+  },
+  {
+    id: 'f_linguistics', type: 'field', label: 'Linguistics',
+    title: 'Linguistics (as a Science)',
+    detail: {
+      established: '1957 (Chomsky\'s Syntactic Structures)',
+      absorbed_from: 'Philosophy of Language, Logic',
+      key_moment: 'Chomsky argued that language is a natural object that can be studied scientifically, not just a topic for philosophical speculation. Formal semantics (Montague) followed.',
+      irony: 'Chomsky himself was deeply philosophical, and many of his key ideas (nativism, universal grammar) are philosophical theses tested empirically.'
+    }
+  },
+  {
+    id: 'f_cs', type: 'field', label: 'Computer\nScience',
+    title: 'Computer Science',
+    detail: {
+      established: '1936 (Turing) / 1950s-60s (as a discipline)',
+      absorbed_from: 'Logic, Philosophy of Mind',
+      key_moment: 'Turing\'s 1936 paper on computability turned a philosophical question about the limits of formal reasoning into the foundation of a new engineering discipline.',
+      irony: 'The foundational papers of CS (Turing, Church, Godel) were all motivated by philosophical questions about the nature and limits of reasoning.'
+    }
+  },
+  {
+    id: 'f_economics', type: 'field', label: 'Economics /\nGame Theory',
+    title: 'Economics & Game Theory',
+    detail: {
+      established: 'Adam Smith (1776), formalized 1940s-50s',
+      absorbed_from: 'Moral Philosophy, Political Philosophy',
+      key_moment: 'Adam Smith was literally a professor of moral philosophy. "The Wealth of Nations" was an offshoot of his moral philosophy. Von Neumann & Morgenstern (1944) formalized rational choice.',
+      irony: 'Economics departments now often dismiss moral philosophy as "unscientific" while their entire field was founded by a moral philosopher.'
+    }
+  },
+  {
+    id: 'f_polisci', type: 'field', label: 'Political\nScience',
+    title: 'Political Science',
+    detail: {
+      established: 'Late 1800s as an empirical discipline',
+      absorbed_from: 'Political Philosophy',
+      key_moment: 'The behavioral revolution in political science (1950s-60s) emphasized empirical methods, data, and quantification over normative theorizing.',
+      irony: 'Almost every concept in political science (legitimacy, sovereignty, rights, democracy) was invented by philosophers.'
+    }
+  },
+  {
+    id: 'f_sociology', type: 'field', label: 'Sociology',
+    title: 'Sociology',
+    detail: {
+      established: '1838 (Comte coined the term), late 1800s empirically',
+      absorbed_from: 'Moral Philosophy, Political Philosophy',
+      key_moment: 'Durkheim\'s "Rules of Sociological Method" (1895) insisted on treating social facts as things, studied empirically rather than philosophically.',
+      irony: 'Durkheim, Weber, and Marx were all deeply philosophical thinkers whose work is now classified as "social science" rather than "philosophy."'
+    }
+  },
+  {
+    id: 'f_math_logic', type: 'field', label: 'Mathematical\nLogic',
+    title: 'Mathematical Logic',
+    detail: {
+      established: '1879 (Frege\'s Begriffsschrift)',
+      absorbed_from: 'Logic (Philosophy)',
+      key_moment: 'Frege\'s invention of predicate logic (1879) was so much more powerful than Aristotelian syllogistic that logic rapidly moved from philosophy departments to mathematics departments.',
+      irony: 'Frege saw himself as doing philosophy. He would be baffled that his work is now classified as mathematics.'
+    }
+  },
+
+  // ===== KEY TRANSITIONAL FIGURES =====
+  {
+    id: 'b_wundt', type: 'bridge', label: 'Wundt\n(1879)',
+    title: 'Wilhelm Wundt - Father of Experimental Psychology',
+    detail: {
+      role: 'Established the first psychology laboratory in Leipzig (1879), declaring that philosophical questions about the mind could be studied experimentally.',
+      significance: 'Drew the line between philosophical speculation about the mind and empirical psychology.',
+      quote: '"Psychology has to investigate that which we call internal experience - i.e., our own sensation and feeling, our thought and volition."'
+    }
+  },
+  {
+    id: 'b_darwin', type: 'bridge', label: 'Darwin\n(1859)',
+    title: 'Charles Darwin - Naturalizing Teleology',
+    detail: {
+      role: 'Provided a mechanistic explanation for apparent design in nature, replacing 2000+ years of teleological philosophy.',
+      significance: 'Natural selection made the question "What is X for?" answerable without invoking purposes, goals, or a designer.',
+      quote: '"There is grandeur in this view of life, with its several powers, having been originally breathed into a few forms or into one."'
+    }
+  },
+  {
+    id: 'b_frege', type: 'bridge', label: 'Frege\n(1879)',
+    title: 'Gottlob Frege - Logic Becomes Mathematics',
+    detail: {
+      role: 'Invented modern predicate logic in Begriffsschrift (1879), making Aristotelian logic obsolete and transforming logic into a mathematical discipline.',
+      significance: 'Single-handedly moved logic from philosophy to mathematics. Also foundational for philosophy of language.',
+      quote: '"In my formalized language... only that part of judgments which affects the possible inferences is taken into consideration."'
+    }
+  },
+  {
+    id: 'b_turing', type: 'bridge', label: 'Turing\n(1936)',
+    title: 'Alan Turing - From Logic to Computation',
+    detail: {
+      role: 'Transformed the philosophical question of "what can be formally decided?" into the mathematical concept of computability, founding computer science.',
+      significance: 'His 1936 paper and 1950 "Computing Machinery and Intelligence" bridged philosophy of mind, logic, and computer science.',
+      quote: '"We can only see a short distance ahead, but we can see plenty there that needs to be done."'
+    }
+  },
+  {
+    id: 'b_chomsky', type: 'bridge', label: 'Chomsky\n(1957)',
+    title: 'Noam Chomsky - Language as Natural Science',
+    detail: {
+      role: 'Argued that the study of language is an empirical science, not just philosophical analysis. Founded generative linguistics.',
+      significance: 'Moved questions about language structure, acquisition, and universals from philosophy into a testable scientific framework.',
+      quote: '"Colorless green ideas sleep furiously." (demonstrating syntax is independent of meaning)'
+    }
+  },
+  {
+    id: 'b_smith', type: 'bridge', label: 'Adam Smith\n(1776)',
+    title: 'Adam Smith - Moral Philosopher Turned Economist',
+    detail: {
+      role: 'Professor of Moral Philosophy at Glasgow. His "Wealth of Nations" spun off questions of economic organization from moral philosophy into a new discipline.',
+      significance: 'Literally a philosopher who created a new field. His "Theory of Moral Sentiments" (1759) preceded and informed his economics.',
+      quote: '"It is not from the benevolence of the butcher, the brewer, or the baker, that we expect our dinner, but from their regard to their own interest."'
+    }
+  },
+  {
+    id: 'b_newton', type: 'bridge', label: 'Newton\n(1687)',
+    title: 'Isaac Newton - Natural Philosopher to Physicist',
+    detail: {
+      role: 'His "Principia Mathematica" (full title: "Mathematical Principles of Natural Philosophy") transformed philosophical questions about nature into mathematical physics.',
+      significance: 'Newton considered himself a natural philosopher. The fact that we now call his work "physics" IS the migration.',
+      quote: '"Hypotheses non fingo" (I feign no hypotheses) - rejecting philosophical speculation in favor of mathematical description.'
+    }
+  },
+  {
+    id: 'b_james', type: 'bridge', label: 'William\nJames',
+    title: 'William James - Philosopher and Psychologist',
+    detail: {
+      role: 'Straddled philosophy and psychology. His "Principles of Psychology" (1890) was both a scientific text and a work of philosophy.',
+      significance: 'Embodied the moment when philosophy of mind was splitting into empirical psychology and residual philosophical questions.',
+      quote: '"The first thing the intellect does with an object is to class it along with something else."'
+    }
+  },
+];
+
+const edges = [
+  // Origins to Questions
+  { source: 'nat_phil', target: 'q_matter', type: 'origin' },
+  { source: 'nat_phil', target: 'q_spacetime', type: 'origin' },
+  { source: 'nat_phil', target: 'q_cosmos', type: 'origin' },
+  { source: 'nat_phil', target: 'q_teleology', type: 'origin' },
+  { source: 'nat_phil', target: 'q_causation', type: 'origin' },
+  { source: 'phil_mind', target: 'q_behavior', type: 'origin' },
+  { source: 'phil_mind', target: 'q_perception', type: 'origin' },
+  { source: 'phil_mind', target: 'q_consciousness', type: 'origin' },
+  { source: 'phil_mind', target: 'q_representation', type: 'origin' },
+  { source: 'phil_mind', target: 'q_emotion', type: 'origin' },
+  { source: 'phil_mind', target: 'q_freewill', type: 'origin' },
+  { source: 'phil_mind', target: 'q_ai', type: 'origin' },
+  { source: 'moral_phil', target: 'q_moral_dev', type: 'origin' },
+  { source: 'moral_phil', target: 'q_justice', type: 'origin' },
+  { source: 'moral_phil', target: 'q_social', type: 'origin' },
+  { source: 'moral_phil', target: 'q_rational', type: 'origin' },
+  { source: 'epistemology', target: 'q_perception', type: 'origin' },
+  { source: 'epistemology', target: 'q_representation', type: 'origin' },
+  { source: 'epistemology', target: 'q_rational', type: 'origin' },
+  { source: 'logic_phil', target: 'q_computation', type: 'origin' },
+  { source: 'logic_phil', target: 'q_logic_math', type: 'origin' },
+  { source: 'logic_phil', target: 'q_ai', type: 'origin' },
+  { source: 'phil_lang', target: 'q_meaning', type: 'origin' },
+  { source: 'phil_lang', target: 'q_grammar', type: 'origin' },
+  { source: 'pol_phil', target: 'q_justice', type: 'origin' },
+  { source: 'pol_phil', target: 'q_social', type: 'origin' },
+  { source: 'pol_phil', target: 'q_power', type: 'origin' },
+
+  // Questions to Modern Fields (absorbed)
+  { source: 'q_behavior', target: 'f_psychology', type: 'absorbed' },
+  { source: 'q_perception', target: 'f_psychology', type: 'absorbed' },
+  { source: 'q_moral_dev', target: 'f_psychology', type: 'absorbed' },
+  { source: 'q_emotion', target: 'f_psychology', type: 'absorbed' },
+  { source: 'q_consciousness', target: 'f_cogsci', type: 'absorbed' },
+  { source: 'q_consciousness', target: 'f_neurosci', type: 'absorbed' },
+  { source: 'q_representation', target: 'f_cogsci', type: 'absorbed' },
+  { source: 'q_freewill', target: 'f_neurosci', type: 'absorbed' },
+  { source: 'q_matter', target: 'f_physics', type: 'absorbed' },
+  { source: 'q_spacetime', target: 'f_physics', type: 'absorbed' },
+  { source: 'q_cosmos', target: 'f_physics', type: 'absorbed' },
+  { source: 'q_causation', target: 'f_physics', type: 'absorbed' },
+  { source: 'q_teleology', target: 'f_biology', type: 'absorbed' },
+  { source: 'q_species', target: 'f_biology', type: 'absorbed' },
+  { source: 'q_meaning', target: 'f_linguistics', type: 'absorbed' },
+  { source: 'q_grammar', target: 'f_linguistics', type: 'absorbed' },
+  { source: 'q_computation', target: 'f_cs', type: 'absorbed' },
+  { source: 'q_ai', target: 'f_cs', type: 'absorbed' },
+  { source: 'q_rational', target: 'f_economics', type: 'absorbed' },
+  { source: 'q_justice', target: 'f_economics', type: 'absorbed' },
+  { source: 'q_social', target: 'f_sociology', type: 'absorbed' },
+  { source: 'q_power', target: 'f_polisci', type: 'absorbed' },
+  { source: 'q_social', target: 'f_polisci', type: 'absorbed' },
+  { source: 'q_logic_math', target: 'f_math_logic', type: 'absorbed' },
+
+  // Bridge figures (catalyzed)
+  { source: 'b_wundt', target: 'f_psychology', type: 'catalyzed' },
+  { source: 'b_darwin', target: 'f_biology', type: 'catalyzed' },
+  { source: 'b_frege', target: 'f_math_logic', type: 'catalyzed' },
+  { source: 'b_turing', target: 'f_cs', type: 'catalyzed' },
+  { source: 'b_chomsky', target: 'f_linguistics', type: 'catalyzed' },
+  { source: 'b_smith', target: 'f_economics', type: 'catalyzed' },
+  { source: 'b_newton', target: 'f_physics', type: 'catalyzed' },
+  { source: 'b_james', target: 'f_psychology', type: 'catalyzed' },
+  { source: 'b_james', target: 'f_cogsci', type: 'catalyzed' },
+];
+
+// ===================== COLOR MAP =====================
+const colorMap = {
+  origin: '#f97316',
+  question: '#38bdf8',
+  field: '#22c55e',
+  bridge: '#f59e0b',
+};
+const typeLabels = {
+  origin: 'Philosophical Origin',
+  question: 'Philosophical Question',
+  field: 'Modern Field',
+  bridge: 'Key Figure',
+};
+
+// ===================== BUILD CYTOSCAPE =====================
+const cyNodes = nodes.map(n => ({
+  data: {
+    id: n.id,
+    label: n.label,
+    type: n.type,
+    color: colorMap[n.type],
+    nodeData: n,
+    weight: n.type === 'origin' ? 60 : n.type === 'field' ? 55 : n.type === 'question' ? 40 : 35,
+  }
+}));
+
+const cyEdges = edges.map((e, i) => ({
+  data: {
+    id: 'e' + i,
+    source: e.source,
+    target: e.target,
+    edgeType: e.type,
+    color: e.type === 'absorbed' ? '#22c55e' : e.type === 'origin' ? '#f97316' : '#f59e0b',
+  }
+}));
+
+const cy = cytoscape({
+  container: document.getElementById('cy'),
+  elements: [...cyNodes, ...cyEdges],
+  style: [
+    {
+      selector: 'node',
+      style: {
+        'label': 'data(label)',
+        'text-wrap': 'wrap',
+        'text-valign': 'center',
+        'text-halign': 'center',
+        'font-size': 9,
+        'font-weight': 600,
+        'color': '#e6edf3',
+        'text-outline-color': '#0d1117',
+        'text-outline-width': 2,
+        'background-color': 'data(color)',
+        'width': 'data(weight)',
+        'height': 'data(weight)',
+        'border-width': 2,
+        'border-color': 'data(color)',
+        'border-opacity': 0.6,
+        'background-opacity': 0.85,
+        'transition-property': 'opacity, background-color, border-color, width, height',
+        'transition-duration': '0.3s',
+      }
+    },
+    {
+      selector: 'node[type="origin"]',
+      style: {
+        'shape': 'round-rectangle',
+        'font-size': 10,
+        'font-weight': 700,
+      }
+    },
+    {
+      selector: 'node[type="field"]',
+      style: {
+        'shape': 'round-rectangle',
+        'font-size': 10,
+        'font-weight': 700,
+      }
+    },
+    {
+      selector: 'node[type="bridge"]',
+      style: {
+        'shape': 'diamond',
+        'font-size': 8,
+      }
+    },
+    {
+      selector: 'edge',
+      style: {
+        'width': 1.5,
+        'line-color': 'data(color)',
+        'target-arrow-color': 'data(color)',
+        'target-arrow-shape': 'triangle',
+        'curve-style': 'bezier',
+        'opacity': 0.5,
+        'arrow-scale': 0.8,
+        'transition-property': 'opacity, width',
+        'transition-duration': '0.3s',
+      }
+    },
+    {
+      selector: 'edge[edgeType="catalyzed"]',
+      style: {
+        'line-style': 'dashed',
+        'line-dash-pattern': [6, 4],
+        'opacity': 0.4,
+      }
+    },
+    {
+      selector: 'edge[edgeType="absorbed"]',
+      style: {
+        'width': 2.5,
+        'opacity': 0.6,
+      }
+    },
+    {
+      selector: '.highlighted',
+      style: {
+        'opacity': 1,
+        'border-width': 4,
+        'z-index': 999,
+      }
+    },
+    {
+      selector: '.faded',
+      style: {
+        'opacity': 0.1,
+      }
+    },
+    {
+      selector: '.edge-highlighted',
+      style: {
+        'opacity': 1,
+        'width': 3,
+        'z-index': 999,
+      }
+    },
+  ],
+  layout: {
+    name: 'fcose',
+    quality: 'proof',
+    randomize: true,
+    animate: true,
+    animationDuration: 1500,
+    nodeRepulsion: 8000,
+    idealEdgeLength: 120,
+    edgeElasticity: 0.1,
+    gravity: 0.3,
+    gravityRange: 2.0,
+    padding: 60,
+  },
+  minZoom: 0.3,
+  maxZoom: 3,
+});
+
+// ===================== INTERACTION =====================
+cy.on('tap', 'node', function(evt) {
+  const node = evt.target;
+  const d = node.data('nodeData');
+  showPopup(d, evt.renderedPosition);
+
+  // Highlight connected nodes
+  cy.elements().removeClass('highlighted faded edge-highlighted');
+  const neighborhood = node.neighborhood().add(node);
+  cy.elements().addClass('faded');
+  neighborhood.removeClass('faded');
+  node.addClass('highlighted');
+  node.connectedEdges().addClass('edge-highlighted');
+  neighborhood.nodes().addClass('highlighted');
+});
+
+cy.on('tap', function(evt) {
+  if (evt.target === cy) {
+    cy.elements().removeClass('highlighted faded edge-highlighted');
+    closePopup();
+  }
+});
+
+function showPopup(d, pos) {
+  const popup = document.getElementById('popup');
+  const content = document.getElementById('popup-content');
+
+  const typeColor = colorMap[d.type];
+  let html = `
+    <div class="popup-type" style="background:${typeColor}22;color:${typeColor};border:1px solid ${typeColor};">${typeLabels[d.type]}</div>
+    <div class="popup-title" style="color:${typeColor};">${d.title}</div>
+  `;
+
+  if (d.detail) {
+    const det = d.detail;
+    if (det.era) html += section('Era', det.era);
+    if (det.established) html += section('Established', det.established);
+    if (det.description) html += section('Description', det.description);
+    if (det.original_field) html += section('Original Field', det.original_field);
+    if (det.question) html += section('Central Question', det.question);
+    if (det.phil_treatment) html += section('Philosophical Treatment', det.phil_treatment);
+    if (det.when_absorbed) html += section('When Absorbed', det.when_absorbed);
+    if (det.what_remained) html += section('What Philosophy Kept', det.what_remained);
+    if (det.absorbed_from) html += section('Absorbed From', det.absorbed_from);
+    if (det.key_moment) html += section('Key Moment', det.key_moment);
+    if (det.irony) html += section('The Irony', `<em>${det.irony}</em>`);
+    if (det.role) html += section('Role', det.role);
+    if (det.significance) html += section('Significance', det.significance);
+    if (det.quote) html += section('Quote', `<em>"${det.quote}"</em>`);
+    if (det.key_questions) html += listSection('Key Questions', det.key_questions);
+    if (det.philosophers) html += section('Key Philosophers', det.philosophers);
+    if (det.thesis) html += section('Thesis', det.thesis);
+    if (det.premises) html += listSection('Key Points', det.premises);
+  }
+
+  content.innerHTML = html;
+  popup.style.display = 'block';
+
+  // Position popup
+  const rect = popup.getBoundingClientRect();
+  let x = pos.x + 20;
+  let y = pos.y - 20;
+  if (x + rect.width > window.innerWidth - 20) x = pos.x - rect.width - 20;
+  if (y + rect.height > window.innerHeight - 20) y = window.innerHeight - rect.height - 20;
+  if (y < 60) y = 60;
+  popup.style.left = x + 'px';
+  popup.style.top = y + 'px';
+}
+
+function section(title, text) {
+  return `<div class="popup-section"><h4>${title}</h4><p>${text}</p></div>`;
+}
+function listSection(title, items) {
+  return `<div class="popup-section"><h4>${title}</h4><ul>${items.map(i => `<li>${i}</li>`).join('')}</ul></div>`;
+}
+
+function closePopup() {
+  document.getElementById('popup').style.display = 'none';
+}
+
+// ===================== FILTERING =====================
+let activeFilter = 'all';
+
+function filterByType(type) {
+  activeFilter = type;
+  document.querySelectorAll('#header button').forEach(b => b.classList.remove('active'));
+  document.getElementById('btn-' + type).classList.add('active');
+
+  cy.elements().removeClass('highlighted faded edge-highlighted');
+  if (type === 'all') {
+    cy.elements().style('display', 'element');
+  } else {
+    cy.nodes().forEach(n => {
+      if (n.data('type') === type) {
+        n.style('display', 'element');
+      } else {
+        n.style('display', 'none');
+      }
+    });
+    cy.edges().forEach(e => {
+      const src = cy.getElementById(e.data('source'));
+      const tgt = cy.getElementById(e.data('target'));
+      if (src.style('display') !== 'none' && tgt.style('display') !== 'none') {
+        e.style('display', 'element');
+      } else {
+        e.style('display', 'none');
+      }
+    });
+  }
+}
+
+// ===================== SEARCH =====================
+document.getElementById('search-box').addEventListener('input', function(e) {
+  const query = e.target.value.toLowerCase().trim();
+  cy.elements().removeClass('highlighted faded edge-highlighted');
+
+  if (!query) {
+    cy.elements().style('display', 'element');
+    return;
+  }
+
+  cy.nodes().forEach(n => {
+    const d = n.data('nodeData');
+    const searchText = (d.label + ' ' + d.title + ' ' + JSON.stringify(d.detail || {})).toLowerCase();
+    if (searchText.includes(query)) {
+      n.style('display', 'element');
+      n.addClass('highlighted');
+    } else {
+      n.addClass('faded');
+    }
+  });
+});
+
+</script>
+</body>
+</html>

@@ -45,7 +45,9 @@ def init_schema():
             healthcheck    TEXT    NOT NULL DEFAULT '/healthz',
             auto_start     INTEGER NOT NULL DEFAULT 1,
             max_restarts   INTEGER NOT NULL DEFAULT 5,
-            description    TEXT    NOT NULL DEFAULT ''
+            description    TEXT    NOT NULL DEFAULT '',
+            is_public      INTEGER NOT NULL DEFAULT 0,  -- 1 = no OAuth required, public to internet
+            allowed_emails TEXT    NULL  -- comma-separated; NULL = use global ALLOWED_EMAILS
         );
 
         CREATE TABLE IF NOT EXISTS app_state (
@@ -58,6 +60,11 @@ def init_schema():
             last_error     TEXT
         );
         """)
+        # Idempotent migration: add allowed_emails column if not present (existing DBs).
+        try:
+            c.execute("ALTER TABLE apps ADD COLUMN allowed_emails TEXT NULL")
+        except sqlite3.OperationalError:
+            pass  # column already exists
 
 
 def list_apps():
@@ -117,6 +124,53 @@ def heartbeat(name):
 def set_auto_start(name, on: bool):
     with conn() as c:
         c.execute("UPDATE apps SET auto_start = ? WHERE name = ?", (1 if on else 0, name))
+
+
+def set_public(name, public: bool):
+    """Toggle whether an app is publicly accessible (no OAuth required)."""
+    with conn() as c:
+        c.execute("UPDATE apps SET is_public = ? WHERE name = ?", (1 if public else 0, name))
+
+
+def set_acl(name, emails):
+    """Set per-app allowed_emails whitelist.
+
+    emails: iterable of email strings, or None/empty to clear (revert to global).
+    Stored as comma-separated lowercase string, or NULL if empty.
+    """
+    normalized = [e.strip().lower() for e in (emails or []) if e.strip()]
+    value = ",".join(normalized) if normalized else None
+    with conn() as c:
+        c.execute("UPDATE apps SET allowed_emails = ? WHERE name = ?", (value, name))
+    return value
+
+
+def get_acl(name):
+    """Return set of allowed emails for app, or None if using global (NULL)."""
+    with conn() as c:
+        row = c.execute("SELECT allowed_emails FROM apps WHERE name = ?", (name,)).fetchone()
+    if not row:
+        return None
+    raw = row["allowed_emails"]
+    if raw is None:
+        return None
+    return {e.strip().lower() for e in raw.split(",") if e.strip()}
+
+
+def email_can_see_app(email, app):
+    """Return True if email is allowed to access app.
+
+    app: dict from get_app() or list_apps().
+    Assumes email has already passed global ALLOWED_EMAILS gate (login check).
+    Public apps (is_public=1) bypass per-app ACL entirely.
+    """
+    if app.get("is_public"):
+        return True
+    raw = app.get("allowed_emails")
+    if raw is None:
+        return True  # no per-app ACL -> global is enough
+    acl = {e.strip().lower() for e in raw.split(",") if e.strip()}
+    return email.lower() in acl
 
 
 def next_free_port(start=18000, end=18999):

@@ -1,0 +1,635 @@
+{
+  "generated_at": "2026-05-26",
+  "note_months_in_2026": 5,
+  "headline": {
+    "annotation_adjustment_abs": 3951.11,
+    "annotation_count": 6,
+    "checking_2025_net": 91559.39,
+    "checking_2026_ytd_net": 44325.2,
+    "checking_2026_annualized": 106380.48,
+    "checking_delta_abs": 14821.09,
+    "checking_delta_pct": 16.2,
+    "alllink_2025": 103955.67000000007,
+    "alllink_2026_ytd": 39592.330000000016,
+    "alllink_2026_annualized": 95021.59
+  },
+  "sources_yoy": [
+    {
+      "name": "CC bill payments",
+      "y2025": 61280.04,
+      "y2026_ann": 74427.38,
+      "delta_abs": 13147.34,
+      "delta_pct": 21.5
+    },
+    {
+      "name": "Zelle to people (family/other)",
+      "y2025": 7711.94,
+      "y2026_ann": 1644.0,
+      "delta_abs": -6067.94,
+      "delta_pct": -78.7
+    },
+    {
+      "name": "Venmo Payments",
+      "y2025": 10565.96,
+      "y2026_ann": 7346.38,
+      "delta_abs": -3219.58,
+      "delta_pct": -30.5
+    },
+    {
+      "name": "Zelle to SJA (rent)",
+      "y2025": 28280.0,
+      "y2026_ann": 29076.0,
+      "delta_abs": 796.0,
+      "delta_pct": 2.8
+    },
+    {
+      "name": "Cash withdrawals",
+      "y2025": 700.0,
+      "y2026_ann": 0.0,
+      "delta_abs": -700.0,
+      "delta_pct": -100.0
+    },
+    {
+      "name": "Other direct debit / ACH",
+      "y2025": 263.9,
+      "y2026_ann": 172.08,
+      "delta_abs": -91.82,
+      "delta_pct": -34.8
+    }
+  ],
+  "refunds_yoy": {
+    "y2025": 17242.45,
+    "y2026_ann": 6285.36,
+    "delta_abs": -10957.09
+  },
+  "cc_by_card_yoy": [
+    {
+      "name": "Apple Card 0321",
+      "y2025": 6482.79,
+      "y2026_ann": 11661.0,
+      "delta_abs": 5178.21,
+      "delta_pct": 79.9
+    },
+    {
+      "name": "Chase Autopay",
+      "y2025": 15508.5,
+      "y2026_ann": 20219.45,
+      "delta_abs": 4710.95,
+      "delta_pct": 30.4
+    },
+    {
+      "name": "Fidelity Visa 1295 (incl 6126 alias)",
+      "y2025": 38050.52,
+      "y2026_ann": 42546.94,
+      "delta_abs": 4496.42,
+      "delta_pct": 11.8
+    },
+    {
+      "name": "Other",
+      "y2025": 1238.23,
+      "y2026_ann": 0.0,
+      "delta_abs": -1238.23,
+      "delta_pct": -100.0
+    }
+  ],
+  "buckets_yoy": [
+    {
+      "name": "Shopping",
+      "y2025": 11281.6,
+      "y2026_ann": 19309.75,
+      "delta_abs": 8028.15,
+      "delta_pct": 71.2
+    },
+    {
+      "name": "Gifts & charity",
+      "y2025": 0,
+      "y2026_ann": 3916.73,
+      "delta_abs": 3916.73,
+      "delta_pct": null
+    },
+    {
+      "name": "Education",
+      "y2025": 280.0,
+      "y2026_ann": 1948.8,
+      "delta_abs": 1668.8,
+      "delta_pct": 596.0
+    },
+    {
+      "name": "Groceries",
+      "y2025": 6573.26,
+      "y2026_ann": 7451.52,
+      "delta_abs": 878.26,
+      "delta_pct": 13.4
+    },
+    {
+      "name": "Rent",
+      "y2025": 28280.0,
+      "y2026_ann": 29076.0,
+      "delta_abs": 796.0,
+      "delta_pct": 2.8
+    },
+    {
+      "name": "Personal care",
+      "y2025": 3992.61,
+      "y2026_ann": 4632.84,
+      "delta_abs": 640.23,
+      "delta_pct": 16.0
+    },
+    {
+      "name": "Subscriptions",
+      "y2025": 1175.41,
+      "y2026_ann": 1777.85,
+      "delta_abs": 602.44,
+      "delta_pct": 51.3
+    },
+    {
+      "name": "Transportation",
+      "y2025": 820.1,
+      "y2026_ann": 1303.03,
+      "delta_abs": 482.93,
+      "delta_pct": 58.9
+    },
+    {
+      "name": "Utilities & home",
+      "y2025": 1316.23,
+      "y2026_ann": 1594.97,
+      "delta_abs": 278.74,
+      "delta_pct": 21.2
+    },
+    {
+      "name": "Other / misc",
+      "y2025": 0.38,
+      "y2026_ann": 0.0,
+      "delta_abs": -0.38,
+      "delta_pct": -100.0
+    },
+    {
+      "name": "Fees & interest",
+      "y2025": 16.75,
+      "y2026_ann": 7.2,
+      "delta_abs": -9.55,
+      "delta_pct": -57.0
+    },
+    {
+      "name": "Insurance",
+      "y2025": 1986.71,
+      "y2026_ann": 1952.95,
+      "delta_abs": -33.76,
+      "delta_pct": -1.7
+    },
+    {
+      "name": "Healthcare",
+      "y2025": 535.85,
+      "y2026_ann": 204.0,
+      "delta_abs": -331.85,
+      "delta_pct": -61.9
+    },
+    {
+      "name": "Cash withdrawal",
+      "y2025": 2337.0,
+      "y2026_ann": 153.0,
+      "delta_abs": -2184.0,
+      "delta_pct": -93.5
+    },
+    {
+      "name": "Food & Dining",
+      "y2025": 7578.6,
+      "y2026_ann": 5245.27,
+      "delta_abs": -2333.33,
+      "delta_pct": -30.8
+    },
+    {
+      "name": "Auto loan",
+      "y2025": 2373.1,
+      "y2026_ann": 0.0,
+      "delta_abs": -2373.1,
+      "delta_pct": -100.0
+    },
+    {
+      "name": "Venmo Payments",
+      "y2025": 10565.96,
+      "y2026_ann": 7346.38,
+      "delta_abs": -3219.58,
+      "delta_pct": -30.5
+    },
+    {
+      "name": "Entertainment",
+      "y2025": 6984.56,
+      "y2026_ann": 3449.38,
+      "delta_abs": -3535.18,
+      "delta_pct": -50.6
+    },
+    {
+      "name": "Travel",
+      "y2025": 10145.61,
+      "y2026_ann": 4211.93,
+      "delta_abs": -5933.68,
+      "delta_pct": -58.5
+    },
+    {
+      "name": "Personal Zelle (family / partner)",
+      "y2025": 7711.94,
+      "y2026_ann": 1440.0,
+      "delta_abs": -6271.94,
+      "delta_pct": -81.3
+    }
+  ],
+  "top_jumpers": [
+    {
+      "merchant": "Scandinavian Designs",
+      "y2025": 0,
+      "y2026_ann": 2152.55,
+      "delta_abs": 2152.55,
+      "tx_2025": 0,
+      "tx_2026": 1
+    },
+    {
+      "merchant": "Every.org* Mersal",
+      "y2025": 0,
+      "y2026_ann": 1600.0,
+      "delta_abs": 1600.0,
+      "tx_2025": 0,
+      "tx_2026": 2
+    },
+    {
+      "merchant": "Amazon Marketplace",
+      "y2025": 1050.26,
+      "y2026_ann": 2113.52,
+      "delta_abs": 1063.26,
+      "tx_2025": 25,
+      "tx_2026": 49
+    },
+    {
+      "merchant": "Back Market",
+      "y2025": 0,
+      "y2026_ann": 1035.1,
+      "delta_abs": 1035.1,
+      "tx_2025": 0,
+      "tx_2026": 1
+    },
+    {
+      "merchant": "Doordash",
+      "y2025": 198.85,
+      "y2026_ann": 1098.53,
+      "delta_abs": 899.68,
+      "tx_2025": 10,
+      "tx_2026": 36
+    },
+    {
+      "merchant": "Southwest Airlines",
+      "y2025": 0,
+      "y2026_ann": 891.59,
+      "delta_abs": 891.59,
+      "tx_2025": 0,
+      "tx_2026": 2
+    },
+    {
+      "merchant": "Rent (Zelle to SJA)",
+      "y2025": 11250.0,
+      "y2026_ann": 12115.0,
+      "delta_abs": 865.0,
+      "tx_2025": 5,
+      "tx_2026": 6
+    },
+    {
+      "merchant": "Instacart",
+      "y2025": 0,
+      "y2026_ann": 724.41,
+      "delta_abs": 724.41,
+      "tx_2025": 0,
+      "tx_2026": 15
+    },
+    {
+      "merchant": "U.s. Citizenship And Immigration Services",
+      "y2025": 0,
+      "y2026_ann": 630.0,
+      "delta_abs": 630.0,
+      "tx_2025": 0,
+      "tx_2026": 1
+    },
+    {
+      "merchant": "Costco",
+      "y2025": 0,
+      "y2026_ann": 523.79,
+      "delta_abs": 523.79,
+      "tx_2025": 0,
+      "tx_2026": 1
+    },
+    {
+      "merchant": "Zelle: Preksha Naik",
+      "y2025": 0,
+      "y2026_ann": 500.0,
+      "delta_abs": 500.0,
+      "tx_2025": 0,
+      "tx_2026": 1
+    },
+    {
+      "merchant": "Expedia",
+      "y2025": 125.95,
+      "y2026_ann": 614.64,
+      "delta_abs": 488.69,
+      "tx_2025": 1,
+      "tx_2026": 2
+    },
+    {
+      "merchant": "Whole Foods Market",
+      "y2025": 1030.31,
+      "y2026_ann": 1508.87,
+      "delta_abs": 478.56,
+      "tx_2025": 38,
+      "tx_2026": 52
+    },
+    {
+      "merchant": "Crystal Massage & Skin Ca",
+      "y2025": 101.8,
+      "y2026_ann": 579.0,
+      "delta_abs": 477.2,
+      "tx_2025": 1,
+      "tx_2026": 5
+    },
+    {
+      "merchant": "San Diego Zoo",
+      "y2025": 0,
+      "y2026_ann": 430.0,
+      "delta_abs": 430.0,
+      "tx_2025": 0,
+      "tx_2026": 1
+    },
+    {
+      "merchant": "Walmart",
+      "y2025": 0,
+      "y2026_ann": 383.43,
+      "delta_abs": 383.43,
+      "tx_2025": 0,
+      "tx_2026": 1
+    },
+    {
+      "merchant": "Pasadena Water & Power",
+      "y2025": 0,
+      "y2026_ann": 371.96,
+      "delta_abs": 371.96,
+      "tx_2025": 0,
+      "tx_2026": 2
+    },
+    {
+      "merchant": "Ca.gov",
+      "y2025": 0,
+      "y2026_ann": 327.0,
+      "delta_abs": 327.0,
+      "tx_2025": 0,
+      "tx_2026": 1
+    },
+    {
+      "merchant": "Papayya",
+      "y2025": 863.01,
+      "y2026_ann": 1188.85,
+      "delta_abs": 325.84,
+      "tx_2025": 3,
+      "tx_2026": 5
+    },
+    {
+      "merchant": "Amazon",
+      "y2025": 581.74,
+      "y2026_ann": 890.65,
+      "delta_abs": 308.91,
+      "tx_2025": 14,
+      "tx_2026": 36
+    },
+    {
+      "merchant": "Guitar Center",
+      "y2025": 0,
+      "y2026_ann": 260.0,
+      "delta_abs": 260.0,
+      "tx_2025": 0,
+      "tx_2026": 1
+    },
+    {
+      "merchant": "Casio America, Inc.",
+      "y2025": 0,
+      "y2026_ann": 209.93,
+      "delta_abs": 209.93,
+      "tx_2025": 0,
+      "tx_2026": 1
+    },
+    {
+      "merchant": "Claude",
+      "y2025": 0,
+      "y2026_ann": 200.47,
+      "delta_abs": 200.47,
+      "tx_2025": 0,
+      "tx_2026": 3
+    },
+    {
+      "merchant": "Geico",
+      "y2025": 681.72,
+      "y2026_ann": 813.73,
+      "delta_abs": 132.01,
+      "tx_2025": 4,
+      "tx_2026": 5
+    },
+    {
+      "merchant": "Ralphs",
+      "y2025": 696.93,
+      "y2026_ann": 703.4,
+      "delta_abs": 6.47,
+      "tx_2025": 24,
+      "tx_2026": 16
+    }
+  ],
+  "top_droppers": [
+    {
+      "merchant": "Zelle: Ali",
+      "y2025": 6135.42,
+      "y2026_ann": 0,
+      "delta_abs": -6135.42,
+      "tx_2025": 11,
+      "tx_2026": 0
+    },
+    {
+      "merchant": "Venmo Payment (outgoing)",
+      "y2025": 7539.96,
+      "y2026_ann": 3060.99,
+      "delta_abs": -4478.97,
+      "tx_2025": 13,
+      "tx_2026": 10
+    },
+    {
+      "merchant": "American Express",
+      "y2025": 1024.73,
+      "y2026_ann": 0,
+      "delta_abs": -1024.73,
+      "tx_2025": 3,
+      "tx_2026": 0
+    },
+    {
+      "merchant": "Atm Withdrawal *lake-colorado",
+      "y2025": 708.0,
+      "y2026_ann": 0,
+      "delta_abs": -708.0,
+      "tx_2025": 2,
+      "tx_2026": 0
+    },
+    {
+      "merchant": "Target",
+      "y2025": 989.29,
+      "y2026_ann": 409.65,
+      "delta_abs": -579.64,
+      "tx_2025": 21,
+      "tx_2026": 9
+    },
+    {
+      "merchant": "The Vip Massage",
+      "y2025": 473.0,
+      "y2026_ann": 0,
+      "delta_abs": -473.0,
+      "tx_2025": 9,
+      "tx_2026": 0
+    },
+    {
+      "merchant": "Csp*mazerooms Playa",
+      "y2025": 308.0,
+      "y2026_ann": 0,
+      "delta_abs": -308.0,
+      "tx_2025": 2,
+      "tx_2026": 0
+    },
+    {
+      "merchant": "Atm Withdrawal 170 Pier Ave Sa",
+      "y2025": 303.0,
+      "y2026_ann": 0,
+      "delta_abs": -303.0,
+      "tx_2025": 1,
+      "tx_2026": 0
+    },
+    {
+      "merchant": "Zelle: Hanan Abdou Abdelaal",
+      "y2025": 300.0,
+      "y2026_ann": 0,
+      "delta_abs": -300.0,
+      "tx_2025": 1,
+      "tx_2026": 0
+    },
+    {
+      "merchant": "Atm Withdrawal 1550 Westwood B",
+      "y2025": 283.5,
+      "y2026_ann": 0,
+      "delta_abs": -283.5,
+      "tx_2025": 1,
+      "tx_2026": 0
+    },
+    {
+      "merchant": "Refair.com* Renaissanc",
+      "y2025": 237.3,
+      "y2026_ann": 0,
+      "delta_abs": -237.3,
+      "tx_2025": 1,
+      "tx_2026": 0
+    },
+    {
+      "merchant": "Zelle: Amena Sahmoud",
+      "y2025": 200.0,
+      "y2026_ann": 0,
+      "delta_abs": -200.0,
+      "tx_2025": 1,
+      "tx_2026": 0
+    },
+    {
+      "merchant": "76 Gas Station",
+      "y2025": 172.55,
+      "y2026_ann": 80.33,
+      "delta_abs": -92.22,
+      "tx_2025": 4,
+      "tx_2026": 2
+    },
+    {
+      "merchant": "Spectrum",
+      "y2025": 284.99,
+      "y2026_ann": 285.0,
+      "delta_abs": 0.01,
+      "tx_2025": 4,
+      "tx_2026": 4
+    },
+    {
+      "merchant": "Ralphs",
+      "y2025": 696.93,
+      "y2026_ann": 703.4,
+      "delta_abs": 6.47,
+      "tx_2025": 24,
+      "tx_2026": 16
+    }
+  ],
+  "monthly": {
+    "y2025": [
+      {
+        "month": "2025-01",
+        "spend": 9698.56
+      },
+      {
+        "month": "2025-02",
+        "spend": 4758.33
+      },
+      {
+        "month": "2025-03",
+        "spend": 8230.59
+      },
+      {
+        "month": "2025-04",
+        "spend": 9554.61
+      },
+      {
+        "month": "2025-05",
+        "spend": 7778.11
+      },
+      {
+        "month": "2025-06",
+        "spend": 12192.26
+      },
+      {
+        "month": "2025-07",
+        "spend": 8840.51
+      },
+      {
+        "month": "2025-08",
+        "spend": 10756.89
+      },
+      {
+        "month": "2025-09",
+        "spend": 7784.85
+      },
+      {
+        "month": "2025-10",
+        "spend": 7769.87
+      },
+      {
+        "month": "2025-11",
+        "spend": 8523.75
+      },
+      {
+        "month": "2025-12",
+        "spend": 8962.4
+      }
+    ],
+    "y2026": [
+      {
+        "month": "2026-01",
+        "spend": 11380.18
+      },
+      {
+        "month": "2026-02",
+        "spend": 9277.3
+      },
+      {
+        "month": "2026-03",
+        "spend": 6553.36
+      },
+      {
+        "month": "2026-04",
+        "spend": 11994.86
+      },
+      {
+        "month": "2026-05",
+        "spend": 11686.51
+      }
+    ]
+  }
+}

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Beach visits vs proximity</title>
+<style>
+  :root{--bg:#0f1419;--panel:#1a212b;--border:#2d3744;--text:#e6ecf3;--dim:#8b97a7;--acc:#5fa8ff;--ext:#3a5a78;--pos:#3ecf8e;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:14px}
+  .wrap{max-width:920px;margin:0 auto;padding:20px}
+  h1{font-size:21px;margin:0 0 2px}
+  .sub{color:var(--dim);font-size:13px;margin-bottom:16px;line-height:1.5}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:11px;margin-bottom:20px}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:13px 15px}
+  .card .n{font-size:20px;font-weight:700;color:var(--acc)}
+  .card .l{color:var(--dim);font-size:12px;margin-top:3px}
+  .chartbox{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:16px 14px 8px}
+  .legend{display:flex;gap:18px;font-size:12px;color:var(--text);margin:2px 2px 10px;flex-wrap:wrap}
+  .sw{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:middle}
+  .note{color:var(--dim);font-size:12px;line-height:1.6;margin-top:16px}
+</style></head>
+<body><div class="wrap">
+  <h1>&#127958;&#65039; How often people visit the coast, by how close they live</h1>
+  <div class="sub">X = how far you live from the coast &middot; Y = how often you go (likelihood of visiting at least once a month), indexed so the closest group = 100. The real-world pattern is a clean <b>exponential drop-off</b>: live-near = go-often.</div>
+  <div class="cards" id="cards"></div>
+  <div class="chartbox">
+    <div class="legend">
+      <span><span class="sw" style="background:#5fa8ff"></span>Published ratios (Elliott/White, MENE)</span>
+      <span><span class="sw" style="background:#3a5a78"></span>Extrapolated (same exponential)</span>
+    </div>
+    <svg id="svg" viewBox="0 0 880 360" width="100%"></svg>
+  </div>
+  <div class="note" id="note"></div>
+</div>
+<script>
+// Relative likelihood of "frequent" (>=monthly) coastal visits, indexed to nearest band=100.
+// Anchors <1/1-5/5-10 km come straight from the published finding that each band is ~2x the
+// next (Elliott, White et al.). Further bands continue the same exponential halving (flagged).
+const D=[
+ ["<1 km",100,"pub"],
+ ["1-5 km",50,"pub"],
+ ["5-10 km",25,"pub"],
+ ["10-20 km",12,"ext"],
+ ["20-50 km",6,"ext"],
+ [">50 km",3,"ext"],
+];
+const W=880,H=360,x0=58,x1=860,y0=20,y1=300,ymax=105;
+const Y=v=>y1-(v/ymax)*(y1-y0);
+const bw=(x1-x0)/D.length;
+let s='';
+for(let v=0;v<=100;v+=20){const y=Y(v);s+=`<line x1="${x0}" y1="${y}" x2="${x1}" y2="${y}" stroke="#222b37"/><text x="${x0-8}" y="${y+4}" fill="#8b97a7" font-size="11" text-anchor="end">${v}</text>`;}
+// exponential trend line through points
+let pts=D.map((d,i)=>[x0+bw*(i+0.5),Y(d[1])]);
+s+=`<path d="M${pts.map(p=>p[0]+' '+p[1]).join(' L')}" fill="none" stroke="#5fa8ff" stroke-width="2" stroke-dasharray="4,3" opacity="0.5"/>`;
+D.forEach((d,i)=>{
+  const cx=x0+bw*i+bw*0.5, h=y1-Y(d[1]), col=d[2]==="pub"?"#5fa8ff":"#3a5a78";
+  s+=`<rect x="${cx-26}" y="${Y(d[1])}" width="52" height="${h}" rx="4" fill="${col}"/>`;
+  s+=`<text x="${cx}" y="${Y(d[1])-7}" fill="${col==='#3a5a78'?'#6f93b3':'#5fa8ff'}" font-size="12" font-weight="700" text-anchor="middle">${d[1]}</text>`;
+  s+=`<text x="${cx}" y="${y1+20}" fill="#cdd6e0" font-size="12" text-anchor="middle">${d[0]}</text>`;
+});
+s+=`<text x="${(x0+x1)/2}" y="${H-6}" fill="#8b97a7" font-size="12" text-anchor="middle">Home distance from the coast</text>`;
+s+=`<text x="16" y="${(y0+y1)/2}" fill="#8b97a7" font-size="12" text-anchor="middle" transform="rotate(-90 16 ${(y0+y1)/2})">Relative visit frequency (nearest = 100)</text>`;
+document.getElementById('svg').innerHTML=s;
+document.getElementById('cards').innerHTML=[
+ ["Exponential","visit frequency falls off exponentially with distance, not in a straight line"],
+ ["~2x per step","people <1km from the coast visit ~2x as often as those 1-5km out, who go ~2x as often as those 5-10km out"],
+ [">= monthly","\"frequent\" = visiting the coast at least once a month"],
+ ["271M / yr","total recreational coastal visits in England (context, MENE)"],
+].map(c=>`<div class="card"><div class="n">${c[0]}</div><div class="l">${c[1]}</div></div>`).join("");
+document.getElementById('note').innerHTML=
+ "<b>Bottom line:</b> the closer you live to the beach, the more often you go, and it drops off fast: roughly <b>halving with each step</b> away from the coast. Living within 1 km, you're about 2x as likely to be a regular (monthly+) coast-goer as someone 1-5 km away, and ~4x vs someone 5-10 km away. "+
+ "<b>Honesty notes (real data, flagged):</b> the solid blue bars (&lt;1, 1-5, 5-10 km) come directly from the published finding that each band is ~2x the next (Elliott, White et al., using England's MENE survey, 326,000+ nature visits 2009-2016, plus the 18-country BlueHealth survey). The darker bars (10 km+) extend that same exponential halving, they're a projection, not separately reported. The y-axis is <b>relative</b> frequency (indexed to the closest group), because clean absolute percentages-by-distance aren't published, so treat it as 'how much more often,' not literal % of people. The relationship is also moderated by income/ethnicity and what counts as 'the coast' locally. "+
+ "Sources: Elliott et al. 2018/2020 (Health & Place / Marine Policy, BlueHealth); gov.scot blue-space access review.";
+</script></body></html>

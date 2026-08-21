@@ -1,0 +1,3565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>To-Do App Reorg Proposal</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #f8f9fa;
+    --card: #ffffff;
+    --border: #e0e4e8;
+    --text: #1a1d23;
+    --text-muted: #6b7280;
+    --accent: #4f46e5;
+    --changed: #fff3cd;
+    --dup-bg: #fde8e8;
+    --shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+  }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; }
+
+  .header {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    color: white; padding: 24px 20px 20px; text-align: center;
+  }
+  .header h1 { font-size: 1.4rem; font-weight: 700; margin-bottom: 6px; }
+  .header .subtitle { font-size: 0.85rem; opacity: 0.9; }
+  .header .stats { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+    margin-top: 12px; }
+  .stat-pill { background: rgba(255,255,255,0.2); border-radius: 20px;
+    padding: 4px 12px; font-size: 0.8rem; font-weight: 600; }
+
+  .layout { display: flex; gap: 0; min-height: calc(100vh - 120px); }
+
+  /* Sidebar */
+  .sidebar {
+    width: 260px; flex-shrink: 0; background: var(--card);
+    border-right: 1px solid var(--border); position: sticky; top: 0;
+    max-height: 100vh; overflow-y: auto; padding: 12px 0;
+  }
+  .sidebar h3 { padding: 8px 16px; font-size: 0.7rem; text-transform: uppercase;
+    letter-spacing: .08em; color: var(--text-muted); }
+  .tree-top, .tree-sub {
+    display: flex; align-items: center; cursor: pointer;
+    padding: 5px 16px; transition: background .15s; user-select: none;
+  }
+  .tree-top { font-weight: 600; font-size: 0.82rem; }
+  .tree-sub { padding-left: 32px; font-size: 0.8rem; color: var(--text-muted); }
+  .tree-top:hover, .tree-sub:hover { background: #f0f0f8; }
+  .tree-top.active, .tree-sub.active { background: #eef2ff; color: var(--accent); }
+  .tree-icon { margin-right: 6px; font-size: 0.6rem; }
+  .tree-label { flex: 1; }
+  .tree-count { background: #e8eaed; border-radius: 12px; padding: 1px 7px;
+    font-size: 0.72rem; color: var(--text-muted); font-weight: 600; min-width: 24px; text-align: center; }
+
+  /* Main content */
+  .main { flex: 1; min-width: 0; padding: 16px; }
+
+  /* Tag legend */
+  .section { background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+    padding: 14px 16px; margin-bottom: 14px; box-shadow: var(--shadow); }
+  .section h2 { font-size: 0.85rem; font-weight: 700; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: .06em; margin-bottom: 10px; }
+  .tag-legend { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag-chip {
+    display: inline-flex; align-items: center; gap: 4px;
+    border-radius: 20px; padding: 3px 10px; font-size: 0.75rem;
+    font-weight: 600; cursor: pointer; transition: transform .1s, opacity .1s;
+    user-select: none;
+  }
+  .tag-chip:hover { transform: scale(1.05); }
+  .tag-chip.active { outline: 2px solid currentColor; }
+  .chip-count { font-size: 0.68rem; opacity: 0.8; }
+
+  /* Controls */
+  .controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 10px; }
+  .controls input, .controls select {
+    border: 1px solid var(--border); border-radius: 6px; padding: 6px 10px;
+    font-size: 0.82rem; outline: none; background: var(--card);
+  }
+  .controls input { min-width: 180px; flex: 1; }
+  .controls input:focus, .controls select:focus { border-color: var(--accent); }
+  .controls label { font-size: 0.8rem; display: flex; align-items: center; gap: 5px; cursor: pointer; }
+  .active-filters { display: flex; flex-wrap: wrap; gap: 6px; }
+  .filter-pill {
+    background: var(--accent); color: white; border-radius: 20px;
+    padding: 3px 10px; font-size: 0.75rem; display: flex; align-items: center; gap: 4px;
+    cursor: pointer;
+  }
+  .filter-pill::after { content: "×"; font-size: 1rem; line-height: 1; }
+
+  /* Table */
+  .table-wrap { overflow-x: auto; border-radius: 8px; border: 1px solid var(--border);
+    box-shadow: var(--shadow); }
+  table { width: 100%; border-collapse: collapse; background: var(--card); }
+  thead th {
+    background: #f1f3f5; font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .06em; padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 2;
+  }
+  tbody tr { border-bottom: 1px solid #f0f0f0; }
+  tbody tr:hover { background: #fafbff; }
+  tbody tr.changed { background: var(--changed); }
+  tbody tr.dup-row { background: var(--dup-bg); }
+  tbody tr.dup-row:hover { background: #fcd0d0; }
+  td { padding: 8px 12px; font-size: 0.8rem; vertical-align: top; }
+  td.name-cell { font-weight: 500; max-width: 220px; word-break: break-word; }
+  td.folder-cell { color: var(--text-muted); font-size: 0.75rem; max-width: 130px; }
+  td.proposed-cell { font-size: 0.75rem; max-width: 150px; }
+  td.arrow-cell { color: var(--text-muted); text-align: center; width: 28px; padding: 8px 4px; }
+  td.tags-cell { max-width: 200px; }
+  td.note-cell { color: var(--text-muted); font-size: 0.73rem; max-width: 160px; font-style: italic; }
+  .row-tag {
+    display: inline-flex; align-items: center;
+    border-radius: 12px; padding: 2px 7px; font-size: 0.68rem; font-weight: 600;
+    margin: 1px; cursor: pointer;
+  }
+  .dup-badge {
+    display: inline-block; background: #dc3545; color: white;
+    border-radius: 4px; padding: 1px 5px; font-size: 0.65rem; font-weight: 700;
+    margin-left: 4px; vertical-align: middle;
+  }
+  .result-count { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 6px; }
+  .no-results { text-align: center; padding: 40px; color: var(--text-muted); }
+
+  /* Category legend key */
+  .cat-legend { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .cat-pill { display: inline-flex; align-items: center; gap: 5px;
+    border-radius: 6px; padding: 3px 9px; font-size: 0.72rem; }
+
+  /* Responsive */
+  @media (max-width: 700px) {
+    .layout { flex-direction: column; }
+    .sidebar { width: 100%; max-height: none; position: static; border-right: none;
+      border-bottom: 1px solid var(--border); }
+    .header h1 { font-size: 1.1rem; }
+    .controls { gap: 6px; }
+    thead th:nth-child(2), td:nth-child(2),
+    thead th:nth-child(5), td:nth-child(5) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>To-Do App Reorg Proposal</h1>
+  <p class="subtitle">Review every item's proposed new home before approving</p>
+  <div class="stats">
+    <span class="stat-pill">258 items</span>
+    <span class="stat-pill">32 current folders</span>
+    <span class="stat-pill">8 top-level → 24 subfolders</span>
+    <span class="stat-pill" id="dup-stat">? duplicates</span>
+    <span class="stat-pill" id="tag-stat">? unique tags</span>
+  </div>
+</div>
+
+<div class="layout">
+  <div class="sidebar">
+    <h3>Proposed Folders</h3>
+    <div id="folder-tree">
+<div class="tree-top" data-folder="Activities & Dates" onclick="filterFolder(this)" title="Filter to Activities & Dates"><span class="tree-icon">▶</span> <span class="tree-label">Activities & Dates</span><span class="tree-count">118</span></div>
+<div class="tree-sub" data-folder="Activities & Dates / At Home" onclick="filterFolder(this)" title="Filter to Activities & Dates / At Home"><span class="tree-label">At Home</span><span class="tree-count">8</span></div>
+<div class="tree-sub" data-folder="Activities & Dates / Outdoors & Active" onclick="filterFolder(this)" title="Filter to Activities & Dates / Outdoors & Active"><span class="tree-label">Outdoors & Active</span><span class="tree-count">28</span></div>
+<div class="tree-sub" data-folder="Activities & Dates / Classes & Lessons" onclick="filterFolder(this)" title="Filter to Activities & Dates / Classes & Lessons"><span class="tree-label">Classes & Lessons</span><span class="tree-count">16</span></div>
+<div class="tree-sub" data-folder="Activities & Dates / Arts & Culture" onclick="filterFolder(this)" title="Filter to Activities & Dates / Arts & Culture"><span class="tree-label">Arts & Culture</span><span class="tree-count">7</span></div>
+<div class="tree-sub" data-folder="Activities & Dates / Shows & Events" onclick="filterFolder(this)" title="Filter to Activities & Dates / Shows & Events"><span class="tree-label">Shows & Events</span><span class="tree-count">19</span></div>
+<div class="tree-sub" data-folder="Activities & Dates / Tours & Sightseeing" onclick="filterFolder(this)" title="Filter to Activities & Dates / Tours & Sightseeing"><span class="tree-label">Tours & Sightseeing</span><span class="tree-count">7</span></div>
+<div class="tree-sub" data-folder="Activities & Dates / Theme Parks & Gaming" onclick="filterFolder(this)" title="Filter to Activities & Dates / Theme Parks & Gaming"><span class="tree-label">Theme Parks & Gaming</span><span class="tree-count">6</span></div>
+<div class="tree-sub" data-folder="Activities & Dates / Spa & Relaxation" onclick="filterFolder(this)" title="Filter to Activities & Dates / Spa & Relaxation"><span class="tree-label">Spa & Relaxation</span><span class="tree-count">2</span></div>
+<div class="tree-sub" data-folder="Activities & Dates / Couple & Romantic" onclick="filterFolder(this)" title="Filter to Activities & Dates / Couple & Romantic"><span class="tree-label">Couple & Romantic</span><span class="tree-count">8</span></div>
+<div class="tree-sub" data-folder="Activities & Dates / Group & Party" onclick="filterFolder(this)" title="Filter to Activities & Dates / Group & Party"><span class="tree-label">Group & Party</span><span class="tree-count">10</span></div>
+<div class="tree-sub" data-folder="Activities & Dates / Bucket List" onclick="filterFolder(this)" title="Filter to Activities & Dates / Bucket List"><span class="tree-label">Bucket List</span><span class="tree-count">7</span></div>
+<div class="tree-top" data-folder="Food" onclick="filterFolder(this)" title="Filter to Food"><span class="tree-icon">▶</span> <span class="tree-label">Food</span><span class="tree-count">42</span></div>
+<div class="tree-sub" data-folder="Food / Restaurants" onclick="filterFolder(this)" title="Filter to Food / Restaurants"><span class="tree-label">Restaurants</span><span class="tree-count">36</span></div>
+<div class="tree-sub" data-folder="Food / Recipes" onclick="filterFolder(this)" title="Filter to Food / Recipes"><span class="tree-label">Recipes</span><span class="tree-count">3</span></div>
+<div class="tree-sub" data-folder="Food / Markets" onclick="filterFolder(this)" title="Filter to Food / Markets"><span class="tree-label">Markets</span><span class="tree-count">3</span></div>
+<div class="tree-top" data-folder="Trips" onclick="filterFolder(this)" title="Filter to Trips"><span class="tree-icon">▶</span> <span class="tree-label">Trips</span><span class="tree-count">19</span></div>
+<div class="tree-top" data-folder="Watch, Read & Learn" onclick="filterFolder(this)" title="Filter to Watch, Read & Learn"><span class="tree-icon">▶</span> <span class="tree-label">Watch, Read & Learn</span><span class="tree-count">16</span></div>
+<div class="tree-sub" data-folder="Watch, Read & Learn / Movies & Shows" onclick="filterFolder(this)" title="Filter to Watch, Read & Learn / Movies & Shows"><span class="tree-label">Movies & Shows</span><span class="tree-count">11</span></div>
+<div class="tree-sub" data-folder="Watch, Read & Learn / Learning & Skills" onclick="filterFolder(this)" title="Filter to Watch, Read & Learn / Learning & Skills"><span class="tree-label">Learning & Skills</span><span class="tree-count">0</span></div>
+<div class="tree-sub" data-folder="Watch, Read & Learn / Articles & Videos" onclick="filterFolder(this)" title="Filter to Watch, Read & Learn / Articles & Videos"><span class="tree-label">Articles & Videos</span><span class="tree-count">5</span></div>
+<div class="tree-top" data-folder="Gifts" onclick="filterFolder(this)" title="Filter to Gifts"><span class="tree-icon">▶</span> <span class="tree-label">Gifts</span><span class="tree-count">9</span></div>
+<div class="tree-top" data-folder="Tasks & Projects" onclick="filterFolder(this)" title="Filter to Tasks & Projects"><span class="tree-icon">▶</span> <span class="tree-label">Tasks & Projects</span><span class="tree-count">12</span></div>
+<div class="tree-sub" data-folder="Tasks & Projects / Chores" onclick="filterFolder(this)" title="Filter to Tasks & Projects / Chores"><span class="tree-label">Chores</span><span class="tree-count">5</span></div>
+<div class="tree-sub" data-folder="Tasks & Projects / App Dev" onclick="filterFolder(this)" title="Filter to Tasks & Projects / App Dev"><span class="tree-label">App Dev</span><span class="tree-count">5</span></div>
+<div class="tree-sub" data-folder="Tasks & Projects / Projects" onclick="filterFolder(this)" title="Filter to Tasks & Projects / Projects"><span class="tree-label">Projects</span><span class="tree-count">2</span></div>
+<div class="tree-top" data-folder="Life Log" onclick="filterFolder(this)" title="Filter to Life Log"><span class="tree-icon">▶</span> <span class="tree-label">Life Log</span><span class="tree-count">31</span></div>
+<div class="tree-top" data-folder="Inbox / To Sort" onclick="filterFolder(this)" title="Filter to Inbox / To Sort"><span class="tree-icon">▶</span> <span class="tree-label">Inbox / To Sort</span><span class="tree-count">0</span></div>
+    </div>
+    <br>
+    <div style="padding: 0 16px 8px;">
+      <button onclick="clearFilters()" style="width:100%;padding:7px;border:1px solid var(--border);
+        border-radius:6px;cursor:pointer;font-size:0.8rem;background:white;color:var(--text);">
+        Clear all filters
+      </button>
+    </div>
+  </div>
+
+  <div class="main">
+    <!-- Tag legend -->
+    <div class="section">
+      <h2>Tag Legend</h2>
+      <div class="cat-legend">
+        <span class="cat-pill" style="background:#6c63ff20;color:#6c63ff">context</span>
+        <span class="cat-pill" style="background:#28a74520;color:#28a745">setting</span>
+        <span class="cat-pill" style="background:#fd7e1420;color:#fd7e14">place</span>
+        <span class="cat-pill" style="background:#dc354520;color:#dc3545">scale</span>
+        <span class="cat-pill" style="background:#17a2b820;color:#17a2b8">status</span>
+        <span class="cat-pill" style="background:#e83e8c20;color:#e83e8c">occasion</span>
+        <span class="cat-pill" style="background:#6f42c120;color:#6f42c1">cost</span>
+      </div>
+      <div class="tag-legend" style="margin-top:10px;">
+        <span class="tag-chip" data-tag="#LA" style="background:#fd7e1420;color:#fd7e14;border:1px solid #fd7e1440" onclick="filterTag(this)">#LA <span class="chip-count">85</span></span>
+<span class="tag-chip" data-tag="#SB" style="background:#fd7e1420;color:#fd7e14;border:1px solid #fd7e1440" onclick="filterTag(this)">#SB <span class="chip-count">6</span></span>
+<span class="tag-chip" data-tag="#SD" style="background:#fd7e1420;color:#fd7e14;border:1px solid #fd7e1440" onclick="filterTag(this)">#SD <span class="chip-count">9</span></span>
+<span class="tag-chip" data-tag="#anniversary" style="background:#e83e8c20;color:#e83e8c;border:1px solid #e83e8c40" onclick="filterTag(this)">#anniversary <span class="chip-count">7</span></span>
+<span class="tag-chip" data-tag="#athome" style="background:#28a74520;color:#28a745;border:1px solid #28a74540" onclick="filterTag(this)">#athome <span class="chip-count">11</span></span>
+<span class="tag-chip" data-tag="#bucketlist" style="background:#dc354520;color:#dc3545;border:1px solid #dc354540" onclick="filterTag(this)">#bucketlist <span class="chip-count">14</span></span>
+<span class="tag-chip" data-tag="#couple" style="background:#6c63ff20;color:#6c63ff;border:1px solid #6c63ff40" onclick="filterTag(this)">#couple <span class="chip-count">12</span></span>
+<span class="tag-chip" data-tag="#done" style="background:#17a2b820;color:#17a2b8;border:1px solid #17a2b840" onclick="filterTag(this)">#done <span class="chip-count">46</span></span>
+<span class="tag-chip" data-tag="#group" style="background:#6c63ff20;color:#6c63ff;border:1px solid #6c63ff40" onclick="filterTag(this)">#group <span class="chip-count">12</span></span>
+<span class="tag-chip" data-tag="#idea" style="background:#17a2b820;color:#17a2b8;border:1px solid #17a2b840" onclick="filterTag(this)">#idea <span class="chip-count">1</span></span>
+<span class="tag-chip" data-tag="#indoor" style="background:#28a74520;color:#28a745;border:1px solid #28a74540" onclick="filterTag(this)">#indoor <span class="chip-count">15</span></span>
+<span class="tag-chip" data-tag="#needs-research" style="background:#17a2b820;color:#17a2b8;border:1px solid #17a2b840" onclick="filterTag(this)">#needs-research <span class="chip-count">19</span></span>
+<span class="tag-chip" data-tag="#outdoor" style="background:#28a74520;color:#28a745;border:1px solid #28a74540" onclick="filterTag(this)">#outdoor <span class="chip-count">28</span></span>
+<span class="tag-chip" data-tag="#splurge" style="background:#6f42c120;color:#6f42c1;border:1px solid #6f42c140" onclick="filterTag(this)">#splurge <span class="chip-count">2</span></span>
+<span class="tag-chip" data-tag="#with-preksha" style="background:#6c63ff20;color:#6c63ff;border:1px solid #6c63ff40" onclick="filterTag(this)">#with-preksha <span class="chip-count">13</span></span>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="section">
+      <div class="controls">
+        <input type="search" id="search-box" placeholder="Search by item name…" oninput="applyFilters()">
+        <select id="folder-select" onchange="applyFilters()">
+          <option value="">All folders</option>
+<option value="Activities & Dates">Activities & Dates</option>
+<option value="Activities & Dates / At Home">  └ At Home</option>
+<option value="Activities & Dates / Outdoors & Active">  └ Outdoors & Active</option>
+<option value="Activities & Dates / Classes & Lessons">  └ Classes & Lessons</option>
+<option value="Activities & Dates / Arts & Culture">  └ Arts & Culture</option>
+<option value="Activities & Dates / Shows & Events">  └ Shows & Events</option>
+<option value="Activities & Dates / Tours & Sightseeing">  └ Tours & Sightseeing</option>
+<option value="Activities & Dates / Theme Parks & Gaming">  └ Theme Parks & Gaming</option>
+<option value="Activities & Dates / Spa & Relaxation">  └ Spa & Relaxation</option>
+<option value="Activities & Dates / Couple & Romantic">  └ Couple & Romantic</option>
+<option value="Activities & Dates / Group & Party">  └ Group & Party</option>
+<option value="Activities & Dates / Bucket List">  └ Bucket List</option>
+<option value="Food">Food</option>
+<option value="Food / Restaurants">  └ Restaurants</option>
+<option value="Food / Recipes">  └ Recipes</option>
+<option value="Food / Markets">  └ Markets</option>
+<option value="Trips">Trips</option>
+<option value="Watch, Read & Learn">Watch, Read & Learn</option>
+<option value="Watch, Read & Learn / Movies & Shows">  └ Movies & Shows</option>
+<option value="Watch, Read & Learn / Learning & Skills">  └ Learning & Skills</option>
+<option value="Watch, Read & Learn / Articles & Videos">  └ Articles & Videos</option>
+<option value="Gifts">Gifts</option>
+<option value="Tasks & Projects">Tasks & Projects</option>
+<option value="Tasks & Projects / Chores">  └ Chores</option>
+<option value="Tasks & Projects / App Dev">  └ App Dev</option>
+<option value="Tasks & Projects / Projects">  └ Projects</option>
+<option value="Life Log">Life Log</option>
+<option value="Inbox / To Sort">Inbox / To Sort</option>
+        </select>
+        <label>
+          <input type="checkbox" id="dup-only" onchange="applyFilters()"> Show duplicates only
+        </label>
+        <label>
+          <input type="checkbox" id="changed-only" onchange="applyFilters()"> Show changed folder only
+        </label>
+      </div>
+      <div class="active-filters" id="active-filters"></div>
+    </div>
+
+    <!-- Table -->
+    <div class="result-count" id="result-count"></div>
+    <div class="table-wrap">
+      <table id="main-table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Current Folder</th>
+            <th>→</th>
+            <th>Proposed Folder</th>
+            <th>Tags</th>
+            <th>Note</th>
+          </tr>
+        </thead>
+        <tbody id="table-body">
+        </tbody>
+      </table>
+      <div class="no-results" id="no-results" style="display:none;">No matching items.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const DATA = [
+  {
+    "id": 132,
+    "name": "Bonfire",
+    "desc": "",
+    "currentFolder": "Already Done",
+    "proposedFolder": "Activities & Dates / Outdoors & Active",
+    "tags": [
+      "#done",
+      "#outdoor",
+      "#LA"
+    ],
+    "note": "bonfire",
+    "dup": false
+  },
+  {
+    "id": 131,
+    "name": "Improv show",
+    "desc": "",
+    "currentFolder": "Already Done",
+    "proposedFolder": "Activities & Dates / Shows & Events",
+    "tags": [
+      "#done",
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 133,
+    "name": "Magic Castle",
+    "desc": "",
+    "currentFolder": "Already Done",
+    "proposedFolder": "Activities & Dates / Shows & Events",
+    "tags": [
+      "#done",
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 129,
+    "name": "Padel",
+    "desc": "",
+    "currentFolder": "Already Done",
+    "proposedFolder": "Activities & Dates / Outdoors & Active",
+    "tags": [
+      "#done",
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 130,
+    "name": "Pickleball",
+    "desc": "",
+    "currentFolder": "Already Done",
+    "proposedFolder": "Activities & Dates / Outdoors & Active",
+    "tags": [
+      "#done",
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 128,
+    "name": "Pottery",
+    "desc": "",
+    "currentFolder": "Already Done",
+    "proposedFolder": "Activities & Dates / Classes & Lessons",
+    "tags": [
+      "#done"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 127,
+    "name": "Salsa",
+    "desc": "",
+    "currentFolder": "Already Done",
+    "proposedFolder": "Activities & Dates / Classes & Lessons",
+    "tags": [
+      "#done",
+      "#couple"
+    ],
+    "note": "DUP: also in Lessons (id 77) and Harder Things (id 123)",
+    "dup": false
+  },
+  {
+    "id": 134,
+    "name": "Santa Barbara trip",
+    "desc": "",
+    "currentFolder": "Already Done",
+    "proposedFolder": "Trips",
+    "tags": [
+      "#done",
+      "#SB"
+    ],
+    "note": "DUP: also Trips/Santa Barbara (id 114)",
+    "dup": false
+  },
+  {
+    "id": 126,
+    "name": "Surfing",
+    "desc": "",
+    "currentFolder": "Already Done",
+    "proposedFolder": "Activities & Dates / Outdoors & Active",
+    "tags": [
+      "#done",
+      "#outdoor"
+    ],
+    "note": "DUP: also in Harder Things (id 122)",
+    "dup": false
+  },
+  {
+    "id": 32,
+    "name": "Afternoon tea → mall → facial/nails → Santa Monica sunset → dinner → rides → movie",
+    "desc": "",
+    "currentFolder": "Anniversary/Valentine Ideas",
+    "proposedFolder": "Activities & Dates / Couple & Romantic",
+    "tags": [
+      "#couple",
+      "#anniversary"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 31,
+    "name": "Bake together + boating + watch a show",
+    "desc": "",
+    "currentFolder": "Anniversary/Valentine Ideas",
+    "proposedFolder": "Activities & Dates / Couple & Romantic",
+    "tags": [
+      "#couple",
+      "#anniversary"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 34,
+    "name": "Cruise dinner",
+    "desc": "",
+    "currentFolder": "Anniversary/Valentine Ideas",
+    "proposedFolder": "Activities & Dates / Couple & Romantic",
+    "tags": [
+      "#couple",
+      "#anniversary"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 33,
+    "name": "Fill car with roses and decorations",
+    "desc": "",
+    "currentFolder": "Anniversary/Valentine Ideas",
+    "proposedFolder": "Activities & Dates / Couple & Romantic",
+    "tags": [
+      "#couple",
+      "#anniversary"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 36,
+    "name": "Photoshoot",
+    "desc": "",
+    "currentFolder": "Anniversary/Valentine Ideas",
+    "proposedFolder": "Activities & Dates / Couple & Romantic",
+    "tags": [
+      "#couple",
+      "#anniversary"
+    ],
+    "note": "DUP: near-dup of Harder Things Photoshoot for anniversary (id 124)",
+    "dup": false
+  },
+  {
+    "id": 35,
+    "name": "String and pin art together",
+    "desc": "",
+    "currentFolder": "Anniversary/Valentine Ideas",
+    "proposedFolder": "Activities & Dates / At Home",
+    "tags": [
+      "#couple",
+      "#anniversary",
+      "#athome"
+    ],
+    "note": "DUP: near-dup of At-Home/String-and-pin-art (id 101)",
+    "dup": false
+  },
+  {
+    "id": 37,
+    "name": "[Google doc with more ideas]",
+    "desc": "https://docs.google.com/document/d/1fJ_B89RuCQ8X4guWDJB0bl-TA4V68F7-DMQNMtY-yWY/",
+    "currentFolder": "Anniversary/Valentine Ideas",
+    "proposedFolder": "Activities & Dates / Couple & Romantic",
+    "tags": [
+      "#couple",
+      "#idea"
+    ],
+    "note": "Google doc link",
+    "dup": false
+  },
+  {
+    "id": 160,
+    "name": "Add edit_completion tool for LLM",
+    "desc": "Add an edit_completion action so the LLM can update existing completion dates/no",
+    "currentFolder": "App Dev",
+    "proposedFolder": "Tasks & Projects / App Dev",
+    "tags": [],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 168,
+    "name": "Add simple API auth using bot token",
+    "desc": "Protect /api/ routes with a Bearer token (use TELEGRAM_BOT_TOKEN or a separate A",
+    "currentFolder": "App Dev",
+    "proposedFolder": "Tasks & Projects / App Dev",
+    "tags": [],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 167,
+    "name": "Capture timestamp not just date",
+    "desc": "Todos for the todo app: I want it to capture the timestamp not just the date",
+    "currentFolder": "App Dev",
+    "proposedFolder": "Tasks & Projects / App Dev",
+    "tags": [],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 170,
+    "name": "Support images and documents",
+    "desc": "We need to support images and documents",
+    "currentFolder": "App Dev",
+    "proposedFolder": "Tasks & Projects / App Dev",
+    "tags": [],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 159,
+    "name": "Undo button should work for previous messages too",
+    "desc": "Currently undo only works for the most recent message per chat. Need to persist ",
+    "currentFolder": "App Dev",
+    "proposedFolder": "Tasks & Projects / App Dev",
+    "tags": [],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 100,
+    "name": "Cook: Nutella pistachio, soup, coffee mousse",
+    "desc": "",
+    "currentFolder": "At-Home Activities",
+    "proposedFolder": "Activities & Dates / At Home",
+    "tags": [
+      "#athome"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 172,
+    "name": "Fingerpainting",
+    "desc": "fingerpainting",
+    "currentFolder": "At-Home Activities",
+    "proposedFolder": "Activities & Dates / At Home",
+    "tags": [
+      "#athome"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 153,
+    "name": "Ice my knee",
+    "desc": "I iced my knee",
+    "currentFolder": "At-Home Activities",
+    "proposedFolder": "Life Log",
+    "tags": [
+      "#done"
+    ],
+    "note": "past health event",
+    "dup": false
+  },
+  {
+    "id": 154,
+    "name": "Knee pain",
+    "desc": "my knee was hurting yesterday",
+    "currentFolder": "At-Home Activities",
+    "proposedFolder": "Life Log",
+    "tags": [
+      "#done"
+    ],
+    "note": "past health event; DUP concept with Tracking Knee pain (id 206)",
+    "dup": false
+  },
+  {
+    "id": 98,
+    "name": "Learn a handshake",
+    "desc": "",
+    "currentFolder": "At-Home Activities",
+    "proposedFolder": "Activities & Dates / At Home",
+    "tags": [
+      "#athome"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 97,
+    "name": "Order and Chaos",
+    "desc": "game",
+    "currentFolder": "At-Home Activities",
+    "proposedFolder": "Activities & Dates / At Home",
+    "tags": [
+      "#athome"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 237,
+    "name": "Pistachio Almond Cookies",
+    "desc": "add https://houseandhome.com/recipe/pistachio-almond-cookies/",
+    "currentFolder": "At-Home Activities",
+    "proposedFolder": "Food / Recipes",
+    "tags": [
+      "#athome"
+    ],
+    "note": "DUP: also in Recipes folder (id 238)",
+    "dup": false
+  },
+  {
+    "id": 253,
+    "name": "Plant picture",
+    "desc": "plant picture",
+    "currentFolder": "At-Home Activities",
+    "proposedFolder": "Life Log",
+    "tags": [
+      "#done"
+    ],
+    "note": "logged plant picture",
+    "dup": false
+  },
+  {
+    "id": 177,
+    "name": "Preksha sleep reminder",
+    "desc": "make sure preksha doesnt sleep after 10 pm",
+    "currentFolder": "At-Home Activities",
+    "proposedFolder": "Tasks & Projects / Chores",
+    "tags": [],
+    "note": "recurring reminder task",
+    "dup": false
+  },
+  {
+    "id": 219,
+    "name": "Protein pancakes",
+    "desc": "https://lowcarbyum.com/protein-pancakes/ but i put a bit of water because its to",
+    "currentFolder": "At-Home Activities",
+    "proposedFolder": "Food / Recipes",
+    "tags": [
+      "#athome"
+    ],
+    "note": "protein pancakes recipe",
+    "dup": false
+  },
+  {
+    "id": 101,
+    "name": "String and pin art",
+    "desc": "",
+    "currentFolder": "At-Home Activities",
+    "proposedFolder": "Activities & Dates / At Home",
+    "tags": [
+      "#athome"
+    ],
+    "note": "DUP: also in Anniversary folder (id 35)",
+    "dup": true
+  },
+  {
+    "id": 99,
+    "name": "Video games: Forever Lost, Minecraft, Rayman Legends",
+    "desc": "",
+    "currentFolder": "At-Home Activities",
+    "proposedFolder": "Activities & Dates / At Home",
+    "tags": [
+      "#athome"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 176,
+    "name": "test",
+    "desc": "add \"test\" to at home activities",
+    "currentFolder": "At-Home Activities",
+    "proposedFolder": "Inbox / To Sort",
+    "tags": [
+      "#needs-research"
+    ],
+    "note": "test item",
+    "dup": false
+  },
+  {
+    "id": 233,
+    "name": "Bathroom fan stopped working again",
+    "desc": "the bathroom fan stopped working again",
+    "currentFolder": "Chores",
+    "proposedFolder": "Tasks & Projects / Chores",
+    "tags": [],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 184,
+    "name": "Put outside curtain back",
+    "desc": "the outside curtain fell i need to put it back b4 i sleep",
+    "currentFolder": "Chores",
+    "proposedFolder": "Tasks & Projects / Chores",
+    "tags": [],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 186,
+    "name": "Set up bathroom holder for shampoos and stuff",
+    "desc": "i want to setup in the bathroom a holder for shampoos and stuff",
+    "currentFolder": "Chores",
+    "proposedFolder": "Tasks & Projects / Chores",
+    "tags": [],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 187,
+    "name": "Sinus rinse",
+    "desc": "i should do the sinus rinse today",
+    "currentFolder": "Chores",
+    "proposedFolder": "Tasks & Projects / Chores",
+    "tags": [],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 157,
+    "name": "Watered the plants",
+    "desc": "I watered the plants 3 days ago",
+    "currentFolder": "Chores",
+    "proposedFolder": "Life Log",
+    "tags": [
+      "#done"
+    ],
+    "note": "past event — watered plants 3 days ago",
+    "dup": false
+  },
+  {
+    "id": 96,
+    "name": "Westin Pasadena ResortPass",
+    "desc": "Pool, gym, loungers",
+    "currentFolder": "Day Spa",
+    "proposedFolder": "Activities & Dates / Spa & Relaxation",
+    "tags": [
+      "#indoor"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 94,
+    "name": "OC Fair",
+    "desc": "",
+    "currentFolder": "Festivals",
+    "proposedFolder": "Activities & Dates / Shows & Events",
+    "tags": [
+      "#LA",
+      "#outdoor"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 93,
+    "name": "Ren Faire",
+    "desc": "",
+    "currentFolder": "Festivals",
+    "proposedFolder": "Activities & Dates / Shows & Events",
+    "tags": [
+      "#LA",
+      "#outdoor"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 95,
+    "name": "Rose Bowl Swap Meet",
+    "desc": "2nd Sunday of month",
+    "currentFolder": "Festivals",
+    "proposedFolder": "Activities & Dates / Shows & Events",
+    "tags": [
+      "#LA",
+      "#outdoor"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 38,
+    "name": "Activate Games (Culver City)",
+    "desc": "Interactive gaming, laser mazes, climbing walls",
+    "currentFolder": "Gaming/Immersive",
+    "proposedFolder": "Activities & Dates / Theme Parks & Gaming",
+    "tags": [
+      "#indoor"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 40,
+    "name": "Hatch Escapes",
+    "desc": "Escape rooms (The Ladder, Lab Rat, The Nest, Mother of Frankenstein)",
+    "currentFolder": "Gaming/Immersive",
+    "proposedFolder": "Activities & Dates / Theme Parks & Gaming",
+    "tags": [
+      "#indoor"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 39,
+    "name": "Spies Among Us (Little Tokyo)",
+    "desc": "Immersive spy adventure",
+    "currentFolder": "Gaming/Immersive",
+    "proposedFolder": "Activities & Dates / Theme Parks & Gaming",
+    "tags": [
+      "#indoor"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 210,
+    "name": "Apple and strawberries in a cup",
+    "desc": "i cut up an apple and strawberries for preksha in a cup she liked this",
+    "currentFolder": "Gift Ideas for Preksha",
+    "proposedFolder": "Gifts",
+    "tags": [
+      "#with-preksha"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 27,
+    "name": "Expensive chocolate",
+    "desc": "",
+    "currentFolder": "Gift Ideas for Preksha",
+    "proposedFolder": "Gifts",
+    "tags": [
+      "#with-preksha"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 171,
+    "name": "Google doc with ideas for Preksha's birthday",
+    "desc": "Google doc with ideas for preksha's bday: https://docs.google.com/document/d/1fJ",
+    "currentFolder": "Gift Ideas for Preksha",
+    "proposedFolder": "Gifts",
+    "tags": [
+      "#with-preksha"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 28,
+    "name": "Hummus, sandwiches, pastries",
+    "desc": "",
+    "currentFolder": "Gift Ideas for Preksha",
+    "proposedFolder": "Gifts",
+    "tags": [
+      "#with-preksha"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 30,
+    "name": "Indian food: pav bhaji, dahi vada, idli, moong dal halwa, poha",
+    "desc": "",
+    "currentFolder": "Gift Ideas for Preksha",
+    "proposedFolder": "Gifts",
+    "tags": [
+      "#with-preksha"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 25,
+    "name": "Indian/Indian-American jewelry",
+    "desc": "bysimran.com, bypavoi",
+    "currentFolder": "Gift Ideas for Preksha",
+    "proposedFolder": "Gifts",
+    "tags": [
+      "#with-preksha"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 29,
+    "name": "Protein smoothie",
+    "desc": "",
+    "currentFolder": "Gift Ideas for Preksha",
+    "proposedFolder": "Gifts",
+    "tags": [
+      "#with-preksha"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 26,
+    "name": "Seashell praline chocolate",
+    "desc": "her favorite",
+    "currentFolder": "Gift Ideas for Preksha",
+    "proposedFolder": "Gifts",
+    "tags": [
+      "#with-preksha"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 24,
+    "name": "Yellow and red roses",
+    "desc": "",
+    "currentFolder": "Gift Ideas for Preksha",
+    "proposedFolder": "Gifts",
+    "tags": [
+      "#with-preksha"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 271,
+    "name": "Antakshari / karaoke night",
+    "desc": "Add to Group Activities: Antakshari / karaoke night",
+    "currentFolder": "Group Activities",
+    "proposedFolder": "Activities & Dates / Group & Party",
+    "tags": [
+      "#group"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 120,
+    "name": "Boating",
+    "desc": "",
+    "currentFolder": "Group Activities",
+    "proposedFolder": "Activities & Dates / Group & Party",
+    "tags": [
+      "#group"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 270,
+    "name": "Carrom board tournament",
+    "desc": "Add to Group Activities: Carrom board tournament",
+    "currentFolder": "Group Activities",
+    "proposedFolder": "Activities & Dates / Group & Party",
+    "tags": [
+      "#group"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 272,
+    "name": "Field day",
+    "desc": "Add to Group Activities: Field day",
+    "currentFolder": "Group Activities",
+    "proposedFolder": "Activities & Dates / Group & Party",
+    "tags": [
+      "#group"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 119,
+    "name": "Four square/wallball",
+    "desc": "",
+    "currentFolder": "Group Activities",
+    "proposedFolder": "Activities & Dates / Group & Party",
+    "tags": [
+      "#group"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 121,
+    "name": "Group trip",
+    "desc": "",
+    "currentFolder": "Group Activities",
+    "proposedFolder": "Activities & Dates / Group & Party",
+    "tags": [
+      "#group"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 247,
+    "name": "Murder Mystery Dinner",
+    "desc": "murder myster dinner under stuff to do w friends",
+    "currentFolder": "Group Activities",
+    "proposedFolder": "Activities & Dates / Group & Party",
+    "tags": [
+      "#group"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 268,
+    "name": "Navy's proposal",
+    "desc": "Add to Group Activities: Navy's proposal",
+    "currentFolder": "Group Activities",
+    "proposedFolder": "Activities & Dates / Group & Party",
+    "tags": [
+      "#group"
+    ],
+    "note": "someone else's proposal — group event",
+    "dup": false
+  },
+  {
+    "id": 231,
+    "name": "Rooftop events",
+    "desc": "do this with preksha \"roof top events\" https://www.themontalban.com/rooftopevent",
+    "currentFolder": "Group Activities",
+    "proposedFolder": "Activities & Dates / Shows & Events",
+    "tags": [
+      "#LA",
+      "#couple"
+    ],
+    "note": "rooftop events",
+    "dup": false
+  },
+  {
+    "id": 269,
+    "name": "Watch a cricket match (replay of a cricket game)",
+    "desc": "Add to Group Activities: Watch a cricket match (replay of a cricket game)",
+    "currentFolder": "Group Activities",
+    "proposedFolder": "Activities & Dates / Group & Party",
+    "tags": [
+      "#group"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 226,
+    "name": "BMX",
+    "desc": "i want to do these things bmx motorcycles rc cars racing drone racing rocket lau",
+    "currentFolder": "Harder Things (Goals)",
+    "proposedFolder": "Activities & Dates / Bucket List",
+    "tags": [
+      "#bucketlist",
+      "#outdoor"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 232,
+    "name": "DDR Machine Research",
+    "desc": "Add todo: DDR Machine Research (from Miss Hanan's bot)  TOP PICKS: 1. L-TEK Danc",
+    "currentFolder": "Harder Things (Goals)",
+    "proposedFolder": "Activities & Dates / At Home",
+    "tags": [
+      "#athome",
+      "#needs-research"
+    ],
+    "note": "DDR machine to buy research",
+    "dup": false
+  },
+  {
+    "id": 125,
+    "name": "Drive a Porsche on a race track",
+    "desc": "",
+    "currentFolder": "Harder Things (Goals)",
+    "proposedFolder": "Activities & Dates / Bucket List",
+    "tags": [
+      "#bucketlist",
+      "#splurge"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 229,
+    "name": "Drone racing",
+    "desc": "i want to do these things bmx motorcycles rc cars racing drone racing rocket lau",
+    "currentFolder": "Harder Things (Goals)",
+    "proposedFolder": "Activities & Dates / Bucket List",
+    "tags": [
+      "#bucketlist",
+      "#outdoor"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 227,
+    "name": "Motorcycles",
+    "desc": "i want to do these things bmx motorcycles rc cars racing drone racing rocket lau",
+    "currentFolder": "Harder Things (Goals)",
+    "proposedFolder": "Activities & Dates / Bucket List",
+    "tags": [
+      "#bucketlist",
+      "#outdoor"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 124,
+    "name": "Photoshoot for anniversary",
+    "desc": "",
+    "currentFolder": "Harder Things (Goals)",
+    "proposedFolder": "Activities & Dates / Couple & Romantic",
+    "tags": [
+      "#couple",
+      "#anniversary",
+      "#bucketlist"
+    ],
+    "note": "DUP: near-dup of Anniversary/Photoshoot (id 36)",
+    "dup": true
+  },
+  {
+    "id": 228,
+    "name": "RC cars racing",
+    "desc": "i want to do these things bmx motorcycles rc cars racing drone racing rocket lau",
+    "currentFolder": "Harder Things (Goals)",
+    "proposedFolder": "Activities & Dates / Bucket List",
+    "tags": [
+      "#bucketlist",
+      "#outdoor"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 230,
+    "name": "Rocket launch",
+    "desc": "i want to do these things bmx motorcycles rc cars racing drone racing rocket lau",
+    "currentFolder": "Harder Things (Goals)",
+    "proposedFolder": "Activities & Dates / Bucket List",
+    "tags": [
+      "#bucketlist",
+      "#outdoor"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 123,
+    "name": "Salsa",
+    "desc": "",
+    "currentFolder": "Harder Things (Goals)",
+    "proposedFolder": "Activities & Dates / Classes & Lessons",
+    "tags": [
+      "#bucketlist"
+    ],
+    "note": "DUP: also in Lessons (id 77) and Already Done (id 127)",
+    "dup": true
+  },
+  {
+    "id": 122,
+    "name": "Surfing",
+    "desc": "",
+    "currentFolder": "Harder Things (Goals)",
+    "proposedFolder": "Activities & Dates / Outdoors & Active",
+    "tags": [
+      "#bucketlist",
+      "#outdoor"
+    ],
+    "note": "DUP: also in Already Done (id 126)",
+    "dup": true
+  },
+  {
+    "id": 19,
+    "name": "Afternoon tea",
+    "desc": "",
+    "currentFolder": "LA Area",
+    "proposedFolder": "Food / Restaurants",
+    "tags": [
+      "#LA"
+    ],
+    "note": "afternoon tea = food/drink experience",
+    "dup": false
+  },
+  {
+    "id": 9,
+    "name": "Aikan Sushi & Ramen",
+    "desc": "",
+    "currentFolder": "LA Area",
+    "proposedFolder": "Food / Restaurants",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 265,
+    "name": "Blueplate Taco",
+    "desc": "blueplate taco at santa monica quesadilla veggie v good cesar salad w chicken go",
+    "currentFolder": "LA Area",
+    "proposedFolder": "Food / Restaurants",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 5,
+    "name": "Bone Kettle",
+    "desc": "",
+    "currentFolder": "LA Area",
+    "proposedFolder": "Food / Restaurants",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 205,
+    "name": "Cluck2Go Pasadena (Singaporean)",
+    "desc": "cluck2go pasadena singaporean",
+    "currentFolder": "LA Area",
+    "proposedFolder": "Food / Restaurants",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 10,
+    "name": "Din Tai Fung",
+    "desc": "Glendale/Santa Anita",
+    "currentFolder": "LA Area",
+    "proposedFolder": "Food / Restaurants",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 3,
+    "name": "Elephante",
+    "desc": "",
+    "currentFolder": "LA Area",
+    "proposedFolder": "Food / Restaurants",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 16,
+    "name": "Fair Oaks Pharmacy",
+    "desc": "milkshakes",
+    "currentFolder": "LA Area",
+    "proposedFolder": "Food / Restaurants",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 161,
+    "name": "In N Out",
+    "desc": "I ate in n out yesterday night",
+    "currentFolder": "LA Area",
+    "proposedFolder": "Food / Restaurants",
+    "tags": [
+      "#LA",
+      "#done"
+    ],
+    "note": "logged as past eating",
+    "dup": false
+  },
+  {
+    "id": 18,
+    "name": "Japanese bakery",
+    "desc": "",
+    "currentFolder": "LA Area",
+    "proposedFolder": "Food / Restaurants",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 2,
+    "name": "Kuya Lord",
+    "desc": "",
+    "currentFolder": "LA Area",
+    "proposedFolder": "Food / Restaurants",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 14,
+    "name": "Lula Cocina Mexicana (Santa Monica)",
+    "desc": "Mexican, 500+ tequilas",
+    "currentFolder": "LA Area",
+    "proposedFolder": "Food / Restaurants",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 1,
+    "name": "Madeline Garden Bistro",
+    "desc": "Pasadena",
+    "currentFolder": "LA Area",
+    "proposedFolder": "Food / Restaurants",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 8,
+    "name": "Mercado",
+    "desc": "",
+    "currentFolder": "LA Area",
+    "proposedFolder": "Food / Restaurants",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 7,
+    "name": "Nick's Pasadena",
+    "desc": "",
+    "currentFolder": "LA Area",
+    "proposedFolder": "Food / Restaurants",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 11,
+    "name": "PLANTA",
+    "desc": "Marina del Rey",
+    "currentFolder": "LA Area",
+    "proposedFolder": "Food / Restaurants",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 273,
+    "name": "Panini Kabob Grill",
+    "desc": "Add to Restaurants (LA Area): Panini Kabob Grill - very good, good vegetarian op",
+    "currentFolder": "LA Area",
+    "proposedFolder": "Food / Restaurants",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 259,
+    "name": "Pathakan Thai",
+    "desc": "pathakan thai seafood is ok pad ke mao was bad  and tofu was bad and not satisfy",
+    "currentFolder": "LA Area",
+    "proposedFolder": "Food / Restaurants",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 164,
+    "name": "Philz Tiramisu drink",
+    "desc": "I got the tirmaisu drink from philz it was so good even tho no sugar",
+    "currentFolder": "LA Area",
+    "proposedFolder": "Food / Restaurants",
+    "tags": [
+      "#LA",
+      "#done"
+    ],
+    "note": "logged as past drink experience",
+    "dup": false
+  },
+  {
+    "id": 6,
+    "name": "Porto's Bakery",
+    "desc": "",
+    "currentFolder": "LA Area",
+    "proposedFolder": "Food / Restaurants",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 15,
+    "name": "République (Miracle Mile)",
+    "desc": "Bakery/café, Southern European",
+    "currentFolder": "LA Area",
+    "proposedFolder": "Food / Restaurants",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 203,
+    "name": "Sticky Rice (Highland Park)",
+    "desc": "add sticky rice in highland park it was v good crispy tofu good and chicken sata",
+    "currentFolder": "LA Area",
+    "proposedFolder": "Food / Restaurants",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 17,
+    "name": "Sushi Nakata",
+    "desc": "Monrovia",
+    "currentFolder": "LA Area",
+    "proposedFolder": "Food / Restaurants",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 4,
+    "name": "Union Restaurant",
+    "desc": "",
+    "currentFolder": "LA Area",
+    "proposedFolder": "Food / Restaurants",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 13,
+    "name": "Uovo",
+    "desc": "",
+    "currentFolder": "LA Area",
+    "proposedFolder": "Food / Restaurants",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 12,
+    "name": "YoungDong Tofu House",
+    "desc": "Alhambra",
+    "currentFolder": "LA Area",
+    "proposedFolder": "Food / Restaurants",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 197,
+    "name": "https://maps.app.goo.gl/mM8pT1TazJJrJnqK8?g_st=it",
+    "desc": "https://maps.app.goo.gl/mM8pT1TazJJrJnqK8?g_st=it",
+    "currentFolder": "LA Area",
+    "proposedFolder": "Inbox / To Sort",
+    "tags": [
+      "#LA",
+      "#needs-research"
+    ],
+    "note": "bare map link DUP (id 198)",
+    "dup": false
+  },
+  {
+    "id": 198,
+    "name": "https://maps.app.goo.gl/mM8pT1TazJJrJnqK8?g_st=it",
+    "desc": "https://maps.app.goo.gl/mM8pT1TazJJrJnqK8?g_st=it",
+    "currentFolder": "LA Area",
+    "proposedFolder": "Inbox / To Sort",
+    "tags": [
+      "#LA",
+      "#needs-research"
+    ],
+    "note": "bare map link DUP (id 197)",
+    "dup": true
+  },
+  {
+    "id": 252,
+    "name": "Interesting articles to read",
+    "desc": "interesting articles to read https://chatgpt.com/share/69faf5a8-73e4-83e8-a748-8",
+    "currentFolder": "Learning",
+    "proposedFolder": "Watch, Read & Learn / Articles & Videos",
+    "tags": [],
+    "note": "collection of articles",
+    "dup": false
+  },
+  {
+    "id": 156,
+    "name": "Lets Build ChatGPT from Scratch — 3 hour video",
+    "desc": "https://youtu.be/kCc8FmEb1nY",
+    "currentFolder": "Learning",
+    "proposedFolder": "Watch, Read & Learn / Articles & Videos",
+    "tags": [],
+    "note": "YouTube video",
+    "dup": false
+  },
+  {
+    "id": 248,
+    "name": "Paragliding",
+    "desc": "add paragliding, sail boating under classes/things to learn",
+    "currentFolder": "Learning",
+    "proposedFolder": "Activities & Dates / Classes & Lessons",
+    "tags": [
+      "#outdoor",
+      "#bucketlist"
+    ],
+    "note": "paragliding lesson",
+    "dup": false
+  },
+  {
+    "id": 249,
+    "name": "Sail boating",
+    "desc": "add paragliding, sail boating under classes/things to learn",
+    "currentFolder": "Learning",
+    "proposedFolder": "Activities & Dates / Classes & Lessons",
+    "tags": [
+      "#outdoor"
+    ],
+    "note": "sail boating lesson",
+    "dup": false
+  },
+  {
+    "id": 179,
+    "name": "Watch Linus Tech Tips video about EUV",
+    "desc": "watch linus tech tips video about EUV",
+    "currentFolder": "Learning",
+    "proposedFolder": "Watch, Read & Learn / Articles & Videos",
+    "tags": [],
+    "note": "specific YouTube video",
+    "dup": false
+  },
+  {
+    "id": 75,
+    "name": "Aerial dancing",
+    "desc": "",
+    "currentFolder": "Lessons",
+    "proposedFolder": "Activities & Dates / Classes & Lessons",
+    "tags": [],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 74,
+    "name": "Flyboarding",
+    "desc": "",
+    "currentFolder": "Lessons",
+    "proposedFolder": "Activities & Dates / Classes & Lessons",
+    "tags": [],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 71,
+    "name": "Hang gliding",
+    "desc": "",
+    "currentFolder": "Lessons",
+    "proposedFolder": "Activities & Dates / Classes & Lessons",
+    "tags": [],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 218,
+    "name": "Hip hop dance class",
+    "desc": "i went to a hip hop dance class w preksha yesterday 7 - 8:30 at burbank",
+    "currentFolder": "Lessons",
+    "proposedFolder": "Activities & Dates / Classes & Lessons",
+    "tags": [],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 76,
+    "name": "Sailing",
+    "desc": "",
+    "currentFolder": "Lessons",
+    "proposedFolder": "Activities & Dates / Classes & Lessons",
+    "tags": [],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 77,
+    "name": "Salsa",
+    "desc": "",
+    "currentFolder": "Lessons",
+    "proposedFolder": "Activities & Dates / Classes & Lessons",
+    "tags": [],
+    "note": "DUP: also in Already Done (id 127) and Harder Things (id 123)",
+    "dup": true
+  },
+  {
+    "id": 73,
+    "name": "Stand-up paddleboard",
+    "desc": "",
+    "currentFolder": "Lessons",
+    "proposedFolder": "Activities & Dates / Classes & Lessons",
+    "tags": [],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 79,
+    "name": "StitchSpace LA",
+    "desc": "Sewing, quilting, crochet, knitting ($50-55/2hr)",
+    "currentFolder": "Lessons",
+    "proposedFolder": "Activities & Dates / Classes & Lessons",
+    "tags": [],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 78,
+    "name": "Trapeze",
+    "desc": "",
+    "currentFolder": "Lessons",
+    "proposedFolder": "Activities & Dates / Classes & Lessons",
+    "tags": [],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 72,
+    "name": "Windsurfing",
+    "desc": "",
+    "currentFolder": "Lessons",
+    "proposedFolder": "Activities & Dates / Classes & Lessons",
+    "tags": [],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 136,
+    "name": "Filipino markets",
+    "desc": "",
+    "currentFolder": "Markets to Explore",
+    "proposedFolder": "Food / Markets",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 137,
+    "name": "Hawaiian supermarket",
+    "desc": "",
+    "currentFolder": "Markets to Explore",
+    "proposedFolder": "Food / Markets",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 135,
+    "name": "Indonesian markets",
+    "desc": "",
+    "currentFolder": "Markets to Explore",
+    "proposedFolder": "Food / Markets",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 275,
+    "name": "Arcane",
+    "desc": "Add these to my Movies to Watch list: Primer; Arcane (the League of Legends anim",
+    "currentFolder": "Movies/Shows",
+    "proposedFolder": "Watch, Read & Learn / Movies & Shows",
+    "tags": [],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 192,
+    "name": "Fraser Cain's Top 100 SciFi Movies",
+    "desc": "add to movies http://youtube.com/post/UgkxwopGORu_ACypfsVeGZhgAoMxjtE-Y23X?si=RA",
+    "currentFolder": "Movies/Shows",
+    "proposedFolder": "Watch, Read & Learn / Movies & Shows",
+    "tags": [],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 194,
+    "name": "Fraser Cain's Top 100 SciFi TV Shows",
+    "desc": "fraser cain's top 100 scifi tv shows: http://youtube.com/post/Ugkxj0KlVEpilcCRoM",
+    "currentFolder": "Movies/Shows",
+    "proposedFolder": "Watch, Read & Learn / Articles & Videos",
+    "tags": [],
+    "note": "DUP: same as id 195",
+    "dup": false
+  },
+  {
+    "id": 195,
+    "name": "Fraser Cain's Top 100 SciFi TV Shows",
+    "desc": "fraser cain's top 100 scifi tv shows: http://youtube.com/post/Ugkxj0KlVEpilcCRoM",
+    "currentFolder": "Movies/Shows",
+    "proposedFolder": "Watch, Read & Learn / Articles & Videos",
+    "tags": [],
+    "note": "DUP: same as id 194",
+    "dup": true
+  },
+  {
+    "id": 190,
+    "name": "Gifted",
+    "desc": "can u add gifted to movies",
+    "currentFolder": "Movies/Shows",
+    "proposedFolder": "Watch, Read & Learn / Movies & Shows",
+    "tags": [],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 151,
+    "name": "How to Train Your Dragon live action movie",
+    "desc": "i watched how to train your dragon yesterday, the live action movie",
+    "currentFolder": "Movies/Shows",
+    "proposedFolder": "Watch, Read & Learn / Movies & Shows",
+    "tags": [
+      "#done"
+    ],
+    "note": "logged as watched",
+    "dup": false
+  },
+  {
+    "id": 274,
+    "name": "Primer",
+    "desc": "Add these to my Movies to Watch list: Primer; Arcane (the League of Legends anim",
+    "currentFolder": "Movies/Shows",
+    "proposedFolder": "Watch, Read & Learn / Movies & Shows",
+    "tags": [],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 191,
+    "name": "The Bit Player",
+    "desc": "can u add the bit player to movies",
+    "currentFolder": "Movies/Shows",
+    "proposedFolder": "Watch, Read & Learn / Movies & Shows",
+    "tags": [],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 276,
+    "name": "This Is How You Lose the Time War",
+    "desc": "Add these to my Movies to Watch list: Primer; Arcane (the League of Legends anim",
+    "currentFolder": "Movies/Shows",
+    "proposedFolder": "Watch, Read & Learn / Movies & Shows",
+    "tags": [],
+    "note": "book, misfiled as movie",
+    "dup": false
+  },
+  {
+    "id": 246,
+    "name": "Watch Date Night",
+    "desc": "watch date night",
+    "currentFolder": "Movies/Shows",
+    "proposedFolder": "Watch, Read & Learn / Movies & Shows",
+    "tags": [
+      "#couple"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 236,
+    "name": "Watch Life of Bryan",
+    "desc": "watch life of bryan",
+    "currentFolder": "Movies/Shows",
+    "proposedFolder": "Watch, Read & Learn / Movies & Shows",
+    "tags": [],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 185,
+    "name": "Watch October Sky",
+    "desc": "preksha proposed watching october sky",
+    "currentFolder": "Movies/Shows",
+    "proposedFolder": "Watch, Read & Learn / Movies & Shows",
+    "tags": [
+      "#with-preksha"
+    ],
+    "note": "Preksha proposed",
+    "dup": false
+  },
+  {
+    "id": 155,
+    "name": "Watch Pirates of the Caribbean with Preksha",
+    "desc": "I want to watch pirates of the carribean w preksha",
+    "currentFolder": "Movies/Shows",
+    "proposedFolder": "Watch, Read & Learn / Movies & Shows",
+    "tags": [
+      "#with-preksha"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 51,
+    "name": "City Hall",
+    "desc": "",
+    "currentFolder": "Museums/Culture",
+    "proposedFolder": "Activities & Dates / Arts & Culture",
+    "tags": [
+      "#LA",
+      "#indoor"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 48,
+    "name": "Gamble House",
+    "desc": "",
+    "currentFolder": "Museums/Culture",
+    "proposedFolder": "Activities & Dates / Arts & Culture",
+    "tags": [
+      "#LA",
+      "#indoor"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 46,
+    "name": "Getty Villa",
+    "desc": "",
+    "currentFolder": "Museums/Culture",
+    "proposedFolder": "Activities & Dates / Arts & Culture",
+    "tags": [
+      "#LA",
+      "#indoor"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 47,
+    "name": "Huntington Library gardens",
+    "desc": "",
+    "currentFolder": "Museums/Culture",
+    "proposedFolder": "Activities & Dates / Arts & Culture",
+    "tags": [
+      "#LA",
+      "#indoor"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 45,
+    "name": "NHM first Friday events",
+    "desc": "",
+    "currentFolder": "Museums/Culture",
+    "proposedFolder": "Activities & Dates / Arts & Culture",
+    "tags": [
+      "#LA",
+      "#indoor"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 50,
+    "name": "Vromans bookstore",
+    "desc": "",
+    "currentFolder": "Museums/Culture",
+    "proposedFolder": "Activities & Dates / Arts & Culture",
+    "tags": [
+      "#LA",
+      "#indoor"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 49,
+    "name": "Walt Disney Hall",
+    "desc": "",
+    "currentFolder": "Museums/Culture",
+    "proposedFolder": "Activities & Dates / Arts & Culture",
+    "tags": [
+      "#LA",
+      "#indoor"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 105,
+    "name": "Archery",
+    "desc": "not early morning",
+    "currentFolder": "Needs Research",
+    "proposedFolder": "Activities & Dates / Outdoors & Active",
+    "tags": [
+      "#needs-research"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 106,
+    "name": "Couples group trip",
+    "desc": "preplanned with other couples",
+    "currentFolder": "Needs Research",
+    "proposedFolder": "Trips",
+    "tags": [
+      "#group",
+      "#needs-research"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 103,
+    "name": "Paintball/airsoft",
+    "desc": "",
+    "currentFolder": "Needs Research",
+    "proposedFolder": "Activities & Dates / Outdoors & Active",
+    "tags": [
+      "#group",
+      "#needs-research"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 102,
+    "name": "Scavenger hunt",
+    "desc": "",
+    "currentFolder": "Needs Research",
+    "proposedFolder": "Activities & Dates / Group & Party",
+    "tags": [
+      "#needs-research"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 104,
+    "name": "Water park",
+    "desc": "",
+    "currentFolder": "Needs Research",
+    "proposedFolder": "Activities & Dates / Outdoors & Active",
+    "tags": [
+      "#needs-research"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 59,
+    "name": "Arroyo Drive benches at sunset",
+    "desc": "",
+    "currentFolder": "Outdoors",
+    "proposedFolder": "Activities & Dates / Outdoors & Active",
+    "tags": [
+      "#outdoor",
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 54,
+    "name": "Arroyo Seco walk",
+    "desc": "",
+    "currentFolder": "Outdoors",
+    "proposedFolder": "Activities & Dates / Outdoors & Active",
+    "tags": [
+      "#outdoor",
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 57,
+    "name": "Butterfly Beach",
+    "desc": "",
+    "currentFolder": "Outdoors",
+    "proposedFolder": "Activities & Dates / Outdoors & Active",
+    "tags": [
+      "#outdoor",
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 55,
+    "name": "Colorado Street Bridge",
+    "desc": "",
+    "currentFolder": "Outdoors",
+    "proposedFolder": "Activities & Dates / Outdoors & Active",
+    "tags": [
+      "#outdoor",
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 56,
+    "name": "Eaton Canyon hike",
+    "desc": "",
+    "currentFolder": "Outdoors",
+    "proposedFolder": "Activities & Dates / Outdoors & Active",
+    "tags": [
+      "#outdoor",
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 53,
+    "name": "Glass balcony skyscraper",
+    "desc": "",
+    "currentFolder": "Outdoors",
+    "proposedFolder": "Activities & Dates / Outdoors & Active",
+    "tags": [
+      "#outdoor",
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 267,
+    "name": "Hike with Maggie",
+    "desc": "Add to Outdoors: Hike with Maggie",
+    "currentFolder": "Outdoors",
+    "proposedFolder": "Activities & Dates / Outdoors & Active",
+    "tags": [
+      "#outdoor",
+      "#LA"
+    ],
+    "note": "with friend",
+    "dup": false
+  },
+  {
+    "id": 58,
+    "name": "Santa Monica Beach sunset",
+    "desc": "",
+    "currentFolder": "Outdoors",
+    "proposedFolder": "Activities & Dates / Outdoors & Active",
+    "tags": [
+      "#outdoor",
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 60,
+    "name": "South Pasadena",
+    "desc": "old-timey vibe",
+    "currentFolder": "Outdoors",
+    "proposedFolder": "Activities & Dates / Outdoors & Active",
+    "tags": [
+      "#outdoor",
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 52,
+    "name": "Venice canals",
+    "desc": "",
+    "currentFolder": "Outdoors",
+    "proposedFolder": "Activities & Dates / Outdoors & Active",
+    "tags": [
+      "#outdoor",
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 43,
+    "name": "Cat cafe",
+    "desc": "",
+    "currentFolder": "Physical",
+    "proposedFolder": "Activities & Dates / Spa & Relaxation",
+    "tags": [
+      "#LA",
+      "#indoor"
+    ],
+    "note": "cat cafe = indoor relaxation venue",
+    "dup": false
+  },
+  {
+    "id": 42,
+    "name": "Indoor flying",
+    "desc": "",
+    "currentFolder": "Physical",
+    "proposedFolder": "Activities & Dates / Outdoors & Active",
+    "tags": [
+      "#indoor"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 44,
+    "name": "Ping pong",
+    "desc": "",
+    "currentFolder": "Physical",
+    "proposedFolder": "Activities & Dates / Outdoors & Active",
+    "tags": [
+      "#indoor"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 41,
+    "name": "Roller skating",
+    "desc": "",
+    "currentFolder": "Physical",
+    "proposedFolder": "Activities & Dates / Outdoors & Active",
+    "tags": [
+      "#indoor"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 251,
+    "name": "SJC airport cool clock screensaver",
+    "desc": "id like to work on a screensaver thats the sjc airport cool clock",
+    "currentFolder": "Projects",
+    "proposedFolder": "Tasks & Projects / Projects",
+    "tags": [],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 238,
+    "name": "Pistachio Almond Cookies",
+    "desc": "add https://houseandhome.com/recipe/pistachio-almond-cookies/",
+    "currentFolder": "Recipes",
+    "proposedFolder": "Food / Recipes",
+    "tags": [
+      "#athome"
+    ],
+    "note": "DUP: also in At-Home Activities (id 237)",
+    "dup": true
+  },
+  {
+    "id": 257,
+    "name": "Erewhon",
+    "desc": "erewhon sashimi not v good wholefoods is better",
+    "currentFolder": "Restaurants",
+    "proposedFolder": "Food / Restaurants",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 258,
+    "name": "Erewhon's miracle noodles",
+    "desc": "erewhon's miracle noodles were v good",
+    "currentFolder": "Restaurants",
+    "proposedFolder": "Food / Restaurants",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 242,
+    "name": "Beach visit",
+    "desc": "also: the beach today was very nice, very calm, nothing intense. had a very nice",
+    "currentFolder": "San Diego",
+    "proposedFolder": "Activities & Dates / Outdoors & Active",
+    "tags": [
+      "#SD",
+      "#outdoor",
+      "#done"
+    ],
+    "note": "SD beach visit",
+    "dup": false
+  },
+  {
+    "id": 215,
+    "name": "Bike",
+    "desc": "ideas for san diego (add an item for each) 1. speed boating 2. bike 3. picklebal",
+    "currentFolder": "San Diego",
+    "proposedFolder": "Activities & Dates / Outdoors & Active",
+    "tags": [
+      "#SD",
+      "#outdoor"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 243,
+    "name": "Hyatt House San Diego Sorrento Mesa",
+    "desc": "staying here. nice hotel, room big + clean. free breakfast (nice). only catch: p",
+    "currentFolder": "San Diego",
+    "proposedFolder": "Trips",
+    "tags": [
+      "#SD"
+    ],
+    "note": "hotel/lodging",
+    "dup": false
+  },
+  {
+    "id": 216,
+    "name": "Pickleball/math",
+    "desc": "ideas for san diego (add an item for each) 1. speed boating 2. bike 3. picklebal",
+    "currentFolder": "San Diego",
+    "proposedFolder": "Activities & Dates / Outdoors & Active",
+    "tags": [
+      "#SD"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 240,
+    "name": "Solare Ristorante",
+    "desc": "Water Grill SD addendum: people super nice + friendly. french press coffee very ",
+    "currentFolder": "San Diego",
+    "proposedFolder": "Food / Restaurants",
+    "tags": [
+      "#SD",
+      "#done"
+    ],
+    "note": "logged visit",
+    "dup": false
+  },
+  {
+    "id": 214,
+    "name": "Speed boating",
+    "desc": "ideas for san diego (add an item for each) 1. speed boating 2. bike 3. picklebal",
+    "currentFolder": "San Diego",
+    "proposedFolder": "Activities & Dates / Outdoors & Active",
+    "tags": [
+      "#SD",
+      "#outdoor",
+      "#bucketlist"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 241,
+    "name": "Village Kitchen and Pie Shop",
+    "desc": "Village Kitchen and Pie Shop — Carlsbad, CA (~20 min north of San Diego, ~15 min",
+    "currentFolder": "San Diego",
+    "proposedFolder": "Food / Restaurants",
+    "tags": [
+      "#SD"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 239,
+    "name": "Water Grill",
+    "desc": "went to Water Grill in San Diego, very good. tuna poke + oysters from all over U",
+    "currentFolder": "San Diego",
+    "proposedFolder": "Food / Restaurants",
+    "tags": [
+      "#SD",
+      "#done"
+    ],
+    "note": "logged visit",
+    "dup": false
+  },
+  {
+    "id": 217,
+    "name": "Zoo",
+    "desc": "ideas for san diego (add an item for each) 1. speed boating 2. bike 3. picklebal",
+    "currentFolder": "San Diego",
+    "proposedFolder": "Activities & Dates / Outdoors & Active",
+    "tags": [
+      "#SD"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 23,
+    "name": "Jeanine's on the Shore",
+    "desc": "",
+    "currentFolder": "Santa Barbara",
+    "proposedFolder": "Food / Restaurants",
+    "tags": [
+      "#SB"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 20,
+    "name": "Lily's Taqueria",
+    "desc": "",
+    "currentFolder": "Santa Barbara",
+    "proposedFolder": "Food / Restaurants",
+    "tags": [
+      "#SB"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 21,
+    "name": "Patxi's Pizza",
+    "desc": "",
+    "currentFolder": "Santa Barbara",
+    "proposedFolder": "Food / Restaurants",
+    "tags": [
+      "#SB"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 22,
+    "name": "Sade Turkish Coffee",
+    "desc": "",
+    "currentFolder": "Santa Barbara",
+    "proposedFolder": "Food / Restaurants",
+    "tags": [
+      "#SB"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 82,
+    "name": "Acapella show",
+    "desc": "",
+    "currentFolder": "Shows/Events",
+    "proposedFolder": "Activities & Dates / Shows & Events",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 83,
+    "name": "Air show",
+    "desc": "",
+    "currentFolder": "Shows/Events",
+    "proposedFolder": "Activities & Dates / Shows & Events",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 89,
+    "name": "Circus show",
+    "desc": "",
+    "currentFolder": "Shows/Events",
+    "proposedFolder": "Activities & Dates / Shows & Events",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 86,
+    "name": "Concerts",
+    "desc": "",
+    "currentFolder": "Shows/Events",
+    "proposedFolder": "Activities & Dates / Shows & Events",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 90,
+    "name": "Cosm events",
+    "desc": "The Matrix",
+    "currentFolder": "Shows/Events",
+    "proposedFolder": "Activities & Dates / Shows & Events",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 81,
+    "name": "Harlem Globetrotters",
+    "desc": "",
+    "currentFolder": "Shows/Events",
+    "proposedFolder": "Activities & Dates / Shows & Events",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 85,
+    "name": "Improv",
+    "desc": "",
+    "currentFolder": "Shows/Events",
+    "proposedFolder": "Activities & Dates / Shows & Events",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 91,
+    "name": "LA Mime Festival",
+    "desc": "September",
+    "currentFolder": "Shows/Events",
+    "proposedFolder": "Activities & Dates / Shows & Events",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 80,
+    "name": "Opera",
+    "desc": "",
+    "currentFolder": "Shows/Events",
+    "proposedFolder": "Activities & Dates / Shows & Events",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 84,
+    "name": "Plays",
+    "desc": "",
+    "currentFolder": "Shows/Events",
+    "proposedFolder": "Activities & Dates / Shows & Events",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 92,
+    "name": "Red Bull events",
+    "desc": "",
+    "currentFolder": "Shows/Events",
+    "proposedFolder": "Activities & Dates / Shows & Events",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 88,
+    "name": "Soundbath",
+    "desc": "",
+    "currentFolder": "Shows/Events",
+    "proposedFolder": "Activities & Dates / Shows & Events",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 87,
+    "name": "Sports games",
+    "desc": "baseball, hockey, soccer",
+    "currentFolder": "Shows/Events",
+    "proposedFolder": "Activities & Dates / Shows & Events",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 61,
+    "name": "Disneyland",
+    "desc": "",
+    "currentFolder": "Theme Parks",
+    "proposedFolder": "Activities & Dates / Theme Parks & Gaming",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 63,
+    "name": "Knott's Berry Farm",
+    "desc": "",
+    "currentFolder": "Theme Parks",
+    "proposedFolder": "Activities & Dates / Theme Parks & Gaming",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 62,
+    "name": "Universal Studios",
+    "desc": "",
+    "currentFolder": "Theme Parks",
+    "proposedFolder": "Activities & Dates / Theme Parks & Gaming",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 70,
+    "name": "Apple picking and baking",
+    "desc": "",
+    "currentFolder": "Tours",
+    "proposedFolder": "Activities & Dates / Tours & Sightseeing",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 69,
+    "name": "Bee farming tour",
+    "desc": "",
+    "currentFolder": "Tours",
+    "proposedFolder": "Activities & Dates / Tours & Sightseeing",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 64,
+    "name": "Chocolate tasting",
+    "desc": "",
+    "currentFolder": "Tours",
+    "proposedFolder": "Activities & Dates / Tours & Sightseeing",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 266,
+    "name": "Drone Coffee Roasters tour",
+    "desc": "Add to Tours: Drone Coffee Roasters tour - request a tour to visit their coffee ",
+    "currentFolder": "Tours",
+    "proposedFolder": "Activities & Dates / Tours & Sightseeing",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 68,
+    "name": "Farm tour",
+    "desc": "",
+    "currentFolder": "Tours",
+    "proposedFolder": "Activities & Dates / Tours & Sightseeing",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 65,
+    "name": "Golf instructor",
+    "desc": "",
+    "currentFolder": "Tours",
+    "proposedFolder": "Activities & Dates / Classes & Lessons",
+    "tags": [
+      "#LA"
+    ],
+    "note": "golf lessons rather than tour",
+    "dup": false
+  },
+  {
+    "id": 66,
+    "name": "VIP studio tours",
+    "desc": "Sony, Paramount",
+    "currentFolder": "Tours",
+    "proposedFolder": "Activities & Dates / Tours & Sightseeing",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 67,
+    "name": "Whale watching",
+    "desc": "",
+    "currentFolder": "Tours",
+    "proposedFolder": "Activities & Dates / Tours & Sightseeing",
+    "tags": [
+      "#LA"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 169,
+    "name": "Added Mamy as Fidelity beneficiary",
+    "desc": "just added mamy as a beneficiary for fidelity accounts",
+    "currentFolder": "Tracking",
+    "proposedFolder": "Life Log",
+    "tags": [
+      "#done"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 196,
+    "name": "Asked Preksha for a date tonight",
+    "desc": "just asked preksha if we can go on a date tonight",
+    "currentFolder": "Tracking",
+    "proposedFolder": "Life Log",
+    "tags": [
+      "#done"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 262,
+    "name": "Ball of big toe hurts",
+    "desc": "ball of big toe hurts the same amount (very little) as past few days",
+    "currentFolder": "Tracking",
+    "proposedFolder": "Life Log",
+    "tags": [
+      "#done"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 261,
+    "name": "Beef",
+    "desc": "i ate beef yesterday",
+    "currentFolder": "Tracking",
+    "proposedFolder": "Life Log",
+    "tags": [
+      "#done"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 260,
+    "name": "Car detailing",
+    "desc": "just detailed my car yesterday",
+    "currentFolder": "Tracking",
+    "proposedFolder": "Life Log",
+    "tags": [
+      "#done"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 150,
+    "name": "Cyclobenzaprine (muscle relaxer)",
+    "desc": "i took cyclobenzaprine yesterday 200mg felt terrible the whole day. my typical d",
+    "currentFolder": "Tracking",
+    "proposedFolder": "Life Log",
+    "tags": [
+      "#done"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 199,
+    "name": "Date with Preksha (not convinced)",
+    "desc": "took preksha out on a date but she is not convinced its a date",
+    "currentFolder": "Tracking",
+    "proposedFolder": "Life Log",
+    "tags": [
+      "#done"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 200,
+    "name": "Date with Preksha (not convinced)",
+    "desc": "took preksha out on a date but she is not convinced its a date",
+    "currentFolder": "Tracking",
+    "proposedFolder": "Life Log",
+    "tags": [
+      "#done"
+    ],
+    "note": "DUP: same as id 199",
+    "dup": true
+  },
+  {
+    "id": 158,
+    "name": "Feeling anxious",
+    "desc": "I'm feeling anxious",
+    "currentFolder": "Tracking",
+    "proposedFolder": "Life Log",
+    "tags": [
+      "#done"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 162,
+    "name": "Flying to San Jose from Burbank",
+    "desc": "Flying now to San Jose from burbank, tsa pre worked!",
+    "currentFolder": "Tracking",
+    "proposedFolder": "Life Log",
+    "tags": [
+      "#done"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 201,
+    "name": "Gave Preksha kisses",
+    "desc": "i gave preksha kisses today she is satisfied",
+    "currentFolder": "Tracking",
+    "proposedFolder": "Life Log",
+    "tags": [
+      "#done"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 202,
+    "name": "Gave Preksha kisses (she is satisfied)",
+    "desc": "i gave preksha kisses today she is satisfied",
+    "currentFolder": "Tracking",
+    "proposedFolder": "Life Log",
+    "tags": [
+      "#done"
+    ],
+    "note": "DUP: same as id 201",
+    "dup": true
+  },
+  {
+    "id": 206,
+    "name": "Knee pain",
+    "desc": "knees have been hurting for the past 5 days, create an entry for each, it starte",
+    "currentFolder": "Tracking",
+    "proposedFolder": "Life Log",
+    "tags": [
+      "#done"
+    ],
+    "note": "DUP: knee pain also logged in At-Home Activities (id 154)",
+    "dup": true
+  },
+  {
+    "id": 180,
+    "name": "Lados visit",
+    "desc": "I got lados today bomb kabob burger, not v good very fried. The Tikka salad was ",
+    "currentFolder": "Tracking",
+    "proposedFolder": "Life Log",
+    "tags": [
+      "#done"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 152,
+    "name": "Practiced piano",
+    "desc": "Practiced piano yesterday for 1.5 hrs",
+    "currentFolder": "Tracking",
+    "proposedFolder": "Life Log",
+    "tags": [
+      "#done"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 163,
+    "name": "Preksha drove me to the airport",
+    "desc": "Preksha drove me to the airport today she is v cute",
+    "currentFolder": "Tracking",
+    "proposedFolder": "Life Log",
+    "tags": [
+      "#done"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 212,
+    "name": "Preksha ran",
+    "desc": "preksha ran today 10 minutes = 0.8 miles",
+    "currentFolder": "Tracking",
+    "proposedFolder": "Life Log",
+    "tags": [
+      "#done"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 148,
+    "name": "Preksha started her period",
+    "desc": "Preksha started her period",
+    "currentFolder": "Tracking",
+    "proposedFolder": "Life Log",
+    "tags": [
+      "#done"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 256,
+    "name": "Preksha's healthy food",
+    "desc": "[User uploaded file: photo.jpg] preksha's healthy food",
+    "currentFolder": "Tracking",
+    "proposedFolder": "Life Log",
+    "tags": [
+      "#done"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 181,
+    "name": "Shore Line Park sit for 5 hours",
+    "desc": "i sat in shore line park today for 5 hours it was v nice the sun and the wind to",
+    "currentFolder": "Tracking",
+    "proposedFolder": "Life Log",
+    "tags": [
+      "#done"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 211,
+    "name": "Stomach hurting / bloaty",
+    "desc": "my stomach has been hurting a bit feeling a bit bloaty for a few days om suspsec",
+    "currentFolder": "Tracking",
+    "proposedFolder": "Life Log",
+    "tags": [
+      "#done"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 182,
+    "name": "TSA Pre worked",
+    "desc": "tsa pre worked today it was nice",
+    "currentFolder": "Tracking",
+    "proposedFolder": "Life Log",
+    "tags": [
+      "#done"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 193,
+    "name": "Teeth cleaning",
+    "desc": "just finished my teeth cleaning",
+    "currentFolder": "Tracking",
+    "proposedFolder": "Life Log",
+    "tags": [
+      "#done"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 178,
+    "name": "Track Mamy's daily schedule",
+    "desc": "make the tracker bot keep track of mamy's schedule every day",
+    "currentFolder": "Tracking",
+    "proposedFolder": "Tasks & Projects / Projects",
+    "tags": [],
+    "note": "automation task",
+    "dup": false
+  },
+  {
+    "id": 149,
+    "name": "back pain",
+    "desc": "add an item called back pain and mark a completion for it",
+    "currentFolder": "Tracking",
+    "proposedFolder": "Life Log",
+    "tags": [
+      "#done"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 183,
+    "name": "massage chair massage",
+    "desc": "got a massage chair massage $5 for 15 min at sjc at gate 21 its so nice",
+    "currentFolder": "Tracking",
+    "proposedFolder": "Life Log",
+    "tags": [
+      "#done"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 244,
+    "name": "relationship retrospective",
+    "desc": "",
+    "currentFolder": "Tracking",
+    "proposedFolder": "Life Log",
+    "tags": [
+      "#done"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 250,
+    "name": "relationship retrospective",
+    "desc": "fought with preksha today about the san diego to lax thing",
+    "currentFolder": "Tracking",
+    "proposedFolder": "Life Log",
+    "tags": [
+      "#done"
+    ],
+    "note": "DUP: same as id 244",
+    "dup": true
+  },
+  {
+    "id": 116,
+    "name": "Bakersfield",
+    "desc": "",
+    "currentFolder": "Trips",
+    "proposedFolder": "Trips",
+    "tags": [],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 112,
+    "name": "Big Bear Lake",
+    "desc": "",
+    "currentFolder": "Trips",
+    "proposedFolder": "Trips",
+    "tags": [],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 110,
+    "name": "Cancun",
+    "desc": "",
+    "currentFolder": "Trips",
+    "proposedFolder": "Trips",
+    "tags": [],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 111,
+    "name": "Hawaii",
+    "desc": "",
+    "currentFolder": "Trips",
+    "proposedFolder": "Trips",
+    "tags": [],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 166,
+    "name": "Lake Piru trip with Preksha",
+    "desc": "Go to lake piru with preksha it's only 1 hour from pasadena",
+    "currentFolder": "Trips",
+    "proposedFolder": "Trips",
+    "tags": [],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 117,
+    "name": "Mountain range",
+    "desc": "",
+    "currentFolder": "Trips",
+    "proposedFolder": "Trips",
+    "tags": [],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 115,
+    "name": "New Jersey",
+    "desc": "",
+    "currentFolder": "Trips",
+    "proposedFolder": "Trips",
+    "tags": [],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 114,
+    "name": "Santa Barbara",
+    "desc": "",
+    "currentFolder": "Trips",
+    "proposedFolder": "Trips",
+    "tags": [
+      "#SB"
+    ],
+    "note": "DUP: also in Already Done as Santa Barbara trip (id 134)",
+    "dup": true
+  },
+  {
+    "id": 113,
+    "name": "Solvang",
+    "desc": "",
+    "currentFolder": "Trips",
+    "proposedFolder": "Trips",
+    "tags": [],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 107,
+    "name": "Stargazing destination",
+    "desc": "",
+    "currentFolder": "Trips",
+    "proposedFolder": "Trips",
+    "tags": [],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 255,
+    "name": "Super yacht trip cruise",
+    "desc": "super yacht trip cruise",
+    "currentFolder": "Trips",
+    "proposedFolder": "Trips",
+    "tags": [
+      "#bucketlist",
+      "#splurge"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 109,
+    "name": "Vegas",
+    "desc": "",
+    "currentFolder": "Trips",
+    "proposedFolder": "Trips",
+    "tags": [],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 108,
+    "name": "Weekend cruise",
+    "desc": "",
+    "currentFolder": "Trips",
+    "proposedFolder": "Trips",
+    "tags": [],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 118,
+    "name": "[Trip ideas doc]",
+    "desc": "https://docs.google.com/document/d/1Wq9DE8xnYgqn2lu9-DIXWnzbvC9eHIyFsGrSG7YsPq4/",
+    "currentFolder": "Trips",
+    "proposedFolder": "Trips",
+    "tags": [],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 254,
+    "name": "Batting cage with Jeff",
+    "desc": "go to batting cage with jeff",
+    "currentFolder": "Unique Experiences",
+    "proposedFolder": "Activities & Dates / Outdoors & Active",
+    "tags": [
+      "#group"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 235,
+    "name": "Dirt bike riding",
+    "desc": "dirt bike riding me and preksha",
+    "currentFolder": "Unique Experiences",
+    "proposedFolder": "Activities & Dates / Outdoors & Active",
+    "tags": [
+      "#outdoor",
+      "#with-preksha",
+      "#bucketlist"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 234,
+    "name": "Fun pics ideas to take w Preksha",
+    "desc": "fun pics ifeas to take w preksha https://www.facebook.com/reel/1262171092544867/",
+    "currentFolder": "Unique Experiences",
+    "proposedFolder": "Activities & Dates / Couple & Romantic",
+    "tags": [
+      "#couple",
+      "#with-preksha"
+    ],
+    "note": "photo ideas",
+    "dup": false
+  },
+  {
+    "id": 138,
+    "name": "Horseback riding + cowboy breakfast in the desert",
+    "desc": "",
+    "currentFolder": "Unique Experiences",
+    "proposedFolder": "Activities & Dates / Bucket List",
+    "tags": [
+      "#outdoor",
+      "#bucketlist"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 139,
+    "name": "makemydrivefun.com",
+    "desc": "road trip planning",
+    "currentFolder": "Unique Experiences",
+    "proposedFolder": "Trips",
+    "tags": [],
+    "note": "road trip tool",
+    "dup": false
+  },
+  {
+    "id": 142,
+    "name": "https://maps.app.goo.gl/153m2d9dUjFq7ASP6",
+    "desc": "",
+    "currentFolder": "Unknown Links (need manual check)",
+    "proposedFolder": "Inbox / To Sort",
+    "tags": [
+      "#needs-research"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 141,
+    "name": "https://maps.app.goo.gl/1W3BqDoFzwaSJRiG9",
+    "desc": "",
+    "currentFolder": "Unknown Links (need manual check)",
+    "proposedFolder": "Inbox / To Sort",
+    "tags": [
+      "#needs-research"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 143,
+    "name": "https://maps.app.goo.gl/6bK7bCnSCsninoVo9",
+    "desc": "New Jersey",
+    "currentFolder": "Unknown Links (need manual check)",
+    "proposedFolder": "Trips",
+    "tags": [
+      "#needs-research"
+    ],
+    "note": "New Jersey location link",
+    "dup": false
+  },
+  {
+    "id": 204,
+    "name": "https://maps.app.goo.gl/KuDPUev25Yy8dB9A6?g_st=it",
+    "desc": "https://maps.app.goo.gl/KuDPUev25Yy8dB9A6?g_st=it",
+    "currentFolder": "Unknown Links (need manual check)",
+    "proposedFolder": "Inbox / To Sort",
+    "tags": [
+      "#needs-research"
+    ],
+    "note": "bare maps link",
+    "dup": false
+  },
+  {
+    "id": 165,
+    "name": "https://maps.app.goo.gl/XmxYqGb3oyGxEr1k7?g_st=it",
+    "desc": "https://maps.app.goo.gl/XmxYqGb3oyGxEr1k7?g_st=it",
+    "currentFolder": "Unknown Links (need manual check)",
+    "proposedFolder": "Inbox / To Sort",
+    "tags": [
+      "#needs-research"
+    ],
+    "note": "bare maps link",
+    "dup": false
+  },
+  {
+    "id": 140,
+    "name": "https://maps.app.goo.gl/zn2QdTZwrPDYfwyz8",
+    "desc": "",
+    "currentFolder": "Unknown Links (need manual check)",
+    "proposedFolder": "Inbox / To Sort",
+    "tags": [
+      "#needs-research"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 144,
+    "name": "https://t.me/c/1674723829/10",
+    "desc": "",
+    "currentFolder": "Unknown Links (need manual check)",
+    "proposedFolder": "Inbox / To Sort",
+    "tags": [
+      "#needs-research"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 146,
+    "name": "https://www.facebook.com/reel/1241354260735628",
+    "desc": "",
+    "currentFolder": "Unknown Links (need manual check)",
+    "proposedFolder": "Inbox / To Sort",
+    "tags": [
+      "#needs-research"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 145,
+    "name": "https://www.facebook.com/reel/1278879213791948",
+    "desc": "",
+    "currentFolder": "Unknown Links (need manual check)",
+    "proposedFolder": "Inbox / To Sort",
+    "tags": [
+      "#needs-research"
+    ],
+    "note": "",
+    "dup": false
+  },
+  {
+    "id": 147,
+    "name": "https://www.facebook.com/reel/1971403923676789",
+    "desc": "Madeline Garden Bistro",
+    "currentFolder": "Unknown Links (need manual check)",
+    "proposedFolder": "Food / Restaurants",
+    "tags": [
+      "#LA",
+      "#needs-research"
+    ],
+    "note": "Madeline Garden Bistro link",
+    "dup": false
+  }
+];
+
+const TAG_COLORS = {
+  "#group": "#6c63ff",
+  "#couple": "#6c63ff",
+  "#solo": "#6c63ff",
+  "#with-preksha": "#6c63ff",
+  "#family": "#6c63ff",
+  "#athome": "#28a745",
+  "#outdoor": "#28a745",
+  "#indoor": "#28a745",
+  "#LA": "#fd7e14",
+  "#SD": "#fd7e14",
+  "#SB": "#fd7e14",
+  "#vegas": "#fd7e14",
+  "#hawaii": "#fd7e14",
+  "#pasadena": "#fd7e14",
+  "#international": "#fd7e14",
+  "#bucketlist": "#dc3545",
+  "#quick": "#dc3545",
+  "#big-trip": "#dc3545",
+  "#done": "#17a2b8",
+  "#needs-research": "#17a2b8",
+  "#booked": "#17a2b8",
+  "#idea": "#17a2b8",
+  "#anniversary": "#e83e8c",
+  "#valentine": "#e83e8c",
+  "#summer": "#e83e8c",
+  "#birthday": "#e83e8c",
+  "#free": "#6f42c1",
+  "#splurge": "#6f42c1",
+};
+
+let activeTagFilters = new Set();
+let activeFolderFilter = "";
+
+function tagChip(tag, clickable=true) {
+  const c = TAG_COLORS[tag] || "#888";
+  const click = clickable ? `onclick="rowTagClick('${tag}')"` : "";
+  return `<span class="row-tag" ${click} style="background:${c}20;color:${c};border:1px solid ${c}40">${tag}</span>`;
+}
+
+function renderRows(items) {
+  const tbody = document.getElementById("table-body");
+  if (items.length === 0) {
+    tbody.innerHTML = "";
+    document.getElementById("no-results").style.display = "block";
+    document.getElementById("result-count").textContent = "No items match.";
+    return;
+  }
+  document.getElementById("no-results").style.display = "none";
+  document.getElementById("result-count").textContent = `Showing ${items.length} of ${DATA.length} items`;
+
+  tbody.innerHTML = items.map(d => {
+    const changed = d.currentFolder !== d.proposedFolder;
+    const rowClass = d.dup ? "dup-row" : (changed ? "changed" : "");
+    const dupBadge = d.dup ? '<span class="dup-badge">DUP</span>' : "";
+    const tags = (d.tags || []).map(t => tagChip(t)).join(" ");
+    const nameShort = d.name.length > 60 ? d.name.slice(0, 57) + "…" : d.name;
+    return `<tr class="${rowClass}" data-id="${d.id}">
+      <td class="name-cell" title="${d.name.replace(/"/g, '&quot;')}">${esc(nameShort)} ${dupBadge}</td>
+      <td class="folder-cell">${esc(d.currentFolder)}</td>
+      <td class="arrow-cell">→</td>
+      <td class="proposed-cell">${esc(d.proposedFolder)}</td>
+      <td class="tags-cell">${tags}</td>
+      <td class="note-cell">${esc(d.note || "")}</td>
+    </tr>`;
+  }).join("");
+}
+
+function esc(s) {
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+function applyFilters() {
+  const q = document.getElementById("search-box").value.toLowerCase();
+  const folderSel = document.getElementById("folder-select").value;
+  const dupOnly = document.getElementById("dup-only").checked;
+  const changedOnly = document.getElementById("changed-only").checked;
+
+  let items = DATA;
+
+  if (q) items = items.filter(d => d.name.toLowerCase().includes(q));
+
+  // Folder filter — match full or top-level
+  const ff = activeFolderFilter || folderSel;
+  if (ff) {
+    items = items.filter(d =>
+      d.proposedFolder === ff ||
+      d.proposedFolder.startsWith(ff + " / ")
+    );
+  }
+
+  if (activeTagFilters.size > 0) {
+    items = items.filter(d => {
+      const dt = new Set(d.tags || []);
+      for (const t of activeTagFilters) if (!dt.has(t)) return false;
+      return true;
+    });
+  }
+
+  if (dupOnly) items = items.filter(d => d.dup);
+  if (changedOnly) items = items.filter(d => d.currentFolder !== d.proposedFolder);
+
+  renderRows(items);
+  updateActiveFilters();
+}
+
+function filterFolder(el) {
+  const folder = el.dataset.folder;
+  if (activeFolderFilter === folder) {
+    activeFolderFilter = "";
+    document.querySelectorAll(".tree-top, .tree-sub").forEach(e => e.classList.remove("active"));
+  } else {
+    activeFolderFilter = folder;
+    document.querySelectorAll(".tree-top, .tree-sub").forEach(e => {
+      e.classList.toggle("active", e.dataset.folder === folder);
+    });
+  }
+  document.getElementById("folder-select").value = "";
+  applyFilters();
+}
+
+function filterTag(el) {
+  const tag = el.dataset.tag;
+  if (activeTagFilters.has(tag)) {
+    activeTagFilters.delete(tag);
+    el.classList.remove("active");
+  } else {
+    activeTagFilters.add(tag);
+    el.classList.add("active");
+  }
+  applyFilters();
+}
+
+function rowTagClick(tag) {
+  const legendChip = document.querySelector(`.tag-chip[data-tag="${tag}"]`);
+  if (legendChip) filterTag(legendChip);
+  else {
+    activeTagFilters.add(tag);
+    applyFilters();
+  }
+}
+
+function updateActiveFilters() {
+  const container = document.getElementById("active-filters");
+  const pills = [];
+  if (activeFolderFilter) {
+    pills.push(`<span class="filter-pill" onclick="clearFolderFilter()">📁 ${activeFolderFilter}</span>`);
+  }
+  for (const t of activeTagFilters) {
+    pills.push(`<span class="filter-pill" onclick="removeTagFilter('${t}')">${t}</span>`);
+  }
+  container.innerHTML = pills.join("");
+}
+
+function clearFolderFilter() {
+  activeFolderFilter = "";
+  document.querySelectorAll(".tree-top, .tree-sub").forEach(e => e.classList.remove("active"));
+  document.getElementById("folder-select").value = "";
+  applyFilters();
+}
+
+function removeTagFilter(tag) {
+  activeTagFilters.delete(tag);
+  const chip = document.querySelector(`.tag-chip[data-tag="${tag}"]`);
+  if (chip) chip.classList.remove("active");
+  applyFilters();
+}
+
+function clearFilters() {
+  activeFolderFilter = "";
+  activeTagFilters.clear();
+  document.getElementById("search-box").value = "";
+  document.getElementById("folder-select").value = "";
+  document.getElementById("dup-only").checked = false;
+  document.getElementById("changed-only").checked = false;
+  document.querySelectorAll(".tree-top, .tree-sub").forEach(e => e.classList.remove("active"));
+  document.querySelectorAll(".tag-chip").forEach(e => e.classList.remove("active"));
+  applyFilters();
+}
+
+// Init
+document.addEventListener("DOMContentLoaded", () => {
+  const dupCount = DATA.filter(d => d.dup).length;
+  const tagSet = new Set();
+  DATA.forEach(d => (d.tags || []).forEach(t => tagSet.add(t)));
+  document.getElementById("dup-stat").textContent = dupCount + " duplicates";
+  document.getElementById("tag-stat").textContent = tagSet.size + " unique tags";
+  renderRows(DATA);
+});
+</script>
+</body>
+</html>

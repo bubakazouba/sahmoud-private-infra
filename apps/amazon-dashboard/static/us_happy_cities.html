@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Happiest US Cities</title>
+<style>
+  :root{--bg:#0f1419;--panel:#1a212b;--border:#2d3744;--text:#e6ecf3;--dim:#8b97a7;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:14px}
+  .wrap{max-width:1040px;margin:0 auto;padding:20px}
+  h1{font-size:21px;margin:0 0 2px}
+  .sub{color:var(--dim);font-size:13px;margin-bottom:16px;line-height:1.5}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .panel{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px}
+  .ptitle{font-size:14px;font-weight:700;margin:0 0 10px}
+  .row{display:flex;align-items:center;gap:8px;margin:5px 0}
+  .rk{width:108px;font-size:11.5px;color:#cdd6e0;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .barwrap{flex:1;background:#141b24;border-radius:4px;height:20px}
+  .bar{height:100%;border-radius:4px;display:flex;align-items:center;justify-content:flex-end;padding-right:6px;font-size:10.5px;font-weight:700;color:#0f1419}
+  .note{color:var(--dim);font-size:12px;line-height:1.6;margin-top:16px}
+  @media(max-width:720px){.cols{grid-template-columns:1fr}}
+</style></head>
+<body><div class="wrap">
+  <h1>&#127961;&#65039; Happiest US Cities &mdash; more granular than state</h1>
+  <div class="sub">Real data: WalletHub <b>Happiest Cities in America</b> (2026), 182 of the largest US cities scored 0&ndash;100 on emotional &amp; physical wellbeing, income/employment, and community. This is the finest TRUE happiness index below state level. (For actual ZIP/tract resolution you'd switch to CDC PLACES mental-distress data, a proxy.)</div>
+  <div class="cols">
+    <div class="panel"><div class="ptitle" style="color:#3ecf8e">Top 20 happiest</div><div id="top"></div></div>
+    <div class="panel"><div class="ptitle" style="color:#ff5a3c">15 least happy (of 182)</div><div id="bot"></div></div>
+  </div>
+  <div class="note" id="note"></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script>
+const TOP=[[1,"Fremont, CA",74.09],[2,"Bismarck, ND",73.11],[3,"Scottsdale, AZ",71.36],[4,"S. Burlington, VT",70.15],[5,"Fargo, ND",69.36],[6,"Overland Park, KS",68.45],[7,"Charleston, SC",68.44],[8,"Irvine, CA",67.99],[9,"Gilbert, AZ",67.96],[10,"San Jose, CA",67.79],[11,"Burlington, VT",67.54],[12,"Madison, WI",66.35],[13,"Columbia, MD",66.28],[14,"Chandler, AZ",65.69],[15,"Seattle, WA",65.62],[16,"Plano, TX",65.34],[17,"San Francisco, CA",64.99],[18,"Lincoln, NE",64.90],[19,"Portland, ME",64.59],[20,"Tempe, AZ",64.30]];
+const BOT=[[168,"Montgomery, AL",41.35],[169,"Columbus, GA",40.61],[170,"Baton Rouge, LA",40.47],[171,"Birmingham, AL",40.37],[172,"Baltimore, MD",40.28],[173,"Akron, OH",40.11],[174,"Dover, DE",39.08],[175,"Fort Smith, AR",38.66],[176,"Augusta, GA",38.24],[177,"Toledo, OH",37.21],[178,"Huntington, WV",37.20],[179,"Cleveland, OH",36.50],[180,"Shreveport, LA",34.93],[181,"Memphis, TN",34.39],[182,"Detroit, MI",29.55]];
+const color=d3.scaleSequential().domain([29,74]).interpolator(d3.interpolateRdYlGn);
+const max=76;
+const render=(arr,el)=>document.getElementById(el).innerHTML=arr.map(d=>
+  `<div class="row"><div class="rk">${d[0]}. ${d[1]}</div><div class="barwrap"><div class="bar" style="width:${d[2]/max*100}%;background:${color(d[2])}">${d[2].toFixed(1)}</div></div></div>`).join("");
+render(TOP,"top"); render(BOT,"bot");
+document.getElementById("note").innerHTML=
+ "Happiest cities skew to the West (Bay Area tech hubs, Phoenix suburbs like Scottsdale/Gilbert/Chandler/Tempe), the Dakotas, and college/coastal towns (Charleston, Burlington, Madison). Note <b>Irvine, CA is #8</b>. Least happy cluster in the Deep South, Rust Belt (Detroit #182, Cleveland, Toledo, Akron) and Appalachia. "+
+ "Source: WalletHub 'Happiest Cities in America' 2026, 182 largest US cities, 30 metrics. A true happiness index but only covers larger cities, not full geographic coverage like the CDC PLACES zip/tract mental-health data.";
+</script></body></html>

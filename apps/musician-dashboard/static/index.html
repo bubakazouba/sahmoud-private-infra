@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Musician Quotes — Mon 5/25</title>
+<style>
+  :root {
+    --bg: #0f1419;
+    --panel: #1a212b;
+    --panel2: #232b37;
+    --border: #2d3744;
+    --text: #e6ecf3;
+    --text-dim: #8b97a7;
+    --quoted-under: #3fb950;
+    --quoted-under-bg: rgba(63, 185, 80, 0.12);
+    --quoted-over: #d29922;
+    --quoted-over-bg: rgba(210, 153, 34, 0.15);
+    --messaged: #58a6ff;
+    --messaged-bg: rgba(88, 166, 255, 0.12);
+    --no-reply: #8b97a7;
+    --no-reply-bg: rgba(139, 151, 167, 0.10);
+    --skipped: #ff7b72;
+    --skipped-bg: rgba(255, 123, 114, 0.12);
+    --live-post: #a371f7;
+    --live-post-bg: rgba(163, 113, 247, 0.12);
+    --accent: #58a6ff;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.5; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 16px; }
+  header { padding: 20px 0 8px; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  .meta-line { color: var(--text-dim); font-size: 13px; }
+  .meta-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px 16px;
+    margin: 12px 0 18px; padding: 12px; background: var(--panel); border: 1px solid var(--border); border-radius: 6px;
+    font-size: 13px;
+  }
+  .meta-grid div span { color: var(--text-dim); }
+
+  .summary {
+    display: grid; grid-template-columns: 1fr; gap: 10px;
+    margin-bottom: 16px;
+  }
+  @media (min-width: 700px) { .summary { grid-template-columns: 1fr 1fr 1fr 1fr; } }
+  .sumcard { padding: 12px; border-radius: 6px; background: var(--panel); border: 1px solid var(--border); }
+  .sumcard h3 { margin: 0 0 4px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-dim); }
+  .sumcard .big { font-size: 24px; font-weight: 700; }
+  .sumcard.q .big { color: var(--quoted-under); }
+  .sumcard.m .big { color: var(--messaged); }
+  .sumcard.n .big { color: var(--no-reply); }
+  .sumcard.s .big { color: var(--skipped); }
+
+  .reco {
+    padding: 14px; background: var(--panel); border: 1px solid var(--border); border-radius: 6px;
+    margin-bottom: 16px;
+  }
+  .reco h3 { margin: 0 0 8px; font-size: 14px; }
+  .reco-bucket { margin: 6px 0; padding-left: 12px; border-left: 3px solid var(--accent); font-size: 13px; }
+  .reco-bucket b { color: var(--accent); }
+
+  table {
+    width: 100%; border-collapse: collapse;
+    background: var(--panel); border: 1px solid var(--border); border-radius: 6px; overflow: hidden;
+  }
+  thead { background: var(--panel2); }
+  th, td { padding: 10px 12px; text-align: left; border-top: 1px solid var(--border); vertical-align: top; font-size: 13px; }
+  th { font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-dim); border-top: none; }
+  td.name { font-weight: 600; min-width: 130px; }
+  td.platform { color: var(--text-dim); font-size: 12px; white-space: nowrap; }
+  td.price { font-variant-numeric: tabular-nums; font-weight: 600; white-space: nowrap; }
+  td.notes { font-size: 12px; color: var(--text); max-width: 380px; }
+  td.contact { font-size: 12px; white-space: nowrap; }
+  td a { color: var(--accent); text-decoration: none; word-break: break-all; }
+  td a:hover { text-decoration: underline; }
+
+  .chip {
+    display: inline-block; padding: 2px 8px; border-radius: 999px;
+    font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+  .chip.quoted_under { background: var(--quoted-under-bg); color: var(--quoted-under); }
+  .chip.quoted_over { background: var(--quoted-over-bg); color: var(--quoted-over); }
+  .chip.messaged { background: var(--messaged-bg); color: var(--messaged); }
+  .chip.no_reply { background: var(--no-reply-bg); color: var(--no-reply); }
+  .chip.skipped, .chip.failed { background: var(--skipped-bg); color: var(--skipped); }
+  .chip.live_post { background: var(--live-post-bg); color: var(--live-post); }
+
+  /* Mobile: stack table rows as cards */
+  @media (max-width: 700px) {
+    table thead { display: none; }
+    table, tbody, tr, td { display: block; width: 100%; }
+    tr { padding: 12px; border-top: 1px solid var(--border); }
+    td { padding: 4px 0; border: none; }
+    td.notes { max-width: none; }
+    td.name { font-size: 16px; }
+    td:before { content: attr(data-label); display: inline-block; min-width: 80px; color: var(--text-dim); font-size: 11px; text-transform: uppercase; margin-right: 8px; }
+    td.name:before { display: none; }
+  }
+
+  footer { margin: 24px 0 32px; padding-top: 16px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 12px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>Musician Quote Tracker</h1>
+    <div class="meta-line" id="meta-line"></div>
+  </header>
+
+  <div class="meta-grid" id="meta-grid"></div>
+
+  <div class="summary" id="summary"></div>
+
+  <div class="reco" id="reco"></div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Platform</th>
+        <th>Status</th>
+        <th>Price</th>
+        <th>Rate / Avail</th>
+        <th>Reviews / Background</th>
+        <th>Notes</th>
+        <th>Contact / Link</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+
+  <footer>
+    Data: state/_musician_quotes/log.jsonl + slashhashdash@ Gmail + GigSalad inbox scrape. Last refreshed manually — DM the assistant 'refresh musician dashboard' to re-pull live state.
+  </footer>
+</div>
+
+<script>
+const STATUS_LABEL = {
+  quoted_under: "quoted (under budget)",
+  quoted_over: "quoted (over budget)",
+  quoted: "quoted",
+  messaged: "messaged only",
+  no_reply: "no reply yet",
+  skipped: "skipped",
+  failed: "failed",
+  live_post: "live post"
+};
+
+async function load() {
+  const r = await fetch('data.json');
+  const d = await r.json();
+
+  document.getElementById('meta-line').textContent = `Refreshed ${d.meta.last_refreshed_pt} PT`;
+
+  const mg = document.getElementById('meta-grid');
+  mg.innerHTML = `
+    <div><span>Gig date:</span> ${d.meta.gig_date}</div>
+    <div><span>Time:</span> ${d.meta.gig_time}</div>
+    <div><span>Location:</span> ${d.meta.location}</div>
+    <div><span>Vibe:</span> ${d.meta.vibe}</div>
+    <div><span>Budget:</span> $${d.meta.budget_ceiling_usd}</div>
+    <div><span>Headcount:</span> ${d.meta.headcount}</div>
+    <div><span>Keyboard on site:</span> ${d.meta.keyboard_on_site ? 'yes' : 'no'}</div>
+  `;
+
+  // Summary cards
+  const s = d.summary;
+  document.getElementById('summary').innerHTML = `
+    <div class="sumcard q"><h3>Quoted</h3><div class="big">${s.quoted}</div></div>
+    <div class="sumcard m"><h3>Messaged only</h3><div class="big">${s.messaged_only}</div></div>
+    <div class="sumcard n"><h3>No reply</h3><div class="big">${s.no_reply}</div></div>
+    <div class="sumcard s"><h3>Skipped/Failed</h3><div class="big">${s.skipped_or_failed}</div></div>
+  `;
+
+  // Recommendation buckets
+  const r2 = d.summary.recommendation_buckets;
+  document.getElementById('reco').innerHTML = `
+    <h3>Recommendation buckets</h3>
+    <div class="reco-bucket"><b>Best credentials:</b> ${r2.best_credentials}</div>
+    <div class="reco-bucket"><b>Best value w/ vetting:</b> ${r2.best_value_with_vetting}</div>
+    <div class="reco-bucket"><b>Best value (no vetting):</b> ${r2.best_value_without_vetting}</div>
+  `;
+
+  // Table rows
+  const budgetUsd = d.meta.budget_ceiling_usd;
+  const tbody = document.getElementById('tbody');
+  d.providers.forEach(p => {
+    let statusKey = p.status;
+    if (p.status === 'quoted' && p.price_total_usd != null) {
+      statusKey = (p.price_total_usd <= budgetUsd) ? 'quoted_under' : 'quoted_over';
+    }
+    const link = p.profile_url ? `<a href="${p.profile_url}" target="_blank">profile</a>` : '';
+    const contact = p.contact && p.contact !== '—' ? p.contact : '';
+    tbody.innerHTML += `
+      <tr>
+        <td class="name">${p.name}</td>
+        <td class="platform" data-label="Platform">${p.platform}</td>
+        <td data-label="Status"><span class="chip ${statusKey}">${STATUS_LABEL[statusKey] || statusKey}</span></td>
+        <td class="price" data-label="Price">${p.price_total_usd != null ? '$' + p.price_total_usd : '—'}</td>
+        <td data-label="Rate">${p.rate || '—'}<br><small style="color:var(--text-dim)">${p.available || ''}</small></td>
+        <td class="notes" data-label="Reviews">${p.reviews || '—'}</td>
+        <td class="notes" data-label="Notes">${p.notes || ''}</td>
+        <td class="contact" data-label="Contact">${contact}${contact && link ? '<br>' : ''}${link}</td>
+      </tr>
+    `;
+  });
+}
+load();
+</script>
+</body>
+</html>

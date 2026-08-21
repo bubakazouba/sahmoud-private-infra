@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>To-Do App — UI Concepts</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  background:radial-gradient(1200px 600px at 70% -10%,#eef1ff,#f6f6f8 60%);color:#1c2030;
+  min-height:100vh;-webkit-font-smoothing:antialiased}
+.wrap{max-width:880px;margin:0 auto;padding:60px 22px 80px}
+.kicker{font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#6d5efc;margin:0 0 8px}
+h1{font-size:38px;margin:0 0 8px;font-weight:800;letter-spacing:-.02em}
+.lede{font-size:16px;color:#5b6072;margin:0 0 36px;max-width:560px;line-height:1.5}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+a.card{display:block;text-decoration:none;color:inherit;background:#fff;border:1px solid #e7e8f0;border-radius:18px;
+  padding:22px 22px 20px;box-shadow:0 6px 22px rgba(40,40,90,.07);transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden}
+a.card:hover{transform:translateY(-4px);box-shadow:0 18px 36px rgba(40,40,90,.16)}
+.swatch{height:64px;border-radius:12px;margin:-2px 0 16px;display:flex;align-items:center;justify-content:center;
+  font-size:30px}
+.s1{background:linear-gradient(135deg,#f6f6f4,#e9e9e6)}
+.s2{background:linear-gradient(135deg,#fbfbfa,#ededec);border:1px solid #ededec}
+.s3{background:linear-gradient(135deg,#0f172a,#1e293b);color:#38bdf8}
+.s4{background:linear-gradient(135deg,#6d5efc,#a78bfa);color:#fff}
+.cname{font-size:19px;font-weight:800;margin:0 0 5px}
+.cdesc{font-size:14px;color:#5b6072;line-height:1.45;margin:0 0 16px}
+.go{font-size:13px;font-weight:700;color:#6d5efc;display:flex;align-items:center;gap:6px}
+.foot{margin-top:40px;color:#8b8fa0;font-size:13px;text-align:center}
+.foot b{color:#5b6072}
+@media(max-width:640px){.grid{grid-template-columns:1fr}h1{font-size:30px}.wrap{padding:40px 16px 60px}}
+</style></head>
+<body><div class="wrap">
+<p class="kicker">Pick one</p>
+<h1>To-Do App — UI Concepts</h1>
+<p class="lede">Four distinct looks for your to-do app, each populated with your real list (258 items, freshly reorganized). Tap any card to explore. Works great on phone and desktop.</p>
+<div class="grid">
+  <a class="card" href="todo-ui-calm.html">
+    <div class="swatch s1">&#9737;</div>
+    <p class="cname">Calm</p>
+    <p class="cdesc">Things-3 / Apple-Reminders feel: airy whitespace, soft neutrals, a folder sidebar with counts and clean check-circle rows. Quiet and elegant.</p>
+    <span class="go">Open concept &rarr;</span>
+  </a>
+  <a class="card" href="todo-ui-notion.html">
+    <div class="swatch s2">&#9636;</div>
+    <p class="cname">Database</p>
+    <p class="cdesc">Notion-style table with Item / Folder / Tags / Status columns, plus a Board toggle and group-by, search, and folder/tag/status filters. Dense but tidy.</p>
+    <span class="go">Open concept &rarr;</span>
+  </a>
+  <a class="card" href="todo-ui-kanban.html">
+    <div class="swatch s3">&#9783;</div>
+    <p class="cname">Board</p>
+    <p class="cdesc">Dark Kanban with draggy-feeling cards in columns. Toggle columns between top-level folders and tags; filter with the tag-pill row up top.</p>
+    <span class="go">Open concept &rarr;</span>
+  </a>
+  <a class="card" href="todo-ui-cards.html">
+    <div class="swatch s4">&#10024;</div>
+    <p class="cname">Cards</p>
+    <p class="cdesc">The app-like, fun one: a tag-pill cloud filter, a responsive card grid grouped by folder with per-folder counts, and a light/dark toggle.</p>
+    <span class="go">Open concept &rarr;</span>
+  </a>
+</div>
+<p class="foot">All concepts are static visual mockups using your <b>real reorganized data</b> — not wired to a backend.</p>
+</div></body></html>

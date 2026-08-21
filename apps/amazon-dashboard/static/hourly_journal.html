@@ -1,0 +1,622 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hourly Journal</title><style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+ background:#0d1117;color:#c9d1d9;padding:26px;max-width:1400px;margin:0 auto;
+ font-variant-numeric:tabular-nums}
+h1{font-size:1.7em;color:#e6b422;letter-spacing:-.01em}
+.sub{color:#8b949e;font-size:.86em;margin-top:4px}
+.stamp{color:#6e7681;font-size:.72em;margin-top:3px}
+section{margin-top:34px}
+h2{font-size:1.02em;color:#e6edf3;margin-bottom:4px;letter-spacing:.02em}
+.hint{color:#8b949e;font-size:.78em;margin-bottom:13px;max-width:80ch;line-height:1.5}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.card{background:#161b22;border:1px solid #21262d;border-radius:9px;padding:14px 15px}
+.card .v{font-size:1.7em;font-weight:600;color:#e6edf3}
+.card .k{font-size:.73em;color:#8b949e;margin-top:3px;text-transform:uppercase;
+ letter-spacing:.05em}
+.wrap{overflow-x:auto}
+.strip{display:grid;grid-template-columns:96px 1fr;gap:9px;align-items:center;
+ margin-bottom:5px;min-width:720px}
+.strip .d{font-size:.76em;color:#8b949e;text-align:right}
+.track{position:relative;height:23px;background:#161b22;border-radius:4px;
+ border:1px solid #21262d}
+.blk{position:absolute;top:0;height:100%;border-radius:3px;cursor:default;
+ border-right:1px solid #0d1117}
+/* The inferred blocks must be unmistakable at strip scale, not merely different on
+   close inspection -- at 23px tall a subtle hatch reads as solid and the chart silently
+   presents inference as fact. Darkened + high-contrast diagonal + dashed top edge. */
+.blk.bounded{opacity:.5;background-image:repeating-linear-gradient(45deg,
+ rgba(0,0,0,.55) 0 4px,rgba(255,255,255,.28) 4px 8px);
+ border-top:2px dotted rgba(255,255,255,.55)}
+.axis{display:grid;grid-template-columns:96px 1fr;gap:9px;margin-top:5px;min-width:720px}
+.ticks{display:flex;justify-content:space-between;font-size:.66em;color:#6e7681}
+table{width:100%;border-collapse:collapse;font-size:.85em}
+th,td{text-align:left;padding:6px 9px;border-bottom:1px solid #21262d}
+th{color:#8b949e;font-weight:500;font-size:.8em;text-transform:uppercase;
+ letter-spacing:.04em}
+td.n{text-align:right}
+.bar{height:9px;border-radius:2px;display:inline-block;vertical-align:middle}
+.bar.b{background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.22) 0 3px,
+ transparent 3px 6px)}
+.legend{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:12px}
+.lg{display:flex;align-items:center;gap:5px;font-size:.75em;color:#8b949e}
+.sw{width:11px;height:11px;border-radius:2px}
+.note{background:#161b22;border-left:3px solid #30363d;border-radius:0 6px 6px 0;
+ padding:9px 12px;margin-bottom:7px}
+.note .w{font-size:.72em;text-transform:uppercase;letter-spacing:.05em;color:#8b949e}
+.note .t{font-size:.9em;color:#e6edf3;margin:2px 0 4px}
+.note .q{font-size:.78em;color:#7d8590;font-style:italic}
+.note.preksha{border-left-color:#C2185B}
+.note.sahmoud{border-left-color:#2E86C1}
+.warn{background:#1c1710;border:1px solid #3d2f14;border-radius:8px;padding:13px 15px;
+ font-size:.83em;line-height:1.6;color:#d3b071}
+</style></head><body>
+<h1>Hourly Journal</h1>
+<div class="sub">Telegram channel &ldquo;Hourly journal&rdquo; &middot; 2026-07-19 &rarr; 2026-08-07 &middot; 16 days logged</div>
+<div class="stamp">built 2026-08-08 00:52 &middot; every block traces to a verbatim quote from the log</div>
+<section><div class="cards">
+<div class="card"><div class="v">16</div><div class="k">days parsed</div></div>
+<div class="card"><div class="v">31</div><div class="k">journal entries</div></div>
+<div class="card"><div class="v">160 h</div><div class="k">hours accounted</div></div>
+<div class="card"><div class="v">32%</div><div class="k">of those hours stated outright</div></div>
+<div class="card"><div class="v">251</div><div class="k">activity blocks</div></div>
+<div class="card"><div class="v">19</div><div class="k">mood / conflict notes</div></div>
+</div></section>
+<section><h2>The shape of each day</h2>
+<div class="hint">One row per day on a 4am&ndash;4am axis, because his day routinely ends at 1&ndash;2am. Solid blocks are intervals where he wrote both a start and a stop. Hatched blocks are ones where he wrote only a start, so the end is inferred from the next time he mentioned a clock &mdash; those are a real inference and are drawn differently on purpose. Hover any block for the exact words it came from.</div>
+<div class="legend">
+<div class="lg"><div class="sw" style="background:#7D3C98"></div>Research</div>
+<div class="lg"><div class="sw" style="background:#7F8C8D"></div>Transit</div>
+<div class="lg"><div class="sw" style="background:#2E86C1"></div>Study</div>
+<div class="lg"><div class="sw" style="background:#B03A2E"></div>Work (AWS)</div>
+<div class="lg"><div class="sw" style="background:#AF601A"></div>TV / video</div>
+<div class="lg"><div class="sw" style="background:#1E8449"></div>Food</div>
+<div class="lg"><div class="sw" style="background:#34495E"></div>Other</div>
+<div class="lg"><div class="sw" style="background:#0E8074"></div>Exercise</div>
+<div class="lg"><div class="sw" style="background:#117A65"></div>Reading</div>
+<div class="lg"><div class="sw" style="background:#4C5578"></div>Sleep</div>
+<div class="lg"><div class="sw" style="background:#D68910"></div>Family calls</div>
+<div class="lg"><div class="sw" style="background:#8E6E1F"></div>Social</div>
+<div class="lg"><div class="sw" style="background:#5D6D7E"></div>Chores</div>
+<div class="lg"><div class="sw" style="background:#C2185B"></div>Preksha</div>
+</div><div class="wrap">
+<div class="strip"><div class="d">07-19</div><div class="track">
+<div class="blk" style="left:64.583%;width:3.819%;background:#5D6D7E" title="19:30-20:25  cleaning bathroom + some kitchen work (Chores)
+both ends stated
+
+&gt; 7:30-8:25 cleaning bathroom, a bit of kitchen work"></div>
+<div class="blk" style="left:64.583%;width:3.819%;background:#1E8449" title="19:30-20:25  cooking the lamb shank (Food)
+both ends stated
+
+&gt; cooking the lamb shank"></div>
+</div></div>
+<div class="strip"><div class="d">07-22 &middot; up 10:30</div><div class="track">
+<div class="blk bounded" style="left:27.083%;width:12.500%;background:#2E86C1" title="10:30-13:30  studying, ~1.5 hours (Study)
+end inferred from the next stated time
+
+&gt; finished my 1 hour at 1:30"></div>
+<div class="blk bounded" style="left:43.750%;width:14.653%;background:#2E86C1" title="14:30-18:01  studying at Whole Foods (Study)
+end inferred from the next stated time
+
+&gt; Just finished studying"></div>
+<div class="blk bounded" style="left:58.403%;width:8.264%;background:#AF601A" title="18:01-20:00  Hank Green video + talking about it (TV / video)
+end inferred from the next stated time
+
+&gt; watched a hank green video w preksha and talked about it until 8"></div>
+<div class="blk bounded" style="left:71.875%;width:2.083%;background:#117A65" title="21:15-21:45  reading the Addie book (Reading)
+end inferred from the next stated time
+
+&gt; started reading the addie book until 9:45"></div>
+<div class="blk" style="left:39.583%;width:4.167%;background:#7D3C98" title="13:30-14:30  research: matrix differentiation (Research)
+both ends stated
+
+&gt; started research 1:30"></div>
+<div class="blk" style="left:66.667%;width:5.208%;background:#1E8449" title="20:00-21:15  dinner with Joaquin (Food)
+both ends stated
+
+&gt; Had dinner with Joaquin at 8 to 9:15"></div>
+</div></div>
+<div class="strip"><div class="d">07-23 &middot; up 10:00</div><div class="track">
+<div class="blk bounded" style="left:27.083%;width:8.333%;background:#B03A2E" title="10:30-12:30  meeting at work (Work (AWS))
+end inferred from the next stated time
+
+&gt; finished 12:30 pm"></div>
+<div class="blk bounded" style="left:36.806%;width:3.472%;background:#1E8449" title="12:50-13:40  ate at Whole Foods (Food)
+end inferred from the next stated time
+
+&gt; Wf: ate and called mom"></div>
+<div class="blk bounded" style="left:27.083%;width:8.333%;background:#7F8C8D" title="10:30-12:30  left for a meeting at work (Transit)
+end inferred from the next stated time
+
+&gt; Went to meeting at 10:30 am at work"></div>
+<div class="blk bounded" style="left:36.806%;width:3.472%;background:#7F8C8D" title="12:50-13:40  left for Whole Foods (Transit)
+end inferred from the next stated time
+
+&gt; left to wf at 12:50"></div>
+<div class="blk" style="left:40.278%;width:6.250%;background:#2E86C1" title="13:40-15:10  studying, 2 focus friend sessions (Study)
+both ends stated
+
+&gt; studied until 3:10 pm 2 focus friend session"></div>
+<div class="blk" style="left:46.875%;width:6.597%;background:#7D3C98" title="15:15-16:50  research block (Research)
+both ends stated
+
+&gt; 3:15: start research"></div>
+<div class="blk" style="left:54.167%;width:12.500%;background:#8E6E1F" title="17:00-20:00  poker night at work (Social)
+both ends stated
+
+&gt; stayed there from 5-8:00"></div>
+</div></div>
+<div class="strip"><div class="d">07-24</div><div class="track">
+<div class="blk" style="left:30.208%;width:5.208%;background:#2E86C1" title="11:15-12:30  1 hour studying (Study)
+both ends stated
+
+&gt; 11:15 to 12:30 1 hour studying"></div>
+<div class="blk" style="left:35.417%;width:0.833%;background:#D68910" title="12:30-12:42  called mamy (Family calls)
+both ends stated
+
+&gt; 12:30 called mamy"></div>
+<div class="blk bounded" style="left:37.847%;width:16.319%;background:#7D3C98" title="13:05-17:00  started research (Research)
+end inferred from the next stated time
+
+&gt; 1:05 starting research"></div>
+<div class="blk bounded" style="left:60.417%;width:18.750%;background:#7F8C8D" title="18:30-23:00  left for board games (Transit)
+end inferred from the next stated time
+
+&gt; Left 6:30 pm to board games thing with Bearless boaters"></div>
+</div></div>
+<div class="strip"><div class="d">07-25 &middot; up 10:40</div><div class="track">
+<div class="blk bounded" style="left:41.389%;width:2.361%;background:#1E8449" title="13:56-14:30  Mendocino Farms delivery with Preksha (Food)
+end inferred from the next stated time
+
+&gt; then had mendo farms with preksha (i ordered delivery) finished eating 2:30"></div>
+<div class="blk bounded" style="left:61.806%;width:18.056%;background:#AF601A" title="18:50-23:10  The Odyssey at AMC (TV / video)
+end inferred from the next stated time
+
+&gt; then went to the oddysey at AMC"></div>
+<div class="blk" style="left:31.250%;width:2.083%;background:#7F8C8D" title="11:30-12:00  drove to Glendale library (Transit)
+both ends stated
+
+&gt; then left at 11:30 am to go to glendale library, arrived at 12"></div>
+<div class="blk" style="left:31.250%;width:3.125%;background:#D68910" title="11:30-12:15  calling family (Family calls)
+both ends stated
+
+&gt; was calling family from 11:30 roughly to 12:15 or so"></div>
+<div class="blk" style="left:35.417%;width:2.083%;background:#2E86C1" title="12:30-13:00  studying at the library (Study)
+both ends stated
+
+&gt; started studying 12:30 -&gt; 1"></div>
+<div class="blk" style="left:38.889%;width:2.500%;background:#2E86C1" title="13:20-13:56  second study block (Study)
+both ends stated
+
+&gt; 1:20 -&gt; 1:56"></div>
+<div class="blk" style="left:44.236%;width:9.583%;background:#7D3C98" title="14:37-16:55  research block at the library (Research)
+both ends stated
+
+&gt; 2:37, starting research now"></div>
+<div class="blk bounded" style="left:54.167%;width:2.083%;background:#7F8C8D" title="17:00-17:30  in the car leaving the library (Transit)
+end inferred from the next stated time
+
+&gt; 5:00 in the car"></div>
+<div class="blk bounded" style="left:61.806%;width:18.056%;background:#7F8C8D" title="18:50-23:10  left for Santa Anita mall (Transit)
+end inferred from the next stated time
+
+&gt; left 6:50 to shops at santa anita mall"></div>
+</div></div>
+<div class="strip"><div class="d">07-26</div><div class="track">
+<div class="blk bounded" style="left:30.208%;width:19.792%;background:#2E86C1" title="11:15-16:00  studying, done at 4 pm (Study)
+end inferred from the next stated time
+
+&gt; Done studying 4 pm"></div>
+<div class="blk bounded" style="left:50.000%;width:1.389%;background:#1E8449" title="16:00-16:20  shopping at Whole Foods (Food)
+end inferred from the next stated time
+
+&gt; Shopping till 4:20"></div>
+<div class="blk bounded" style="left:61.458%;width:2.083%;background:#C2185B" title="18:45-19:15  sex (Preksha)
+end inferred from the next stated time
+
+&gt; Had sex 6:45"></div>
+<div class="blk bounded" style="left:63.542%;width:1.042%;background:#7F8C8D" title="19:15-19:30  left home for pickleball (Transit)
+end inferred from the next stated time
+
+&gt; Left home 7:15"></div>
+<div class="blk" style="left:64.583%;width:10.417%;background:#0E8074" title="19:30-22:00  pickleball (Exercise)
+both ends stated
+
+&gt; Pickleball 7:30 -10:00"></div>
+<div class="blk" style="left:77.083%;width:2.083%;background:#AF601A" title="22:30-23:00  watching The Dink (movie) (TV / video)
+both ends stated
+
+&gt; 10:30 pm started watching the dink (movie)"></div>
+</div></div>
+<div class="strip"><div class="d">07-27 &middot; up 10:30</div><div class="track">
+<div class="blk bounded" style="left:34.375%;width:5.208%;background:#2E86C1" title="12:15-13:30  studying at Whole Foods (Study)
+end inferred from the next stated time
+
+&gt; Studied until 1:30 pm"></div>
+<div class="blk bounded" style="left:41.667%;width:12.500%;background:#7D3C98" title="14:00-17:00  research: simple proof for properties of delta C (Research)
+end inferred from the next stated time
+
+&gt; Did research until 5 pm (just tried to understand the simple proof again for properties of delta C)"></div>
+<div class="blk" style="left:54.167%;width:4.167%;background:#5D6D7E" title="17:00-18:00  UPS return + car swap at Preksha's place (Chores)
+both ends stated
+
+&gt; 5 -&gt; 6 went to Ups to make a return then preksha's place to exchange cars"></div>
+<div class="blk" style="left:58.333%;width:4.167%;background:#1E8449" title="18:00-19:00  cooking lamb leg, eggs, Spanish rice (Food)
+both ends stated
+
+&gt; 6-&gt; 7 cooking the lamb leg + eggs and Spanish rice"></div>
+</div></div>
+<div class="strip"><div class="d">07-28 &middot; up 10:00</div><div class="track">
+<div class="blk bounded" style="left:54.167%;width:4.167%;background:#1E8449" title="17:00-18:00  heated food, ate together (Food)
+end inferred from the next stated time
+
+&gt; Ate together until 6"></div>
+<div class="blk bounded" style="left:71.528%;width:3.472%;background:#7F8C8D" title="21:10-22:00  driving around with Preksha (Transit)
+end inferred from the next stated time
+
+&gt; Driving around with preksha until 10 pm"></div>
+<div class="blk bounded" style="left:78.125%;width:6.250%;background:#AF601A" title="22:45-00:15  Pirates of the Caribbean, only 20 min (TV / video)
+end inferred from the next stated time
+
+&gt; so we started watching piratws of the carribean"></div>
+<div class="blk bounded" style="left:29.167%;width:3.125%;background:#C2185B" title="11:00-11:45  convinced Preksha to go on a drive (Preksha)
+end inferred from the next stated time
+
+&gt; convinced her in 10 minutes to go on a drive"></div>
+<div class="blk bounded" style="left:53.472%;width:0.694%;background:#7F8C8D" title="16:50-17:00  leaving work (Transit)
+end inferred from the next stated time
+
+&gt; 4:50 pm leaving from work"></div>
+<div class="blk" style="left:58.333%;width:7.292%;background:#117A65" title="18:00-19:45  reading the Iliad, OK session (Reading)
+both ends stated
+
+&gt; then I started reading the Iliad"></div>
+<div class="blk" style="left:65.625%;width:3.125%;background:#AF601A" title="19:45-20:30  Terry Tao math-in-AI presentation (TV / video)
+both ends stated
+
+&gt; 7:45 -&gt; 8:30 watched math in ai presentation by Terry tao"></div>
+<div class="blk" style="left:68.750%;width:2.083%;background:#34495E" title="20:30-21:00  piano, 15 min on Simply Piano (Other)
+both ends stated
+
+&gt; 8:30 -&gt; 9:00 piano for 15 min (simply piano I haven't done piano in weeks)"></div>
+<div class="blk" style="left:70.833%;width:0.694%;background:#C2185B" title="21:00-21:10  talked with Preksha about AI and research (Preksha)
+both ends stated
+
+&gt; 9 to 9:10 talked with preksha about ai and research"></div>
+<div class="blk" style="left:75.000%;width:3.125%;background:#0E8074" title="22:00-22:45  Mohsen workout, good one (Exercise)
+both ends stated
+
+&gt; Mohsen from 10-10:45"></div>
+</div></div>
+<div class="strip"><div class="d">07-29 &middot; up 09:00</div><div class="track">
+<div class="blk bounded" style="left:67.708%;width:1.042%;background:#7D3C98" title="20:15-20:30  talking to the math bots (Research)
+end inferred from the next stated time
+
+&gt; spent some time talking to math bots"></div>
+<div class="blk bounded" style="left:23.264%;width:10.069%;background:#B03A2E" title="09:35-12:00  fab leads meeting, continued at LAX39 camera off (Work (AWS))
+end inferred from the next stated time
+
+&gt; entered the meeting 9:35 at home"></div>
+<div class="blk" style="left:33.333%;width:4.167%;background:#1E8449" title="12:00-13:00  lunch at Whole Foods with Preksha (Food)
+both ends stated
+
+&gt; preksha picked me up at 12 - 1 to get lunch at wholefoods, we ate there too"></div>
+<div class="blk bounded" style="left:37.500%;width:12.500%;background:#B03A2E" title="13:00-16:00  back at work, more slides (Work (AWS))
+end inferred from the next stated time
+
+&gt; got back to work at 1, worked a bit more on the slides"></div>
+<div class="blk" style="left:64.583%;width:3.125%;background:#34495E" title="19:30-20:15  played piano (Other)
+both ends stated
+
+&gt; played piano"></div>
+<div class="blk" style="left:72.222%;width:4.167%;background:#117A65" title="21:20-22:20  reading Addie (Reading)
+both ends stated
+
+&gt; reading addie starting 9:20 to 10:20"></div>
+</div></div>
+<div class="strip"><div class="d">07-30 &middot; up 09:00</div><div class="track">
+<div class="blk bounded" style="left:20.833%;width:13.542%;background:#B03A2E" title="09:00-12:15  OLR meeting (Work (AWS))
+end inferred from the next stated time
+
+&gt; Meeting until 12:15"></div>
+<div class="blk bounded" style="left:78.125%;width:9.375%;background:#7D3C98" title="22:45-01:00  re-deriving the proof for Mijares tomorrow (Research)
+end inferred from the next stated time
+
+&gt; then i was working until 1 am to remember how the proof goes for mijares tomorrow"></div>
+<div class="blk" style="left:36.806%;width:19.444%;background:#B03A2E" title="12:50-17:30  second meeting block (Work (AWS))
+both ends stated
+
+&gt; meeting from 12:50 to 5:30 pm"></div>
+<div class="blk" style="left:62.500%;width:4.167%;background:#7D3C98" title="19:00-20:00  explaining the math proof to Preksha (Research)
+both ends stated
+
+&gt; then it was 7 spent until 8 pm explaining math proof to preksha"></div>
+<div class="blk" style="left:67.361%;width:7.639%;background:#34495E" title="20:10-22:00  max BG3 (Other)
+both ends stated
+
+&gt; 8:10 pm max bg3 until 10 pm"></div>
+<div class="blk bounded" style="left:75.000%;width:0.139%;background:#C2185B" title="22:00-22:02  2 min chat with Preksha, gave her kisses (Preksha)
+end inferred from the next stated time
+
+&gt; 10 pm had 2 min chat with preksha"></div>
+<div class="blk" style="left:75.139%;width:2.986%;background:#0E8074" title="22:02-22:45  Mohsen workout (Exercise)
+both ends stated
+
+&gt; 10:02 - 10:45 mohsen"></div>
+</div></div>
+<div class="strip"><div class="d">07-31</div><div class="track">
+<div class="blk bounded" style="left:75.000%;width:5.208%;background:#AF601A" title="22:00-23:15  ate while watching The Devil Wears Prada 2 (TV / video)
+end inferred from the next stated time
+
+&gt; ate while watching devils wears Prada 2"></div>
+<div class="blk bounded" style="left:55.208%;width:3.819%;background:#7F8C8D" title="17:15-18:10  left home for Whole Foods (Transit)
+end inferred from the next stated time
+
+&gt; Left home 5:15 to wholefoods for groceries"></div>
+<div class="blk bounded" style="left:70.139%;width:2.083%;background:#7F8C8D" title="20:50-21:20  left the house for pickleball (Transit)
+end inferred from the next stated time
+
+&gt; then left the house at 8:50"></div>
+<div class="blk" style="left:72.222%;width:2.778%;background:#0E8074" title="21:20-22:00  pickleball at Allendale, cardio was bad (Exercise)
+both ends stated
+
+&gt; 9:20 to 10 pm pickleball allendale"></div>
+<div class="blk bounded" style="left:80.208%;width:7.986%;background:#117A65" title="23:15-01:10  started reading (Reading)
+end inferred from the next stated time
+
+&gt; Finished 11:15 then started reading"></div>
+</div></div>
+<div class="strip"><div class="d">08-01 &middot; up 11:05</div><div class="track">
+<div class="blk bounded" style="left:29.514%;width:3.125%;background:#D68910" title="11:05-11:50  family call (Family calls)
+end inferred from the next stated time
+
+&gt; family call"></div>
+<div class="blk bounded" style="left:33.333%;width:6.944%;background:#1E8449" title="12:00-13:40  lunch at Bone Kettle with Iris (Food)
+end inferred from the next stated time
+
+&gt; ate at bone kettle finished 1:40"></div>
+<div class="blk bounded" style="left:59.375%;width:13.542%;background:#AF601A" title="18:15-21:30  Spider-Man with Arpit, Nidhi, Nithin, Swati (TV / video)
+end inferred from the next stated time
+
+&gt; spide man movie with arpit nidhi and nithin and swati, finished at 9:30"></div>
+<div class="blk bounded" style="left:75.000%;width:2.500%;background:#7D3C98" title="22:00-22:36  research with ChatGPT, got up from laptop 10:36 (Research)
+end inferred from the next stated time
+
+&gt; talking to chatgpt a bit to do research"></div>
+<div class="blk" style="left:32.639%;width:0.694%;background:#D68910" title="11:50-12:00  called mom to read together (Family calls)
+both ends stated
+
+&gt; then called my mom to read together until 12 pm"></div>
+<div class="blk bounded" style="left:59.375%;width:13.542%;background:#7F8C8D" title="18:15-21:30  left for the Spider-Man movie (Transit)
+end inferred from the next stated time
+
+&gt; then left at 6:15 for spide man movie with arpit nidhi and nithin and swati"></div>
+<div class="blk" style="left:85.417%;width:8.333%;background:#34495E" title="00:30-02:30  in bed but didn't fall asleep for 2 hours (Other)
+both ends stated
+
+&gt; even though i went to bed 12:30 am or so i slept at 2:30 am"></div>
+</div></div>
+<div class="strip"><div class="d">08-04 &middot; up 11:00</div><div class="track">
+<div class="blk bounded" style="left:45.833%;width:23.264%;background:#2E86C1" title="15:00-20:35  comm alg then lin alg (only started ~3) (Study)
+end inferred from the next stated time
+
+&gt; Did a bit of comm alg then Lin alg"></div>
+<div class="blk bounded" style="left:69.097%;width:5.903%;background:#7F8C8D" title="20:35-22:00  left the house for a walk (Transit)
+end inferred from the next stated time
+
+&gt; Left the house 8:35"></div>
+<div class="blk" style="left:77.083%;width:5.556%;background:#34495E" title="22:30-23:50  played Haven (Other)
+both ends stated
+
+&gt; 10:30 sat down to play Haven"></div>
+</div></div>
+<div class="strip"><div class="d">08-05 &middot; up 10:00</div><div class="track">
+<div class="blk" style="left:27.083%;width:6.250%;background:#B03A2E" title="10:30-12:00  meeting at work (Work (AWS))
+both ends stated
+
+&gt; meeting at work 10:30 am"></div>
+<div class="blk bounded" style="left:41.667%;width:16.667%;background:#7D3C98" title="14:00-18:00  sat down at 2 pm, did research instead of studying (Research)
+end inferred from the next stated time
+
+&gt; didnt do studying did research instead"></div>
+<div class="blk bounded" style="left:58.333%;width:8.333%;background:#1E8449" title="18:00-20:00  dinner with Joaquin (Food)
+end inferred from the next stated time
+
+&gt; Had dinner with Joaquin at 6"></div>
+<div class="blk" style="left:66.667%;width:8.333%;background:#D68910" title="20:00-22:00  called papy, Aya, Amena, Ali (Family calls)
+both ends stated
+
+&gt; Called papy,aya,amena,ali 8 -&gt; 10 pm"></div>
+<div class="blk bounded" style="left:75.000%;width:12.500%;background:#0E8074" title="22:00-01:00  long walk with Preksha, 5k steps (Exercise)
+end inferred from the next stated time
+
+&gt; preksha finished 10 pm so we did a long walk 5k steps"></div>
+</div></div>
+<div class="strip"><div class="d">08-06 &middot; up 10:00</div><div class="track">
+<div class="blk bounded" style="left:43.750%;width:10.417%;background:#7D3C98" title="14:30-17:00  talked to the ChatGPT provers, stopped at 5 (Research)
+end inferred from the next stated time
+
+&gt; talked to chatgpt provers"></div>
+<div class="blk bounded" style="left:58.333%;width:6.250%;background:#AF601A" title="18:00-19:30  2 episodes of Platonic (TV / video)
+end inferred from the next stated time
+
+&gt; watched 2 episodes platonic until 7:30"></div>
+<div class="blk bounded" style="left:64.583%;width:4.514%;background:#34495E" title="19:30-20:35  played BG3 again (Other)
+end inferred from the next stated time
+
+&gt; Started playing bg3 again until 8:35"></div>
+<div class="blk bounded" style="left:78.125%;width:3.819%;background:#AF601A" title="22:45-23:40  watched Platonic with Shosha (TV / video)
+end inferred from the next stated time
+
+&gt; watched platonic with shosha until aya called"></div>
+<div class="blk bounded" style="left:27.083%;width:16.667%;background:#B03A2E" title="10:30-14:30  a bunch of meetings at work (Work (AWS))
+end inferred from the next stated time
+
+&gt; had a bunch of meetings at work starting 10:30 am"></div>
+<div class="blk" style="left:54.167%;width:4.167%;background:#34495E" title="17:00-18:00  played BG3 (Other)
+both ends stated
+
+&gt; Played bg3 5-6"></div>
+<div class="blk bounded" style="left:58.333%;width:6.250%;background:#1E8449" title="18:00-19:30  ate with Preksha (Food)
+end inferred from the next stated time
+
+&gt; Ate with preksha at 6"></div>
+<div class="blk" style="left:75.000%;width:3.125%;background:#0E8074" title="22:00-22:45  susie workout session (Exercise)
+both ends stated
+
+&gt; 10 pm - 10:45 pm susie"></div>
+<div class="blk" style="left:81.944%;width:2.083%;background:#D68910" title="23:40-00:10  Aya called about a virus on her work computer (Family calls)
+both ends stated
+
+&gt; aya called 11:40 -&gt; 12:10 because she installed a virus on her work computer"></div>
+</div></div>
+<div class="strip"><div class="d">08-07 &middot; up 10:00</div><div class="track">
+<div class="blk bounded" style="left:27.083%;width:7.292%;background:#7D3C98" title="10:30-12:15  meeting with Mijares (Research)
+end inferred from the next stated time
+
+&gt; Finished 12:15"></div>
+<div class="blk bounded" style="left:39.583%;width:19.792%;background:#7D3C98" title="13:30-18:15  kept working on the ChatGPT/math work (Research)
+end inferred from the next stated time
+
+&gt; kept working until 6:15"></div>
+<div class="blk" style="left:4.167%;width:0.694%;background:#34495E" title="05:00-05:10  woken up by Preksha's period cramps (Other)
+both ends stated
+
+&gt; 5 am preksha randomly woke me up cuz period cramps"></div>
+<div class="blk" style="left:4.861%;width:20.139%;background:#4C5578" title="05:10-10:00  back to sleep until 10 am (Sleep)
+both ends stated
+
+&gt; slept 10 min later"></div>
+<div class="blk bounded" style="left:27.083%;width:7.292%;background:#7F8C8D" title="10:30-12:15  left for Mijares (Transit)
+end inferred from the next stated time
+
+&gt; Left 10:30 am for Mijares"></div>
+<div class="blk bounded" style="left:36.458%;width:3.125%;background:#7F8C8D" title="12:45-13:30  left for lunch at Whole Foods with Preksha (Transit)
+end inferred from the next stated time
+
+&gt; Left 12:45 to wholefoods"></div>
+</div></div>
+<div class="axis"><div></div><div class="ticks">
+<span>04:00</span>
+<span>06:00</span>
+<span>08:00</span>
+<span>10:00</span>
+<span>12:00</span>
+<span>14:00</span>
+<span>16:00</span>
+<span>18:00</span>
+<span>20:00</span>
+<span>22:00</span>
+<span>00:00</span>
+<span>02:00</span>
+<span>04:00</span>
+</div></div></div></section>
+<section><h2>Where the hours go</h2>
+<div class="hint">Solid = both endpoints written down. Hatched = end inferred. Overlapping blocks in the same category on the same day are merged, because he often logs one session twice, once starting it and once finishing it.</div>
+<table><tr><th>Category</th><th class="n">Blocks</th><th class="n">Hours</th><th class="n">Per logged day</th><th style="width:44%">Split</th></tr>
+<tr><td><span class="sw" style="display:inline-block;background:#7D3C98;margin-right:7px"></span>Research</td><td class="n">13</td><td class="n">28.9</td><td class="n">1.8 h</td><td>
+<span class="bar" style="background:#7D3C98;width:20.4%"></span>
+<span class="bar b" style="background:#7D3C98;width:79.6%"></span>
+</td></tr>
+<tr><td><span class="sw" style="display:inline-block;background:#7F8C8D;margin-right:7px"></span>Transit</td><td class="n">15</td><td class="n">22.5</td><td class="n">1.4 h</td><td>
+<span class="bar" style="background:#7F8C8D;width:1.7%"></span>
+<span class="bar b" style="background:#7F8C8D;width:76.1%"></span>
+</td></tr>
+<tr><td><span class="sw" style="display:inline-block;background:#2E86C1;margin-right:7px"></span>Study</td><td class="n">9</td><td class="n">21.9</td><td class="n">1.4 h</td><td>
+<span class="bar" style="background:#2E86C1;width:13.3%"></span>
+<span class="bar b" style="background:#2E86C1;width:62.6%"></span>
+</td></tr>
+<tr><td><span class="sw" style="display:inline-block;background:#B03A2E;margin-right:7px"></span>Work (AWS)</td><td class="n">7</td><td class="n">20.8</td><td class="n">1.3 h</td><td>
+<span class="bar" style="background:#B03A2E;width:21.3%"></span>
+<span class="bar b" style="background:#B03A2E;width:50.7%"></span>
+</td></tr>
+<tr><td><span class="sw" style="display:inline-block;background:#AF601A;margin-right:7px"></span>TV / video</td><td class="n">9</td><td class="n">16.0</td><td class="n">1.0 h</td><td>
+<span class="bar" style="background:#AF601A;width:4.3%"></span>
+<span class="bar b" style="background:#AF601A;width:51.0%"></span>
+</td></tr>
+<tr><td><span class="sw" style="display:inline-block;background:#1E8449;margin-right:7px"></span>Food</td><td class="n">11</td><td class="n">12.1</td><td class="n">0.8 h</td><td>
+<span class="bar" style="background:#1E8449;width:14.4%"></span>
+<span class="bar b" style="background:#1E8449;width:27.3%"></span>
+</td></tr>
+<tr><td><span class="sw" style="display:inline-block;background:#34495E;margin-right:7px"></span>Other</td><td class="n">8</td><td class="n">8.7</td><td class="n">0.5 h</td><td>
+<span class="bar" style="background:#34495E;width:26.2%"></span>
+<span class="bar b" style="background:#34495E;width:3.7%"></span>
+</td></tr>
+<tr><td><span class="sw" style="display:inline-block;background:#0E8074;margin-right:7px"></span>Exercise</td><td class="n">6</td><td class="n">8.4</td><td class="n">0.5 h</td><td>
+<span class="bar" style="background:#0E8074;width:18.6%"></span>
+<span class="bar b" style="background:#0E8074;width:10.4%"></span>
+</td></tr>
+<tr><td><span class="sw" style="display:inline-block;background:#117A65;margin-right:7px"></span>Reading</td><td class="n">4</td><td class="n">5.2</td><td class="n">0.3 h</td><td>
+<span class="bar" style="background:#117A65;width:9.5%"></span>
+<span class="bar b" style="background:#117A65;width:8.4%"></span>
+</td></tr>
+<tr><td><span class="sw" style="display:inline-block;background:#4C5578;margin-right:7px"></span>Sleep</td><td class="n">1</td><td class="n">4.8</td><td class="n">0.3 h</td><td>
+<span class="bar" style="background:#4C5578;width:16.7%"></span>
+<span class="bar b" style="background:#4C5578;width:0.0%"></span>
+</td></tr>
+<tr><td><span class="sw" style="display:inline-block;background:#D68910;margin-right:7px"></span>Family calls</td><td class="n">6</td><td class="n">4.4</td><td class="n">0.3 h</td><td>
+<span class="bar" style="background:#D68910;width:12.5%"></span>
+<span class="bar b" style="background:#D68910;width:2.6%"></span>
+</td></tr>
+<tr><td><span class="sw" style="display:inline-block;background:#8E6E1F;margin-right:7px"></span>Social</td><td class="n">1</td><td class="n">3.0</td><td class="n">0.2 h</td><td>
+<span class="bar" style="background:#8E6E1F;width:10.4%"></span>
+<span class="bar b" style="background:#8E6E1F;width:0.0%"></span>
+</td></tr>
+<tr><td><span class="sw" style="display:inline-block;background:#5D6D7E;margin-right:7px"></span>Chores</td><td class="n">2</td><td class="n">1.9</td><td class="n">0.1 h</td><td>
+<span class="bar" style="background:#5D6D7E;width:6.6%"></span>
+<span class="bar b" style="background:#5D6D7E;width:0.0%"></span>
+</td></tr>
+<tr><td><span class="sw" style="display:inline-block;background:#C2185B;margin-right:7px"></span>Preksha</td><td class="n">4</td><td class="n">1.4</td><td class="n">0.1 h</td><td>
+<span class="bar" style="background:#C2185B;width:0.6%"></span>
+<span class="bar b" style="background:#C2185B;width:4.4%"></span>
+</td></tr>
+</table></section>
+<section><h2>Wake and bed times</h2>
+<div class="hint">Only days where he actually wrote the time. Blank means he did not record it that day, not that he did not sleep.</div>
+<table><tr><th>Day</th><th>Woke</th><th>Bed</th><th class="n">Awake for</th></tr>
+<tr><td>2026-07-19</td><td>&mdash;</td><td>&mdash;</td><td class="n">&mdash;</td></tr>
+<tr><td>2026-07-22</td><td>10:30</td><td>&mdash;</td><td class="n">&mdash;</td></tr>
+<tr><td>2026-07-23</td><td>10:00</td><td>02:00 <span style='color:#6e7681;font-size:.85em'>next day</span></td><td class="n">16.0 h</td></tr>
+<tr><td>2026-07-24</td><td>&mdash;</td><td>01:00 <span style='color:#6e7681;font-size:.85em'>next day</span></td><td class="n">&mdash;</td></tr>
+<tr><td>2026-07-25</td><td>10:40</td><td>&mdash;</td><td class="n">&mdash;</td></tr>
+<tr><td>2026-07-26</td><td>&mdash;</td><td>01:40 <span style='color:#6e7681;font-size:.85em'>next day</span></td><td class="n">&mdash;</td></tr>
+<tr><td>2026-07-27</td><td>10:30</td><td>&mdash;</td><td class="n">&mdash;</td></tr>
+<tr><td>2026-07-28</td><td>10:00</td><td>&mdash;</td><td class="n">&mdash;</td></tr>
+<tr><td>2026-07-29</td><td>09:00</td><td>&mdash;</td><td class="n">&mdash;</td></tr>
+<tr><td>2026-07-30</td><td>09:00</td><td>&mdash;</td><td class="n">&mdash;</td></tr>
+<tr><td>2026-07-31</td><td>&mdash;</td><td>01:10 <span style='color:#6e7681;font-size:.85em'>next day</span></td><td class="n">&mdash;</td></tr>
+<tr><td>2026-08-01</td><td>11:05</td><td>00:30 <span style='color:#6e7681;font-size:.85em'>next day</span></td><td class="n">13.4 h</td></tr>
+<tr><td>2026-08-04</td><td>11:00</td><td>01:10 <span style='color:#6e7681;font-size:.85em'>next day</span></td><td class="n">14.2 h</td></tr>
+<tr><td>2026-08-05</td><td>10:00</td><td>01:00 <span style='color:#6e7681;font-size:.85em'>next day</span></td><td class="n">15.0 h</td></tr>
+<tr><td>2026-08-06</td><td>10:00</td><td>01:30 <span style='color:#6e7681;font-size:.85em'>next day</span></td><td class="n">15.5 h</td></tr>
+<tr><td>2026-08-07</td><td>10:00</td><td>&mdash;</td><td class="n">&mdash;</td></tr>
+</table></section>
+<section><h2>What he wrote about how it felt</h2>
+<div class="hint">Only lines where he explicitly says something about mood or a conflict. Nothing here is inferred from tone.</div>
+<div class="note preksha"><div class="w">2026-07-23 &middot; preksha &middot; conflict</div><div class="t">Preksha was sad in the morning because he paid attention to the laptop instead of her.</div><div class="q">&ldquo;Preksha was sad twice today, once in the morning because I paid attention to the laptop and not her&rdquo;</div></div>
+<div class="note preksha"><div class="w">2026-07-23 &middot; preksha &middot; conflict</div><div class="t">Preksha was sad at night because he was complaining that she loses her clothes.</div><div class="q">&ldquo;Once at night because I was complaining that she loses her clothes&rdquo;</div></div>
+<div class="note sahmoud"><div class="w">2026-07-25 &middot; sahmoud &middot; conflict</div><div class="t">Fight with Preksha in the car over him not wanting to leave the library when she said they should go.</div><div class="q">&ldquo;fight with preksha about me not wanting to leave at 4:52 when she told me we should go instead I wanted to leave in a couple of min (library closes at 5)&rdquo;</div></div>
+<div class="note sahmoud"><div class="w">2026-07-25 &middot; sahmoud &middot; mood</div><div class="t">He was pissed at Preksha and didn't go upstairs when he got home.</div><div class="q">&ldquo;I didn't go upstairs because I'm piseed at preksha&rdquo;</div></div>
+<div class="note preksha"><div class="w">2026-07-25 &middot; preksha &middot; mood</div><div class="t">Preksha is emotional because her period is the next day.</div><div class="q">&ldquo;(her period is next day so she is emotional)&rdquo;</div></div>
+<div class="note preksha"><div class="w">2026-07-28 &middot; preksha &middot; mood</div><div class="t">Preksha is sad about AI taking over and having no paper.</div><div class="q">&ldquo;preksha is sad because AI taking over, no paper&rdquo;</div></div>
+<div class="note preksha"><div class="w">2026-07-28 &middot; preksha &middot; mood</div><div class="t">She cried for an hour and had been sad since before he woke up.</div><div class="q">&ldquo;crying for an hour, looks like she has been sad from before i woke up&rdquo;</div></div>
+<div class="note sahmoud"><div class="w">2026-07-29 &middot; sahmoud &middot; conflict</div><div class="t">He tried to give Sultan ideas to be useful to the new manager and Sultan just argued.</div><div class="q">&ldquo;i was trying to give him ideas of what to work on so he can be useful to the new manager but he was just arguing for no reason&rdquo;</div></div>
+<div class="note preksha"><div class="w">2026-07-30 &middot; preksha &middot; mood</div><div class="t">Preksha is overwhelmed and sad about the ChatGPT thing and about the PhD.</div><div class="q">&ldquo;she didn't enjoy it too much and she is overwhelmed and sad about the whole Chatgpt thing and she is sad about the phd&rdquo;</div></div>
+<div class="note preksha"><div class="w">2026-07-30 &middot; preksha &middot; mood</div><div class="t">By 10 pm she was feeling better.</div><div class="q">&ldquo;she was feeling better&rdquo;</div></div>
+<div class="note sahmoud"><div class="w">2026-07-30 &middot; sahmoud &middot; conflict</div><div class="t">He nagged Preksha a bit after coming out.</div><div class="q">&ldquo;nagged on preksha a bit&rdquo;</div></div>
+<div class="note sahmoud"><div class="w">2026-07-31 &middot; sahmoud &middot; mood</div><div class="t">His knee hurts a lot and has been hurting for a few days, which made playing pickleball hard.</div><div class="q">&ldquo;My knee hurts a lot today and it's been hurting for a few days&rdquo;</div></div>
+<div class="note sahmoud"><div class="w">2026-08-01 &middot; sahmoud &middot; mood</div><div class="t">He was anxious about the whole AI taking over thing and couldn't focus while studying.</div><div class="q">&ldquo;a bit anxious about the whole AI taking over thing&rdquo;</div></div>
+<div class="note sahmoud"><div class="w">2026-08-01 &middot; sahmoud &middot; mood</div><div class="t">He was anxious the night before about the ChatGPT stuff and mean people at work.</div><div class="q">&ldquo;was a bit anxious yesterdya night about the chatgpt stuff and mean people at work&rdquo;</div></div>
+<div class="note preksha"><div class="w">2026-08-04 &middot; preksha &middot; mood</div><div class="t">Preksha is sad because she's lonely and has no close friends here.</div><div class="q">&ldquo;Preksha today is sad cuz lonely and friends stuck no close friends&rdquo;</div></div>
+<div class="note preksha"><div class="w">2026-08-04 &middot; preksha &middot; mood</div><div class="t">She'd be happy if they lived close to Pragyna and her parents.</div><div class="q">&ldquo;She'd be happy if we lived close to pragyna and her parents&rdquo;</div></div>
+<div class="note preksha"><div class="w">2026-08-04 &middot; preksha &middot; mood</div><div class="t">She hates LA.</div><div class="q">&ldquo;She hates LA..etc&rdquo;</div></div>
+<div class="note preksha"><div class="w">2026-08-04 &middot; preksha &middot; milestone</div><div class="t">She promised him she'd do volunteering and the dance for kids thing.</div><div class="q">&ldquo;Promised me she'd do volunteering and the dance for kids thing&rdquo;</div></div>
+<div class="note preksha"><div class="w">2026-08-07 &middot; preksha &middot; mood</div><div class="t">Preksha had period cramps and woke him up at 5 am.</div><div class="q">&ldquo;preksha randomly woke me up cuz period cramps&rdquo;</div></div>
+</section>
+<section><h2>How much of this is actually known</h2><div class="warn">
+<b>251</b> activity blocks were extracted. <b>41</b> have both a start and a stop written down; <b>55</b> had only one endpoint and were bounded by the next stated clock time; <b>155</b> could not be placed on the clock at all and carry no duration; <b>0</b> were merged into an overlapping block of the same category on the same day.
+<br><br>Rows whose quote could not be found verbatim in that day's text were dropped at parse time rather than shown.
+</div></section>
+</body></html>

@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SD Safari Park — Apr 25/26 Day Planner</title>
+<style>
+  :root {
+    --bg: #0f1419;
+    --panel: #1a2332;
+    --text: #e8eef4;
+    --muted: #8a9ba8;
+    --accent: #f4a261;
+    --accent2: #4ea8de;
+    --good: #2a9d8f;
+    --warn: #e9c46a;
+    --bad:  #e76f51;
+    --line: #2a3849;
+    --free: #43aa8b;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 24px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.5;
+  }
+  h1 { margin: 0 0 4px; font-size: 28px; color: var(--accent); }
+  h2 { margin: 0 0 12px; font-size: 20px; color: var(--accent2); }
+  h3 { margin: 0 0 8px; font-size: 15px; color: var(--accent); }
+  .sub { color: var(--muted); margin-bottom: 16px; font-size: 14px; }
+
+  .date-toggle {
+    display: inline-flex; background: var(--panel); border: 1px solid var(--line);
+    border-radius: 8px; padding: 4px; margin-bottom: 20px; gap: 4px;
+  }
+  .date-toggle button {
+    background: transparent; color: var(--text); border: 0;
+    padding: 8px 18px; border-radius: 6px; cursor: pointer; font-size: 14px;
+    font-weight: 600;
+  }
+  .date-toggle button.active {
+    background: var(--accent); color: var(--bg);
+  }
+  .date-toggle .price-tier {
+    font-size: 11px; opacity: 0.85; display: block; margin-top: 2px;
+    font-weight: 400;
+  }
+
+  .strategy {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 12px; margin-bottom: 20px;
+  }
+  .strategy .card {
+    background: var(--panel); border-radius: 8px; padding: 14px 16px;
+    border: 1px solid var(--line); font-size: 13px;
+  }
+  .strategy .card ul { margin: 4px 0 0; padding-left: 18px; }
+  .strategy .card li { margin-bottom: 4px; }
+  .strategy .card.warn { border-left: 3px solid var(--warn); }
+  .strategy .card.bad { border-left: 3px solid var(--bad); }
+  .strategy .card.good { border-left: 3px solid var(--good); }
+  .strategy .card.info { border-left: 3px solid var(--accent2); }
+
+  .planner {
+    background: var(--panel); border-radius: 8px; padding: 16px 20px;
+    margin-bottom: 20px; border: 1px solid var(--line);
+  }
+  .timeline {
+    position: relative; height: 84px; margin: 12px 0;
+    background: #0c121a; border-radius: 6px; overflow: hidden;
+    border: 1px solid var(--line);
+  }
+  .hour-marks { position: absolute; inset: 0; display: flex; pointer-events: none; }
+  .hour-marks > div {
+    flex: 1; border-right: 1px solid var(--line);
+    font-size: 10px; color: var(--muted); padding: 2px 4px;
+  }
+  .hour-marks > div:last-child { border-right: 0; }
+  .arrival-marker {
+    position: absolute; top: 0; bottom: 0;
+    border-left: 2px dashed var(--accent2); pointer-events: none;
+  }
+  .arrival-marker::after {
+    content: '11AM arrival'; position: absolute; top: -2px; left: 4px;
+    font-size: 9px; color: var(--accent2); white-space: nowrap;
+    background: rgba(78,168,222,0.15); padding: 1px 4px; border-radius: 3px;
+  }
+  .closing-marker {
+    position: absolute; top: 0; bottom: 0;
+    border-left: 2px dashed var(--bad); pointer-events: none;
+  }
+  .closing-marker::after {
+    content: 'park closes'; position: absolute; top: -2px; right: 4px;
+    font-size: 9px; color: var(--bad); white-space: nowrap;
+    background: rgba(231,111,81,0.15); padding: 1px 4px; border-radius: 3px;
+  }
+  .plan-block {
+    position: absolute; top: 22px; height: 56px;
+    background: var(--accent); color: var(--bg);
+    border-radius: 4px; padding: 4px 6px; font-size: 11px;
+    font-weight: 600; overflow: hidden; cursor: pointer;
+    border: 1px solid rgba(0,0,0,0.3); white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .plan-block.free { background: var(--free); color: #fff; }
+  .plan-block.conflict { background: var(--bad); color: #fff; }
+  .plan-block .x {
+    float: right; background: rgba(0,0,0,0.3); border-radius: 50%;
+    width: 14px; height: 14px; text-align: center; line-height: 14px;
+    margin-left: 4px; cursor: pointer;
+  }
+  .totals {
+    display: flex; gap: 12px; flex-wrap: wrap;
+    font-size: 13px; color: var(--muted); margin-top: 8px;
+  }
+  .totals b { color: var(--text); }
+  .totals .pill {
+    background: #0c121a; padding: 4px 10px; border-radius: 12px;
+    border: 1px solid var(--line);
+  }
+  .warnings { margin-top: 8px; }
+  .warnings div {
+    font-size: 12px; padding: 6px 10px; border-radius: 4px;
+    background: rgba(231,111,81,0.15); color: var(--bad);
+    margin-top: 4px; border-left: 3px solid var(--bad);
+  }
+  .warnings div.ok {
+    background: rgba(42,157,143,0.15); color: var(--good);
+    border-left-color: var(--good);
+  }
+
+  .controls { margin-bottom: 12px; }
+  .controls button {
+    background: var(--panel); color: var(--text); border: 1px solid var(--line);
+    padding: 6px 12px; border-radius: 6px; cursor: pointer; margin-right: 6px; font-size: 13px;
+  }
+  .controls button:hover { border-color: var(--accent); }
+  .controls button.active { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+
+  table { width: 100%; border-collapse: collapse; background: var(--panel); border-radius: 8px; overflow: hidden; }
+  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--line); font-size: 13px; vertical-align: top; }
+  th { background: #122031; color: var(--accent); font-weight: 600; cursor: pointer; user-select: none; position: sticky; top: 0; }
+  th:hover { color: #fff; }
+  tr.hidden { display: none; }
+  tr.unavailable { opacity: 0.4; }
+  tr.unavailable td:first-child { text-decoration: line-through; }
+  tr.skip-warn { background: rgba(231,111,81,0.06); }
+  tr.free-row { background: rgba(67,170,139,0.07); }
+  tr.free-row td.price-cell { color: var(--free); font-weight: 700; }
+  td.mob-good { color: var(--good); font-weight: 600; }
+  td.mob-warn { color: var(--warn); font-weight: 600; }
+  td.mob-bad  { color: var(--bad);  font-weight: 600; }
+  td a { color: var(--accent); text-decoration: none; }
+  td a:hover { text-decoration: underline; }
+  .price-cell { font-variant-numeric: tabular-nums; }
+  .price-diff {
+    display: block; font-size: 10px; color: var(--good);
+    font-weight: 400;
+  }
+  .price-diff.bad { color: var(--bad); }
+  .slots {
+    font-family: 'SF Mono', Consolas, monospace; font-size: 11px;
+    color: var(--text); line-height: 1.5;
+  }
+  .badge {
+    display: inline-block; padding: 1px 5px; font-size: 10px;
+    background: var(--bad); color: #fff; border-radius: 3px; margin-right: 4px;
+    font-weight: 600; text-transform: uppercase;
+  }
+  .badge.warn { background: var(--warn); color: var(--bg); }
+  .badge.good { background: var(--good); color: #fff; }
+  .badge.free { background: var(--free); color: #fff; }
+  .add-cell select {
+    background: #0c121a; color: var(--text); border: 1px solid var(--line);
+    border-radius: 4px; padding: 3px 6px; font-size: 11px; margin-right: 4px;
+    max-width: 110px;
+  }
+  .add-cell button {
+    background: var(--good); color: #fff; border: 0;
+    padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: 600;
+  }
+  .add-cell button:hover { background: #38b2a4; }
+  .add-cell button:disabled { background: var(--line); color: var(--muted); cursor: not-allowed; }
+  footer { margin-top: 24px; color: var(--muted); font-size: 12px; }
+  footer a { color: var(--accent); }
+</style>
+</head>
+<body>
+  <h1>San Diego Safari Park — Day Planner</h1>
+  <div class="sub">Real slot data scraped from <a href="https://tickets.sandiegozoo.org">tickets.sandiegozoo.org</a> · Toggle date below to compare Sat vs Sun. Admission ~$76 adult separately.</div>
+
+  <div class="date-toggle">
+    <button class="active" data-date="sat">Saturday Apr 25<span class="price-tier">Peak pricing</span></button>
+    <button data-date="sun">Sunday Apr 26<span class="price-tier">Standard pricing (~$10-13 cheaper)</span></button>
+  </div>
+
+  <div class="strategy">
+    <div class="card good">
+      <h3>🦒 timing strategy</h3>
+      <ul>
+        <li>animals most active 8–11am + after 4pm; midday they nap</li>
+        <li>your 11am arrival misses the morning peak → save the truck for the <b>3:30–4:30pm</b> slot</li>
+        <li>midday: shaded indoor exhibits (Hidden Jungle aviary, Gorilla Forest)</li>
+        <li>last Africa Tram leaves ~4:15pm</li>
+      </ul>
+    </div>
+    <div class="card info">
+      <h3>🦽 mobility (PRP)</h3>
+      <ul>
+        <li>rent ECV scooter at entrance — limited inventory, get it AT 11am</li>
+        <li>ADA shuttle every 15–20min between Guest Services + Okavango Outpost</li>
+        <li>Easy Access Pass for Africa Tram (skips queue) — ask at tram host podium</li>
+        <li>free admission for ONE personal attendant</li>
+        <li><b>call 619-718-3000 in advance</b> to book accessible truck/cart</li>
+      </ul>
+    </div>
+    <div class="card warn">
+      <h3>⚠ skip-warnings</h3>
+      <ul>
+        <li><b>Cart Safari</b> ≈ 90% same content as the free Africa Tram</li>
+        <li><b>Balloon Safari</b> = waste, doesn't get closer to animals</li>
+        <li>park food is bad — except <b>The Watering Hole at Kijamii Overlook</b> (book ahead)</li>
+        <li>Africa Tram lines hit 75min by 11:30am — Easy Access Pass essential</li>
+      </ul>
+    </div>
+    <div class="card good">
+      <h3>🎁 free experiences</h3>
+      <ul>
+        <li><b>Africa Tram</b> — sit LEFT for giraffes, RIGHT for rhinos</li>
+        <li><b>Elephant Valley</b> — NEW Mar 2026, walking bridge through habitat</li>
+        <li><b>Hidden Jungle</b> aviary — climate-controlled midday refuge</li>
+        <li><b>Cheetah Run</b> — check Safari Park app schedule</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="planner">
+    <h2>📅 My Day Plan — <span id="planner-date">Sat Apr 25, 2026</span></h2>
+    <div style="font-size:12px; color:var(--muted); margin-bottom:8px;">Park hours 9:00 – 17:00. Click [+ Add] to drop items on the timeline. Toggling the date will clear the plan.</div>
+    <div class="timeline" id="timeline">
+      <div class="hour-marks" id="hour-marks"></div>
+      <div class="arrival-marker" id="arrival-marker"></div>
+      <div class="closing-marker" id="closing-marker"></div>
+    </div>
+    <div class="totals">
+      <span class="pill">Items: <b id="cnt">0</b></span>
+      <span class="pill">Booked time: <b id="dur">0 min</b></span>
+      <span class="pill">Cost (1 person): <b id="cost">$0</b></span>
+      <span class="pill">Cost (2 people): <b id="cost2">$0</b></span>
+      <span class="pill">+ admission ~$76/person</span>
+    </div>
+    <div class="warnings" id="warnings"></div>
+  </div>
+
+  <div class="controls">
+    <button class="active" data-filter="all">All</button>
+    <button data-filter="available">Available on selected date</button>
+    <button data-filter="good">Mobility-friendly only</button>
+    <button data-filter="free">Free with admission</button>
+  </div>
+
+  <table id="t">
+    <thead>
+      <tr>
+        <th>Safari / Experience</th>
+        <th>Duration</th>
+        <th>Price</th>
+        <th>Mobility</th>
+        <th>What you actually see</th>
+        <th>Slots on selected date</th>
+        <th>Add to plan</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+
+  <footer>
+    Slot data scraped from <a href="https://tickets.sandiegozoo.org">tickets.sandiegozoo.org</a> on 2026-04-19 for Sat Apr 25 + Sun Apr 26, 2026. <strong>Saturday = Peak tier · Sunday = Standard tier (~$10-13 cheaper).</strong><br>
+    Reddit / TripAdvisor analysis from r/sandiego, San Diego TripAdvisor forum, La Jolla Mom, SanDiegoing, Travel Caffeine.<br>
+    Verify everything on <a href="https://sdzsafaripark.org/safaris">sdzsafaripark.org/safaris</a> before booking. Mobility booking phone: 619-718-3000.
+  </footer>
+
+<script>
+  // ===== Tour catalog (static bits) + date-keyed pricing/slots/availability =====
+  const TOURS = [
+    // free experiences (same both days)
+    { id: 'tram', name: 'Africa Tram', free: true, badges: '<span class="badge free">FREE</span>',
+      mob: 'good', mobLabel: 'Vehicle (Easy Access Pass)',
+      desc: 'Open-air narrated tram around the African plains — giraffes, rhinos, antelope. 25-min ride. Sit LEFT side for giraffes. <b>Starts 9:30am (30 min after park opens), busiest 11am–3pm.</b>',
+      durMin: 25, route: 'free-tram',
+      url: null, both: { price: 0, slots: ['9:30','10:00','10:30','11:00','11:30','12:00','12:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:15'], slotsLabel: 'starts 9:30am, runs continuously, last ~4:15pm. Sat/Sun noon = special "Botanical Tram" plant-focus version.' }
+    },
+    { id: 'eleph_valley', name: 'Elephant Valley walk', free: true, badges: '<span class="badge free">FREE · NEW</span>',
+      mob: 'warn', mobLabel: 'Walkable bridge',
+      desc: 'NEW Mar 2026 — guided bridge through elephant habitat. "Surrounded on both sides." Free with admission.',
+      durMin: 40, route: 'free-elephant',
+      url: null, both: { price: 0, slots: ['11:00','12:00','13:00','14:00','15:00','16:00'], slotsLabel: 'walk-up, anytime park is open' }
+    },
+    { id: 'hidden_jungle', name: 'Hidden Jungle aviary', free: true, badges: '<span class="badge free">FREE</span>',
+      mob: 'good', mobLabel: 'Climate-controlled, paved',
+      desc: 'Indoor aviary — close bird encounters. Best midday heat refuge.',
+      durMin: 20, route: 'free-aviary',
+      url: null, both: { price: 0, slots: ['11:00','12:00','13:00','14:00','15:00','16:00'], slotsLabel: 'walk-up, anytime' }
+    },
+    // paid tours
+    { id: 'wildlife', name: 'Wildlife Safari', mob: 'good', mobLabel: 'Truck',
+      desc: 'African + Asian savanna habitats — drive-through. Most-popular paid tour. "100% worth it" (La Jolla Mom). Ages 3+.',
+      durMin: 60, route: 'savanna-truck',
+      url: 'https://tickets.sandiegozoo.org/webstore/shop/viewItems.aspx?cg=webstoresdp&c=spkcwls21',
+      sat: { price: 124, slots: ['9:15','9:45','10:00','10:45','11:00','11:15','11:30','12:00','12:45','13:00','13:15','13:30','14:00','14:30','14:45','15:00','15:30','16:00','16:15'] },
+      sun: { price: 111, slots: ['9:15','10:00','11:00','11:15','11:30','12:00','12:30','13:00','13:15','13:30','14:00','14:30','14:45','15:00','15:30','16:00'] }
+    },
+    { id: 'wildlife_dlx', name: 'Wildlife Safari Deluxe', mob: 'good', mobLabel: 'Truck',
+      desc: '<span class="badge good">+$26 worth it</span>Same route + Asian savanna add-on. <b>Best chance to pet a rhino.</b> Ages 6+.',
+      durMin: 90, route: 'savanna-truck',
+      url: 'https://tickets.sandiegozoo.org/webstore/shop/viewItems.aspx?cg=webstoresdp&c=spdwls21',
+      sat: { price: 150, slots: ['9:15','9:30','10:00','12:45','14:15','15:30','15:45'] },
+      sun: { price: 137, slots: ['9:15','10:00','12:00','14:00','15:30'] }
+    },
+    { id: 'sips_savanna', name: 'Wildlife Safari: Sips on Savanna', mob: 'good', mobLabel: 'Truck + viewpoint',
+      desc: 'Savanna route + extended viewpoint stop with drinks + souvenir glass. 21+. Reddit verdict: "10/10 adults date".',
+      durMin: 120, route: 'savanna-truck-evening',
+      url: 'https://tickets.sandiegozoo.org/webstore/shop/viewItems.aspx?cg=webstoresdp&c=6171990',
+      sat: { price: 175, slots: ['9:30'] },
+      sun: { price: 165, slots: ['9:30'] }
+    },
+    { id: 'cart', name: 'Cart Safari', mob: 'warn', mobLabel: 'Cart + walk', skipWarn: true,
+      desc: '<span class="badge">SKIP?</span>≈90% same content as the FREE Africa Tram (per locals on TripAdvisor). Only worth it if you specifically need the accessible cart vs truck.',
+      durMin: 60, route: 'savanna-cart',
+      url: 'https://tickets.sandiegozoo.org/webstore/shop/viewItems.aspx?cg=webstoresdp&c=spkcs21',
+      sat: { price: 82, slots: ['9:15','12:30','13:15','14:45','15:45'] },
+      sun: { price: 73, slots: ['9:15','12:45','14:15','14:45'] }
+    },
+    { id: 'cart_dlx', name: 'Cart Safari Deluxe', mob: 'warn', mobLabel: 'Cart + disembark stops',
+      desc: 'Cart with multiple disembark stops at habitats. More animal-close access than standard Cart but still walks.',
+      durMin: 90, route: 'savanna-cart',
+      url: 'https://tickets.sandiegozoo.org/webstore/shop/viewItems.aspx?cg=webstoresdp&c=spdlcsf',
+      sat: { price: 112, slots: ['9:30','14:00','14:30','14:45'] },
+      sun: { price: 103, slots: ['12:15','14:15'] }
+    },
+    // BTS Standard splits into one row per *theme* — each is a distinct experience.
+    { id: 'bts_wildcat', name: 'BTS: Wild Cat Adventure', mob: 'warn', mobLabel: 'Cart + uneven walkways',
+      desc: '<span class="badge good">value pick</span>Behind-the-scenes w/ keepers at the cat care areas — cheetahs, lions, tiger encounters. Ambassador-animal program.',
+      durMin: 90, route: 'bts',
+      url: 'https://tickets.sandiegozoo.org/webstore/shop/viewItems.aspx?cg=webstoresdp&c=spkbts21',
+      sat: { price: 124, slots: ['9:15'] },
+      sun: { price: 111, slots: ['9:15'] }
+    },
+    { id: 'bts_savinggiants', name: 'BTS: Saving Giants', mob: 'warn', mobLabel: 'Cart + uneven walkways',
+      desc: '<span class="badge good">value pick</span>Behind-the-scenes elephants + rhinos focus — the conservation/breeding side of the park\'s biggest mammals.',
+      durMin: 90, route: 'bts',
+      url: 'https://tickets.sandiegozoo.org/webstore/shop/viewItems.aspx?cg=webstoresdp&c=spkbts21',
+      sat: { price: 124, slots: ['10:00','11:45','14:00'] },
+      sun: { price: null, slots: [] }
+    },
+    { id: 'bts_discoverafrica', name: 'BTS: Discover Africa', mob: 'warn', mobLabel: 'Cart + uneven walkways',
+      desc: '<span class="badge good">value pick</span>Behind-the-scenes African species deep-dive — antelope, giraffes, savanna species + keeper stories.',
+      durMin: 90, route: 'bts',
+      url: 'https://tickets.sandiegozoo.org/webstore/shop/viewItems.aspx?cg=webstoresdp&c=spkbts21',
+      sat: { price: 124, slots: ['10:45','12:00'] },
+      sun: { price: 111, slots: ['10:45'] }
+    },
+    { id: 'bts_dlx_rescue', name: 'BTS Deluxe: Mission — Wildlife Rescue', mob: 'warn', mobLabel: 'Cart + walk',
+      desc: '2hr deluxe behind-the-scenes — wildlife rescue / rehabilitation theme. Longer + more stops than Standard. Sun-only this weekend.',
+      durMin: 120, route: 'bts',
+      url: 'https://tickets.sandiegozoo.org/webstore/shop/viewItems.aspx?cg=webstoresdp&c=6171716',
+      sat: { price: null, slots: [] },
+      sun: { price: 137, slots: ['12:30'] }
+    },
+    { id: 'bts_sips', name: 'BTS Deluxe: Sips on Savanna', mob: 'warn', mobLabel: 'Cart + walk',
+      desc: '21+ behind-the-scenes 2hr w/ drinks. Platypuses, tigers, rhinos.',
+      durMin: 120, route: 'bts-evening',
+      url: 'https://tickets.sandiegozoo.org/webstore/shop/viewItems.aspx?cg=webstoresdp&c=6205987',
+      sat: { price: 175, slots: ['9:45'] },
+      sun: { price: null, slots: [] }
+    },
+    { id: 'elite', name: 'Elite Adventure', mob: 'warn', mobLabel: 'Cart + walk',
+      desc: '<span class="badge warn">SPLURGE</span>BTS care areas + savanna truck combo + snack. Reddit: "celebration only" — same access can be assembled separately for ~$200.',
+      durMin: 210, route: 'bts-extended',
+      url: 'https://tickets.sandiegozoo.org/webstore/shop/viewItems.aspx?cg=webstoresdp&c=6180836',
+      sat: { price: 499, slots: ['11:15'] },
+      sun: { price: 474, slots: ['11:15'] }
+    },
+    { id: 'ultimate', name: 'Ultimate Safari (custom)', mob: 'good', mobLabel: 'Custom — wheelchair-friendly cart available',
+      phoneOnly: true,
+      desc: '<span class="badge warn">PHONE-ONLY · 72hr ahead</span>5hr or 7hr fully customized — your own personal guide, sit-down lunch, exclusive habitat areas, animal interactions. Built around your interests. <b>Call 619-718-3000 to book (not online).</b> Often the answer for mobility-restricted guests who want everything tailored.',
+      durMin: 300, route: 'ultimate',
+      url: 'https://sdzsafaripark.org/safaris/ultimate-safari',
+      sat: { price: 760, slots: ['10:00'], slotsLabel: '<span class="badge warn">CALL 619-718-3000</span> 72hr advance booking. Pick your own start time.' },
+      sun: { price: 760, slots: ['10:00'], slotsLabel: '<span class="badge warn">CALL 619-718-3000</span> 72hr advance booking. Pick your own start time.' }
+    },
+    { id: 'flightline', name: 'Flightline Safari', mob: 'bad', mobLabel: 'Stairs req · 60–275 lb',
+      desc: '<span class="badge">PRP RISK</span>2/3-mile dual zipline OVER the African Plains. Stairs to climb. Bad in rain. Ages 8+.',
+      durMin: 90, route: 'zipline',
+      url: 'https://tickets.sandiegozoo.org/webstore/shop/viewItems.aspx?cg=webstoresdp&c=6206422',
+      sat: { price: 146, slots: ['9:45','10:15','11:45','12:30','14:30'] },
+      sun: { price: 133, slots: ['9:45','10:15','11:45','12:30','14:30'] }
+    },
+    { id: 'walking_eleph', name: 'Walking with Elephants', mob: 'bad', mobLabel: '60min walk',
+      desc: 'Guided walk through Elephant Valley. <b>Skip — Elephant Valley itself is FREE with admission.</b>',
+      durMin: 60, route: 'elephant-valley',
+      url: 'https://tickets.sandiegozoo.org/webstore/shop/viewItems.aspx?cg=webstoresdp&c=6171751',
+      sat: { price: null, slots: [] },
+      sun: { price: null, slots: [] }
+    },
+    { id: 'sip_stroll', name: 'Sip & Stroll Elephant Valley', mob: 'bad', mobLabel: '90min walk',
+      desc: '21+ guided walk through Elephant Valley w/ welcome drink. <b>vs FREE walk: pays for the drinks + guide.</b>',
+      durMin: 90, route: 'elephant-valley-paid',
+      url: 'https://tickets.sandiegozoo.org/webstore/shop/viewItems.aspx?cg=webstoresdp&c=6214206',
+      sat: { price: 115, slots: ['10:00'] },
+      sun: { price: null, slots: [] }
+    },
+    { id: 'butterfly', name: 'Butterfly Jungle Safari', mob: 'warn', mobLabel: 'Walking',
+      desc: '<b>Closed.</b> Ran Mar 21 – Apr 12 only.',
+      durMin: 60, route: 'butterfly',
+      url: 'https://tickets.sandiegozoo.org/webstore/shop/viewItems.aspx?cg=webstoresdp&c=6214146',
+      sat: { price: null, slots: [], note: 'SEASON CLOSED' },
+      sun: { price: null, slots: [], note: 'SEASON CLOSED' }
+    },
+  ];
+
+  let DATE = 'sat';
+  const DAY_START = 9 * 60;
+  const DAY_END   = 17 * 60;
+  const DAY_TOTAL = DAY_END - DAY_START;
+  const ARRIVE = 11 * 60;
+
+  let plan = [];
+  let nextId = 1;
+
+  // Hour marks
+  const hm = document.getElementById('hour-marks');
+  for (let h = 9; h <= 17; h++) {
+    const d = document.createElement('div');
+    d.textContent = h === 12 ? '12P' : (h < 12 ? `${h}A` : `${h-12}P`);
+    hm.appendChild(d);
+  }
+  document.getElementById('arrival-marker').style.left = ((ARRIVE - DAY_START) / DAY_TOTAL * 100) + '%';
+  document.getElementById('closing-marker').style.left = '100%';
+
+  function timeToMin(t) {
+    const [h, m] = t.split(':').map(Number);
+    return h * 60 + m;
+  }
+  function minToTime(m) {
+    const h = Math.floor(m / 60), mm = m % 60;
+    const hh = h > 12 ? h - 12 : (h === 0 ? 12 : h);
+    const ap = h >= 12 ? 'p' : 'a';
+    return `${hh}:${String(mm).padStart(2,'0')}${ap}`;
+  }
+  function fmtSlot(s) {
+    const [h, m] = s.split(':').map(Number);
+    return (h === 12 ? '12' : (h > 12 ? h - 12 : h)) + ':' + String(m).padStart(2,'0') + (h >= 12 ? 'p' : 'a');
+  }
+
+  function dataFor(tour) {
+    return tour.both ? tour.both : tour[DATE];
+  }
+  function otherDateData(tour) {
+    if (tour.both) return tour.both;
+    return tour[DATE === 'sat' ? 'sun' : 'sat'];
+  }
+
+  function renderTable() {
+    const tbody = document.getElementById('tbody');
+    tbody.innerHTML = '';
+    TOURS.forEach(tour => {
+      const d = dataFor(tour);
+      const tr = document.createElement('tr');
+      const slots = d.slots || [];
+      const available = slots.length > 0;
+
+      const classes = [];
+      if (tour.free) classes.push('free-row');
+      if (tour.skipWarn) classes.push('skip-warn');
+      if (!available) classes.push('unavailable');
+      tr.className = classes.join(' ');
+      tr.dataset.tourId = tour.id;
+      tr.dataset.avail = available ? '1' : '0';
+      tr.dataset.good = (tour.mob === 'good') ? '1' : '0';
+      tr.dataset.free = tour.free ? '1' : '0';
+
+      // Name cell
+      const nameHtml = tour.url
+        ? `${tour.badges || ''}<a href="${tour.url}" target="_blank">${tour.name}</a>`
+        : `${tour.badges || ''}<b>${tour.name}</b>`;
+
+      // Price + diff vs other day
+      let priceCell;
+      if (tour.free) {
+        priceCell = '<td class="price-cell">FREE</td>';
+      } else if (d.price === null) {
+        priceCell = '<td class="price-cell" style="color:var(--muted)">—</td>';
+      } else {
+        const other = otherDateData(tour);
+        let diff = '';
+        if (other && other.price !== null && other.price !== d.price) {
+          const delta = d.price - other.price;
+          const sign = delta > 0 ? '+' : '';
+          const otherLabel = DATE === 'sat' ? 'Sun' : 'Sat';
+          diff = `<span class="price-diff${delta > 0 ? ' bad' : ''}">${sign}$${delta} vs ${otherLabel}</span>`;
+        }
+        priceCell = `<td class="price-cell">$${d.price}${diff}</td>`;
+      }
+
+      // Slots cell
+      let slotsCell;
+      if (d.note) {
+        slotsCell = `<td class="slots"><span class="badge">${d.note}</span></td>`;
+      } else if (!available) {
+        slotsCell = '<td class="slots"><span class="badge">NOT BOOKABLE</span></td>';
+      } else {
+        const slotsLabel = d.slotsLabel || `${slots.length} slot${slots.length > 1 ? 's' : ''}: ${slots.map(fmtSlot).join(' · ')}`;
+        slotsCell = `<td class="slots">${slotsLabel}</td>`;
+      }
+
+      tr.innerHTML = `
+        <td>${nameHtml}</td>
+        <td>${tour.durMin >= 60 ? (tour.durMin/60 + ' hr').replace('.5 hr','.5 hr') : tour.durMin + ' min'}</td>
+        ${priceCell}
+        <td class="mob-${tour.mob}">${tour.mobLabel}</td>
+        <td>${tour.desc}</td>
+        ${slotsCell}
+        <td class="add-cell"></td>
+      `;
+      tbody.appendChild(tr);
+
+      // Build add cell
+      const cell = tr.querySelector('.add-cell');
+      if (!available) {
+        cell.innerHTML = '<span style="color:var(--muted);font-size:11px">—</span>';
+        return;
+      }
+      const sel = document.createElement('select');
+      slots.forEach(s => {
+        const o = document.createElement('option');
+        o.value = s;
+        o.textContent = fmtSlot(s);
+        sel.appendChild(o);
+      });
+      const btn = document.createElement('button');
+      btn.textContent = '+ Add';
+      btn.addEventListener('click', () => {
+        plan.push({
+          id: nextId++,
+          name: tour.name,
+          route: tour.route,
+          startMin: timeToMin(sel.value),
+          durMin: tour.durMin,
+          cost: d.price || 0,
+          free: tour.free,
+        });
+        renderPlanner();
+      });
+      cell.appendChild(sel);
+      cell.appendChild(btn);
+    });
+    applyFilter();
+  }
+
+  function renderPlanner() {
+    const tl = document.getElementById('timeline');
+    [...tl.querySelectorAll('.plan-block')].forEach(b => b.remove());
+
+    let totalDur = 0, totalCost = 0;
+    const conflicts = new Set();
+    for (let i = 0; i < plan.length; i++) {
+      for (let j = i + 1; j < plan.length; j++) {
+        const a = plan[i], b = plan[j];
+        if (a.startMin < b.startMin + b.durMin && b.startMin < a.startMin + a.durMin) {
+          conflicts.add(a.id); conflicts.add(b.id);
+        }
+      }
+    }
+    plan.forEach(p => {
+      totalDur += p.durMin;
+      totalCost += p.cost;
+      const block = document.createElement('div');
+      const cls = ['plan-block'];
+      if (p.free) cls.push('free');
+      if (conflicts.has(p.id)) cls.push('conflict');
+      block.className = cls.join(' ');
+      const startVis = Math.max(p.startMin, DAY_START);
+      const endVis = Math.min(p.startMin + p.durMin, DAY_END);
+      const left = ((startVis - DAY_START) / DAY_TOTAL) * 100;
+      const width = Math.max(((endVis - startVis) / DAY_TOTAL) * 100, 5);
+      block.style.left = left + '%';
+      block.style.width = width + '%';
+      block.innerHTML = `<span class="x" data-id="${p.id}">×</span>${p.name}<br><span style="font-weight:400;font-size:10px">${minToTime(p.startMin)}–${minToTime(p.startMin + p.durMin)}${p.free ? '' : ' · $' + p.cost}</span>`;
+      tl.appendChild(block);
+    });
+    tl.querySelectorAll('.x').forEach(x => {
+      x.addEventListener('click', e => {
+        e.stopPropagation();
+        const id = parseInt(x.dataset.id, 10);
+        const idx = plan.findIndex(p => p.id === id);
+        if (idx >= 0) plan.splice(idx, 1);
+        renderPlanner();
+      });
+    });
+    document.getElementById('cnt').textContent = plan.length;
+    document.getElementById('dur').textContent = `${totalDur} min`;
+    document.getElementById('cost').textContent = '$' + totalCost.toFixed(0);
+    document.getElementById('cost2').textContent = '$' + (totalCost * 2).toFixed(0);
+
+    const w = document.getElementById('warnings');
+    w.innerHTML = '';
+    const seenRoutes = {};
+    plan.forEach(p => seenRoutes[p.route] = (seenRoutes[p.route] || 0) + 1);
+    Object.entries(seenRoutes).forEach(([r, n]) => {
+      if (n > 1 && !r.startsWith('free-')) {
+        const d = document.createElement('div');
+        d.textContent = `⚠ ${n} items share route "${r}" — same content overlap. Pick one for variety.`;
+        w.appendChild(d);
+      }
+    });
+    if (conflicts.size) {
+      const d = document.createElement('div');
+      d.textContent = `⚠ Time conflict — items overlap (red on timeline). Move one.`;
+      w.appendChild(d);
+    }
+    const beforeArr = plan.filter(p => p.startMin < ARRIVE);
+    if (beforeArr.length) {
+      const d = document.createElement('div');
+      d.textContent = `⚠ ${beforeArr.length} item(s) start before your 11am arrival: ${beforeArr.map(p => p.name).join(', ')}`;
+      w.appendChild(d);
+    }
+    const bads = plan.filter(p => /zipline|elephant-valley-paid/.test(p.route));
+    if (bads.length) {
+      const d = document.createElement('div');
+      d.textContent = `⚠ ${bads.map(b => b.name).join(', ')} require significant walking/stairs — flag for PRP.`;
+      w.appendChild(d);
+    }
+    if (plan.length && !conflicts.size && Object.values(seenRoutes).every((n,i,arr)=>{const k=Object.keys(seenRoutes)[i];return n<=1||k.startsWith('free-');}) && beforeArr.length === 0) {
+      const d = document.createElement('div');
+      d.className = 'ok';
+      d.textContent = `✓ Plan looks good — ${plan.length} item${plan.length>1?'s':''}, no conflicts, all after 11am.`;
+      w.appendChild(d);
+    }
+  }
+
+  let activeFilter = 'all';
+  function applyFilter() {
+    document.querySelectorAll('#t tbody tr').forEach(tr => {
+      let show = true;
+      if (activeFilter === 'available') show = tr.dataset.avail === '1';
+      if (activeFilter === 'good') show = tr.dataset.good === '1';
+      if (activeFilter === 'free') show = tr.dataset.free === '1';
+      tr.classList.toggle('hidden', !show);
+    });
+  }
+
+  // Date toggle
+  document.querySelectorAll('.date-toggle button').forEach(b => {
+    b.addEventListener('click', () => {
+      DATE = b.dataset.date;
+      document.querySelectorAll('.date-toggle button').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      document.getElementById('planner-date').textContent =
+        DATE === 'sat' ? 'Sat Apr 25, 2026' : 'Sun Apr 26, 2026';
+      plan = [];
+      renderTable();
+      renderPlanner();
+    });
+  });
+
+  // Filter buttons
+  document.querySelectorAll('.controls button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.controls button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeFilter = btn.dataset.filter;
+      applyFilter();
+    });
+  });
+
+  renderTable();
+  renderPlanner();
+</script>
+</body>
+</html>

@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Brain - Interactive Connectivity Map</title>
+<script src="https://unpkg.com/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://unpkg.com/layout-base/layout-base.js"></script>
+<script src="https://unpkg.com/cose-base/cose-base.js"></script>
+<script src="https://unpkg.com/cytoscape-fcose@2.2.0/cytoscape-fcose.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0a0e14; color: #c9d1d9; font-family: 'Segoe UI', system-ui, sans-serif; overflow: hidden; }
+
+  #header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: linear-gradient(135deg, #111820, #0a0e14);
+    border-bottom: 1px solid #1e2a3a;
+    padding: 8px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  #header h1 { font-size: 15px; color: #f472b6; white-space: nowrap; }
+  #header .subtitle { font-size: 11px; color: #6b7b8d; margin-left: 12px; white-space: nowrap; }
+  #header .controls { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+  #header button {
+    background: #151d28; border: 1px solid #1e2a3a; color: #c9d1d9;
+    padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 11px;
+    white-space: nowrap;
+  }
+  #header button:hover { background: #1e2a3a; }
+  #header button.active { background: #f472b6; border-color: #f472b6; color: #fff; }
+
+  .legend {
+    position: fixed; bottom: 15px; left: 15px; z-index: 100;
+    background: #111820ee; border: 1px solid #1e2a3a; border-radius: 8px;
+    padding: 10px 14px; font-size: 10px; line-height: 1.8;
+    max-height: calc(100vh - 100px); overflow-y: auto;
+  }
+  .legend-title { font-weight: 700; color: #f472b6; margin-bottom: 4px; font-size: 11px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+  .legend-line { width: 18px; height: 2px; flex-shrink: 0; }
+
+  #cy { width: 100vw; height: 100vh; padding-top: 45px; }
+
+  #popup {
+    display: none; position: fixed; z-index: 200;
+    background: #111820; border: 1px solid #f472b6;
+    border-radius: 10px; padding: 16px 20px;
+    max-width: 480px; min-width: 300px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.7);
+    font-size: 13px; line-height: 1.6;
+    pointer-events: auto;
+    max-height: 75vh; overflow-y: auto;
+  }
+  #popup .popup-title {
+    font-size: 15px; font-weight: 700; margin-bottom: 6px;
+    padding-bottom: 6px; border-bottom: 1px solid #1e2a3a;
+  }
+  #popup .popup-type {
+    display: inline-block; font-size: 10px; font-weight: 600;
+    padding: 2px 8px; border-radius: 10px; margin-bottom: 6px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  #popup .popup-section { margin-top: 8px; }
+  #popup .popup-section h4 { font-size: 10px; color: #6b7b8d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+  #popup .popup-section p, #popup .popup-section li { color: #c9d1d9; font-size: 12px; }
+  #popup .popup-section ul { padding-left: 16px; }
+  #popup .close-btn {
+    position: absolute; top: 8px; right: 12px;
+    background: none; border: none; color: #6b7b8d;
+    font-size: 18px; cursor: pointer; line-height: 1;
+  }
+  #popup .close-btn:hover { color: #f472b6; }
+
+  #search-box {
+    background: #0a0e14; border: 1px solid #1e2a3a; color: #c9d1d9;
+    padding: 4px 10px; border-radius: 6px; font-size: 11px; width: 150px;
+  }
+  #search-box::placeholder { color: #3a4a5c; }
+
+  #info-panel {
+    position: fixed; bottom: 15px; right: 15px; z-index: 100;
+    background: #111820ee; border: 1px solid #1e2a3a; border-radius: 8px;
+    padding: 10px 14px; font-size: 10px; max-width: 240px; color: #6b7b8d;
+    line-height: 1.6;
+  }
+  #info-panel .ip-title { font-weight: 700; color: #f472b6; margin-bottom: 4px; font-size: 11px; }
+</style>
+</head>
+<body>
+
+<div id="header">
+  <div style="display:flex;align-items:baseline;">
+    <h1>The Brain</h1>
+    <span class="subtitle">Interactive Connectivity &amp; Function Map</span>
+  </div>
+  <div class="controls">
+    <input type="text" id="search-box" placeholder="Search..." />
+    <button onclick="filterByRegion('all')" class="active" id="btn-all">All</button>
+    <button onclick="filterByRegion('frontal')" id="btn-frontal">Frontal</button>
+    <button onclick="filterByRegion('temporal')" id="btn-temporal">Temporal</button>
+    <button onclick="filterByRegion('parietal')" id="btn-parietal">Parietal</button>
+    <button onclick="filterByRegion('occipital')" id="btn-occipital">Occipital</button>
+    <button onclick="filterByRegion('subcortical')" id="btn-subcortical">Subcortical</button>
+    <button onclick="filterByRegion('brainstem')" id="btn-brainstem">Brainstem</button>
+    <button onclick="filterByRegion('cerebellum')" id="btn-cerebellum">Cerebellum</button>
+    <span style="color:#1e2a3a;">|</span>
+    <button onclick="showNetwork('default_mode')" id="btn-net-dmn">DMN</button>
+    <button onclick="showNetwork('salience')" id="btn-net-sal">Salience</button>
+    <button onclick="showNetwork('reward')" id="btn-net-rew">Reward</button>
+    <button onclick="showNetwork('language')" id="btn-net-lang">Language</button>
+    <button onclick="showNetwork('motor')" id="btn-net-mot">Motor</button>
+    <button onclick="showNetwork('visual')" id="btn-net-vis">Visual</button>
+    <button onclick="showNetwork('memory')" id="btn-net-mem">Memory</button>
+    <button onclick="showNetwork('fear')" id="btn-net-fear">Fear</button>
+    <span style="color:#1e2a3a;">|</span>
+    <button onclick="clearAll()">Clear</button>
+    <button onclick="cy.fit(undefined, 50)">Reset View</button>
+  </div>
+</div>
+
+<div class="legend">
+  <div class="legend-title">Brain Regions</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#f472b6;"></div> Frontal Lobe</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#818cf8;"></div> Parietal Lobe</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#34d399;"></div> Temporal Lobe</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#fbbf24;"></div> Occipital Lobe</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#fb923c;"></div> Subcortical</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#f87171;"></div> Brainstem</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#22d3ee;"></div> Cerebellum</div>
+  <div style="margin-top:6px;border-top:1px solid #1e2a3a;padding-top:6px;">
+    <div class="legend-title">Connections</div>
+    <div class="legend-item"><div class="legend-line" style="background:#6b7b8d;"></div> Structural</div>
+    <div class="legend-item"><div class="legend-line" style="background:#22d3ee;"></div> Modulatory</div>
+    <div class="legend-item"><div class="legend-line" style="background:#f87171; height:0; border-top:2px dashed #f87171;"></div> Inhibitory</div>
+  </div>
+  <div style="margin-top:6px;color:#3a4a5c;font-size:9px;">
+    Click node for details.<br/>
+    Use network buttons to<br/>highlight functional circuits.<br/>
+    Scroll to zoom. Drag to pan.
+  </div>
+</div>
+
+<div id="info-panel">
+  <div class="ip-title">Quick Stats</div>
+  <div>~86 billion neurons</div>
+  <div>~100 trillion synapses</div>
+  <div>~2% of body weight</div>
+  <div>~20% of energy consumption</div>
+  <div style="margin-top:6px; border-top:1px solid #1e2a3a; padding-top:6px;">
+    <div class="ip-title">Tip</div>
+    Use the network buttons (DMN, Salience, Reward...) to highlight functional circuits.
+  </div>
+</div>
+
+<div id="cy"></div>
+
+<div id="popup">
+  <button class="close-btn" onclick="closePopup()">&times;</button>
+  <div id="popup-content"></div>
+</div>
+
+<script>
+// ===================== NODE DATA =====================
+const nodes = [
+  // ===== FRONTAL LOBE =====
+  {
+    id: 'dlpfc', region: 'frontal', label: 'Dorsolateral\nPFC',
+    title: 'Dorsolateral Prefrontal Cortex (dlPFC)',
+    detail: {
+      location: 'Lateral surface of the frontal lobe, Brodmann areas 9 & 46',
+      function: 'Working memory, cognitive flexibility, planning, abstract reasoning, and attentional control. The "CEO of the brain."',
+      responsible_for: ['Holding information in mind temporarily (working memory)', 'Task switching and cognitive flexibility', 'Planning complex sequences of actions', 'Abstract reasoning and problem-solving'],
+      damage: 'Impaired working memory, difficulty planning, perseveration (inability to switch tasks), reduced abstract thinking.',
+      networks: ['default_mode', 'salience'],
+      connects_to: 'Parietal cortex, ACC, OFC, basal ganglia, thalamus'
+    }
+  },
+  {
+    id: 'vmpfc', region: 'frontal', label: 'Ventromedial\nPFC',
+    title: 'Ventromedial Prefrontal Cortex (vmPFC)',
+    detail: {
+      location: 'Medial and ventral surface of prefrontal cortex, Brodmann areas 10, 14, 25, 32',
+      function: 'Decision-making, emotion regulation, value assessment, self-referential thinking, and social cognition.',
+      responsible_for: ['Integrating emotion into decision-making', 'Assigning value to options and outcomes', 'Regulating emotional responses (top-down)', 'Self-referential processing ("thinking about yourself")'],
+      damage: 'Phineas Gage syndrome: intact intelligence but poor decision-making, impulsivity, inappropriate social behavior, inability to learn from emotional consequences.',
+      networks: ['default_mode'],
+      connects_to: 'Amygdala, hippocampus, OFC, ACC, hypothalamus'
+    }
+  },
+  {
+    id: 'ofc', region: 'frontal', label: 'Orbitofrontal\nCortex',
+    title: 'Orbitofrontal Cortex (OFC)',
+    detail: {
+      location: 'Ventral surface of frontal lobe, above the eye orbits, Brodmann areas 11, 47',
+      function: 'Reward processing, value computation, expectation, and adaptive decision-making. Constantly updates the value of choices based on outcomes.',
+      responsible_for: ['Computing expected reward value of stimuli', 'Updating predictions when outcomes change', 'Representing taste, smell, and reward', 'Impulse control and delayed gratification'],
+      damage: 'Disinhibition, poor impulse control, inability to adapt behavior when reward contingencies change, socially inappropriate behavior.',
+      networks: ['reward'],
+      connects_to: 'Amygdala, VTA, nucleus accumbens, vmPFC, insula, sensory cortices'
+    }
+  },
+  {
+    id: 'acc', region: 'frontal', label: 'Anterior\nCingulate\nCortex',
+    title: 'Anterior Cingulate Cortex (ACC)',
+    detail: {
+      location: 'Medial surface surrounding the corpus callosum anteriorly, Brodmann areas 24, 32, 33',
+      function: 'Error detection, conflict monitoring, pain processing, and motivation. Acts as an alarm system that detects when things go wrong.',
+      responsible_for: ['Detecting errors and conflicts between competing responses', 'Signaling need for increased cognitive control', 'Processing physical and social pain', 'Motivation and effort allocation', 'Autonomic regulation (heart rate, blood pressure)'],
+      damage: 'Apathy, reduced motivation (akinetic mutism in extreme cases), impaired error detection, altered pain processing.',
+      networks: ['salience', 'default_mode'],
+      connects_to: 'dlPFC, insula, amygdala, motor cortex, PAG, hypothalamus'
+    }
+  },
+  {
+    id: 'motor', region: 'frontal', label: 'Primary\nMotor Cortex\n(M1)',
+    title: 'Primary Motor Cortex (M1)',
+    detail: {
+      location: 'Precentral gyrus, Brodmann area 4',
+      function: 'Direct control of voluntary movement. Contains a topographic "homunculus" map of the body, with disproportionately large areas for hands and face.',
+      responsible_for: ['Executing voluntary movements', 'Fine motor control (especially hands, fingers, lips)', 'Force and direction of movement'],
+      damage: 'Contralateral paralysis or weakness (hemiparesis). Upper motor neuron signs: spasticity, hyperreflexia.',
+      networks: ['motor'],
+      connects_to: 'Premotor cortex, SMA, basal ganglia, cerebellum (via thalamus), spinal cord (corticospinal tract)'
+    }
+  },
+  {
+    id: 'premotor', region: 'frontal', label: 'Premotor\nCortex',
+    title: 'Premotor Cortex (PMC)',
+    detail: {
+      location: 'Lateral frontal lobe, anterior to M1, Brodmann area 6',
+      function: 'Planning and preparing movements before execution. Selects movements based on external cues and learned rules.',
+      responsible_for: ['Movement planning and preparation', 'Selecting appropriate motor programs', 'Responding to external cues with learned movements', 'Mirror neuron activity (understanding others\' actions)'],
+      damage: 'Difficulty initiating movements, impaired ability to use tools or follow motor sequences.',
+      networks: ['motor'],
+      connects_to: 'Motor cortex, SMA, parietal cortex, basal ganglia, cerebellum'
+    }
+  },
+  {
+    id: 'sma', region: 'frontal', label: 'Supplementary\nMotor Area',
+    title: 'Supplementary Motor Area (SMA)',
+    detail: {
+      location: 'Medial surface of frontal lobe, anterior to M1, Brodmann area 6 (medial)',
+      function: 'Planning internally-generated movement sequences. Coordinates bimanual movements and sequential actions.',
+      responsible_for: ['Planning complex movement sequences', 'Coordinating two-handed movements', 'Internally-generated (vs. externally-cued) actions', 'Speech motor planning'],
+      damage: 'SMA syndrome: transient mutism and contralateral akinesia after surgery. Difficulty with sequential movements.',
+      networks: ['motor'],
+      connects_to: 'Motor cortex, premotor cortex, basal ganglia, cingulate cortex'
+    }
+  },
+  {
+    id: 'broca', region: 'frontal', label: 'Broca\'s\nArea',
+    title: 'Broca\'s Area',
+    detail: {
+      location: 'Left inferior frontal gyrus (usually), Brodmann areas 44 & 45',
+      function: 'Speech production and language processing. Also involved in syntax, working memory for language, and action understanding.',
+      responsible_for: ['Producing fluent speech (motor programming of speech)', 'Grammatical/syntactic processing', 'Verbal working memory', 'Understanding complex sentences'],
+      damage: 'Broca\'s aphasia: non-fluent, effortful speech with preserved comprehension. "Tan, tan" (Broca\'s original patient). Telegraphic speech.',
+      networks: ['language'],
+      connects_to: 'Wernicke\'s area (via arcuate fasciculus), motor cortex (mouth/larynx), dlPFC, insula'
+    }
+  },
+  {
+    id: 'fef', region: 'frontal', label: 'Frontal\nEye Fields',
+    title: 'Frontal Eye Fields (FEF)',
+    detail: {
+      location: 'Intersection of precentral and superior frontal sulci, Brodmann area 8',
+      function: 'Voluntary control of eye movements (saccades). Top-down attentional control of visual processing.',
+      responsible_for: ['Initiating voluntary saccadic eye movements', 'Directing visual attention', 'Visual search and target selection', 'Suppressing reflexive eye movements'],
+      damage: 'Difficulty making voluntary eye movements to the contralateral side. Impaired visual search.',
+      networks: ['visual'],
+      connects_to: 'Superior colliculus, V1, parietal cortex, dlPFC'
+    }
+  },
+
+  // ===== PARIETAL LOBE =====
+  {
+    id: 'somatosensory', region: 'parietal', label: 'Somatosensory\nCortex (S1)',
+    title: 'Primary Somatosensory Cortex (S1)',
+    detail: {
+      location: 'Postcentral gyrus, Brodmann areas 1, 2, 3',
+      function: 'Processes touch, pressure, temperature, pain, and proprioception. Contains a sensory homunculus map.',
+      responsible_for: ['Processing tactile information (touch, pressure, vibration)', 'Temperature and pain sensation', 'Proprioception (body position sense)', 'Texture and shape discrimination'],
+      damage: 'Loss of fine touch discrimination, impaired proprioception, difficulty recognizing objects by touch (astereognosis).',
+      networks: ['motor'],
+      connects_to: 'Motor cortex, posterior parietal cortex, secondary somatosensory cortex, thalamus (VPL nucleus)'
+    }
+  },
+  {
+    id: 'ppc', region: 'parietal', label: 'Posterior\nParietal\nCortex',
+    title: 'Posterior Parietal Cortex (PPC)',
+    detail: {
+      location: 'Superior and inferior parietal lobules, Brodmann areas 5, 7, 39, 40',
+      function: 'Multisensory integration, spatial awareness, attention, and sensorimotor transformation. Converts "where is it?" into "how do I reach it?"',
+      responsible_for: ['Spatial awareness and navigation', 'Integrating visual, tactile, and proprioceptive information', 'Transforming sensory info into motor plans (reaching, grasping)', 'Mathematical and numerical cognition', 'Attention (especially spatial attention)'],
+      damage: 'Hemispatial neglect (right PPC damage: ignoring left side of space), optic ataxia (can\'t reach accurately), constructional apraxia.',
+      networks: ['default_mode', 'visual'],
+      connects_to: 'Visual cortex, motor/premotor cortex, dlPFC, hippocampus, temporal lobe'
+    }
+  },
+  {
+    id: 'angular', region: 'parietal', label: 'Angular\nGyrus',
+    title: 'Angular Gyrus',
+    detail: {
+      location: 'Inferior parietal lobule, Brodmann area 39',
+      function: 'Semantic processing, reading, arithmetic, spatial cognition, memory retrieval, and theory of mind. A major hub for integrating information.',
+      responsible_for: ['Reading and writing (grapheme-phoneme conversion)', 'Arithmetic and number processing', 'Semantic memory retrieval', 'Theory of mind (understanding others\' mental states)', 'Spatial reasoning and mental rotation'],
+      damage: 'Gerstmann syndrome: agraphia, acalculia, finger agnosia, left-right confusion. Also: alexia, anomia.',
+      networks: ['default_mode', 'language'],
+      connects_to: 'Wernicke\'s area, visual cortex, hippocampus, prefrontal cortex, supramarginal gyrus'
+    }
+  },
+  {
+    id: 'smg', region: 'parietal', label: 'Supramarginal\nGyrus',
+    title: 'Supramarginal Gyrus (SMG)',
+    detail: {
+      location: 'Inferior parietal lobule, Brodmann area 40',
+      function: 'Phonological processing, empathy, and tactile recognition. Important for overriding egocentric bias in social judgments.',
+      responsible_for: ['Phonological processing (sound structure of words)', 'Empathy and perspective-taking', 'Tactile object recognition', 'Overriding one\'s own perspective to understand another\'s'],
+      damage: 'Conduction aphasia (can\'t repeat words despite intact comprehension and production), impaired empathy.',
+      networks: ['language'],
+      connects_to: 'Broca\'s area, Wernicke\'s area, insula, somatosensory cortex'
+    }
+  },
+
+  // ===== TEMPORAL LOBE =====
+  {
+    id: 'auditory', region: 'temporal', label: 'Primary\nAuditory\nCortex (A1)',
+    title: 'Primary Auditory Cortex (A1)',
+    detail: {
+      location: 'Superior temporal gyrus (Heschl\'s gyrus), Brodmann areas 41, 42',
+      function: 'First cortical processing of sound. Organized tonotopically (different frequencies mapped to different locations).',
+      responsible_for: ['Processing basic auditory information (pitch, volume, timing)', 'Frequency discrimination', 'Sound localization (initial processing)', 'Detecting changes in auditory environment'],
+      damage: 'Cortical deafness (bilateral), difficulty discriminating sounds, auditory agnosia.',
+      networks: ['language'],
+      connects_to: 'Wernicke\'s area, auditory association cortex, amygdala (for emotional sounds), thalamus (MGN)'
+    }
+  },
+  {
+    id: 'wernicke', region: 'temporal', label: 'Wernicke\'s\nArea',
+    title: 'Wernicke\'s Area',
+    detail: {
+      location: 'Posterior superior temporal gyrus (left hemisphere usually), Brodmann area 22',
+      function: 'Language comprehension. Converts heard speech into meaning. Connected to Broca\'s area via the arcuate fasciculus.',
+      responsible_for: ['Comprehending spoken language', 'Selecting appropriate words for speech (semantic retrieval)', 'Processing sentence meaning', 'Distinguishing speech sounds from non-speech'],
+      damage: 'Wernicke\'s aphasia: fluent but meaningless speech ("word salad"), severely impaired comprehension. Patients often unaware of their deficit.',
+      networks: ['language'],
+      connects_to: 'Broca\'s area (arcuate fasciculus), auditory cortex, angular gyrus, hippocampus'
+    }
+  },
+  {
+    id: 'ffa', region: 'temporal', label: 'Fusiform\nFace Area',
+    title: 'Fusiform Face Area (FFA)',
+    detail: {
+      location: 'Fusiform gyrus on the ventral temporal surface, lateral to parahippocampal gyrus',
+      function: 'Face recognition and processing. Also responds to objects of expertise (e.g., cars for car experts, birds for birders).',
+      responsible_for: ['Recognizing individual faces', 'Processing facial expressions', 'Expert-level visual categorization', 'Holistic (vs. part-based) visual processing'],
+      damage: 'Prosopagnosia (face blindness): inability to recognize faces despite intact vision. Can\'t recognize family members by face alone.',
+      networks: ['visual'],
+      connects_to: 'Visual cortex, amygdala (emotional evaluation of faces), PFC, superior temporal sulcus'
+    }
+  },
+  {
+    id: 'itc', region: 'temporal', label: 'Inferior\nTemporal\nCortex',
+    title: 'Inferior Temporal Cortex (ITC)',
+    detail: {
+      location: 'Ventral and lateral inferior temporal gyrus, Brodmann areas 20, 37',
+      function: 'The end of the ventral visual stream ("what pathway"). Recognizes objects, scenes, and complex visual patterns.',
+      responsible_for: ['Object recognition and categorization', 'Visual memory of object appearance', 'Reading (visual word form area nearby)', 'Scene recognition'],
+      damage: 'Visual agnosia: can see objects but can\'t recognize them. Visual memory impairment.',
+      networks: ['visual'],
+      connects_to: 'Visual cortex (V2, V4), hippocampus, amygdala, prefrontal cortex, fusiform face area'
+    }
+  },
+  {
+    id: 'sts', region: 'temporal', label: 'Superior\nTemporal\nSulcus',
+    title: 'Superior Temporal Sulcus (STS)',
+    detail: {
+      location: 'Sulcus between superior and middle temporal gyri',
+      function: 'Social perception: processing biological motion, gaze direction, facial expressions, and voice. A key hub for social cognition.',
+      responsible_for: ['Perceiving biological motion (e.g., walking)', 'Tracking eye gaze direction of others', 'Processing vocal prosody (emotional tone)', 'Audiovisual speech integration', 'Theory of mind (mentalizing)'],
+      damage: 'Difficulty reading social cues, impaired gaze following, reduced understanding of others\' intentions.',
+      networks: ['default_mode', 'language'],
+      connects_to: 'Amygdala, fusiform face area, angular gyrus, prefrontal cortex, auditory cortex'
+    }
+  },
+
+  // ===== OCCIPITAL LOBE =====
+  {
+    id: 'v1', region: 'occipital', label: 'Primary\nVisual Cortex\n(V1)',
+    title: 'Primary Visual Cortex (V1)',
+    detail: {
+      location: 'Banks of the calcarine sulcus, Brodmann area 17',
+      function: 'First cortical stage of visual processing. Detects edges, orientations, basic shapes, and simple motion. Organized retinotopically.',
+      responsible_for: ['Edge and orientation detection', 'Basic contrast and spatial frequency processing', 'Color processing (initial stage)', 'Binocular disparity (depth perception)', 'Retinotopic mapping of visual field'],
+      damage: 'Cortical blindness (bilateral), scotomas (blind spots in visual field), blindsight (unconscious visual processing without awareness).',
+      networks: ['visual'],
+      connects_to: 'LGN (thalamus - input), V2, V3, V4, V5/MT, dorsal and ventral streams'
+    }
+  },
+  {
+    id: 'v2v3', region: 'occipital', label: 'Visual\nAssociation\n(V2/V3)',
+    title: 'Visual Association Areas (V2/V3)',
+    detail: {
+      location: 'Surrounding V1, Brodmann area 18, 19',
+      function: 'Intermediate visual processing. V2 processes illusory contours, figure-ground separation. V3 processes dynamic form and global motion.',
+      responsible_for: ['Illusory contour perception', 'Figure-ground segregation', 'Processing visual texture and patterns', 'Integrating information from V1 for higher processing'],
+      damage: 'Impaired visual discrimination, difficulty perceiving complex patterns.',
+      networks: ['visual'],
+      connects_to: 'V1, V4, V5/MT, parietal cortex, temporal cortex'
+    }
+  },
+  {
+    id: 'v4', region: 'occipital', label: 'V4\n(Color &\nForm)',
+    title: 'Visual Area V4',
+    detail: {
+      location: 'Ventral occipital cortex, fusiform and lingual gyri',
+      function: 'Color perception and complex form recognition. Part of the ventral "what" stream.',
+      responsible_for: ['Color constancy (recognizing colors under different lighting)', 'Complex shape perception', 'Attentional modulation of visual processing', 'Intermediate object recognition'],
+      damage: 'Achromatopsia (cortical color blindness): sees the world in shades of gray despite intact retinal cones.',
+      networks: ['visual'],
+      connects_to: 'V1, V2, inferior temporal cortex, fusiform face area'
+    }
+  },
+  {
+    id: 'v5mt', region: 'occipital', label: 'V5/MT\n(Motion)',
+    title: 'Visual Area V5/MT (Middle Temporal)',
+    detail: {
+      location: 'Junction of occipital and temporal lobes',
+      function: 'Motion perception. Detects speed and direction of visual motion. Part of the dorsal "where/how" stream.',
+      responsible_for: ['Perceiving visual motion (speed and direction)', 'Processing optic flow (motion patterns during self-movement)', 'Motion-defined form perception', 'Pursuit eye movement guidance'],
+      damage: 'Akinetopsia (motion blindness): the world appears as a series of still frames. Can\'t pour tea (liquid appears frozen then suddenly overflowing).',
+      networks: ['visual'],
+      connects_to: 'V1, posterior parietal cortex, FEF, MST (medial superior temporal)'
+    }
+  },
+
+  // ===== SUBCORTICAL STRUCTURES =====
+  {
+    id: 'thalamus', region: 'subcortical', label: 'Thalamus',
+    title: 'Thalamus',
+    detail: {
+      location: 'Central diencephalon, bilateral egg-shaped structures',
+      function: 'The brain\'s relay station. Nearly ALL sensory information (except smell) passes through the thalamus before reaching the cortex. Also relays motor signals and regulates consciousness.',
+      responsible_for: ['Relaying sensory info to appropriate cortical areas (LGN->V1, MGN->A1, VPL->S1)', 'Filtering and gating sensory information', 'Regulating sleep-wake cycles and consciousness', 'Relaying motor signals from cerebellum/basal ganglia to cortex', 'Attentional filtering (pulvinar nucleus)'],
+      damage: 'Thalamic syndrome: contralateral pain, sensory loss, and sometimes movement disorders. Severe bilateral damage: coma.',
+      networks: ['motor', 'visual', 'salience'],
+      connects_to: 'Nearly every cortical area (reciprocal connections), basal ganglia, cerebellum, brainstem, hypothalamus'
+    }
+  },
+  {
+    id: 'hypothalamus', region: 'subcortical', label: 'Hypothalamus',
+    title: 'Hypothalamus',
+    detail: {
+      location: 'Ventral diencephalon, below the thalamus, above the pituitary gland',
+      function: 'Master regulator of homeostasis. Controls the endocrine system via the pituitary gland. Regulates hunger, thirst, temperature, sleep, and sexual behavior.',
+      responsible_for: ['Hunger and satiety (arcuate nucleus, lateral/ventromedial nuclei)', 'Thirst and fluid balance', 'Body temperature regulation', 'Circadian rhythms (suprachiasmatic nucleus - body clock)', 'Sexual behavior and reproduction', 'Stress response (CRH release -> pituitary -> cortisol)', 'Autonomic nervous system control'],
+      damage: 'Disrupted eating (obesity or anorexia), temperature dysregulation, hormonal imbalances, sleep disorders, diabetes insipidus.',
+      networks: ['fear'],
+      connects_to: 'Pituitary gland, amygdala, hippocampus, brainstem, ACC, vmPFC, PAG'
+    }
+  },
+  {
+    id: 'hippocampus', region: 'subcortical', label: 'Hippocampus',
+    title: 'Hippocampus',
+    detail: {
+      location: 'Medial temporal lobe, curved structure ("seahorse-shaped")',
+      function: 'Critical for forming new explicit (declarative) memories: facts (semantic) and events (episodic). Also crucial for spatial navigation and mental time travel.',
+      responsible_for: ['Encoding new episodic memories (events, autobiography)', 'Encoding new semantic memories (facts, knowledge)', 'Spatial navigation and cognitive mapping (place cells, grid cells)', 'Memory consolidation (transferring memories to cortex during sleep)', 'Pattern separation (distinguishing similar memories)', 'Pattern completion (recalling whole memory from partial cues)'],
+      damage: 'Patient H.M.: bilateral removal caused profound anterograde amnesia (can\'t form new memories) with preserved old memories, skills, and intelligence. London taxi drivers have enlarged hippocampi.',
+      networks: ['memory', 'default_mode'],
+      connects_to: 'Entorhinal cortex, amygdala, prefrontal cortex, thalamus, mammillary bodies, cingulate cortex, temporal cortex'
+    }
+  },
+  {
+    id: 'amygdala', region: 'subcortical', label: 'Amygdala',
+    title: 'Amygdala',
+    detail: {
+      location: 'Medial temporal lobe, anterior to hippocampus, almond-shaped',
+      function: 'Emotional processing, especially fear and threat detection. Evaluates emotional significance of stimuli. Modulates memory formation (emotional memories are stronger).',
+      responsible_for: ['Fear conditioning and threat detection', 'Processing facial expressions (especially fear)', 'Emotional modulation of memory (making emotional events memorable)', 'Anxiety and vigilance', 'Social evaluation (trustworthiness judgments)', 'Autonomic fear response (fight-or-flight via hypothalamus)'],
+      damage: 'Urbach-Wiethe disease (bilateral amygdala damage): inability to recognize fear in faces, impaired fear conditioning, poor judgment of trustworthiness. Patient S.M. approached dangerous snakes and criminals without fear.',
+      networks: ['fear', 'memory', 'salience'],
+      connects_to: 'Hippocampus, vmPFC, OFC, ACC, hypothalamus, PAG, thalamus, sensory cortices, insula'
+    }
+  },
+  {
+    id: 'basal_ganglia', region: 'subcortical', label: 'Basal Ganglia\n(Striatum)',
+    title: 'Basal Ganglia (Striatum: Caudate + Putamen)',
+    detail: {
+      location: 'Deep cerebral hemispheres; caudate nucleus, putamen, globus pallidus',
+      function: 'Action selection, habit formation, reward-based learning, and movement modulation. The direct pathway facilitates movement; the indirect pathway inhibits it.',
+      responsible_for: ['Selecting and initiating voluntary movements', 'Suppressing unwanted/competing movements', 'Habit formation and procedural learning', 'Reward prediction and reinforcement learning', 'Cognitive and emotional loops (not just motor)'],
+      damage: 'Parkinson\'s disease (loss of dopamine input): tremor, rigidity, bradykinesia. Huntington\'s disease (striatal degeneration): chorea, cognitive decline. OCD linked to caudate dysfunction.',
+      networks: ['motor', 'reward'],
+      connects_to: 'Motor cortex, premotor cortex, SMA, thalamus (VA/VL nuclei), substantia nigra, VTA, prefrontal cortex (cognitive loop)'
+    }
+  },
+  {
+    id: 'nac', region: 'subcortical', label: 'Nucleus\nAccumbens',
+    title: 'Nucleus Accumbens (NAc)',
+    detail: {
+      location: 'Ventral striatum, where caudate and putamen meet',
+      function: 'The brain\'s "reward center." Processes pleasure, motivation, and reinforcement. Key target of dopamine from VTA (mesolimbic pathway).',
+      responsible_for: ['Processing reward and pleasure signals', 'Motivation and drive ("wanting" vs. "liking")', 'Reinforcement learning (what actions lead to reward)', 'Anticipation of reward (dopamine release)', 'Addiction (hijacked reward system)'],
+      damage: 'Anhedonia (inability to experience pleasure), reduced motivation. Stimulation produces intense pleasure. Drugs of abuse flood NAc with dopamine.',
+      networks: ['reward'],
+      connects_to: 'VTA (dopamine input), OFC, vmPFC, amygdala, hippocampus, hypothalamus, ventral pallidum'
+    }
+  },
+  {
+    id: 'insula', region: 'subcortical', label: 'Insular\nCortex',
+    title: 'Insular Cortex (Insula)',
+    detail: {
+      location: 'Deep within the lateral sulcus (Sylvian fissure), hidden between temporal and frontal lobes',
+      function: 'Interoception (awareness of body states), disgust, empathy, pain, taste, and subjective feeling states. The bridge between body sensation and conscious emotion.',
+      responsible_for: ['Interoception: sensing heartbeat, breathing, gut feelings', 'Disgust (both physical and moral)', 'Pain processing (subjective suffering component)', 'Taste perception', 'Empathy (especially bodily empathy)', 'Awareness of cravings and urges', 'Sense of body ownership'],
+      damage: 'Loss of disgust response, reduced empathy, impaired interoception, loss of cigarette cravings (smokers with insula damage spontaneously quit).',
+      networks: ['salience'],
+      connects_to: 'ACC, amygdala, somatosensory cortex, OFC, hypothalamus, thalamus, temporal cortex'
+    }
+  },
+
+  // ===== BRAINSTEM =====
+  {
+    id: 'vta', region: 'brainstem', label: 'Ventral\nTegmental\nArea (VTA)',
+    title: 'Ventral Tegmental Area (VTA)',
+    detail: {
+      location: 'Midbrain, medial to substantia nigra',
+      function: 'Major source of dopamine for the brain. Sends dopamine to nucleus accumbens (mesolimbic pathway = reward) and prefrontal cortex (mesocortical pathway = cognition/motivation).',
+      responsible_for: ['Reward signaling (dopamine release when reward exceeds expectation)', 'Motivation and drive', 'Reinforcement learning (reward prediction errors)', 'Romantic love and attachment (activated by images of beloved)', 'Addiction (all drugs of abuse activate VTA)'],
+      damage: 'VTA dysfunction linked to depression, anhedonia, addiction, and schizophrenia (mesocortical pathway). Stimulation produces seeking/wanting behavior.',
+      networks: ['reward'],
+      connects_to: 'Nucleus accumbens, prefrontal cortex (dlPFC, vmPFC, OFC), amygdala, hippocampus'
+    }
+  },
+  {
+    id: 'sn', region: 'brainstem', label: 'Substantia\nNigra',
+    title: 'Substantia Nigra',
+    detail: {
+      location: 'Midbrain, named for its dark pigmentation (neuromelanin)',
+      function: 'Dopamine source for the basal ganglia (nigrostriatal pathway). Essential for movement initiation and smooth motor control.',
+      responsible_for: ['Providing dopamine to the striatum (caudate + putamen)', 'Facilitating voluntary movement initiation', 'Motor learning and habit formation', 'Reward processing (pars reticulata)'],
+      damage: 'Parkinson\'s disease: loss of 60-80% of dopaminergic neurons in substantia nigra pars compacta causes tremor, rigidity, bradykinesia, and postural instability.',
+      networks: ['motor', 'reward'],
+      connects_to: 'Basal ganglia (striatum), thalamus, superior colliculus, PFC'
+    }
+  },
+  {
+    id: 'pag', region: 'brainstem', label: 'Periaqueductal\nGray (PAG)',
+    title: 'Periaqueductal Gray (PAG)',
+    detail: {
+      location: 'Midbrain, surrounding the cerebral aqueduct',
+      function: 'Pain modulation, defensive behaviors, and autonomic control. The brain\'s pain control center - mediates the analgesic effect of opioids and stress-induced analgesia.',
+      responsible_for: ['Descending pain inhibition (can "turn off" pain signals)', 'Defensive behaviors (fight, flight, freeze)', 'Vocalization and emotional expression', 'Cardiovascular regulation', 'Maternal behavior'],
+      damage: 'Altered pain processing, impaired defensive behaviors.',
+      networks: ['fear'],
+      connects_to: 'Amygdala, hypothalamus, ACC, insula, spinal cord dorsal horn, raphe nuclei'
+    }
+  },
+  {
+    id: 'raphe', region: 'brainstem', label: 'Raphe\nNuclei',
+    title: 'Raphe Nuclei',
+    detail: {
+      location: 'Midline of brainstem (from midbrain to medulla)',
+      function: 'Primary source of serotonin (5-HT) in the brain. Serotonin modulates mood, sleep, appetite, pain, and cognition. Target of most antidepressants (SSRIs).',
+      responsible_for: ['Mood regulation (serotonin system)', 'Sleep-wake cycle regulation', 'Pain modulation (descending inhibition)', 'Appetite and feeding behavior', 'Impulse control and behavioral inhibition'],
+      damage: 'Serotonin dysfunction linked to depression, anxiety, OCD, insomnia, and impulsive aggression. SSRIs increase serotonin availability at synapses.',
+      networks: ['salience'],
+      connects_to: 'Widespread cortical projections, amygdala, hippocampus, hypothalamus, basal ganglia, PAG, spinal cord'
+    }
+  },
+  {
+    id: 'lc', region: 'brainstem', label: 'Locus\nCoeruleus',
+    title: 'Locus Coeruleus (LC)',
+    detail: {
+      location: 'Dorsal pons, small bilateral nucleus ("blue spot")',
+      function: 'Primary source of norepinephrine (noradrenaline) in the brain. Regulates arousal, attention, stress response, and fight-or-flight. Like the brain\'s "alarm amplifier."',
+      responsible_for: ['Arousal and wakefulness', 'Attentional focus and vigilance', 'Stress response (norepinephrine release)', 'Fight-or-flight activation', 'Memory consolidation (emotional memories)', 'Pupil dilation (indicator of LC activity)'],
+      damage: 'LC degeneration: early marker of Alzheimer\'s and Parkinson\'s. Dysfunction linked to ADHD, PTSD, anxiety, and depression.',
+      networks: ['salience', 'fear'],
+      connects_to: 'Virtually every cortical area, amygdala, hippocampus, thalamus, hypothalamus, cerebellum'
+    }
+  },
+  {
+    id: 'reticular', region: 'brainstem', label: 'Reticular\nFormation',
+    title: 'Reticular Formation',
+    detail: {
+      location: 'Core of the brainstem, extending from medulla through pons to midbrain',
+      function: 'Controls consciousness, arousal, and sleep-wake transitions. The ascending reticular activating system (ARAS) keeps the cortex awake and alert.',
+      responsible_for: ['Maintaining consciousness and wakefulness', 'Sleep-wake cycle regulation', 'Filtering sensory input (habituation)', 'Cardiovascular and respiratory regulation', 'Motor tone and posture'],
+      damage: 'Lesions cause coma or persistent vegetative state. The reticular formation is why brainstem damage is so catastrophic to consciousness.',
+      networks: [],
+      connects_to: 'Thalamus (intralaminar nuclei), hypothalamus, entire cortex (diffuse projections), spinal cord'
+    }
+  },
+  {
+    id: 'medulla', region: 'brainstem', label: 'Medulla\nOblongata',
+    title: 'Medulla Oblongata',
+    detail: {
+      location: 'Lowest part of brainstem, continuous with spinal cord',
+      function: 'Controls vital autonomic functions: breathing, heart rate, blood pressure, and reflexes like swallowing, coughing, and vomiting. Damage is typically fatal.',
+      responsible_for: ['Breathing rhythm generation', 'Heart rate and blood pressure regulation', 'Swallowing and gag reflex', 'Vomiting reflex', 'Coughing and sneezing', 'Decussation of pyramids (motor fibers cross here - left brain controls right body)'],
+      damage: 'Life-threatening: respiratory failure, cardiovascular collapse. "Locked-in syndrome" with pontine damage.',
+      networks: [],
+      connects_to: 'Pons, spinal cord, cerebellum, hypothalamus, cranial nerves IX-XII'
+    }
+  },
+
+  // ===== CEREBELLUM =====
+  {
+    id: 'cerebellum', region: 'cerebellum', label: 'Cerebellum',
+    title: 'Cerebellum ("Little Brain")',
+    detail: {
+      location: 'Posterior cranial fossa, behind the pons. Contains ~80% of the brain\'s neurons despite being ~10% of volume.',
+      function: 'Motor coordination, timing, balance, and motor learning. Increasingly recognized for cognitive and emotional roles. Compares intended movement with actual movement and corrects errors.',
+      responsible_for: ['Fine motor coordination and precision', 'Balance and posture (vestibulocerebellum)', 'Motor learning and adaptation (riding a bike)', 'Timing and rhythm (both motor and cognitive)', 'Error correction in real-time', 'Eye movement coordination', 'Cognitive functions: language processing, working memory, emotional regulation (cerebellar cognitive affective syndrome)'],
+      damage: 'Ataxia (uncoordinated movement), dysmetria (over/undershooting), intention tremor, dysarthria (slurred speech), impaired balance. Cerebellar cognitive affective syndrome: blunted affect, impaired planning.',
+      networks: ['motor'],
+      connects_to: 'Motor cortex (via thalamus), pons (input from cortex), vestibular nuclei, spinal cord, red nucleus, prefrontal cortex (cognitive loop)'
+    }
+  },
+  {
+    id: 'vermis', region: 'cerebellum', label: 'Cerebellar\nVermis',
+    title: 'Cerebellar Vermis',
+    detail: {
+      location: 'Midline of cerebellum',
+      function: 'Balance, posture, and gross body movements. Also increasingly linked to emotional processing - sometimes called the "limbic cerebellum."',
+      responsible_for: ['Balance and postural control', 'Trunk and proximal limb coordination', 'Locomotion (walking, running)', 'Emotional processing and regulation', 'Autonomic functions'],
+      damage: 'Truncal ataxia (staggering gait), postural instability, emotional dysregulation.',
+      networks: ['motor', 'fear'],
+      connects_to: 'Vestibular nuclei, reticular formation, hypothalamus, amygdala (emotional connections), spinal cord'
+    }
+  },
+];
+
+// ===================== EDGE DATA =====================
+const edges = [
+  // === Frontal lobe internal connections ===
+  { source: 'dlpfc', target: 'vmpfc', type: 'structural', label: 'Executive-emotional integration' },
+  { source: 'dlpfc', target: 'acc', type: 'structural', label: 'Cognitive control signals' },
+  { source: 'dlpfc', target: 'ofc', type: 'structural', label: 'Value-guided decisions' },
+  { source: 'vmpfc', target: 'ofc', type: 'structural', label: 'Value processing' },
+  { source: 'acc', target: 'motor', type: 'structural', label: 'Effort to action' },
+  { source: 'premotor', target: 'motor', type: 'structural', label: 'Movement plans to execution' },
+  { source: 'sma', target: 'motor', type: 'structural', label: 'Sequence planning' },
+  { source: 'sma', target: 'premotor', type: 'structural', label: 'Internal plans' },
+  { source: 'broca', target: 'motor', type: 'structural', label: 'Speech motor commands' },
+  { source: 'fef', target: 'dlpfc', type: 'structural', label: 'Attentional control' },
+
+  // === Language circuit ===
+  { source: 'broca', target: 'wernicke', type: 'structural', label: 'Arcuate fasciculus' },
+  { source: 'wernicke', target: 'auditory', type: 'structural', label: 'Speech sounds to meaning' },
+  { source: 'wernicke', target: 'angular', type: 'structural', label: 'Semantic processing' },
+  { source: 'smg', target: 'broca', type: 'structural', label: 'Phonological loop' },
+  { source: 'smg', target: 'wernicke', type: 'structural', label: 'Sound processing' },
+  { source: 'angular', target: 'wernicke', type: 'structural', label: 'Reading to speech' },
+
+  // === Visual pathway ===
+  { source: 'thalamus', target: 'v1', type: 'structural', label: 'LGN relay' },
+  { source: 'v1', target: 'v2v3', type: 'structural', label: 'Feedforward visual' },
+  { source: 'v2v3', target: 'v4', type: 'structural', label: 'Ventral stream (what)' },
+  { source: 'v2v3', target: 'v5mt', type: 'structural', label: 'Dorsal stream (where)' },
+  { source: 'v4', target: 'itc', type: 'structural', label: 'Object recognition' },
+  { source: 'v4', target: 'ffa', type: 'structural', label: 'Face processing' },
+  { source: 'v5mt', target: 'ppc', type: 'structural', label: 'Spatial/motion to action' },
+  { source: 'fef', target: 'v1', type: 'modulatory', label: 'Top-down attention' },
+  { source: 'itc', target: 'hippocampus', type: 'structural', label: 'Visual memories' },
+  { source: 'ffa', target: 'amygdala', type: 'structural', label: 'Face emotion eval' },
+  { source: 'ffa', target: 'sts', type: 'structural', label: 'Social face processing' },
+
+  // === Sensorimotor ===
+  { source: 'somatosensory', target: 'motor', type: 'structural', label: 'Sensory feedback' },
+  { source: 'somatosensory', target: 'ppc', type: 'structural', label: 'Spatial integration' },
+  { source: 'ppc', target: 'premotor', type: 'structural', label: 'Sensorimotor transform' },
+
+  // === Subcortical-cortical loops ===
+  { source: 'thalamus', target: 'somatosensory', type: 'structural', label: 'VPL relay (touch)' },
+  { source: 'thalamus', target: 'auditory', type: 'structural', label: 'MGN relay (sound)' },
+  { source: 'thalamus', target: 'motor', type: 'structural', label: 'VA/VL relay (motor)' },
+  { source: 'thalamus', target: 'dlpfc', type: 'structural', label: 'MD relay (cognition)' },
+  { source: 'thalamus', target: 'acc', type: 'structural', label: 'Anterior nuclei' },
+
+  // === Basal ganglia circuit ===
+  { source: 'motor', target: 'basal_ganglia', type: 'structural', label: 'Motor commands' },
+  { source: 'dlpfc', target: 'basal_ganglia', type: 'structural', label: 'Cognitive loop' },
+  { source: 'basal_ganglia', target: 'thalamus', type: 'structural', label: 'Motor output (via GP)' },
+  { source: 'sn', target: 'basal_ganglia', type: 'modulatory', label: 'Nigrostriatal dopamine' },
+
+  // === Reward circuit ===
+  { source: 'vta', target: 'nac', type: 'modulatory', label: 'Mesolimbic dopamine' },
+  { source: 'vta', target: 'dlpfc', type: 'modulatory', label: 'Mesocortical dopamine' },
+  { source: 'vta', target: 'vmpfc', type: 'modulatory', label: 'Reward to value' },
+  { source: 'nac', target: 'ofc', type: 'structural', label: 'Reward evaluation' },
+  { source: 'ofc', target: 'vta', type: 'structural', label: 'Reward prediction' },
+
+  // === Limbic / Emotion circuit ===
+  { source: 'amygdala', target: 'hippocampus', type: 'structural', label: 'Emotional memory tag' },
+  { source: 'amygdala', target: 'hypothalamus', type: 'structural', label: 'Fear -> fight/flight' },
+  { source: 'amygdala', target: 'pag', type: 'structural', label: 'Defensive behaviors' },
+  { source: 'amygdala', target: 'acc', type: 'structural', label: 'Emotional salience' },
+  { source: 'amygdala', target: 'insula', type: 'structural', label: 'Emotional body states' },
+  { source: 'vmpfc', target: 'amygdala', type: 'inhibitory', label: 'Emotion regulation (top-down)' },
+  { source: 'hippocampus', target: 'vmpfc', type: 'structural', label: 'Context for decisions' },
+  { source: 'hippocampus', target: 'thalamus', type: 'structural', label: 'Mammillothalamic tract' },
+  { source: 'amygdala', target: 'vta', type: 'structural', label: 'Emotional salience to reward' },
+  { source: 'amygdala', target: 'nac', type: 'structural', label: 'Emotional drive' },
+
+  // === Insula connections ===
+  { source: 'insula', target: 'acc', type: 'structural', label: 'Salience network core' },
+  { source: 'insula', target: 'amygdala', type: 'structural', label: 'Interoception to emotion' },
+  { source: 'insula', target: 'somatosensory', type: 'structural', label: 'Body state awareness' },
+
+  // === STS social connections ===
+  { source: 'sts', target: 'amygdala', type: 'structural', label: 'Social threat eval' },
+  { source: 'sts', target: 'angular', type: 'structural', label: 'Social meaning' },
+  { source: 'sts', target: 'vmpfc', type: 'structural', label: 'Theory of mind' },
+
+  // === Cerebellum circuit ===
+  { source: 'cerebellum', target: 'thalamus', type: 'structural', label: 'Cerebellar output' },
+  { source: 'cerebellum', target: 'vermis', type: 'structural', label: 'Midline integration' },
+  { source: 'vermis', target: 'reticular', type: 'structural', label: 'Balance/posture' },
+  { source: 'premotor', target: 'cerebellum', type: 'structural', label: 'Motor plans (via pons)' },
+
+  // === Brainstem modulatory ===
+  { source: 'raphe', target: 'amygdala', type: 'modulatory', label: 'Serotonin -> mood' },
+  { source: 'raphe', target: 'hippocampus', type: 'modulatory', label: 'Serotonin -> memory' },
+  { source: 'raphe', target: 'dlpfc', type: 'modulatory', label: 'Serotonin -> cognition' },
+  { source: 'lc', target: 'amygdala', type: 'modulatory', label: 'NE -> arousal/fear' },
+  { source: 'lc', target: 'dlpfc', type: 'modulatory', label: 'NE -> attention' },
+  { source: 'lc', target: 'hippocampus', type: 'modulatory', label: 'NE -> memory encoding' },
+  { source: 'reticular', target: 'thalamus', type: 'modulatory', label: 'ARAS -> consciousness' },
+
+  // === Brainstem to brainstem ===
+  { source: 'pag', target: 'raphe', type: 'structural', label: 'Pain modulation' },
+  { source: 'hypothalamus', target: 'pag', type: 'structural', label: 'Stress response' },
+  { source: 'hypothalamus', target: 'medulla', type: 'structural', label: 'Autonomic control' },
+  { source: 'reticular', target: 'medulla', type: 'structural', label: 'Vital function regulation' },
+];
+
+// ===================== NETWORK DEFINITIONS =====================
+const networks = {
+  default_mode: {
+    name: 'Default Mode Network',
+    color: '#c084fc',
+    desc: 'Active during rest, daydreaming, self-reflection, and mind-wandering. Deactivates during focused external tasks.',
+    nodes: ['vmpfc', 'ppc', 'angular', 'hippocampus', 'sts', 'acc']
+  },
+  salience: {
+    name: 'Salience Network',
+    color: '#f472b6',
+    desc: 'Detects important stimuli and switches between DMN and task-positive networks. Integrates sensory, emotional, and cognitive info.',
+    nodes: ['acc', 'insula', 'amygdala', 'dlpfc', 'thalamus', 'lc', 'raphe']
+  },
+  reward: {
+    name: 'Reward Circuit',
+    color: '#fbbf24',
+    desc: 'Mesolimbic and mesocortical dopamine pathways. Processes pleasure, motivation, reinforcement learning, and addiction.',
+    nodes: ['vta', 'nac', 'ofc', 'vmpfc', 'amygdala', 'basal_ganglia', 'sn', 'hippocampus']
+  },
+  language: {
+    name: 'Language Network',
+    color: '#34d399',
+    desc: 'Primarily left-lateralized circuit for speech production, comprehension, reading, and semantic processing.',
+    nodes: ['broca', 'wernicke', 'angular', 'smg', 'auditory', 'sts']
+  },
+  motor: {
+    name: 'Motor Circuit',
+    color: '#fb923c',
+    desc: 'Cortico-basal ganglia-thalamo-cortical loop plus cerebellar modulation. Plans, initiates, coordinates, and fine-tunes movement.',
+    nodes: ['motor', 'premotor', 'sma', 'basal_ganglia', 'sn', 'thalamus', 'cerebellum', 'somatosensory', 'vermis']
+  },
+  visual: {
+    name: 'Visual Processing',
+    color: '#fbbf24',
+    desc: 'Hierarchical from V1 through ventral (what) and dorsal (where/how) streams.',
+    nodes: ['v1', 'v2v3', 'v4', 'v5mt', 'ffa', 'itc', 'ppc', 'fef']
+  },
+  memory: {
+    name: 'Memory Circuit',
+    color: '#818cf8',
+    desc: 'Hippocampal-cortical circuit for encoding, consolidation, and retrieval of explicit memories.',
+    nodes: ['hippocampus', 'amygdala', 'vmpfc', 'thalamus', 'angular', 'itc', 'ppc']
+  },
+  fear: {
+    name: 'Fear / Threat Circuit',
+    color: '#f87171',
+    desc: 'Rapid threat detection and defensive response. Amygdala-centered circuit triggering fight, flight, or freeze.',
+    nodes: ['amygdala', 'hypothalamus', 'pag', 'lc', 'acc', 'insula', 'vmpfc', 'vermis']
+  },
+};
+
+// ===================== COLOR MAP =====================
+const regionColors = {
+  frontal: '#f472b6',
+  parietal: '#818cf8',
+  temporal: '#34d399',
+  occipital: '#fbbf24',
+  subcortical: '#fb923c',
+  brainstem: '#f87171',
+  cerebellum: '#22d3ee',
+};
+
+// ===================== BUILD CYTOSCAPE =====================
+const cyNodes = nodes.map(n => ({
+  data: {
+    id: n.id,
+    label: n.label,
+    region: n.region,
+    color: regionColors[n.region],
+    nodeData: n,
+    weight: n.id === 'thalamus' ? 65 : n.id === 'hippocampus' || n.id === 'amygdala' ? 58 :
+            n.id === 'cerebellum' ? 60 : n.region === 'brainstem' ? 38 : 48,
+  }
+}));
+
+const cyEdges = edges.map((e, i) => ({
+  data: {
+    id: 'e' + i,
+    source: e.source,
+    target: e.target,
+    edgeType: e.type,
+    edgeLabel: e.label,
+    color: e.type === 'modulatory' ? '#22d3ee' : e.type === 'inhibitory' ? '#f87171' : '#3a4a5c',
+  }
+}));
+
+const cy = cytoscape({
+  container: document.getElementById('cy'),
+  elements: [...cyNodes, ...cyEdges],
+  style: [
+    {
+      selector: 'node',
+      style: {
+        'label': 'data(label)',
+        'text-wrap': 'wrap',
+        'text-valign': 'center',
+        'text-halign': 'center',
+        'font-size': 8,
+        'font-weight': 600,
+        'color': '#e6edf3',
+        'text-outline-color': '#0a0e14',
+        'text-outline-width': 2,
+        'background-color': 'data(color)',
+        'width': 'data(weight)',
+        'height': 'data(weight)',
+        'border-width': 2,
+        'border-color': 'data(color)',
+        'border-opacity': 0.5,
+        'background-opacity': 0.8,
+        'shape': 'ellipse',
+        'transition-property': 'opacity, background-color, border-color, width, height, border-width',
+        'transition-duration': '0.3s',
+      }
+    },
+    {
+      selector: 'edge',
+      style: {
+        'width': 1.2,
+        'line-color': 'data(color)',
+        'target-arrow-color': 'data(color)',
+        'target-arrow-shape': 'triangle',
+        'curve-style': 'bezier',
+        'opacity': 0.35,
+        'arrow-scale': 0.7,
+        'transition-property': 'opacity, width, line-color',
+        'transition-duration': '0.3s',
+      }
+    },
+    {
+      selector: 'edge[edgeType="modulatory"]',
+      style: {
+        'line-style': 'dashed',
+        'line-dash-pattern': [5, 3],
+        'target-arrow-shape': 'diamond',
+      }
+    },
+    {
+      selector: 'edge[edgeType="inhibitory"]',
+      style: {
+        'line-style': 'dashed',
+        'line-dash-pattern': [8, 4],
+        'target-arrow-shape': 'tee',
+      }
+    },
+    {
+      selector: '.highlighted',
+      style: { 'opacity': 1, 'border-width': 4, 'z-index': 999, 'background-opacity': 1 }
+    },
+    {
+      selector: '.faded',
+      style: { 'opacity': 0.08 }
+    },
+    {
+      selector: '.edge-highlighted',
+      style: { 'opacity': 0.9, 'width': 2.5, 'z-index': 999 }
+    },
+    {
+      selector: '.network-node',
+      style: { 'opacity': 1, 'border-width': 5, 'z-index': 999, 'background-opacity': 1 }
+    },
+    {
+      selector: '.network-edge',
+      style: { 'opacity': 0.8, 'width': 2.5, 'z-index': 999 }
+    },
+  ],
+  layout: {
+    name: 'fcose',
+    quality: 'proof',
+    randomize: true,
+    animate: true,
+    animationDuration: 1500,
+    nodeRepulsion: 6500,
+    idealEdgeLength: 100,
+    edgeElasticity: 0.08,
+    gravity: 0.35,
+    gravityRange: 2.5,
+    padding: 70,
+  },
+  minZoom: 0.3,
+  maxZoom: 3,
+});
+
+// ===================== INTERACTION =====================
+cy.on('tap', 'node', function(evt) {
+  const node = evt.target;
+  const d = node.data('nodeData');
+  showPopup(d, evt.renderedPosition);
+
+  cy.elements().removeClass('highlighted faded edge-highlighted network-node network-edge');
+  const neighborhood = node.neighborhood().add(node);
+  cy.elements().addClass('faded');
+  neighborhood.removeClass('faded');
+  node.addClass('highlighted');
+  node.connectedEdges().addClass('edge-highlighted');
+  neighborhood.nodes().addClass('highlighted');
+});
+
+cy.on('tap', function(evt) {
+  if (evt.target === cy) { clearAll(); }
+});
+
+cy.on('mouseover', 'edge', function(evt) {
+  const e = evt.target;
+  const label = e.data('edgeLabel');
+  if (label) {
+    e.style('label', label);
+    e.style('font-size', 8);
+    e.style('color', '#c9d1d9');
+    e.style('text-outline-color', '#0a0e14');
+    e.style('text-outline-width', 2);
+    e.style('text-rotation', 'autorotate');
+  }
+});
+cy.on('mouseout', 'edge', function(evt) {
+  evt.target.style('label', '');
+});
+
+function showPopup(d, pos) {
+  const popup = document.getElementById('popup');
+  const content = document.getElementById('popup-content');
+  const typeColor = regionColors[d.region];
+
+  let html = `
+    <div class="popup-type" style="background:${typeColor}22;color:${typeColor};border:1px solid ${typeColor};">${d.region.charAt(0).toUpperCase() + d.region.slice(1)} ${d.region === 'subcortical' || d.region === 'brainstem' || d.region === 'cerebellum' ? '' : 'Lobe'}</div>
+    <div class="popup-title" style="color:${typeColor};">${d.title}</div>
+  `;
+
+  if (d.detail) {
+    const det = d.detail;
+    if (det.location) html += sec('Location', det.location);
+    if (det.function) html += sec('Function', det.function);
+    if (det.responsible_for) html += listSec('Responsible For', det.responsible_for);
+    if (det.damage) html += sec('When Damaged', det.damage);
+    if (det.connects_to) html += sec('Major Connections', det.connects_to);
+    if (det.networks && det.networks.length) {
+      const netNames = det.networks.map(n => networks[n] ? networks[n].name : n).join(', ');
+      html += sec('Member of Networks', netNames);
+    }
+  }
+
+  content.innerHTML = html;
+  popup.style.display = 'block';
+
+  const rect = popup.getBoundingClientRect();
+  let x = pos.x + 20, y = pos.y - 20;
+  if (x + rect.width > window.innerWidth - 20) x = pos.x - rect.width - 20;
+  if (y + rect.height > window.innerHeight - 20) y = window.innerHeight - rect.height - 20;
+  if (y < 55) y = 55;
+  popup.style.left = x + 'px';
+  popup.style.top = y + 'px';
+}
+
+function sec(t, txt) { return `<div class="popup-section"><h4>${t}</h4><p>${txt}</p></div>`; }
+function listSec(t, items) { return `<div class="popup-section"><h4>${t}</h4><ul>${items.map(i => `<li>${i}</li>`).join('')}</ul></div>`; }
+function closePopup() { document.getElementById('popup').style.display = 'none'; }
+
+// ===================== REGION FILTER =====================
+function filterByRegion(region) {
+  // Clear network buttons
+  document.querySelectorAll('#header button').forEach(b => {
+    if (b.id.startsWith('btn-net-')) b.classList.remove('active');
+  });
+  document.querySelectorAll('#header button').forEach(b => {
+    if (b.id.startsWith('btn-') && !b.id.startsWith('btn-net-')) b.classList.remove('active');
+  });
+  const btn = document.getElementById('btn-' + region);
+  if (btn) btn.classList.add('active');
+
+  cy.elements().removeClass('highlighted faded edge-highlighted network-node network-edge');
+  closePopup();
+
+  if (region === 'all') {
+    cy.elements().style('display', 'element');
+    return;
+  }
+
+  cy.nodes().forEach(n => {
+    if (n.data('region') === region) {
+      n.style('display', 'element');
+      n.addClass('highlighted');
+    } else {
+      // Show but fade
+      n.style('display', 'element');
+      n.addClass('faded');
+    }
+  });
+  cy.edges().forEach(e => {
+    const src = cy.getElementById(e.data('source'));
+    const tgt = cy.getElementById(e.data('target'));
+    if (src.data('region') === region || tgt.data('region') === region) {
+      e.style('display', 'element');
+      e.addClass('edge-highlighted');
+      // Also highlight the connected node from another region
+      if (src.data('region') !== region) src.removeClass('faded').addClass('highlighted');
+      if (tgt.data('region') !== region) tgt.removeClass('faded').addClass('highlighted');
+    } else {
+      e.style('display', 'element');
+      e.addClass('faded');
+    }
+  });
+}
+
+// ===================== NETWORK HIGHLIGHT =====================
+function showNetwork(netId) {
+  const net = networks[netId];
+  if (!net) return;
+
+  // Clear region buttons
+  document.querySelectorAll('#header button').forEach(b => b.classList.remove('active'));
+  const btn = document.getElementById('btn-net-' + netId.replace('default_mode', 'dmn')
+    .replace('salience', 'sal').replace('reward', 'rew').replace('language', 'lang')
+    .replace('motor', 'mot').replace('visual', 'vis').replace('memory', 'mem'));
+  if (btn) btn.classList.add('active');
+
+  cy.elements().removeClass('highlighted faded edge-highlighted network-node network-edge');
+  cy.elements().addClass('faded');
+  closePopup();
+
+  const netNodeIds = new Set(net.nodes);
+  cy.nodes().forEach(n => {
+    if (netNodeIds.has(n.id())) {
+      n.removeClass('faded').addClass('network-node');
+      n.style('border-color', net.color);
+    }
+  });
+
+  cy.edges().forEach(e => {
+    const srcIn = netNodeIds.has(e.data('source'));
+    const tgtIn = netNodeIds.has(e.data('target'));
+    if (srcIn && tgtIn) {
+      e.removeClass('faded').addClass('network-edge');
+      e.style('line-color', net.color);
+      e.style('target-arrow-color', net.color);
+    }
+  });
+
+  // Show network info in popup
+  const popup = document.getElementById('popup');
+  const content = document.getElementById('popup-content');
+  content.innerHTML = `
+    <div class="popup-type" style="background:${net.color}22;color:${net.color};border:1px solid ${net.color};">Functional Network</div>
+    <div class="popup-title" style="color:${net.color};">${net.name}</div>
+    <div class="popup-section"><p>${net.desc}</p></div>
+    <div class="popup-section"><h4>Key Regions</h4><ul>${net.nodes.map(id => {
+      const n = nodes.find(x => x.id === id);
+      return `<li>${n ? n.title : id}</li>`;
+    }).join('')}</ul></div>
+  `;
+  popup.style.display = 'block';
+  popup.style.right = '270px';
+  popup.style.top = '60px';
+  popup.style.left = 'auto';
+}
+
+function clearAll() {
+  cy.elements().removeClass('highlighted faded edge-highlighted network-node network-edge');
+  cy.elements().style('display', 'element');
+  // Reset edge colors
+  cy.edges().forEach(e => {
+    e.style('line-color', e.data('color'));
+    e.style('target-arrow-color', e.data('color'));
+  });
+  cy.nodes().forEach(n => {
+    n.style('border-color', n.data('color'));
+  });
+  closePopup();
+  document.querySelectorAll('#header button').forEach(b => b.classList.remove('active'));
+  document.getElementById('btn-all').classList.add('active');
+}
+
+// ===================== SEARCH =====================
+document.getElementById('search-box').addEventListener('input', function(e) {
+  const query = e.target.value.toLowerCase().trim();
+  cy.elements().removeClass('highlighted faded edge-highlighted network-node network-edge');
+
+  if (!query) { clearAll(); return; }
+
+  cy.nodes().forEach(n => {
+    const d = n.data('nodeData');
+    const txt = (d.label + ' ' + d.title + ' ' + d.region + ' ' + JSON.stringify(d.detail || {})).toLowerCase();
+    if (txt.includes(query)) {
+      n.addClass('highlighted');
+    } else {
+      n.addClass('faded');
+    }
+  });
+  cy.edges().forEach(e => {
+    const src = cy.getElementById(e.data('source'));
+    const tgt = cy.getElementById(e.data('target'));
+    if (src.hasClass('highlighted') || tgt.hasClass('highlighted')) {
+      if (src.hasClass('highlighted') && tgt.hasClass('highlighted')) {
+        e.addClass('edge-highlighted');
+      }
+    } else {
+      e.addClass('faded');
+    }
+  });
+});
+
+</script>
+</body>
+</html>

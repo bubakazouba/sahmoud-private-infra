@@ -1,0 +1,34 @@
+{
+  "likes": [
+    "lucha libre",
+    "drifting / motorsports racing",
+    "monster jam + demolition derbies",
+    "robot fights / robot races",
+    "BMX / Red Bull extreme sports",
+    "immersive theatre",
+    "weird food fests + pop-ups",
+    "cyphers / breakdance",
+    "puppet shows",
+    "jump rope / double dutch",
+    "pop-up choirs",
+    "costume parties",
+    "art crawls",
+    "niche / weird meetups",
+    "weird local history events",
+    "1-day pickup sports (one-offs, not multi-week leagues)",
+    "blood donation drives within ~25 min of Pasadena"
+  ],
+  "dislikes": [
+    "kid / family events",
+    "mainstream concerts",
+    "pro sports (NBA/NFL/MLB)",
+    "galas",
+    "generic happy hours",
+    "brand launches",
+    "concert",
+    "raves / DJ sets / club nights",
+    "vinyl / techno / house DJ parties",
+    "live music concerts & symphony shows"
+  ],
+  "_doc": "SINGLE SOURCE OF TRUTH for la-events curation. Edit via the dashboard prefs panel (POST /api/preferences) or by DMing PianoBot. The weekly refresh SEEKS events matching likes and HARD-DROPS events matching dislikes (dislikes override), and purges already-disliked events each run."
+}

@@ -1,0 +1,3025 @@
+{
+  "years": [
+    {
+      "year": "2023",
+      "year_label": "2023",
+      "gross_spend": 84126.97,
+      "refunds": 3851.07,
+      "net_spend": 80275.9,
+      "empower_moneyOut": 36769.98,
+      "tx_count": 76,
+      "sources": [
+        {
+          "name": "CC bill payments",
+          "amount": 39922.66,
+          "tx_count": 42,
+          "transactions": [
+            {
+              "date": "2023-01-07",
+              "amount": 4191.93,
+              "merchant": "CC bill payments",
+              "description": "Cardmember Serv Web Pymt ***********1295 Web Id: Xxxxxx1111"
+            },
+            {
+              "date": "2023-10-07",
+              "amount": 3644.64,
+              "merchant": "CC bill payments",
+              "description": "Cardmember Serv Web Pymt ***********1295 Web Id: Xxxxxx1111"
+            },
+            {
+              "date": "2023-03-08",
+              "amount": 2981.07,
+              "merchant": "CC bill payments",
+              "description": "Cardmember Serv Web Pymt ***********1295 Web Id: Xxxxxx1111"
+            },
+            {
+              "date": "2023-09-08",
+              "amount": 2821.72,
+              "merchant": "CC bill payments",
+              "description": "Cardmember Serv Web Pymt ***********1295 Web Id: Xxxxxx1111"
+            },
+            {
+              "date": "2023-04-08",
+              "amount": 2673.78,
+              "merchant": "CC bill payments",
+              "description": "Cardmember Serv Web Pymt ***********1295 Web Id: Xxxxxx1111"
+            },
+            {
+              "date": "2023-11-08",
+              "amount": 2637.55,
+              "merchant": "CC bill payments",
+              "description": "Cardmember Serv Web Pymt ***********1295 Web Id: Xxxxxx1111"
+            },
+            {
+              "date": "2023-06-08",
+              "amount": 2069.58,
+              "merchant": "CC bill payments",
+              "description": "Cardmember Serv Web Pymt ***********1295 Web Id: Xxxxxx1111"
+            },
+            {
+              "date": "2023-12-08",
+              "amount": 1998.15,
+              "merchant": "CC bill payments",
+              "description": "Cardmember Serv Web Pymt ***********1295 Web Id: Xxxxxx1111"
+            },
+            {
+              "date": "2023-05-17",
+              "amount": 1974.34,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2023-08-08",
+              "amount": 1911.08,
+              "merchant": "CC bill payments",
+              "description": "Cardmember Serv Web Pymt ***********1295 Web Id: Xxxxxx1111"
+            },
+            {
+              "date": "2023-05-06",
+              "amount": 1798.61,
+              "merchant": "CC bill payments",
+              "description": "Cardmember Serv Web Pymt ***********1295 Web Id: Xxxxxx1111"
+            },
+            {
+              "date": "2023-07-08",
+              "amount": 1422.21,
+              "merchant": "CC bill payments",
+              "description": "Cardmember Serv Web Pymt ***********1295 Web Id: Xxxxxx1111"
+            },
+            {
+              "date": "2023-02-17",
+              "amount": 945.44,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2023-02-08",
+              "amount": 898.19,
+              "merchant": "CC bill payments",
+              "description": "Cardmember Serv Web Pymt ***********1295 Web Id: Xxxxxx1111"
+            },
+            {
+              "date": "2023-03-17",
+              "amount": 867.13,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2023-09-06",
+              "amount": 839.28,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2023-01-06",
+              "amount": 736.42,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2023-01-17",
+              "amount": 734.07,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2023-08-07",
+              "amount": 667.69,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2023-03-06",
+              "amount": 372.54,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2023-11-06",
+              "amount": 335.71,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2023-06-06",
+              "amount": 264.95,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2023-02-06",
+              "amount": 258.93,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2023-12-06",
+              "amount": 242.97,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2023-07-17",
+              "amount": 241.07,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2023-12-18",
+              "amount": 240.0,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2023-05-08",
+              "amount": 235.68,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2023-07-06",
+              "amount": 231.47,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2023-03-06",
+              "amount": 230.43,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2023-09-06",
+              "amount": 220.46,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2023-10-06",
+              "amount": 212.85,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2023-04-06",
+              "amount": 198.87,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2023-10-06",
+              "amount": 136.54,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2023-10-17",
+              "amount": 120.56,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2023-08-07",
+              "amount": 100.21,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2023-04-17",
+              "amount": 94.57,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2023-04-06",
+              "amount": 86.11,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2023-08-17",
+              "amount": 78.09,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2023-11-06",
+              "amount": 64.55,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2023-06-20",
+              "amount": 59.39,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2023-11-17",
+              "amount": 50.92,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2023-09-18",
+              "amount": 32.91,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            }
+          ]
+        },
+        {
+          "name": "Zelle to SJA (rent)",
+          "amount": 27000.0,
+          "tx_count": 12,
+          "transactions": [
+            {
+              "date": "2023-12-05",
+              "amount": 2250.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx5955"
+            },
+            {
+              "date": "2023-11-05",
+              "amount": 2250.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx3849"
+            },
+            {
+              "date": "2023-10-05",
+              "amount": 2250.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx5471"
+            },
+            {
+              "date": "2023-09-05",
+              "amount": 2250.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx9171"
+            },
+            {
+              "date": "2023-08-05",
+              "amount": 2250.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx8139"
+            },
+            {
+              "date": "2023-07-05",
+              "amount": 2250.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx0325"
+            },
+            {
+              "date": "2023-06-05",
+              "amount": 2250.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx2462"
+            },
+            {
+              "date": "2023-05-05",
+              "amount": 2250.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx1326"
+            },
+            {
+              "date": "2023-04-05",
+              "amount": 2250.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx1992"
+            },
+            {
+              "date": "2023-03-05",
+              "amount": 2250.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx0488"
+            },
+            {
+              "date": "2023-02-05",
+              "amount": 2250.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx3177"
+            },
+            {
+              "date": "2023-01-05",
+              "amount": 2250.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx0181"
+            }
+          ]
+        },
+        {
+          "name": "Cash withdrawals",
+          "amount": 8100.0,
+          "tx_count": 1,
+          "transactions": [
+            {
+              "date": "2023-03-11",
+              "amount": 8100.0,
+              "merchant": "Cash withdrawals",
+              "description": "Withdrawal 03/13"
+            }
+          ]
+        },
+        {
+          "name": "Venmo Payments",
+          "amount": 4741.6,
+          "tx_count": 4,
+          "transactions": [
+            {
+              "date": "2023-01-19",
+              "amount": 1965.0,
+              "merchant": "Venmo Payments",
+              "description": "Venmo Payment Xxxxxxxxx6711 Web Id: Xxxxxx1992"
+            },
+            {
+              "date": "2023-08-30",
+              "amount": 1203.96,
+              "merchant": "Venmo Payments",
+              "description": "Venmo Payment Xxxxxxxxx9135 Web Id: Xxxxxx1992"
+            },
+            {
+              "date": "2023-10-03",
+              "amount": 786.34,
+              "merchant": "Venmo Payments",
+              "description": "Venmo Payment Xxxxxxxxx3004 Web Id: Xxxxxx1992"
+            },
+            {
+              "date": "2023-05-05",
+              "amount": 786.3,
+              "merchant": "Venmo Payments",
+              "description": "Venmo Payment Xxxxxxxxx4971 Web Id: Xxxxxx1992"
+            }
+          ]
+        },
+        {
+          "name": "Zelle to people (family/other)",
+          "amount": 3581.37,
+          "tx_count": 12,
+          "transactions": [
+            {
+              "date": "2023-03-20",
+              "amount": 1200.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Hanan Abdou Abdelaal Jpm999uav41s"
+            },
+            {
+              "date": "2023-01-18",
+              "amount": 1000.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Ali Xxxxxxx4937"
+            },
+            {
+              "date": "2023-12-16",
+              "amount": 700.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Hanan Abdou Abdelaal Jpm99a6lwhlu"
+            },
+            {
+              "date": "2023-01-04",
+              "amount": 500.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Hanan Abdou Abdelaal Jpm999kgz44t"
+            },
+            {
+              "date": "2023-01-30",
+              "amount": 96.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Ali Xxxxxxx7409"
+            },
+            {
+              "date": "2023-08-26",
+              "amount": 25.37,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Ali Xxxxxxx6086"
+            },
+            {
+              "date": "2023-12-07",
+              "amount": 20.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Hanan Abdou Abdelaal Jpm99a64ho11"
+            },
+            {
+              "date": "2023-09-02",
+              "amount": 12.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Omar Alcharihi Jpm99a1lo884"
+            },
+            {
+              "date": "2023-09-23",
+              "amount": 10.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Ali Xxxxxxx0765"
+            },
+            {
+              "date": "2023-01-04",
+              "amount": 10.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Alpha Ttproductions, Inc, Pasadena, Jpm999kh0q79"
+            },
+            {
+              "date": "2023-09-02",
+              "amount": 7.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Omar Alcharihi Jpm99a1lospw"
+            },
+            {
+              "date": "2023-03-20",
+              "amount": 1.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Hanan Abdou Abdelaal Jpm999uaoabw"
+            }
+          ]
+        },
+        {
+          "name": "Other direct debit / ACH",
+          "amount": 781.34,
+          "tx_count": 5,
+          "transactions": [
+            {
+              "date": "2023-01-06",
+              "amount": 660.0,
+              "merchant": "Other direct debit / ACH",
+              "description": "Check # 2779 Uscis Phoenix Payment Arc Id: Xxxxxxxxxx - 2779"
+            },
+            {
+              "date": "2023-11-22",
+              "amount": 50.0,
+              "merchant": "Other direct debit / ACH",
+              "description": "Check - 151"
+            },
+            {
+              "date": "2023-08-02",
+              "amount": 41.18,
+              "merchant": "Other direct debit / ACH",
+              "description": "Velvet Ea Velvet Eagle Los Angeles Ca 08/02"
+            },
+            {
+              "date": "2023-05-07",
+              "amount": 21.16,
+              "merchant": "Other direct debit / ACH",
+              "description": "Tst* Knead & Co. Pasta Los Angeles Ca 05/07"
+            },
+            {
+              "date": "2023-01-02",
+              "amount": 9.0,
+              "merchant": "Other direct debit / ACH",
+              "description": "P1 Lax Smartparking Los Angeles Ca 01/02"
+            }
+          ]
+        }
+      ],
+      "refund_txs": [
+        {
+          "date": "2023-01-18",
+          "amount": 1000.0,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx7202"
+        },
+        {
+          "date": "2023-04-20",
+          "amount": 987.84,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx3800"
+        },
+        {
+          "date": "2023-09-27",
+          "amount": 545.76,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx6164"
+        },
+        {
+          "date": "2023-04-20",
+          "amount": 284.95,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx1805"
+        },
+        {
+          "date": "2023-04-20",
+          "amount": 221.32,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx4796"
+        },
+        {
+          "date": "2023-08-20",
+          "amount": 165.52,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx2560"
+        },
+        {
+          "date": "2023-10-31",
+          "amount": 138.0,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx9312"
+        },
+        {
+          "date": "2023-08-20",
+          "amount": 115.27,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx9845"
+        },
+        {
+          "date": "2023-10-29",
+          "amount": 84.4,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx0248"
+        },
+        {
+          "date": "2023-08-29",
+          "amount": 69.0,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx7494"
+        },
+        {
+          "date": "2023-09-27",
+          "amount": 59.0,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx5448"
+        },
+        {
+          "date": "2023-09-07",
+          "amount": 59.0,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx0220"
+        },
+        {
+          "date": "2023-04-26",
+          "amount": 50.12,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx8868"
+        },
+        {
+          "date": "2023-10-29",
+          "amount": 36.89,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx1070"
+        },
+        {
+          "date": "2023-10-28",
+          "amount": 34.0,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Joaquin Minguzzi Aranis Xxxxxxx0078"
+        }
+      ]
+    },
+    {
+      "year": "2024",
+      "year_label": "2024",
+      "gross_spend": 105542.29,
+      "refunds": 9478.18,
+      "net_spend": 96064.11,
+      "empower_moneyOut": 63882.92,
+      "tx_count": 145,
+      "sources": [
+        {
+          "name": "CC bill payments",
+          "amount": 48538.03,
+          "tx_count": 51,
+          "transactions": [
+            {
+              "date": "2024-01-06",
+              "amount": 3641.18,
+              "merchant": "CC bill payments",
+              "description": "Cardmember Serv Web Pymt ***********1295 Web Id: Xxxxxx1111"
+            },
+            {
+              "date": "2024-09-07",
+              "amount": 3158.55,
+              "merchant": "CC bill payments",
+              "description": "Cardmember Serv Web Pymt ***********1295 Web Id: Xxxxxx1111"
+            },
+            {
+              "date": "2024-03-08",
+              "amount": 2768.7,
+              "merchant": "CC bill payments",
+              "description": "Cardmember Serv Web Pymt ***********1295 Web Id: Xxxxxx1111"
+            },
+            {
+              "date": "2024-04-06",
+              "amount": 2681.54,
+              "merchant": "CC bill payments",
+              "description": "Cardmember Serv Web Pymt ***********1295 Web Id: Xxxxxx1111"
+            },
+            {
+              "date": "2024-05-08",
+              "amount": 2522.79,
+              "merchant": "CC bill payments",
+              "description": "Cardmember Serv Web Pymt ***********1295 Web Id: Xxxxxx1111"
+            },
+            {
+              "date": "2024-08-08",
+              "amount": 2466.18,
+              "merchant": "CC bill payments",
+              "description": "Cardmember Serv Web Pymt ***********1295 Web Id: Xxxxxx1111"
+            },
+            {
+              "date": "2024-07-06",
+              "amount": 2364.48,
+              "merchant": "CC bill payments",
+              "description": "Cardmember Serv Web Pymt ***********1295 Web Id: Xxxxxx1111"
+            },
+            {
+              "date": "2024-06-08",
+              "amount": 2166.23,
+              "merchant": "CC bill payments",
+              "description": "Cardmember Serv Web Pymt ***********1295 Web Id: Xxxxxx1111"
+            },
+            {
+              "date": "2024-10-17",
+              "amount": 2060.76,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2024-10-04",
+              "amount": 2000.0,
+              "merchant": "CC bill payments",
+              "description": "Cardmember Serv Web Pymt ***********1295 Web Id: Xxxxxx1111"
+            },
+            {
+              "date": "2024-10-08",
+              "amount": 1955.36,
+              "merchant": "CC bill payments",
+              "description": "Cardmember Serv Web Pymt ***********1295 Web Id: Xxxxxx1111"
+            },
+            {
+              "date": "2024-02-08",
+              "amount": 1575.91,
+              "merchant": "CC bill payments",
+              "description": "Cardmember Serv Web Pymt ***********1295 Web Id: Xxxxxx1111"
+            },
+            {
+              "date": "2024-11-08",
+              "amount": 1538.15,
+              "merchant": "CC bill payments",
+              "description": "Cardmember Serv Web Pymt ***********1295 Web Id: Xxxxxx1111"
+            },
+            {
+              "date": "2024-11-04",
+              "amount": 1414.45,
+              "merchant": "CC bill payments",
+              "description": "American Express Ach Pmt A6008 Web Id: Xxxxxx0001"
+            },
+            {
+              "date": "2024-12-07",
+              "amount": 1219.22,
+              "merchant": "CC bill payments",
+              "description": "Cardmember Serv Web Pymt ***********1295 Web Id: Xxxxxx1111"
+            },
+            {
+              "date": "2024-09-06",
+              "amount": 978.09,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2024-08-06",
+              "amount": 911.71,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2024-02-06",
+              "amount": 857.4,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2024-01-08",
+              "amount": 850.94,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2024-12-06",
+              "amount": 792.77,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2024-12-03",
+              "amount": 740.2,
+              "merchant": "CC bill payments",
+              "description": "American Express Ach Pmt A4740 Web Id: Xxxxxx0001"
+            },
+            {
+              "date": "2024-06-06",
+              "amount": 714.74,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2024-07-08",
+              "amount": 709.27,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2024-10-03",
+              "amount": 678.96,
+              "merchant": "CC bill payments",
+              "description": "American Express Ach Pmt A1180 Web Id: Xxxxxx0001"
+            },
+            {
+              "date": "2024-05-06",
+              "amount": 620.72,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2024-11-06",
+              "amount": 617.06,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2024-03-06",
+              "amount": 599.37,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2024-10-07",
+              "amount": 577.01,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2024-04-08",
+              "amount": 552.4,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2024-11-06",
+              "amount": 411.88,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2024-11-18",
+              "amount": 362.21,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2024-01-17",
+              "amount": 347.91,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2024-03-06",
+              "amount": 294.9,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2024-04-08",
+              "amount": 289.7,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2024-10-07",
+              "amount": 275.26,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2024-12-17",
+              "amount": 262.28,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2024-08-06",
+              "amount": 261.73,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2024-09-17",
+              "amount": 221.01,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2024-05-06",
+              "amount": 219.84,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2024-08-19",
+              "amount": 217.55,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2024-07-08",
+              "amount": 198.09,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2024-02-20",
+              "amount": 194.6,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2024-07-17",
+              "amount": 192.12,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2024-06-06",
+              "amount": 182.82,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2024-05-17",
+              "amount": 177.31,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2024-03-18",
+              "amount": 176.13,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2024-04-17",
+              "amount": 174.64,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2024-09-06",
+              "amount": 163.79,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2024-12-06",
+              "amount": 105.65,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2024-01-08",
+              "amount": 45.5,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2024-06-17",
+              "amount": 28.97,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            }
+          ]
+        },
+        {
+          "name": "Zelle to SJA (rent)",
+          "amount": 27000.0,
+          "tx_count": 12,
+          "transactions": [
+            {
+              "date": "2024-12-05",
+              "amount": 2250.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx4111"
+            },
+            {
+              "date": "2024-11-05",
+              "amount": 2250.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx0462"
+            },
+            {
+              "date": "2024-10-05",
+              "amount": 2250.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx2033"
+            },
+            {
+              "date": "2024-09-05",
+              "amount": 2250.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx4611"
+            },
+            {
+              "date": "2024-08-05",
+              "amount": 2250.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx4415"
+            },
+            {
+              "date": "2024-07-05",
+              "amount": 2250.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx1140"
+            },
+            {
+              "date": "2024-06-05",
+              "amount": 2250.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx5473"
+            },
+            {
+              "date": "2024-05-05",
+              "amount": 2250.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx3087"
+            },
+            {
+              "date": "2024-04-05",
+              "amount": 2250.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx3920"
+            },
+            {
+              "date": "2024-03-05",
+              "amount": 2250.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx0112"
+            },
+            {
+              "date": "2024-02-05",
+              "amount": 2250.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx0590"
+            },
+            {
+              "date": "2024-01-05",
+              "amount": 2250.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx7163"
+            }
+          ]
+        },
+        {
+          "name": "Zelle to people (family/other)",
+          "amount": 22272.37,
+          "tx_count": 34,
+          "transactions": [
+            {
+              "date": "2024-09-17",
+              "amount": 2000.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Aya Xxxxxxx1685"
+            },
+            {
+              "date": "2024-04-26",
+              "amount": 2000.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Preksha Naik Jpm99ag2641x"
+            },
+            {
+              "date": "2024-02-04",
+              "amount": 2000.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Aya Xxxxxxx1699"
+            },
+            {
+              "date": "2024-01-31",
+              "amount": 1999.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Aya Xxxxxxx4410"
+            },
+            {
+              "date": "2024-02-06",
+              "amount": 1960.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Aya Xxxxxxx8568"
+            },
+            {
+              "date": "2024-05-13",
+              "amount": 1800.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Hanan Abdou Abdelaal Jpm99ah1b4xr"
+            },
+            {
+              "date": "2024-04-25",
+              "amount": 1500.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Preksha Naik Jpm99ag0ac5y"
+            },
+            {
+              "date": "2024-05-24",
+              "amount": 1000.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Hanan Abdou Abdelaal Jpm99ahk3395"
+            },
+            {
+              "date": "2024-04-24",
+              "amount": 1000.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Ali Xxxxxxx3052"
+            },
+            {
+              "date": "2024-04-24",
+              "amount": 999.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Preksha Naik Jpm99afzv1nw"
+            },
+            {
+              "date": "2024-04-10",
+              "amount": 991.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Dr Michael Balikyan, Inc. Dba South Lake, Pasadena, Ca Xxxxxxx2257"
+            },
+            {
+              "date": "2024-08-27",
+              "amount": 955.23,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Ali Xxxxxxx2383"
+            },
+            {
+              "date": "2024-03-31",
+              "amount": 614.21,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Ali Xxxxxxx9586"
+            },
+            {
+              "date": "2024-04-27",
+              "amount": 500.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Preksha Naik Jpm99ag4j3v8"
+            },
+            {
+              "date": "2024-08-21",
+              "amount": 430.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Hanan Abdou Abdelaal Jpm99amcowa6"
+            },
+            {
+              "date": "2024-12-04",
+              "amount": 400.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Hanan Abdou Abdelaal Jpm99ascbmuh"
+            },
+            {
+              "date": "2024-08-26",
+              "amount": 342.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Ali Xxxxxxx5370"
+            },
+            {
+              "date": "2024-03-31",
+              "amount": 338.31,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Ali Xxxxxxx1954"
+            },
+            {
+              "date": "2024-03-19",
+              "amount": 275.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Hanan Abdou Abdelaal Jpm99acf3cqu"
+            },
+            {
+              "date": "2024-12-28",
+              "amount": 210.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Hanan Abdou Abdelaal Jpm99atpzpbt"
+            },
+            {
+              "date": "2024-08-29",
+              "amount": 170.87,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Ali Xxxxxxx9207"
+            },
+            {
+              "date": "2024-03-16",
+              "amount": 145.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Ali Xxxxxxx6597"
+            },
+            {
+              "date": "2024-08-14",
+              "amount": 130.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Hanan Abdou Abdelaal Jpm99alz5j2e"
+            },
+            {
+              "date": "2024-12-01",
+              "amount": 120.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Maria Alvarez Jpm99as5zxw7"
+            },
+            {
+              "date": "2024-08-14",
+              "amount": 100.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Amena Sahmoud Jpm99aly4jax"
+            },
+            {
+              "date": "2024-02-17",
+              "amount": 100.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Hanan Abdou Abdelaal Jpm99a9nahnn"
+            },
+            {
+              "date": "2024-08-13",
+              "amount": 71.75,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Ali Xxxxxxx3171"
+            },
+            {
+              "date": "2024-03-27",
+              "amount": 52.5,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Kyle Jpm99aeatx67"
+            },
+            {
+              "date": "2024-03-17",
+              "amount": 52.5,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Kyle Jpm99aby3qqh"
+            },
+            {
+              "date": "2024-04-20",
+              "amount": 10.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Hindu Temple And Heritage Foundatio Jpm99aftveft"
+            },
+            {
+              "date": "2024-04-20",
+              "amount": 3.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Hindu Temple And Heritage Foundatio Jpm99aftuwnh"
+            },
+            {
+              "date": "2024-07-31",
+              "amount": 1.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Amena Sahmoud Jpm99al73cxv"
+            },
+            {
+              "date": "2024-04-24",
+              "amount": 1.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Preksha Naik Jpm99afzlq0t"
+            },
+            {
+              "date": "2024-01-31",
+              "amount": 1.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Aya Xxxxxxx5982"
+            }
+          ]
+        },
+        {
+          "name": "Venmo Payments",
+          "amount": 5018.36,
+          "tx_count": 13,
+          "transactions": [
+            {
+              "date": "2024-06-03",
+              "amount": 1153.98,
+              "merchant": "Venmo Payments",
+              "description": "Venmo Payment Xxxxxxxxx2249 Web Id: Xxxxxx1992"
+            },
+            {
+              "date": "2024-10-28",
+              "amount": 962.93,
+              "merchant": "Venmo Payments",
+              "description": "Venmo Payment Xxxxxxxxx8586 Web Id: Xxxxxx1992"
+            },
+            {
+              "date": "2024-06-03",
+              "amount": 954.0,
+              "merchant": "Venmo Payments",
+              "description": "Venmo Payment Xxxxxxxxx3163 Web Id: Xxxxxx1992"
+            },
+            {
+              "date": "2024-08-30",
+              "amount": 394.8,
+              "merchant": "Venmo Payments",
+              "description": "Venmo Payment Xxxxxxxxx0558 Web Id: Xxxxxx1992"
+            },
+            {
+              "date": "2024-05-02",
+              "amount": 279.79,
+              "merchant": "Venmo Payments",
+              "description": "Venmo Payment Xxxxxxxxx8030 Web Id: Xxxxxx1992"
+            },
+            {
+              "date": "2024-09-30",
+              "amount": 260.0,
+              "merchant": "Venmo Payments",
+              "description": "Venmo Payment Xxxxxxxxx6315 Web Id: Xxxxxx1992"
+            },
+            {
+              "date": "2024-05-02",
+              "amount": 246.75,
+              "merchant": "Venmo Payments",
+              "description": "Venmo Payment Xxxxxxxxx1716 Web Id: Xxxxxx1992"
+            },
+            {
+              "date": "2024-05-02",
+              "amount": 242.52,
+              "merchant": "Venmo Payments",
+              "description": "Venmo Payment Xxxxxxxxx7303 Web Id: Xxxxxx1992"
+            },
+            {
+              "date": "2024-05-02",
+              "amount": 240.73,
+              "merchant": "Venmo Payments",
+              "description": "Venmo Payment Xxxxxxxxx0686 Web Id: Xxxxxx1992"
+            },
+            {
+              "date": "2024-08-31",
+              "amount": 150.86,
+              "merchant": "Venmo Payments",
+              "description": "Venmo Payment Xxxxxxxxx5203 Web Id: Xxxxxx1992"
+            },
+            {
+              "date": "2024-07-27",
+              "amount": 82.0,
+              "merchant": "Venmo Payments",
+              "description": "Venmo Payment Xxxxxxxxx6031 Web Id: Xxxxxx1992"
+            },
+            {
+              "date": "2024-05-13",
+              "amount": 40.0,
+              "merchant": "Venmo Payments",
+              "description": "Venmo Payment Xxxxxxxxx7713 Web Id: Xxxxxx1992"
+            },
+            {
+              "date": "2024-05-20",
+              "amount": 10.0,
+              "merchant": "Venmo Payments",
+              "description": "Venmo Payment Xxxxxxxxx8988 Web Id: Xxxxxx1992"
+            }
+          ]
+        },
+        {
+          "name": "Other direct debit / ACH",
+          "amount": 2413.53,
+          "tx_count": 34,
+          "transactions": [
+            {
+              "date": "2024-08-09",
+              "amount": 630.0,
+              "merchant": "Other direct debit / ACH",
+              "description": "Check # 0153 Uscis Phoenix Payment Arc Id: Xxxxxxxxxx - 153"
+            },
+            {
+              "date": "2024-08-09",
+              "amount": 630.0,
+              "merchant": "Other direct debit / ACH",
+              "description": "Check # 0152 Uscis Phoenix Payment Arc Id: Xxxxxxxxxx - 152"
+            },
+            {
+              "date": "2024-11-19",
+              "amount": 342.0,
+              "merchant": "Other direct debit / ACH",
+              "description": "St Of Ca Dmv Internet Xxxxxxxxxxx1118 Web Id: Xxxxxx1348"
+            },
+            {
+              "date": "2024-06-24",
+              "amount": 172.15,
+              "merchant": "Other direct debit / ACH",
+              "description": "Wise Inc Wise Ppd Id: Xxxxxx3521"
+            },
+            {
+              "date": "2024-04-20",
+              "amount": 63.5,
+              "merchant": "Other direct debit / ACH",
+              "description": "Non-chase Atm Withdraw Xx7852 04/x0827 E Col"
+            },
+            {
+              "date": "2024-04-13",
+              "amount": 32.53,
+              "merchant": "Other direct debit / ACH",
+              "description": "99 Ranch #1257 Arcadia Ca Xx4850 04/13"
+            },
+            {
+              "date": "2024-03-13",
+              "amount": 22.01,
+              "merchant": "Other direct debit / ACH",
+              "description": "Wise Inc Trnwise Xxxx4219 Web Id: Xxxxxx0223"
+            },
+            {
+              "date": "2024-03-13",
+              "amount": 21.99,
+              "merchant": "Other direct debit / ACH",
+              "description": "Wise Inc Wise Ppd Id: Xxxxxx3521"
+            },
+            {
+              "date": "2024-03-18",
+              "amount": 21.9,
+              "merchant": "Other direct debit / ACH",
+              "description": "Wise Inc Wise Ppd Id: Xxxxxx3521"
+            },
+            {
+              "date": "2024-06-05",
+              "amount": 21.89,
+              "merchant": "Other direct debit / ACH",
+              "description": "Wise Inc Wise Ppd Id: Xxxxxx3521"
+            },
+            {
+              "date": "2024-05-20",
+              "amount": 21.89,
+              "merchant": "Other direct debit / ACH",
+              "description": "Wise Inc Wise Ppd Id: Xxxxxx3521"
+            },
+            {
+              "date": "2024-03-20",
+              "amount": 21.86,
+              "merchant": "Other direct debit / ACH",
+              "description": "Wise Inc Wise Ppd Id: Xxxxxx3521"
+            },
+            {
+              "date": "2024-04-10",
+              "amount": 21.84,
+              "merchant": "Other direct debit / ACH",
+              "description": "Wise Inc Wise Ppd Id: Xxxxxx3521"
+            },
+            {
+              "date": "2024-06-03",
+              "amount": 21.83,
+              "merchant": "Other direct debit / ACH",
+              "description": "Wise Inc Wise Ppd Id: Xxxxxx3521"
+            },
+            {
+              "date": "2024-06-03",
+              "amount": 21.83,
+              "merchant": "Other direct debit / ACH",
+              "description": "Wise Inc Wise Ppd Id: Xxxxxx3521"
+            },
+            {
+              "date": "2024-05-29",
+              "amount": 21.83,
+              "merchant": "Other direct debit / ACH",
+              "description": "Wise Inc Wise Ppd Id: Xxxxxx3521"
+            },
+            {
+              "date": "2024-05-22",
+              "amount": 21.83,
+              "merchant": "Other direct debit / ACH",
+              "description": "Wise Inc Wise Ppd Id: Xxxxxx3521"
+            },
+            {
+              "date": "2024-03-27",
+              "amount": 21.79,
+              "merchant": "Other direct debit / ACH",
+              "description": "Wise Inc Wise Ppd Id: Xxxxxx3521"
+            },
+            {
+              "date": "2024-05-15",
+              "amount": 21.78,
+              "merchant": "Other direct debit / ACH",
+              "description": "Wise Inc Wise Ppd Id: Xxxxxx3521"
+            },
+            {
+              "date": "2024-03-25",
+              "amount": 21.75,
+              "merchant": "Other direct debit / ACH",
+              "description": "Wise Inc Wise Ppd Id: Xxxxxx3521"
+            },
+            {
+              "date": "2024-04-03",
+              "amount": 21.68,
+              "merchant": "Other direct debit / ACH",
+              "description": "Wise Inc Wise Ppd Id: Xxxxxx3521"
+            },
+            {
+              "date": "2024-05-06",
+              "amount": 21.65,
+              "merchant": "Other direct debit / ACH",
+              "description": "Wise Inc Wise Ppd Id: Xxxxxx3521"
+            },
+            {
+              "date": "2024-06-12",
+              "amount": 21.63,
+              "merchant": "Other direct debit / ACH",
+              "description": "Wise Inc Wise Ppd Id: Xxxxxx3521"
+            },
+            {
+              "date": "2024-06-20",
+              "amount": 21.6,
+              "merchant": "Other direct debit / ACH",
+              "description": "Wise Inc Wise Ppd Id: Xxxxxx3521"
+            },
+            {
+              "date": "2024-05-08",
+              "amount": 21.6,
+              "merchant": "Other direct debit / ACH",
+              "description": "Wise Inc Wise Ppd Id: Xxxxxx3521"
+            },
+            {
+              "date": "2024-06-17",
+              "amount": 21.54,
+              "merchant": "Other direct debit / ACH",
+              "description": "Wise Inc Wise Ppd Id: Xxxxxx3521"
+            },
+            {
+              "date": "2024-04-24",
+              "amount": 21.53,
+              "merchant": "Other direct debit / ACH",
+              "description": "Wise Inc Wise Ppd Id: Xxxxxx3521"
+            },
+            {
+              "date": "2024-05-01",
+              "amount": 21.43,
+              "merchant": "Other direct debit / ACH",
+              "description": "Wise Inc Wise Ppd Id: Xxxxxx3521"
+            },
+            {
+              "date": "2024-04-15",
+              "amount": 21.4,
+              "merchant": "Other direct debit / ACH",
+              "description": "Wise Inc Wise Ppd Id: Xxxxxx3521"
+            },
+            {
+              "date": "2024-04-17",
+              "amount": 21.36,
+              "merchant": "Other direct debit / ACH",
+              "description": "Wise Inc Wise Ppd Id: Xxxxxx3521"
+            },
+            {
+              "date": "2024-01-23",
+              "amount": 8.81,
+              "merchant": "Other direct debit / ACH",
+              "description": "Rite Aid X6255 Pasadena Ca 01/23"
+            },
+            {
+              "date": "2024-04-28",
+              "amount": 6.0,
+              "merchant": "Other direct debit / ACH",
+              "description": "Ucla Ream Los Angeles Ca 04/27"
+            },
+            {
+              "date": "2024-01-22",
+              "amount": 4.1,
+              "merchant": "Other direct debit / ACH",
+              "description": "365 Market J Xxx Xx2-32 Troy Mi 01/22"
+            },
+            {
+              "date": "2024-08-01",
+              "amount": 3.0,
+              "merchant": "Other direct debit / ACH",
+              "description": "Pasadena Neuroscience 4 Pasadena Ca 08/01"
+            }
+          ]
+        },
+        {
+          "name": "Cash withdrawals",
+          "amount": 300.0,
+          "tx_count": 1,
+          "transactions": [
+            {
+              "date": "2024-08-11",
+              "amount": 300.0,
+              "merchant": "Cash withdrawals",
+              "description": "Atm Withdrawal Xx6661 08/xxx6645 Mis"
+            }
+          ]
+        }
+      ],
+      "refund_txs": [
+        {
+          "date": "2024-04-16",
+          "amount": 3500.0,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Preksha Naik Bacz37xgtkvh"
+        },
+        {
+          "date": "2024-04-17",
+          "amount": 1500.0,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Preksha Naik Bacwjn6chsci"
+        },
+        {
+          "date": "2024-04-17",
+          "amount": 1000.0,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx0629"
+        },
+        {
+          "date": "2024-05-15",
+          "amount": 616.95,
+          "merchant": "Reimbursement",
+          "description": "Venmo Cashout Ppd Id: Xxxxxx1992"
+        },
+        {
+          "date": "2024-06-11",
+          "amount": 361.83,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx9258"
+        },
+        {
+          "date": "2024-09-02",
+          "amount": 253.28,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx7758"
+        },
+        {
+          "date": "2024-01-14",
+          "amount": 207.0,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx9168"
+        },
+        {
+          "date": "2024-06-11",
+          "amount": 201.02,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx3496"
+        },
+        {
+          "date": "2024-06-11",
+          "amount": 170.87,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx7240"
+        },
+        {
+          "date": "2024-05-12",
+          "amount": 159.0,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx9833"
+        },
+        {
+          "date": "2024-03-31",
+          "amount": 159.0,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx8733"
+        },
+        {
+          "date": "2024-02-18",
+          "amount": 159.0,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx2570"
+        },
+        {
+          "date": "2024-01-15",
+          "amount": 154.93,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx8532"
+        },
+        {
+          "date": "2024-01-16",
+          "amount": 151.0,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx5622"
+        },
+        {
+          "date": "2024-11-08",
+          "amount": 150.0,
+          "merchant": "Reimbursement",
+          "description": "Amazon.com Servi Payments Tlrxxxxxxxx3992 Ctx Id: Xxxxxx7358"
+        },
+        {
+          "date": "2024-03-10",
+          "amount": 150.0,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ihab Badr And Ragda Jabi, Tte Of Th Wfct0s2jq8cg"
+        },
+        {
+          "date": "2024-09-02",
+          "amount": 86.44,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx0727"
+        },
+        {
+          "date": "2024-09-02",
+          "amount": 80.41,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx5719"
+        },
+        {
+          "date": "2024-09-02",
+          "amount": 61.91,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx5267"
+        },
+        {
+          "date": "2024-10-19",
+          "amount": 60.0,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Amena Sahmoud Cofqq3rydvnt"
+        },
+        {
+          "date": "2024-03-31",
+          "amount": 55.28,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx3920"
+        },
+        {
+          "date": "2024-03-26",
+          "amount": 50.0,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Yi Ting Zhang Xxxxxxx9583"
+        },
+        {
+          "date": "2024-05-12",
+          "amount": 47.24,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx4649"
+        },
+        {
+          "date": "2024-08-08",
+          "amount": 47.0,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Amena Sahmoud Cofuty1w1o7h"
+        },
+        {
+          "date": "2024-03-31",
+          "amount": 36.29,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx0554"
+        },
+        {
+          "date": "2024-09-02",
+          "amount": 26.13,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx0412"
+        },
+        {
+          "date": "2024-02-24",
+          "amount": 18.44,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx7765"
+        },
+        {
+          "date": "2024-09-02",
+          "amount": 9.18,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx9076"
+        },
+        {
+          "date": "2024-01-15",
+          "amount": 4.98,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx6235"
+        },
+        {
+          "date": "2024-03-31",
+          "amount": 1.0,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Preksha Naik Baczu9fovuac"
+        }
+      ]
+    },
+    {
+      "year": "2025",
+      "year_label": "2025",
+      "gross_spend": 108801.84,
+      "refunds": 17242.45,
+      "net_spend": 91559.39,
+      "empower_moneyOut": 55024.67,
+      "tx_count": 123,
+      "sources": [
+        {
+          "name": "CC bill payments",
+          "amount": 61280.04,
+          "tx_count": 59,
+          "transactions": [
+            {
+              "date": "2025-08-08",
+              "amount": 6216.45,
+              "merchant": "CC bill payments",
+              "description": "Cardmember Serv Web Pymt ***********1295 Web Id: Xxxxxx1111"
+            },
+            {
+              "date": "2025-11-08",
+              "amount": 4557.91,
+              "merchant": "CC bill payments",
+              "description": "Cardmember Serv Web Pymt ***********1295 Web Id: Xxxxxx1111"
+            },
+            {
+              "date": "2025-12-06",
+              "amount": 3915.03,
+              "merchant": "CC bill payments",
+              "description": "Cardmember Serv Web Pymt ***********1295 Web Id: Xxxxxx1111"
+            },
+            {
+              "date": "2025-10-08",
+              "amount": 3099.61,
+              "merchant": "CC bill payments",
+              "description": "Cardmember Serv Web Pymt ***********1295 Web Id: Xxxxxx1111"
+            },
+            {
+              "date": "2025-01-08",
+              "amount": 2975.07,
+              "merchant": "CC bill payments",
+              "description": "Cardmember Serv Web Pymt ***********1295 Web Id: Xxxxxx1111"
+            },
+            {
+              "date": "2025-07-08",
+              "amount": 2845.27,
+              "merchant": "CC bill payments",
+              "description": "Cardmember Serv Web Pymt ***********1295 Web Id: Xxxxxx1111"
+            },
+            {
+              "date": "2025-04-08",
+              "amount": 2753.97,
+              "merchant": "CC bill payments",
+              "description": "Cardmember Serv Web Pymt ***********1295 Web Id: Xxxxxx1111"
+            },
+            {
+              "date": "2025-03-08",
+              "amount": 2610.35,
+              "merchant": "CC bill payments",
+              "description": "Cardmember Serv Web Pymt ***********1295 Web Id: Xxxxxx1111"
+            },
+            {
+              "date": "2025-06-10",
+              "amount": 2150.0,
+              "merchant": "CC bill payments",
+              "description": "Cardmember Serv Web Pymt ***********1295 Web Id: Xxxxxx1111"
+            },
+            {
+              "date": "2025-09-06",
+              "amount": 1841.74,
+              "merchant": "CC bill payments",
+              "description": "Cardmember Serv Web Pymt ***********1295 Web Id: Xxxxxx1111"
+            },
+            {
+              "date": "2025-05-08",
+              "amount": 1746.11,
+              "merchant": "CC bill payments",
+              "description": "Cardmember Serv Web Pymt ***********1295 Web Id: Xxxxxx1111"
+            },
+            {
+              "date": "2025-02-08",
+              "amount": 1723.13,
+              "merchant": "CC bill payments",
+              "description": "Cardmember Serv Web Pymt ***********1295 Web Id: Xxxxxx1111"
+            },
+            {
+              "date": "2025-07-01",
+              "amount": 1721.02,
+              "merchant": "CC bill payments",
+              "description": "Applecard Gsbank Payment Xxxxx0321 Web Id: Xxxxxx9999"
+            },
+            {
+              "date": "2025-06-07",
+              "amount": 1615.88,
+              "merchant": "CC bill payments",
+              "description": "Cardmember Serv Web Pymt ***********1295 Web Id: Xxxxxx1111"
+            },
+            {
+              "date": "2025-09-02",
+              "amount": 1481.46,
+              "merchant": "CC bill payments",
+              "description": "Applecard Gsbank Payment Xxxxx0321 Web Id: Xxxxxx9999"
+            },
+            {
+              "date": "2025-09-08",
+              "amount": 1413.08,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2025-10-06",
+              "amount": 1337.34,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2025-06-02",
+              "amount": 1275.39,
+              "merchant": "CC bill payments",
+              "description": "Applecard Gsbank Payment Xxxxx0321 Web Id: Xxxxxx9999"
+            },
+            {
+              "date": "2025-07-07",
+              "amount": 1174.39,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2025-04-07",
+              "amount": 1099.65,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2025-12-08",
+              "amount": 1058.26,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2025-06-06",
+              "amount": 972.45,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2025-03-06",
+              "amount": 943.19,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2025-05-06",
+              "amount": 837.69,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2025-11-06",
+              "amount": 812.19,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2025-01-06",
+              "amount": 749.03,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2025-01-03",
+              "amount": 746.43,
+              "merchant": "CC bill payments",
+              "description": "American Express Ach Pmt A2192 Web Id: Xxxxxx0001"
+            },
+            {
+              "date": "2025-08-01",
+              "amount": 668.19,
+              "merchant": "CC bill payments",
+              "description": "Applecard Gsbank Payment Xxxxx0321 Web Id: Xxxxxx9999"
+            },
+            {
+              "date": "2025-12-01",
+              "amount": 599.46,
+              "merchant": "CC bill payments",
+              "description": "Applecard Gsbank Payment Xxxxx0321 Web Id: Xxxxxx9999"
+            },
+            {
+              "date": "2025-08-06",
+              "amount": 529.97,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2025-10-01",
+              "amount": 445.7,
+              "merchant": "CC bill payments",
+              "description": "Applecard Gsbank Payment Xxxxx0321 Web Id: Xxxxxx9999"
+            },
+            {
+              "date": "2025-12-08",
+              "amount": 412.15,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2025-06-06",
+              "amount": 406.68,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2025-01-06",
+              "amount": 398.73,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2025-12-17",
+              "amount": 327.5,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2025-09-17",
+              "amount": 302.95,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2025-11-01",
+              "amount": 291.57,
+              "merchant": "CC bill payments",
+              "description": "Applecard Gsbank Payment Xxxxx0321 Web Id: Xxxxxx9999"
+            },
+            {
+              "date": "2025-11-06",
+              "amount": 275.96,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2025-02-03",
+              "amount": 274.3,
+              "merchant": "CC bill payments",
+              "description": "American Express Ach Pmt A1280 Web Id: Xxxxxx0001"
+            },
+            {
+              "date": "2025-01-17",
+              "amount": 250.06,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2025-08-06",
+              "amount": 249.26,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2025-02-18",
+              "amount": 247.48,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2025-10-06",
+              "amount": 231.28,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2025-08-04",
+              "amount": 213.5,
+              "merchant": "CC bill payments",
+              "description": "American Express Ach Pmt A1172 Web Id: Xxxxxx0001"
+            },
+            {
+              "date": "2025-07-07",
+              "amount": 190.51,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2025-09-08",
+              "amount": 183.62,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2025-11-17",
+              "amount": 156.12,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2025-02-06",
+              "amount": 136.91,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2025-03-06",
+              "amount": 136.28,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2025-02-06",
+              "amount": 126.51,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2025-05-06",
+              "amount": 111.03,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2025-10-17",
+              "amount": 105.94,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2025-04-07",
+              "amount": 82.66,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2025-07-17",
+              "amount": 79.32,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2025-05-19",
+              "amount": 67.57,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2025-04-17",
+              "amount": 46.95,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2025-03-17",
+              "amount": 34.93,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2025-06-17",
+              "amount": 20.86,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2025-03-03",
+              "amount": 4.0,
+              "merchant": "CC bill payments",
+              "description": "American Express Ach Pmt A3872 Web Id: Xxxxxx0001"
+            }
+          ]
+        },
+        {
+          "name": "Zelle to SJA (rent)",
+          "amount": 28280.0,
+          "tx_count": 14,
+          "transactions": [
+            {
+              "date": "2025-12-08",
+              "amount": 2430.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx0627"
+            },
+            {
+              "date": "2025-11-08",
+              "amount": 2430.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx4570"
+            },
+            {
+              "date": "2025-10-05",
+              "amount": 2430.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx7568"
+            },
+            {
+              "date": "2025-09-05",
+              "amount": 2430.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx4289"
+            },
+            {
+              "date": "2025-07-05",
+              "amount": 2430.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx9743"
+            },
+            {
+              "date": "2025-08-05",
+              "amount": 2250.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx5715"
+            },
+            {
+              "date": "2025-06-05",
+              "amount": 2250.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx1989"
+            },
+            {
+              "date": "2025-05-05",
+              "amount": 2250.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx7700"
+            },
+            {
+              "date": "2025-04-05",
+              "amount": 2250.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx0301"
+            },
+            {
+              "date": "2025-03-05",
+              "amount": 2250.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx0551"
+            },
+            {
+              "date": "2025-02-05",
+              "amount": 2250.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx2247"
+            },
+            {
+              "date": "2025-01-05",
+              "amount": 2250.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx7472"
+            },
+            {
+              "date": "2025-12-10",
+              "amount": 200.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx4623"
+            },
+            {
+              "date": "2025-08-05",
+              "amount": 180.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx1635"
+            }
+          ]
+        },
+        {
+          "name": "Venmo Payments",
+          "amount": 10565.96,
+          "tx_count": 15,
+          "transactions": [
+            {
+              "date": "2025-06-10",
+              "amount": 3000.0,
+              "merchant": "Venmo Payments",
+              "description": "Venmo Payment Xxxxxxxxx7430 Web Id: Xxxxxx1992"
+            },
+            {
+              "date": "2025-04-14",
+              "amount": 1587.74,
+              "merchant": "Venmo Payments",
+              "description": "Venmo Payment Xxxxxxxxx8493 Web Id: Xxxxxx1992"
+            },
+            {
+              "date": "2025-05-05",
+              "amount": 1010.38,
+              "merchant": "Venmo Payments",
+              "description": "Venmo Payment Xxxxxxxxx7511 Web Id: Xxxxxx1992"
+            },
+            {
+              "date": "2025-04-14",
+              "amount": 922.15,
+              "merchant": "Venmo Payments",
+              "description": "Venmo Payment Xxxxxxxxx9067 Web Id: Xxxxxx1992"
+            },
+            {
+              "date": "2025-04-14",
+              "amount": 811.49,
+              "merchant": "Venmo Payments",
+              "description": "Venmo Payment Xxxxxxxxx3693 Web Id: Xxxxxx1992"
+            },
+            {
+              "date": "2025-01-24",
+              "amount": 757.79,
+              "merchant": "Venmo Payments",
+              "description": "Venmo Payment Xxxxxxxxx9574 Web Id: Xxxxxx1992"
+            },
+            {
+              "date": "2025-01-24",
+              "amount": 541.28,
+              "merchant": "Venmo Payments",
+              "description": "Venmo Payment Xxxxxxxxx3129 Web Id: Xxxxxx1992"
+            },
+            {
+              "date": "2025-05-05",
+              "amount": 529.66,
+              "merchant": "Venmo Payments",
+              "description": "Venmo Payment Xxxxxxxxx6959 Web Id: Xxxxxx1992"
+            },
+            {
+              "date": "2025-05-05",
+              "amount": 469.11,
+              "merchant": "Venmo Payments",
+              "description": "Venmo Payment Xxxxxxxxx8859 Web Id: Xxxxxx1992"
+            },
+            {
+              "date": "2025-01-24",
+              "amount": 324.77,
+              "merchant": "Venmo Payments",
+              "description": "Venmo Payment Xxxxxxxxx7121 Web Id: Xxxxxx1992"
+            },
+            {
+              "date": "2025-05-05",
+              "amount": 265.59,
+              "merchant": "Venmo Payments",
+              "description": "Venmo Payment Xxxxxxxxx3271 Web Id: Xxxxxx1992"
+            },
+            {
+              "date": "2025-01-31",
+              "amount": 250.0,
+              "merchant": "Venmo Payments",
+              "description": "Venmo Payment Xxxxxxxxx5156 Web Id: Xxxxxx1992"
+            },
+            {
+              "date": "2025-05-16",
+              "amount": 50.0,
+              "merchant": "Venmo Payments",
+              "description": "Venmo Payment Xxxxxxxxx5858 Web Id: Xxxxxx1992"
+            },
+            {
+              "date": "2025-09-18",
+              "amount": 26.0,
+              "merchant": "Venmo Payments",
+              "description": "Venmo Payment Xxxxxxxxx0151 Web Id: Xxxxxx1992"
+            },
+            {
+              "date": "2025-05-05",
+              "amount": 20.0,
+              "merchant": "Venmo Payments",
+              "description": "Venmo Payment Xxxxxxxxx7826 Web Id: Xxxxxx1992"
+            }
+          ]
+        },
+        {
+          "name": "Zelle to people (family/other)",
+          "amount": 7711.94,
+          "tx_count": 27,
+          "transactions": [
+            {
+              "date": "2026-01-06",
+              "amount": 2814.64,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Ali Xxxxxxx7153"
+            },
+            {
+              "date": "2025-03-29",
+              "amount": 1115.87,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Ali Jpm99b30gujx"
+            },
+            {
+              "date": "2026-04-22",
+              "amount": 577.36,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Ali Xxxxxxx0474"
+            },
+            {
+              "date": "2025-05-03",
+              "amount": 390.97,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Ali Jpm99b75m310"
+            },
+            {
+              "date": "2025-03-29",
+              "amount": 337.89,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Ali Jpm99b30hlt3"
+            },
+            {
+              "date": "2025-03-29",
+              "amount": 310.27,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Ali Jpm99b30hdry"
+            },
+            {
+              "date": "2026-05-01",
+              "amount": 300.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Hanan Abdou Abdelaal Jpm99cffe2ly"
+            },
+            {
+              "date": "2025-06-30",
+              "amount": 250.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Hanan Abdou Abdelaal Jpm99be0jlp6"
+            },
+            {
+              "date": "2025-06-22",
+              "amount": 250.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Amena Jpm99bd45zxg"
+            },
+            {
+              "date": "2025-03-23",
+              "amount": 233.19,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Ali Xxxxxxx7657"
+            },
+            {
+              "date": "2025-01-22",
+              "amount": 200.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Amena Sahmoud Jpm99avpk8ea"
+            },
+            {
+              "date": "2025-08-01",
+              "amount": 149.52,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Amena Jpm99bhxb6a7"
+            },
+            {
+              "date": "2026-04-22",
+              "amount": 137.12,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Ali Xxxxxxx0074"
+            },
+            {
+              "date": "2025-10-18",
+              "amount": 120.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Kyle Jpm99brh9twk"
+            },
+            {
+              "date": "2025-03-29",
+              "amount": 96.12,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Ali Jpm99b30h67z"
+            },
+            {
+              "date": "2025-09-02",
+              "amount": 90.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Ki Kim Jpm99blsqpc8"
+            },
+            {
+              "date": "2026-04-22",
+              "amount": 84.74,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Ali Xxxxxxx0129"
+            },
+            {
+              "date": "2025-03-30",
+              "amount": 40.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Sunshine Spa Xxxxxxx8703"
+            },
+            {
+              "date": "2025-03-30",
+              "amount": 40.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Sunshine Spa Xxxxxxx2697"
+            },
+            {
+              "date": "2025-03-06",
+              "amount": 40.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Kyle Jpm99b0er6nl"
+            },
+            {
+              "date": "2026-04-22",
+              "amount": 37.25,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Ali Xxxxxxx8349"
+            },
+            {
+              "date": "2025-05-17",
+              "amount": 30.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To D Xxxxxxx9357"
+            },
+            {
+              "date": "2025-01-04",
+              "amount": 30.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Joaquin Xxxxxxx2911"
+            },
+            {
+              "date": "2025-12-30",
+              "amount": 20.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Parking Next To Crypto Jpm99c0c2y94"
+            },
+            {
+              "date": "2025-09-05",
+              "amount": 15.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Jane Lin Ping Pong Jpm99bm6pqcz"
+            },
+            {
+              "date": "2025-09-05",
+              "amount": 1.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Jane Lin Ping Pong Jpm99bm6tncy"
+            },
+            {
+              "date": "2025-06-22",
+              "amount": 1.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Amena Jpm99bd42lj1"
+            }
+          ]
+        },
+        {
+          "name": "Cash withdrawals",
+          "amount": 700.0,
+          "tx_count": 2,
+          "transactions": [
+            {
+              "date": "2025-07-25",
+              "amount": 400.0,
+              "merchant": "Cash withdrawals",
+              "description": "Atm Withdrawal Xx3177 07/x5650 Broad"
+            },
+            {
+              "date": "2025-08-16",
+              "amount": 300.0,
+              "merchant": "Cash withdrawals",
+              "description": "Atm Withdrawal Xx8574 08/x5860 E Col"
+            }
+          ]
+        },
+        {
+          "name": "Other direct debit / ACH",
+          "amount": 263.9,
+          "tx_count": 6,
+          "transactions": [
+            {
+              "date": "2025-01-22",
+              "amount": 167.58,
+              "merchant": "Other direct debit / ACH",
+              "description": "Wise Inc Wise 8 Lessons Start Web Id: Xxxxxx3521"
+            },
+            {
+              "date": "2025-03-08",
+              "amount": 38.5,
+              "merchant": "Other direct debit / ACH",
+              "description": "Non-chase Atm Withdraw Xx3147 03/x7827 Color"
+            },
+            {
+              "date": "2025-01-15",
+              "amount": 26.1,
+              "merchant": "Other direct debit / ACH",
+              "description": "Winco Foods #x7 90 Rio Pomona Ca Xx3895 01/15"
+            },
+            {
+              "date": "2025-01-14",
+              "amount": 11.17,
+              "merchant": "Other direct debit / ACH",
+              "description": "Winco Foods #x7 90 Rio Pomona Ca Xx7291 01/14"
+            },
+            {
+              "date": "2025-01-14",
+              "amount": 10.97,
+              "merchant": "Other direct debit / ACH",
+              "description": "Winco Foods #x7 90 Rio Pomona Ca Xx5523 01/14"
+            },
+            {
+              "date": "2025-01-17",
+              "amount": 9.58,
+              "merchant": "Other direct debit / ACH",
+              "description": "Winco Foods #x7 90 Rio Pomona Ca Xx5979 01/17"
+            }
+          ]
+        }
+      ],
+      "refund_txs": [
+        {
+          "date": "2025-03-29",
+          "amount": 3000.0,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Preksha Naik Bactdj5np5yx"
+        },
+        {
+          "date": "2025-12-22",
+          "amount": 2585.66,
+          "merchant": "Reimbursement",
+          "description": "Amazon.com Servi Payments Tlrxxxxxxxx0432 Ctx Id: Xxxxxx9299"
+        },
+        {
+          "date": "2025-06-09",
+          "amount": 2136.42,
+          "merchant": "Reimbursement",
+          "description": "Amazon.com Servi Payments Tlrxxxxxxxx0312 Ctx Id: Xxxxxx7358"
+        },
+        {
+          "date": "2025-06-20",
+          "amount": 1595.78,
+          "merchant": "Reimbursement",
+          "description": "Amazon.com Servi Payments Tlrxxxxxxxx1992 Ctx Id: Xxxxxx7358"
+        },
+        {
+          "date": "2025-10-06",
+          "amount": 1585.63,
+          "merchant": "Reimbursement",
+          "description": "Amazon.com Servi Payments Tlrxxxxxxxx5602 Ctx Id: Xxxxxx9299"
+        },
+        {
+          "date": "2025-01-13",
+          "amount": 1430.8,
+          "merchant": "Reimbursement",
+          "description": "Amazon.com Servi Payments Tlrxxxxxxxx2712 Ctx Id: Xxxxxx7358"
+        },
+        {
+          "date": "2025-12-22",
+          "amount": 1291.2,
+          "merchant": "Reimbursement",
+          "description": "Amazon.com Servi Payments Tlrxxxxxxxx5882 Ctx Id: Xxxxxx7358"
+        },
+        {
+          "date": "2025-09-13",
+          "amount": 1011.98,
+          "merchant": "Reimbursement",
+          "description": "Venmo Cashout Ppd Id: Xxxxxx1992"
+        },
+        {
+          "date": "2025-03-31",
+          "amount": 1000.0,
+          "merchant": "Reimbursement",
+          "description": "Venmo Cashout Ppd Id: Xxxxxx1992"
+        },
+        {
+          "date": "2025-01-30",
+          "amount": 750.0,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Amazon Employee Relief Bacmexl2iv0z"
+        },
+        {
+          "date": "2025-04-14",
+          "amount": 500.0,
+          "merchant": "Reimbursement",
+          "description": "Venmo Cashout Ppd Id: Xxxxxx1992"
+        },
+        {
+          "date": "2025-02-02",
+          "amount": 90.4,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx5262"
+        },
+        {
+          "date": "2025-02-04",
+          "amount": 60.0,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Joaquin Minguzzi Xxxxxxx3269"
+        },
+        {
+          "date": "2025-02-03",
+          "amount": 58.0,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Maryam Alghannam Bacgu17ck8d8"
+        },
+        {
+          "date": "2025-02-02",
+          "amount": 47.46,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx8407"
+        },
+        {
+          "date": "2025-02-02",
+          "amount": 45.2,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx4461"
+        },
+        {
+          "date": "2025-02-02",
+          "amount": 33.37,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx1107"
+        },
+        {
+          "date": "2025-02-02",
+          "amount": 11.3,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx1945"
+        },
+        {
+          "date": "2025-02-02",
+          "amount": 7.25,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx7597"
+        },
+        {
+          "date": "2025-03-29",
+          "amount": 1.0,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Preksha Naik Bacu83k69lcy"
+        },
+        {
+          "date": "2025-03-18",
+          "amount": 1.0,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx0629"
+        }
+      ]
+    },
+    {
+      "year": "2026",
+      "year_label": "2026 YTD",
+      "gross_spend": 46944.1,
+      "refunds": 2618.9,
+      "net_spend": 44325.2,
+      "empower_moneyOut": 24009.34,
+      "tx_count": 47,
+      "sources": [
+        {
+          "name": "CC bill payments",
+          "amount": 31011.41,
+          "tx_count": 25,
+          "transactions": [
+            {
+              "date": "2026-05-08",
+              "amount": 6233.97,
+              "merchant": "CC bill payments",
+              "description": "Cardmember Serv Web Pymt ***********6126 Web Id: Xxxxxx1111"
+            },
+            {
+              "date": "2026-02-07",
+              "amount": 3490.1,
+              "merchant": "CC bill payments",
+              "description": "Cardmember Serv Web Pymt ***********6126 Web Id: Xxxxxx1111"
+            },
+            {
+              "date": "2026-04-08",
+              "amount": 3418.56,
+              "merchant": "CC bill payments",
+              "description": "Cardmember Serv Web Pymt ***********6126 Web Id: Xxxxxx1111"
+            },
+            {
+              "date": "2026-01-08",
+              "amount": 3214.04,
+              "merchant": "CC bill payments",
+              "description": "Cardmember Serv Web Pymt ***********1295 Web Id: Xxxxxx1111"
+            },
+            {
+              "date": "2026-02-02",
+              "amount": 1564.59,
+              "merchant": "CC bill payments",
+              "description": "Applecard Gsbank Payment Xxxxx0321 Web Id: Xxxxxx9999"
+            },
+            {
+              "date": "2026-03-07",
+              "amount": 1371.22,
+              "merchant": "CC bill payments",
+              "description": "Cardmember Serv Web Pymt ***********6126 Web Id: Xxxxxx1111"
+            },
+            {
+              "date": "2026-01-06",
+              "amount": 1257.19,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2026-04-01",
+              "amount": 1101.24,
+              "merchant": "CC bill payments",
+              "description": "Applecard Gsbank Payment Xxxxx0321 Web Id: Xxxxxx9999"
+            },
+            {
+              "date": "2026-05-01",
+              "amount": 894.85,
+              "merchant": "CC bill payments",
+              "description": "Applecard Gsbank Payment Xxxxx0321 Web Id: Xxxxxx9999"
+            },
+            {
+              "date": "2026-03-06",
+              "amount": 871.94,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2026-05-06",
+              "amount": 856.06,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2026-01-06",
+              "amount": 849.34,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2026-03-06",
+              "amount": 785.83,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2026-03-02",
+              "amount": 752.79,
+              "merchant": "CC bill payments",
+              "description": "Applecard Gsbank Payment Xxxxx0321 Web Id: Xxxxxx9999"
+            },
+            {
+              "date": "2026-02-06",
+              "amount": 645.73,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2026-04-06",
+              "amount": 617.34,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2026-01-01",
+              "amount": 545.28,
+              "merchant": "CC bill payments",
+              "description": "Applecard Gsbank Payment Xxxxx0321 Web Id: Xxxxxx9999"
+            },
+            {
+              "date": "2026-02-06",
+              "amount": 531.95,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2026-04-06",
+              "amount": 475.53,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2026-05-06",
+              "amount": 382.52,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2026-02-17",
+              "amount": 294.93,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2026-05-18",
+              "amount": 263.67,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2026-03-17",
+              "amount": 256.58,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2026-04-17",
+              "amount": 198.02,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            },
+            {
+              "date": "2026-01-20",
+              "amount": 138.14,
+              "merchant": "CC bill payments",
+              "description": "Chase Credit Crd Autopay Ppd Id: Xxxxxx9224"
+            }
+          ]
+        },
+        {
+          "name": "Zelle to SJA (rent)",
+          "amount": 12115.0,
+          "tx_count": 6,
+          "transactions": [
+            {
+              "date": "2026-02-05",
+              "amount": 2430.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx0741"
+            },
+            {
+              "date": "2026-03-05",
+              "amount": 2430.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx2432"
+            },
+            {
+              "date": "2026-04-05",
+              "amount": 2430.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx9549"
+            },
+            {
+              "date": "2026-05-05",
+              "amount": 2430.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx0485"
+            },
+            {
+              "date": "2026-01-06",
+              "amount": 2185.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx0497"
+            },
+            {
+              "date": "2026-01-07",
+              "amount": 210.0,
+              "merchant": "Zelle to SJA (rent)",
+              "description": "Zelle Payment To Sja Management Llc, Arcadia, Ca Xxxxxxx6112"
+            }
+          ]
+        },
+        {
+          "name": "Venmo Payments",
+          "amount": 3060.99,
+          "tx_count": 10,
+          "transactions": [
+            {
+              "date": "2026-04-24",
+              "amount": 1010.38,
+              "merchant": "Venmo Payments",
+              "description": "Venmo Payment Xxxxxxxxx5892 Web Id: Xxxxxx1992"
+            },
+            {
+              "date": "2026-04-24",
+              "amount": 721.7,
+              "merchant": "Venmo Payments",
+              "description": "Venmo Payment Xxxxxxxxx2100 Web Id: Xxxxxx1992"
+            },
+            {
+              "date": "2026-04-22",
+              "amount": 685.62,
+              "merchant": "Venmo Payments",
+              "description": "Venmo Payment Xxxxxxxxx8514 Web Id: Xxxxxx1992"
+            },
+            {
+              "date": "2026-02-09",
+              "amount": 220.0,
+              "merchant": "Venmo Payments",
+              "description": "Venmo Payment Xxxxxxxxx6406 Web Id: Xxxxxx1992"
+            },
+            {
+              "date": "2026-05-07",
+              "amount": 135.0,
+              "merchant": "Venmo Payments",
+              "description": "Venmo Payment Xxxxxxxxx8457 Web Id: Xxxxxx1992"
+            },
+            {
+              "date": "2026-01-20",
+              "amount": 102.8,
+              "merchant": "Venmo Payments",
+              "description": "Venmo Payment Xxxxxxxxx2229 Web Id: Xxxxxx1992"
+            },
+            {
+              "date": "2026-05-05",
+              "amount": 59.75,
+              "merchant": "Venmo Payments",
+              "description": "Venmo Payment Xxxxxxxxx5459 Web Id: Xxxxxx1992"
+            },
+            {
+              "date": "2026-05-05",
+              "amount": 57.24,
+              "merchant": "Venmo Payments",
+              "description": "Venmo Payment Xxxxxxxxx3467 Web Id: Xxxxxx1992"
+            },
+            {
+              "date": "2026-05-05",
+              "amount": 35.5,
+              "merchant": "Venmo Payments",
+              "description": "Venmo Payment Xxxxxxxxx2981 Web Id: Xxxxxx1992"
+            },
+            {
+              "date": "2026-05-05",
+              "amount": 33.0,
+              "merchant": "Venmo Payments",
+              "description": "Venmo Payment Xxxxxxxxx2340 Web Id: Xxxxxx1992"
+            }
+          ]
+        },
+        {
+          "name": "Zelle to people (family/other)",
+          "amount": 685.0,
+          "tx_count": 3,
+          "transactions": [
+            {
+              "date": "2026-04-08",
+              "amount": 500.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Preksha Naik Jpm99ccez3nt"
+            },
+            {
+              "date": "2026-02-13",
+              "amount": 100.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Ki Kim Jpm99c5n4qgm"
+            },
+            {
+              "date": "2026-03-26",
+              "amount": 85.0,
+              "merchant": "Zelle to people (family/other)",
+              "description": "Zelle Payment To Dr Michael Balikyan, Inc. Dba South Jpm99canz4d9"
+            }
+          ]
+        },
+        {
+          "name": "Other direct debit / ACH",
+          "amount": 71.7,
+          "tx_count": 3,
+          "transactions": [
+            {
+              "date": "2026-01-04",
+              "amount": 63.75,
+              "merchant": "Other direct debit / ACH",
+              "description": "Non-chase Atm Withdraw Xx8034 01/x4400 S Bal"
+            },
+            {
+              "date": "2026-05-14",
+              "amount": 4.95,
+              "merchant": "Other direct debit / ACH",
+              "description": "Cal State La Parking P Xxx-xxx5274 Ca 05/14"
+            },
+            {
+              "date": "2026-01-04",
+              "amount": 3.0,
+              "merchant": "Other direct debit / ACH",
+              "description": "Non-chase Atm Fee-with"
+            }
+          ]
+        }
+      ],
+      "refund_txs": [
+        {
+          "date": "2026-01-07",
+          "amount": 1000.0,
+          "merchant": "Reimbursement",
+          "description": "Venmo Cashout Ppd Id: Xxxxxx1992"
+        },
+        {
+          "date": "2026-04-08",
+          "amount": 500.0,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Preksha Naik Bacycj8i0f3n"
+        },
+        {
+          "date": "2026-01-05",
+          "amount": 450.4,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx8708"
+        },
+        {
+          "date": "2026-01-05",
+          "amount": 269.56,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx2000"
+        },
+        {
+          "date": "2026-01-05",
+          "amount": 119.32,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx6456"
+        },
+        {
+          "date": "2026-01-05",
+          "amount": 85.88,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx0244"
+        },
+        {
+          "date": "2026-01-05",
+          "amount": 56.5,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx0202"
+        },
+        {
+          "date": "2026-01-05",
+          "amount": 56.5,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Ali Sahmoud Xxxxxxx1551"
+        },
+        {
+          "date": "2026-01-23",
+          "amount": 38.0,
+          "merchant": "Reimbursement",
+          "description": "Amazon.com Servi Payments Tlrxxxxxxxx0472 Ctx Id: Xxxxxx7358"
+        },
+        {
+          "date": "2026-02-06",
+          "amount": 21.37,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Partnership Healthplan Of Californi Bmoi000r38zq"
+        },
+        {
+          "date": "2026-02-06",
+          "amount": 21.37,
+          "merchant": "Reimbursement",
+          "description": "Zelle Payment From Partnership Healthplan Of Californi Bmoi000r38z0"
+        }
+      ]
+    }
+  ]
+}

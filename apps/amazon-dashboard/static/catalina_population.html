@@ -1,0 +1,44 @@
+<!DOCTYPE html><html lang=en><head><meta charset=UTF-8>
+<meta name=viewport content="width=device-width, initial-scale=1">
+<title>Catalina (Avalon) Population - 100 Years</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{--bg:#0e1116;--panel:#171b22;--line:#2a313d;--ink:#eef2f7;--mut:#9aa6b6;--accent:#34d399;--blue:#60a5fa}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:900px;margin:0 auto;padding:24px 18px 70px}
+h1{font-size:1.5rem;margin:0 0 4px}.sub{color:var(--mut);margin-bottom:20px;font-size:.95rem}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:18px}
+.chartbox{position:relative;height:340px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:18px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px}
+.kpi .n{font-size:1.5rem;font-weight:800}.kpi .l{color:var(--mut);font-size:.76rem;margin-top:4px}
+table{width:100%;border-collapse:collapse;font-size:.9rem}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+th{color:var(--mut);font-size:.74rem;text-transform:uppercase;letter-spacing:.04em}
+td.pop{text-align:right;font-weight:600}
+.foot{color:var(--mut);font-size:.82rem;margin-top:24px;border-top:1px solid var(--line);padding-top:14px}
+</style></head><body><div class=wrap>
+<h1>Catalina Island Population, 1920-2026</h1>
+<div class=sub>Avalon, CA, the island's only incorporated city and ~90%+ of its residents. Decennial US Census through 2020, plus annual estimates 2021-2026.</div>
+<div class=kpis>
+<div class=kpi><div class=n>586</div><div class=l>1920 population</div></div>
+<div class=kpi><div class=n>3,810</div><div class=l>peak (~2015 estimate)</div></div>
+<div class=kpi><div class=n>3,460</div><div class=l>2020 Census</div></div>
+<div class=kpi><div class=n>~3,193</div><div class=l>2026 (projected)</div></div>
+</div>
+<div class=card><div class=chartbox><canvas id=c></canvas></div></div>
+<div class=card>
+<table><thead><tr><th>Year</th><th style="text-align:right">Population</th><th>Source</th></tr></thead><tbody id=tb></tbody></table>
+</div>
+<div class=foot>Sources: U.S. Census Bureau decennial counts (1920-2020) + Census Population Estimates / World Population Review (annual 2021-2026, projected). Avalon is the only city on Catalina; total island adds a few hundred (Two Harbors) atop these figures.</div>
+</div>
+<script>
+const D=[[1920,586,'Census'],[1930,1897,'Census'],[1940,1637,'Census'],[1950,1506,'Census'],[1960,1536,'Census'],[1970,1520,'Census'],[1980,2022,'Census'],[1990,2918,'Census'],[2000,3127,'Census'],[2010,3728,'Census'],[2020,3460,'Census'],[2021,3368,'est'],[2022,3319,'est'],[2023,3287,'est'],[2024,3267,'est'],[2025,3237,'est'],[2026,3193,'proj']];
+Chart.defaults.color='#9aa6b6';
+new Chart(document.getElementById('c'),{type:'line',
+ data:{datasets:[{label:'Avalon population',data:D.map(r=>({x:r[0],y:r[1]})),borderColor:'#34d399',backgroundColor:'rgba(52,211,153,.12)',fill:true,tension:.25,pointRadius:3,pointBackgroundColor:'#34d399'}]},
+ options:{plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.parsed.y.toLocaleString()+' ('+c.parsed.x+')'}}},
+  scales:{x:{type:'linear',min:1920,max:2026,ticks:{stepSize:10,callback:v=>v},grid:{color:'#2a313d'},title:{display:true,text:'year'}},
+          y:{beginAtZero:true,grid:{color:'#2a313d'},title:{display:true,text:'population'}}}}});
+document.getElementById('tb').innerHTML=D.map(r=>'<tr><td>'+r[0]+'</td><td class=pop>'+r[1].toLocaleString()+'</td><td style="color:#9aa6b6">'+r[2]+'</td></tr>').join('');
+</script></body></html>

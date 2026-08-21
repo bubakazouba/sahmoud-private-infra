@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tax Strategy Sandbox</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --border: #30363d;
+      --text: #c9d1d9;
+      --muted: #8b949e;
+      --accent: #79c0ff;
+      --green: #3fb950;
+      --red: #f85149;
+      --yellow: #d29922;
+      --orange: #e3b341;
+      --mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 24px;
+    }
+    header h1 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--accent);
+      font-family: var(--mono);
+    }
+    header .sub {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 4px;
+    }
+    .sandbox-badge {
+      display: inline-block;
+      background: #2d1a00;
+      border: 1px solid #e3b34180;
+      color: var(--orange);
+      font-size: 11px;
+      font-family: var(--mono);
+      padding: 2px 8px;
+      border-radius: 20px;
+      margin-top: 6px;
+      margin-right: 6px;
+    }
+    .source-badge {
+      display: inline-block;
+      background: #1f6feb22;
+      border: 1px solid #1f6feb60;
+      color: var(--accent);
+      font-size: 10px;
+      font-family: var(--mono);
+      padding: 2px 8px;
+      border-radius: 20px;
+      margin-top: 6px;
+    }
+
+    /* ── Sticky controls ── */
+    #controls {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+    }
+
+    .controls-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 10px 20px;
+    }
+
+    .slider-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .slider-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+    }
+    .slider-label span:first-child { color: var(--muted); }
+    .slider-label .val { color: var(--accent); font-family: var(--mono); font-weight: 600; }
+    input[type=range] {
+      width: 100%;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .radio-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .radio-group > label { font-size: 12px; color: var(--muted); }
+    .radio-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 2px; }
+    .radio-row label {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      color: var(--text);
+      font-size: 12px;
+    }
+    input[type=radio], input[type=checkbox] { accent-color: var(--accent); cursor: pointer; }
+
+    .check-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text);
+      padding-top: 14px;
+    }
+
+    .derived-bar {
+      margin-top: 10px;
+      padding: 8px 12px;
+      background: #1f2937;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+    .derived-bar .lbl { color: var(--muted); }
+    .derived-bar strong { color: var(--accent); }
+
+    /* ── Main ── */
+    main {
+      padding: 20px 24px;
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+
+    .spinner-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 50px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 13px;
+      gap: 10px;
+    }
+    .spinner {
+      width: 16px; height: 16px;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Lifetime savings callout ── */
+    #lifetime-callout {
+      background: #0d2318;
+      border: 1px solid #3fb95060;
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    #lifetime-callout .big {
+      font-size: 36px;
+      font-family: var(--mono);
+      font-weight: 700;
+      color: var(--green);
+    }
+    #lifetime-callout .label {
+      font-size: 13px;
+      color: var(--muted);
+      max-width: 300px;
+    }
+    #lifetime-callout .breakdown {
+      margin-left: auto;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .callout-stat { text-align: right; }
+    .callout-stat .cs-lbl { font-size: 11px; color: var(--muted); }
+    .callout-stat .cs-val { font-size: 15px; font-family: var(--mono); font-weight: 600; color: var(--accent); }
+
+    /* ── Charts grid ── */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 900px) {
+      .charts-grid { grid-template-columns: 1fr; }
+    }
+
+    .chart-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+    }
+    .chart-card h2 {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+      font-family: var(--mono);
+    }
+    .chart-card h2 span { color: var(--text); text-transform: none; letter-spacing: 0; }
+    .chart-wrap { position: relative; height: 260px; }
+    .chart-wrap-tall { position: relative; height: 360px; }
+
+    /* ── Per-year table ── */
+    #table-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      margin-bottom: 20px;
+      overflow-x: auto;
+    }
+    #table-panel h2 {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+      font-family: var(--mono);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      font-family: var(--mono);
+    }
+    th {
+      text-align: left;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      padding: 6px 8px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    td {
+      padding: 6px 8px;
+      border-bottom: 1px solid #1f2730;
+      color: var(--text);
+      white-space: nowrap;
+    }
+    tr:last-child td { border-bottom: none; }
+    td.green { color: var(--green); }
+    td.red { color: var(--red); }
+    td.muted { color: var(--muted); }
+
+    /* ── Per-lot table ── */
+    #lot-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      margin-bottom: 20px;
+      overflow-x: auto;
+    }
+    #lot-panel h2 {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+      font-family: var(--mono);
+    }
+    .lot-st { color: var(--red) !important; }
+    .lot-lt { color: var(--green) !important; }
+
+    /* ── Gap warning ── */
+    #gap-warning {
+      background: #1f1a00;
+      border: 1px solid #d2992260;
+      border-radius: 6px;
+      padding: 8px 14px;
+      margin-bottom: 16px;
+      font-size: 12px;
+      color: var(--yellow);
+    }
+
+    /* ── ⓘ tooltip system ── */
+    .tip-wrap {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .tip-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #1f6feb33;
+      border: 1px solid #1f6feb80;
+      color: var(--accent);
+      font-size: 9px;
+      font-weight: 700;
+      cursor: pointer;
+      line-height: 1;
+      flex-shrink: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .tip-icon:hover { background: #1f6feb66; }
+    .tip-bubble {
+      display: none;
+      position: absolute;
+      z-index: 9999;
+      bottom: calc(100% + 6px);
+      left: 50%;
+      transform: translateX(-50%);
+      width: 280px;
+      background: #0d1117;
+      border: 1px solid var(--accent);
+      border-radius: 6px;
+      padding: 10px 12px;
+      font-size: 11px;
+      color: var(--text);
+      line-height: 1.5;
+      white-space: normal;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-style: normal;
+      font-weight: normal;
+    }
+    .tip-bubble::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 5px solid transparent;
+      border-top-color: var(--accent);
+    }
+    .tip-wrap.open .tip-bubble { display: block; }
+
+    /* ── Intro section ── */
+    .intro-section {
+      background: #111827;
+      border-bottom: 1px solid var(--border);
+      padding: 16px 24px;
+    }
+    .intro-section h2 {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 6px;
+      font-family: var(--mono);
+    }
+    .intro-section p {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 8px;
+      max-width: 900px;
+    }
+    .key-concepts {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 8px 16px;
+      margin-top: 10px;
+    }
+    .concept-pill {
+      background: #1f2937;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-size: 11px;
+    }
+    .concept-pill strong {
+      color: var(--accent);
+      font-family: var(--mono);
+      display: block;
+      margin-bottom: 3px;
+    }
+    .concept-pill span { color: var(--muted); }
+
+    /* ── Chart help text ── */
+    .chart-help {
+      font-size: 11px;
+      color: var(--muted);
+      font-style: italic;
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+    .avg-cost-note {
+      font-size: 10px;
+      color: var(--yellow);
+      margin-top: 4px;
+      font-style: italic;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 14px 24px;
+      text-align: center;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+  </style>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      document.addEventListener('click', function(e) {
+        const icon = e.target.closest('.tip-icon');
+        const allWraps = document.querySelectorAll('.tip-wrap');
+        if (icon) {
+          const wrap = icon.closest('.tip-wrap');
+          const wasOpen = wrap.classList.contains('open');
+          allWraps.forEach(function(w) { w.classList.remove('open'); });
+          if (!wasOpen) wrap.classList.add('open');
+          // stopPropagation stops bubbling; preventDefault stops label from
+          // triggering its associated checkbox/radio — fixes ⓘ inside <label>
+          e.stopPropagation();
+          e.preventDefault();
+        } else if (!e.target.closest('.tip-bubble')) {
+          allWraps.forEach(function(w) { w.classList.remove('open'); });
+        }
+      });
+    });
+  </script>
+</head>
+<body>
+
+<header>
+  <h1>Tax Strategy Sandbox</h1>
+  <p class="sub">Sliders to explore — <strong>NOT a committed plan</strong>. Real Vanguard 166-lot + AMZN 5-lot data. Last updated 2026-05-09.</p>
+  <span class="sandbox-badge">SANDBOX — exploration only</span>
+  <span class="source-badge">Fed brackets: Rev. Proc. 2025-32 · Notice 2025-67</span>
+</header>
+
+<section class="intro-section">
+  <h2>What is this dashboard?</h2>
+  <p>
+    Sandbox for exploring how to fund ~$80k/yr of living expenses during low-income grad-school years
+    (masters + PhD) with minimum federal tax. <strong>Not a committed plan.</strong> Uses real Vanguard 166-lot
+    + AMZN 5-lot data as of 2026-05-08.
+  </p>
+  <div class="key-concepts">
+    <div class="concept-pill">
+      <strong>SpecID / HIFO</strong>
+      <span>You pick which lots to sell — modeled here as highest-cost-basis first, which minimizes gain recognized per dollar of proceeds.</span>
+    </div>
+    <div class="concept-pill">
+      <strong>LTCG bracket-fill (harvest)</strong>
+      <span>In a low-income year the 0% long-term capital gains bracket may cover $40k+ of realized gains. "Harvesting" means intentionally selling appreciated lots to use up that bracket — resetting cost basis higher for free, then re-buying. No wash-sale rule applies to gains.</span>
+    </div>
+    <div class="concept-pill">
+      <strong>Roth conversion ladder</strong>
+      <span>Moving money from a traditional 401k/IRA to Roth IRA while ordinary income is low. Counts as ordinary income now, grows tax-free forever. Each dollar converted shrinks the 0%-LTCG headroom.</span>
+    </div>
+    <div class="concept-pill">
+      <strong>AMZN ST→LT aging</strong>
+      <span>AMZN lots held less than 1 year are short-term (taxed as ordinary income at 22-37%). The Oct-2025 lot crosses to LT on 2026-10-15; the Apr-2026 lot on 2027-04-15. Selling before that crossing is expensive.</span>
+    </div>
+    <div class="concept-pill">
+      <strong>Delta (savings vs baseline)</strong>
+      <span>The difference between your strategy's cumulative tax and the baseline (FIFO sell at average basis ratio, no optimization). A positive delta means you saved that much in taxes.</span>
+    </div>
+  </div>
+</section>
+
+<section id="controls">
+  <div class="controls-grid">
+
+    <div class="slider-group">
+      <div class="slider-label">
+        <span class="tip-wrap">Annual spend
+          <span class="tip-icon" role="button">i</span>
+          <span class="tip-bubble">Total annual living expenses funded from portfolio sales. This entire amount is modeled as coming from selling LT lots (long-term capital gains), not from ordinary income.</span>
+        </span>
+        <span class="val" id="lbl-spend">$80,000</span>
+      </div>
+      <input type="range" id="sl-spend" min="40000" max="200000" step="5000" value="80000" />
+    </div>
+
+    <div class="slider-group">
+      <div class="slider-label">
+        <span class="tip-wrap">Years to model
+          <span class="tip-icon" role="button">i</span>
+          <span class="tip-bubble">How many years of grad school / post-Amazon life to model. Default 7 = 2 masters + 5 PhD. Each year is treated as a separate tax year.</span>
+        </span>
+        <span class="val" id="lbl-years">7</span>
+      </div>
+      <input type="range" id="sl-years" min="2" max="10" step="1" value="7" />
+    </div>
+
+    <div class="slider-group">
+      <div class="slider-label">
+        <span class="tip-wrap">PhD stipend / yr
+          <span class="tip-icon" role="button">i</span>
+          <span class="tip-bubble">NSF GRFP stipend = $37,000/yr for FY2026. Counts as ordinary income (taxable). Set to $0 for masters years when no stipend exists. The slider applies the same stipend to all modeled years — adjust per-year in a future version.</span>
+        </span>
+        <span class="val" id="lbl-stipend">$37,000</span>
+      </div>
+      <input type="range" id="sl-stipend" min="0" max="60000" step="1000" value="37000" />
+    </div>
+
+    <div class="slider-group">
+      <div class="slider-label">
+        <span class="tip-wrap">Roth conversion / yr
+          <span class="tip-icon" role="button">i</span>
+          <span class="tip-bubble">Roth conversion = moving money from traditional 401k/IRA to Roth IRA. It counts as ordinary income. CRITICAL: Roth conversion uses up 0%-LTCG headroom dollar-for-dollar — more conversion means more LTCG gets taxed at 15% instead of 0%. The default fills the remaining 0%-LTCG headroom after stipend.</span>
+        </span>
+        <span class="val" id="lbl-roth">$0</span>
+      </div>
+      <input type="range" id="sl-roth" min="0" max="48475" step="500" value="0" />
+    </div>
+
+    <div class="slider-group">
+      <div class="slider-label">
+        <span class="tip-wrap">Year 1 (leaves Amazon)
+          <span class="tip-icon" role="button">i</span>
+          <span class="tip-bubble">The first year modeled — when he stops earning Amazon salary. AMZN lot ST/LT aging is computed relative to this year. Default 2027.</span>
+        </span>
+        <span class="val" id="lbl-year1">2027</span>
+      </div>
+      <input type="range" id="sl-year1" min="2026" max="2030" step="1" value="2027" />
+    </div>
+
+    <div class="radio-group">
+      <label class="tip-wrap">Cost-basis method
+        <span class="tip-icon" role="button">i</span>
+        <span class="tip-bubble">Determines which lots to sell first when funding spend. FIFO = oldest first. HIFO = highest cost-basis first (minimizes gain recognized = lowest current-year tax). SpecID = same as HIFO in outcome (you manually pick the highest-basis lots). MinTax = Vanguard's automatic mix of gains + losses to minimize current-year tax impact.</span>
+      </label>
+      <div class="radio-row">
+        <label><input type="radio" name="method" value="SpecID" /> <span class="tip-wrap">SpecID<span class="tip-icon" role="button">i</span><span class="tip-bubble">Specific Identification — you pick exactly which lots to sell. Modeled here as highest-basis-first (same as HIFO), which is the tax-optimal selection strategy.</span></span></label>
+        <label><input type="radio" name="method" value="FIFO" /> <span class="tip-wrap">FIFO<span class="tip-icon" role="button">i</span><span class="tip-bubble">First In, First Out — sells oldest lots first. Often least tax-optimal since older lots tend to have lower basis (higher gain).</span></span></label>
+        <label><input type="radio" name="method" value="HIFO" checked /> <span class="tip-wrap">HIFO<span class="tip-icon" role="button">i</span><span class="tip-bubble">Highest In, First Out — sells highest-cost-basis lots first. Minimizes gain recognized per dollar of proceeds. Usually most tax-optimal when all gains are long-term.</span></span></label>
+        <label><input type="radio" name="method" value="MinTax" /> <span class="tip-wrap">MinTax<span class="tip-icon" role="button">i</span><span class="tip-bubble">Vanguard's MinTax method — automatically selects a mix of lots that minimizes the current-year tax impact, including using losses to offset gains where available.</span></span></label>
+        <label><input type="radio" name="method" value="AverageCost" /> <span class="tip-wrap">Avg Cost<span class="tip-icon" role="button">i</span><span class="tip-bubble">Average Cost — every share sold realizes the same per-share gain (portfolio total cost ÷ total shares). Simple but imprecise. Shown for comparison only.</span></span></label>
+      </div>
+      <div class="avg-cost-note" id="avg-cost-note" style="display:none;">
+        ⚠ Average Cost is only available for mutual fund holdings at Vanguard — not ETFs (your VTI/VXUS/QQQ are ETFs). Shown for comparison purposes only; you cannot elect this method at the brokerage for these positions.
+      </div>
+    </div>
+
+    <div class="check-group">
+      <input type="checkbox" id="cb-show-amzn-st" />
+      <label for="cb-show-amzn-st" class="tip-wrap">Show AMZN ST lots in inventory
+        <span class="tip-icon" role="button">i</span>
+        <span class="tip-bubble">Short-term AMZN lots are taxed as ordinary income (22-37% federal) — generally not worth selling during low-income years. The Oct-2025 lot crosses to LT on 2026-10-15. The Apr-2026 lot crosses to LT on 2027-04-15. Check this to show them in the lot inventory chart.</span>
+      </label>
+    </div>
+
+  </div>
+
+  <div class="derived-bar">
+    <div><span class="lbl">0%-LTCG headroom: </span><strong id="d-headroom">—</strong></div>
+    <div><span class="lbl">Ordinary taxable: </span><strong id="d-ord-taxable">—</strong></div>
+    <div><span class="lbl">End year: </span><strong id="d-endyr">—</strong></div>
+    <div><span class="lbl">Vanguard MV: </span><strong id="d-vmv">—</strong></div>
+    <div><span class="lbl">AMZN MV: </span><strong id="d-amzn-mv">—</strong></div>
+  </div>
+</section>
+
+<main>
+  <div id="gap-warning">
+    Data gap: Vanguard + Fidelity brokerage = <strong id="d-brokerage-mv">—</strong> + 401k ~$600k + Roth ~$100k = ~$1.8M vs stated $2.5M — <strong>$0.7M gap unreconciled</strong>. Empower lookup in flight. 401k/Roth are estimates.
+  </div>
+
+  <div id="loading-indicator" class="spinner-wrap" style="display:none;">
+    <div class="spinner"></div>
+    <span>Computing...</span>
+  </div>
+
+  <!-- Lifetime savings callout -->
+  <div id="lifetime-callout">
+    <div>
+      <div class="big" id="callout-savings">—</div>
+      <div class="label">Lifetime tax savings vs do-nothing baseline over <span id="callout-years">—</span> years <span class="tip-wrap" style="vertical-align:middle;"><span class="tip-icon" role="button">i</span><span class="tip-bubble">Delta = cumulative tax under your strategy minus cumulative tax if you sold at the average portfolio basis ratio with no lot selection (baseline). Positive = you paid less tax. CA taxes are included.</span></span></div>
+    </div>
+    <div class="breakdown">
+      <div class="callout-stat">
+        <div class="cs-lbl">Total LTCG harvested <span class="tip-wrap" style="vertical-align:middle;"><span class="tip-icon" role="button">i</span><span class="tip-bubble">Total long-term gains realized across all modeled years to fund spending. Because these years have low ordinary income, much of this falls in the 0% federal LTCG bracket — meaning you're resetting cost basis for free.</span></span></div>
+        <div class="cs-val" id="callout-ltcg">—</div>
+      </div>
+      <div class="callout-stat">
+        <div class="cs-lbl">Total fed tax (strategy)</div>
+        <div class="cs-val" id="callout-fed">—</div>
+      </div>
+      <div class="callout-stat">
+        <div class="cs-lbl">Total CA tax (strategy)</div>
+        <div class="cs-val" id="callout-ca">—</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="charts-grid">
+    <div class="chart-card" style="grid-column: 1 / -1;">
+      <h2>Lot inventory — basis as % of market value
+        <span class="tip-wrap" style="vertical-align:middle;">
+          <span class="tip-icon" role="button">i</span>
+          <span class="tip-bubble">Each bar = one lot. Bar width = market value. Bar color = basis/MV ratio: green = low basis (big unrealized gain), yellow = medium, red = high basis. Under HIFO/SpecID, you sell the rightmost (highest-basis) lots first. AMZN lots shown separately.</span>
+        </span>
+      </h2>
+      <p class="chart-help">Each bar is one tax lot. Blue = high cost basis (less gain per dollar sold — preferred under HIFO). Green = low cost basis (lots of unrealized gain — good to hold or harvest at 0% LTCG rate). Red outlines = short-term lots (avoid selling; taxed as ordinary income).</p>
+      <div class="chart-wrap-tall"><canvas id="chart-lots"></canvas></div>
+    </div>
+
+    <div class="chart-card">
+      <h2>Year-by-year federal tax — strategy vs baseline
+        <span class="tip-wrap" style="vertical-align:middle;">
+          <span class="tip-icon" role="button">i</span>
+          <span class="tip-bubble">Blue = your strategy (HIFO/SpecID + Roth conversion plan). Gray = baseline (selling random mix at average basis ratio, no optimization). CA tax excluded from this chart for clarity — see table.</span>
+        </span>
+      </h2>
+      <p class="chart-help">Blue bars = tax under the chosen strategy. Gray bars = baseline (FIFO sell at average portfolio basis ratio, no optimization). The gap between gray and blue is the delta — tax you avoid each year by being deliberate about which lots you sell.</p>
+      <div class="chart-wrap"><canvas id="chart-tax-bar"></canvas></div>
+    </div>
+
+    <div class="chart-card">
+      <h2>Cumulative LTCG harvested vs cumulative tax
+        <span class="tip-wrap" style="vertical-align:middle;">
+          <span class="tip-icon" role="button">i</span>
+          <span class="tip-bubble">LTCG harvested = total long-term capital gains you realized to fund spending. Cumulative tax = total tax paid (fed + CA). The gap between them is money you kept. A flat tax line vs rising LTCG line = efficient harvesting.</span>
+        </span>
+      </h2>
+      <p class="chart-help"><strong>Harvest</strong> = intentionally realizing long-term capital gains in a low-income year to reset your cost basis higher — for free, because gains within the 0% LTCG bracket incur no federal tax. You immediately re-buy the same shares (no wash-sale rule on gains). The blue line shows cumulative gains harvested; the green line shows cumulative tax paid. A wide gap between them means you're pulling gains into your portfolio at minimal tax cost. The dashed line shows what baseline tax would have been.</p>
+      <div class="chart-wrap"><canvas id="chart-cumulative"></canvas></div>
+    </div>
+
+    <div class="chart-card">
+      <h2>Per-year tax savings vs baseline
+        <span class="tip-wrap" style="vertical-align:middle;">
+          <span class="tip-icon" role="button">i</span>
+          <span class="tip-bubble">Delta per year = (baseline tax) minus (strategy tax). Positive = you saved money vs doing nothing. Baseline = selling at the average portfolio basis ratio with no lot selection. This is the per-year version of the overall lifetime savings shown at the top.</span>
+        </span>
+      </h2>
+      <p class="chart-help"><strong>Delta</strong> = strategy tax subtracted from baseline tax. Computed as: (fed + CA tax if you sold at average portfolio basis ratio with no optimization) minus (fed + CA tax under the chosen method). Green bar = you paid less than baseline. The lifetime total of all these bars = the "Lifetime tax savings" callout at the top.</p>
+      <div class="chart-wrap"><canvas id="chart-savings"></canvas></div>
+    </div>
+
+    <div class="chart-card">
+      <h2>LTCG headroom used vs available (0% rate zone)
+        <span class="tip-wrap" style="vertical-align:middle;">
+          <span class="tip-icon" role="button">i</span>
+          <span class="tip-bubble">0%-LTCG headroom = $49,450 (single 2026, IRS Rev. Proc. 2025-32) minus your ordinary taxable income (stipend + Roth conversion minus std deduction). LTCG below headroom is tax-free federally. LTCG above headroom is taxed at 15% (up to $545,500). CA taxes all LTCG as ordinary income regardless.</span>
+        </span>
+      </h2>
+      <p class="chart-help">The 0% federal LTCG bracket runs up to $49,450 of total taxable income (single, 2026 — IRS Rev. Proc. 2025-32). Your ordinary income (stipend + Roth conversion minus standard deduction) occupies the bottom of that bracket; what remains is "headroom" you can fill with harvested gains at 0% federal rate. Blue = available headroom, green = gains realized. Ideal: green stays at or below blue each year.</p>
+      <div class="chart-wrap"><canvas id="chart-headroom"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Per-year breakdown table -->
+  <div id="table-panel">
+    <h2>Per-year breakdown</h2>
+    <table id="year-table">
+      <thead>
+        <tr>
+          <th>Year</th>
+          <th>Stipend + Roth</th>
+          <th>Ordinary Taxable</th>
+          <th class="tip-wrap">LTCG Realized
+            <span class="tip-icon" role="button">i</span>
+            <span class="tip-bubble">Long-term capital gains realized by selling lots to fund your spend. If below headroom, federal rate = 0%.</span>
+          </th>
+          <th>0%-Headroom</th>
+          <th>Fed (strategy)</th>
+          <th>Fed (baseline)</th>
+          <th>CA (strategy)</th>
+          <th>CA (baseline)</th>
+          <th class="tip-wrap">Savings
+            <span class="tip-icon" role="button">i</span>
+            <span class="tip-bubble">Tax saved vs do-nothing baseline this year. Cumulative savings grow over time.</span>
+          </th>
+          <th>Cum. Savings</th>
+        </tr>
+      </thead>
+      <tbody id="year-tbody"></tbody>
+    </table>
+  </div>
+
+  <!-- Per-lot detail table -->
+  <div id="lot-panel">
+    <h2>Per-lot detail — <span id="lot-count">—</span> lots (Vanguard + AMZN)
+      <span class="tip-wrap" style="vertical-align:middle;">
+        <span class="tip-icon" role="button">i</span>
+        <span class="tip-bubble">All lots from Vanguard (166 lots: QQQ/VTI/VXUS) and Fidelity AMZN (5 lots). MV as of 2026-05-08. Sorted by basis/MV ratio descending = highest-basis first. Green = long-term, Red = short-term.</span>
+      </span>
+    </h2>
+    <table id="lot-table">
+      <thead>
+        <tr>
+          <th>Symbol</th>
+          <th>Acquired</th>
+          <th>Type</th>
+          <th>Qty</th>
+          <th>Cost/sh</th>
+          <th>Total Cost</th>
+          <th>MV (2026-05-08)</th>
+          <th>Unrealized Gain</th>
+          <th>Basis/MV %</th>
+          <th>Gain %</th>
+        </tr>
+      </thead>
+      <tbody id="lot-tbody"></tbody>
+    </table>
+  </div>
+</main>
+
+<footer>
+  Tax brackets: <a href="https://www.irs.gov/pub/irs-drop/rp-25-32.pdf" target="_blank">Rev. Proc. 2025-32</a> / Notice 2025-67 (single filer 2026) &nbsp;|&nbsp;
+  CA brackets: FTB 2026 &nbsp;|&nbsp;
+  Vanguard data: 2026-05-08 &nbsp;|&nbsp;
+  AMZN: Fidelity screenshot (hardcoded) &nbsp;|&nbsp;
+  <strong>This is a sandbox — not tax advice.</strong>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

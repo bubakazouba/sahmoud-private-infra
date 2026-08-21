@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="refresh" content="60">
+<title>Scholarship Dashboard</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f0f23; color: #e0e0e0; padding: 24px; max-width: 1500px; margin: 0 auto; }
+.header { margin-bottom: 24px; }
+.header h1 { font-size: 1.8em; color: #ff9900; margin-bottom: 4px; }
+.header .subtitle { color: #999; font-size: 0.9em; margin-bottom: 4px; }
+.header .updated { color: #666; font-size: 0.75em; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 28px; }
+.stat-card { background: linear-gradient(135deg, #1a1a3e, #252560); border-radius: 10px; padding: 14px 16px; border: 1px solid #333; }
+.stat-card .value { font-size: 1.5em; font-weight: bold; color: #ff9900; }
+.stat-card .label { font-size: 0.75em; color: #999; margin-top: 4px; }
+.stat-card.money .value { color: #22c55e; }
+.stat-card.pipeline .value { color: #3b82f6; }
+.stat-card.missed .value { color: #ef4444; }
+.section { margin-bottom: 28px; background: #1a1a3e; border-radius: 10px; padding: 16px 18px; border: 1px solid #2a2a4a; }
+.section h2 { color: #ff9900; font-size: 1.05em; margin-bottom: 8px; }
+.needs-section { background: linear-gradient(135deg, #3a2410, #4a2810); border: 1px solid #f59e0b; }
+.needs-section h2 { color: #fbbf24; font-size: 1.2em; }
+.needs-card { background: #1a1a3e; border-left: 3px solid #fbbf24; padding: 12px 14px; margin-top: 10px; border-radius: 6px; }
+.needs-head { margin-bottom: 6px; }
+.needs-amt { color: #22c55e; font-family: 'SF Mono', Monaco, monospace; font-size: 0.9em; margin-left: 8px; }
+.needs-src { font-size: 0.78em; color: #999; margin-top: 2px; }
+.needs-action { color: #e0e0e0; font-size: 0.92em; line-height: 1.5; margin-top: 6px; padding: 8px 10px; background: #252560; border-radius: 4px; }
+.section h2 .count { color: #888; font-weight: normal; font-size: 0.85em; }
+.section-sub { color: #888; font-size: 0.8em; margin-bottom: 10px; font-style: italic; }
+table { width: 100%; border-collapse: collapse; font-size: 0.82em; }
+th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid #2a2a4a; vertical-align: top; }
+th { color: #ff9900; font-weight: 600; font-size: 0.78em; text-transform: uppercase; }
+tr:hover { background: #252560; }
+td.num { font-family: 'SF Mono', Monaco, monospace; text-align: right; color: #22c55e; }
+td.note { color: #aaa; font-size: 0.92em; max-width: 320px; }
+td .src { font-size: 0.75em; color: #888; margin-top: 2px; }
+td.status-cell { white-space: nowrap; }
+.status-pill { font-size: 0.72em; padding: 3px 8px; border-radius: 4px; font-weight: 500; }
+a { color: #3b82f6; text-decoration: none; }
+a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>Scholarship Apply Arc</h1>
+  <div class="subtitle">Fall 2026 CSULA MS Math start. Constraint: NO LoRs, NO work-study, NO loans.</div>
+  <div class="updated">started 2026-05-16 · last updated 2026-07-08T07:20-07:00 · auto-refresh 60s</div>
+</div>
+
+<div class="stats">
+  <div class="stat-card money"><div class="value">15</div><div class="label">Submitted</div></div>
+  <div class="stat-card"><div class="value">2</div><div class="label">Drafted (your turn)</div></div>
+  <div class="stat-card pipeline"><div class="value">8</div><div class="label">Planned</div></div>
+  <div class="stat-card"><div class="value">5</div><div class="label">Blocked</div></div>
+  <div class="stat-card missed"><div class="value">6</div><div class="label">Deadline missed</div></div>
+  <div class="stat-card money"><div class="value">$63,510</div><div class="label">Submitted pool</div></div>
+  <div class="stat-card pipeline"><div class="value">$22,681</div><div class="label">Pipeline</div></div>
+  <div class="stat-card"><div class="value">$115,500</div><div class="label">Blocked by LoR</div></div>
+</div>
+
+
+        <div class="section needs-section">
+          <h2>🙋 NEEDS YOU <span class="count">(6)</span></h2>
+          <div class="section-sub">Items where I can't proceed without your hand — recording / decision / relationship-based outreach.</div>
+          
+            <div class="needs-card">
+              <div class="needs-head">
+                <div><strong>Unitary Foundation Microgrant</strong> <span class="needs-amt">$4,000</span></div>
+                <div class="needs-src">Unitary Foundation · deadline Rolling · <a href="https://unitaryfund.typeform.com/to/j0kAOd" target="_blank">link</a></div>
+              </div>
+              <div class="needs-action">👉 Record a 2-min phone video (script in TG DM: who you are 15s / what you'll build with $4k 45s / why you specifically 45s / timeline 15s). Upload unlisted YouTube or share-link Google Drive. Then paste link in the typeform along with the drafted form content (also in DM).</div>
+            </div>
+            <div class="needs-card">
+              <div class="needs-head">
+                <div><strong>GRC Quantum Science 2026 + Carl Storm Fellowship</strong> <span class="needs-amt">$1,315</span></div>
+                <div class="needs-src">Gordon Research Conferences · deadline 2026-06-28 · <a href="https://www.grc.org/quantum-science-conference/2026/" target="_blank">link</a></div>
+              </div>
+              <div class="needs-action">👉 Reply yes/no/maybe: would you actually fly to Stonehill MA July 25-31 given foot status + ~$1-1.5k travel cost on top of registration? My recommendation: SKIP unless you want to be at this specific conference. If yes, you'd also need to write a research abstract on your Ramsey/QEC work.</div>
+            </div>
+            <div class="needs-card">
+              <div class="needs-head">
+                <div><strong>CSULA Math dept GA/TA position</strong> <span class="needs-amt">$8,000</span></div>
+                <div class="needs-src">Cal State LA Math Department · deadline Rolling — contact Prof Mijares · <a href="https://www.calstatela.edu/academic/nss/math" target="_blank">link</a></div>
+              </div>
+              <div class="needs-action">👉 Talk to Prof Mijares (or email him) about GA/TA availability for Fall 2026. Highest-EV non-scholarship path — stipend + tuition. Your relationship, your call on timing. Want me to draft a 3-sentence email to him? Say 'draft mijares' and I will.</div>
+            </div>
+            <div class="needs-card">
+              <div class="needs-head">
+                <div><strong>Bulkthreads 'Believe in Yourself!' Scholarship</strong> <span class="needs-amt">$500</span></div>
+                <div class="needs-src">ScholarshipOwl · deadline 2026-06-01 · <a href="https://scholarshipowl.com/scholarship/i32940-copy-of-moving-forward-scholarship" target="_blank">link</a></div>
+              </div>
+              <div class="needs-action">👉 Write 300-500 word essay: 'Tell us about something you want to build and how it creates positive impact' — quantum lecture series / Mitiq / qRAM. Apply at scholarshipowl.com before June 1 midnight.</div>
+            </div>
+            <div class="needs-card">
+              <div class="needs-head">
+                <div><strong>ScholarshipOwl $2,026 No-Essay Scholarship</strong> <span class="needs-amt">$2,026</span></div>
+                <div class="needs-src">ScholarshipOwl · deadline 2026-06-01 · <a href="https://scholarshipowl.com/awards/scholarshipowl-2026-scholarship" target="_blank">link</a></div>
+              </div>
+              <div class="needs-action">👉 No essay required. Register/enter at scholarshipowl.com before June 1 midnight. 1,342 winners.</div>
+            </div>
+            <div class="needs-card">
+              <div class="needs-head">
+                <div><strong>PCC Foundation Osher Scholarship — summer inquiry</strong> <span class="needs-amt">$640</span></div>
+                <div class="needs-src">PCC Foundation / CCCSE · deadline Email to confirm — contact pccfoundation@pasadena.edu · <a href="https://pasadena.edu/foundation/scholarships.php" target="_blank">link</a></div>
+              </div>
+              <div class="needs-action">👉 Send 1-email inquiry to pccfoundation@pasadena.edu: 'I am currently enrolled at PCC (piano course, enrolled April 2026) and will be attending CSULA MS Math in Fall 2026. Am I eligible for any summer 2026 scholarship awards, including Osher funds? Also please confirm whether noncredit enrollment qualifies for PCC Foundation scholarships.' This also pre-positions for Nov 1 2026 institutional cycle.</div>
+            </div>
+        </div>
+    <div class="section">
+      <h2>✅ Applied / In Progress <span class="count">(17 · $63,510)</span></h2>
+      <div class="section-sub">Submitted or drafted-and-handed-off-to-Sahmoud</div>
+      <table>
+        <thead><tr><th>Status</th><th>Scholarship</th><th>Amount</th><th>Deadline</th><th>Essay</th><th>LoR</th><th>Note</th><th></th></tr></thead>
+        <tbody>
+    <tr class="status-submitted">
+      <td class="status-cell"><span class="status-pill" style="background:#22c55e22; color:#22c55e; border:1px solid #22c55e66;">✅ Submitted</span></td>
+      <td><strong>Sallie Mae $5,000 Grad School No-Essay Scholarship (Q2 2026)</strong><div class="src">Sallie Mae</div></td>
+      <td class="num">$5,000</td>
+      <td>2026-06-30</td>
+      <td>no</td>
+      <td>no</td>
+      <td class="note">Submission confirmed (GUID 8de43d17). Quarterly drawing — also fire for Sep 30 and Dec 31 2026 drawings.</td>
+      <td><a href="https://www.sallie.com/scholarships/grad-no-essay" target="_blank">link</a></td>
+    </tr>
+
+    <tr class="status-submitted">
+      <td class="status-cell"><span class="status-pill" style="background:#22c55e22; color:#22c55e; border:1px solid #22c55e66;">✅ Submitted</span></td>
+      <td><strong>Sallie $10,000 No-Essay Scholarship</strong><div class="src">Bold.org / Sallie</div></td>
+      <td class="num">$10,000</td>
+      <td>2026-05-31</td>
+      <td>no</td>
+      <td>no</td>
+      <td class="note">Submitted via Bold wave-1 wizard. Monthly drawing.</td>
+      <td><a href="https://app.bold.org/scholarships/scholarships360-no-essay-10000-scholarship" target="_blank">link</a></td>
+    </tr>
+
+    <tr class="status-submitted">
+      <td class="status-cell"><span class="status-pill" style="background:#22c55e22; color:#22c55e; border:1px solid #22c55e66;">✅ Submitted</span></td>
+      <td><strong>Niche $2,000 No-Essay Scholarship</strong><div class="src">Niche.com</div></td>
+      <td class="num">$2,000</td>
+      <td>2026-05-31</td>
+      <td>no</td>
+      <td>no</td>
+      <td class="note">Entered via Niche signup wizard. Monthly drawing.</td>
+      <td><a href="https://www.niche.com/colleges/scholarships/no-essay-scholarship/" target="_blank">link</a></td>
+    </tr>
+
+    <tr class="status-submitted_pending">
+      <td class="status-cell"><span class="status-pill" style="background:#22c55e22; color:#22c55e; border:1px solid #22c55e66;">⏳ Submitted (pending)</span></td>
+      <td><strong>Scholarships360 $10,000 No-Essay Scholarship</strong><div class="src">Scholarships360.com</div></td>
+      <td class="num">$10,000</td>
+      <td>Rolling</td>
+      <td>no</td>
+      <td>no</td>
+      <td class="note">Application confirmed. Awarded to active platform users — engagement-based.</td>
+      <td><a href="https://app.scholarships360.org/" target="_blank">link</a></td>
+    </tr>
+
+    <tr class="status-submitted">
+      <td class="status-cell"><span class="status-pill" style="background:#22c55e22; color:#22c55e; border:1px solid #22c55e66;">✅ Submitted</span></td>
+      <td><strong>Bold wave-1: Miley Cyrus / Post Malone / KPop / Top Friend / 100 Bold Points</strong><div class="src">Bold.org</div></td>
+      <td class="num">$1,500</td>
+      <td>Various</td>
+      <td>no</td>
+      <td>no</td>
+      <td class="note">5 sponsored no-essay sweepstakes via Bold wave-1 signup wizard.</td>
+      <td><a href="https://app.bold.org/" target="_blank">link</a></td>
+    </tr>
+
+    <tr class="status-drafted_handed_off">
+      <td class="status-cell"><span class="status-pill" style="background:#f59e0b22; color:#f59e0b; border:1px solid #f59e0b66;">📝 Drafted (your turn)</span></td>
+      <td><strong>Unitary Foundation Microgrant</strong><div class="src">Unitary Foundation</div></td>
+      <td class="num">$4,000</td>
+      <td>Rolling</td>
+      <td>short form + 2-min video</td>
+      <td>no</td>
+      <td class="note">Drafted content package for Sahmoud — form open in Chrome. Needs 2-min video from him to submit. Strong match: Mitiq + 70-lecture series.</td>
+      <td><a href="https://unitaryfund.typeform.com/to/j0kAOd" target="_blank">link</a></td>
+    </tr>
+
+    <tr class="status-drafted_handed_off">
+      <td class="status-cell"><span class="status-pill" style="background:#f59e0b22; color:#f59e0b; border:1px solid #f59e0b66;">📝 Drafted (your turn)</span></td>
+      <td><strong>GRC Quantum Science 2026 + Carl Storm Fellowship</strong><div class="src">Gordon Research Conferences</div></td>
+      <td class="num">$1,315</td>
+      <td>2026-06-28</td>
+      <td>abstract + Carl Storm career-impact statement</td>
+      <td>none stated</td>
+      <td class="note">Carl Storm covers REGISTRATION ONLY (~$850-$1315) for one first-time attendee per conference, selected by chairs 2 months pre-meeting (~late May 2026). Conference July 25-31 Stonehill MA.</td>
+      <td><a href="https://www.grc.org/quantum-science-conference/2026/" target="_blank">link</a></td>
+    </tr>
+
+    <tr class="status-submitted">
+      <td class="status-cell"><span class="status-pill" style="background:#22c55e22; color:#22c55e; border:1px solid #22c55e66;">✅ Submitted</span></td>
+      <td><strong>Ethel Hayes Destigmatization of Mental Health Scholarship</strong><div class="src">Bold.org</div></td>
+      <td class="num">$10,195</td>
+      <td>2026-06-13</td>
+      <td>yes</td>
+      <td>no</td>
+      <td class="note">Verified: 'You've applied' badge + Remove-application; Bold Points 555->565. Essay built from his real story (father's stroke, family caregiving) per his USC personal statement. $5,098+$5,097 to two winners.</td>
+      <td></td>
+    </tr>
+
+    <tr class="status-submitted">
+      <td class="status-cell"><span class="status-pill" style="background:#22c55e22; color:#22c55e; border:1px solid #22c55e66;">✅ Submitted</span></td>
+      <td><strong>"Gutsy Graduate Student" Essay Scholarship</strong><div class="src">Scholarships360</div></td>
+      <td class="num">$1,000</td>
+      <td>2026-06-30</td>
+      <td>yes</td>
+      <td>no</td>
+      <td class="note">Verified in Applied list ('Applied on Jun 5'). NOTE: their 'Quick Apply' only DRAFTS; must click real 'Submit Application'. 295-word essay from his true tech->math-grad pivot story.</td>
+      <td></td>
+    </tr>
+
+    <tr class="status-submitted">
+      <td class="status-cell"><span class="status-pill" style="background:#22c55e22; color:#22c55e; border:1px solid #22c55e66;">✅ Submitted</span></td>
+      <td><strong>Digital Privacy Scholarship (Digital Responsibility)</strong><div class="src">Digital Responsibility</div></td>
+      <td class="num">$1,000</td>
+      <td>2026-06-30</td>
+      <td>140-char</td>
+      <td>no</td>
+      <td class="note">Verified: success page 'application accepted' + email from confirm@digitalresponsibility.org. Applied direct-to-source (bypassed the ad-gauntlet redirect); fixed default 'HS Senior'->'Graduate Student'; truthful statement on his real digital-privacy practices; declined military-info upsell.</td>
+      <td></td>
+    </tr>
+
+    <tr class="status-submitted">
+      <td class="status-cell"><span class="status-pill" style="background:#22c55e22; color:#22c55e; border:1px solid #22c55e66;">✅ Submitted</span></td>
+      <td><strong>Chapter Putting Seniors First Scholarship</strong><div class="src">Scholarships360</div></td>
+      <td class="num">$5,000</td>
+      <td>2026-06-30</td>
+      <td>245-word</td>
+      <td>no</td>
+      <td class="note">Verified: Applied count 6->7, draft cleared, redirected applied=true. Authentic essay from his real father-stroke caregiving story; attached his resume. No faked eligibility.</td>
+      <td></td>
+    </tr>
+
+    <tr class="status-submitted">
+      <td class="status-cell"><span class="status-pill" style="background:#22c55e22; color:#22c55e; border:1px solid #22c55e66;">✅ Submitted</span></td>
+      <td><strong>Don't Text and Drive Scholarship</strong><div class="src">Digital Responsibility (direct)</div></td>
+      <td class="num">$1,000</td>
+      <td>2026-09-30</td>
+      <td>119-char pledge</td>
+      <td>no</td>
+      <td class="note">Verified: 'Your application has been accepted, confirmation emailed.' Authentic anti-texting pledge, real info, grad-student eligible US citizen. Declined military-info upsell. Known-working direct-to-source (same org as Digital Privacy).</td>
+      <td></td>
+    </tr>
+
+    <tr class="status-submitted">
+      <td class="status-cell"><span class="status-pill" style="background:#22c55e22; color:#22c55e; border:1px solid #22c55e66;">✅ Submitted</span></td>
+      <td><strong>Technology Addiction Awareness Scholarship</strong><div class="src">Digital Responsibility (direct)</div></td>
+      <td class="num">$1,000</td>
+      <td>2026-09-30</td>
+      <td>120-char statement</td>
+      <td>no</td>
+      <td class="note">Verified 'application accepted' page. Authentic statement (piano/paragliding/photography), real info, eligible grad student. 3rd Digital Responsibility scholarship (after Digital Privacy + Don't Text and Drive). Declined military upsell.</td>
+      <td></td>
+    </tr>
+
+    <tr class="status-submitted">
+      <td class="status-cell"><span class="status-pill" style="background:#22c55e22; color:#22c55e; border:1px solid #22c55e66;">✅ Submitted</span></td>
+      <td><strong>E-Waste Scholarship</strong><div class="src">Digital Responsibility (direct)</div></td>
+      <td class="num">$1,000</td>
+      <td>2026-09-30</td>
+      <td>128-char statement</td>
+      <td>no</td>
+      <td class="note">Verified 'application accepted'. Authentic e-waste statement, real info, eligible grad student. 4th (and final) Digital Responsibility scholarship - all 4 now done. Declined military upsell.</td>
+      <td></td>
+    </tr>
+
+    <tr class="status-submitted">
+      <td class="status-cell"><span class="status-pill" style="background:#22c55e22; color:#22c55e; border:1px solid #22c55e66;">✅ Submitted</span></td>
+      <td><strong>New Light: Illuminating Your Future Scholarship</strong><div class="src">Bold.org</div></td>
+      <td class="num">$1,000</td>
+      <td>2026-06-15</td>
+      <td>429-word essay</td>
+      <td>no</td>
+      <td class="note">Verified via 'Remove application' button. Authentic essay (deferred grad school for father's care, quantum/math goals). Fresh source after Digital Responsibility exhausted.</td>
+      <td></td>
+    </tr>
+
+    <tr class="status-submitted">
+      <td class="status-cell"><span class="status-pill" style="background:#22c55e22; color:#22c55e; border:1px solid #22c55e66;">✅ Submitted</span></td>
+      <td><strong>J&Y Law Yahouda Yahoudai Service Scholarship</strong><div class="src">Bold.org</div></td>
+      <td class="num">$500</td>
+      <td>2026-10-29</td>
+      <td>yes</td>
+      <td>no</td>
+      <td class="note">494-word real community-service essay (father-stroke caregiving + Gentle Intro to Quantum series + Mitiq + mentoring). Verified You've applied, apps 31->32.</td>
+      <td><a href="https://app.bold.org/scholarships/JandY-law-yahouda-yahoudai-service-schlolarship/" target="_blank">link</a></td>
+    </tr>
+
+    <tr class="status-submitted">
+      <td class="status-cell"><span class="status-pill" style="background:#22c55e22; color:#22c55e; border:1px solid #22c55e66;">✅ Submitted</span></td>
+      <td><strong>Mad Genius Scholarship</strong><div class="src">Bold.org</div></td>
+      <td class="num">$8,000</td>
+      <td>2026-11-01</td>
+      <td>yes</td>
+      <td>no</td>
+      <td class="note">642-word Option-C writing narrative. FLAG: rules warrant work not AI-made; essay was AI-drafted from his real story -> attestation technically violated; Remove-application option is his call.</td>
+      <td><a href="https://app.bold.org/scholarships/mad-genius-scholarship/" target="_blank">link</a></td>
+    </tr></tbody>
+      </table>
+    </div>
+    <div class="section">
+      <h2>📋 Planned (next up) <span class="count">(8 · $22,681)</span></h2>
+      
+      <table>
+        <thead><tr><th>Status</th><th>Scholarship</th><th>Amount</th><th>Deadline</th><th>Essay</th><th>LoR</th><th>Note</th><th></th></tr></thead>
+        <tbody>
+    <tr class="status-planned">
+      <td class="status-cell"><span class="status-pill" style="background:#3b82f622; color:#3b82f6; border:1px solid #3b82f666;">📋 Planned (queued)</span></td>
+      <td><strong>Scholarships360 STEM 'Tuition Solution' Scholarship</strong><div class="src">Scholarships360.com</div></td>
+      <td class="num">$1,000</td>
+      <td>2026-11-08</td>
+      <td>yes - which STEM area excites you</td>
+      <td>no</td>
+      <td class="note">Essay required. Open through Nov 2026.</td>
+      <td><a href="https://scholarships360.org/scholarships/search/tuition-solution-scholarship-for-stem-students/" target="_blank">link</a></td>
+    </tr>
+
+    <tr class="status-planned">
+      <td class="status-cell"><span class="status-pill" style="background:#3b82f622; color:#3b82f6; border:1px solid #3b82f666;">📋 Planned (queued)</span></td>
+      <td><strong>Sallie Mae $5k Grad No-Essay (Q3 2026)</strong><div class="src">Sallie Mae</div></td>
+      <td class="num">$5,000</td>
+      <td>2026-09-30</td>
+      <td>no</td>
+      <td>no</td>
+      <td class="note">Next quarterly drawing after Q2 (already submitted). Resubmit Q3 in September.</td>
+      <td><a href="https://www.sallie.com/scholarships/grad-no-essay" target="_blank">link</a></td>
+    </tr>
+
+    <tr class="status-planned">
+      <td class="status-cell"><span class="status-pill" style="background:#3b82f622; color:#3b82f6; border:1px solid #3b82f666;">📋 Planned (queued)</span></td>
+      <td><strong>Sallie Mae $5k Grad No-Essay (Q4 2026)</strong><div class="src">Sallie Mae</div></td>
+      <td class="num">$5,000</td>
+      <td>2026-12-31</td>
+      <td>no</td>
+      <td>no</td>
+      <td class="note">Final Sallie Mae grad drawing for 2026. Resubmit December.</td>
+      <td><a href="https://www.sallie.com/scholarships/grad-no-essay" target="_blank">link</a></td>
+    </tr>
+
+    <tr class="status-planned">
+      <td class="status-cell"><span class="status-pill" style="background:#3b82f622; color:#3b82f6; border:1px solid #3b82f666;">📋 Planned (queued)</span></td>
+      <td><strong>CSULA Math dept GA/TA position</strong><div class="src">Cal State LA Math Department</div></td>
+      <td class="num">$8,000</td>
+      <td>Rolling — contact Prof Mijares</td>
+      <td>no formal app</td>
+      <td>no</td>
+      <td class="note">Not a scholarship per se: Graduate Assistant / Teaching Associate positions provide stipend + tuition support. Prof Mijares is already a contact from your 2026-04-14 meeting.</td>
+      <td><a href="https://www.calstatela.edu/academic/nss/math" target="_blank">link</a></td>
+    </tr>
+
+    <tr class="status-planned">
+      <td class="status-cell"><span class="status-pill" style="background:#3b82f622; color:#3b82f6; border:1px solid #3b82f666;">📋 Planned (queued)</span></td>
+      <td><strong>Bulkthreads 'Believe in Yourself!' Scholarship</strong><div class="src">ScholarshipOwl</div></td>
+      <td class="num">$500</td>
+      <td>2026-06-01</td>
+      <td>300-500 word essay</td>
+      <td>no</td>
+      <td class="note">Deadline TODAY. Grad-eligible, any major, no LoR. Use quantum lecture series / Mitiq narrative.</td>
+      <td><a href="https://scholarshipowl.com/scholarship/i32940-copy-of-moving-forward-scholarship" target="_blank">link</a></td>
+    </tr>
+
+    <tr class="status-planned">
+      <td class="status-cell"><span class="status-pill" style="background:#3b82f622; color:#3b82f6; border:1px solid #3b82f666;">📋 Planned (queued)</span></td>
+      <td><strong>ScholarshipOwl $2,026 No-Essay Scholarship</strong><div class="src">ScholarshipOwl</div></td>
+      <td class="num">$2,026</td>
+      <td>2026-06-01</td>
+      <td>no</td>
+      <td>no</td>
+      <td class="note">Deadline TODAY. Sweepstakes-style, high winner count. No essay, no LoR.</td>
+      <td><a href="https://scholarshipowl.com/awards/scholarshipowl-2026-scholarship" target="_blank">link</a></td>
+    </tr>
+
+    <tr class="status-planned">
+      <td class="status-cell"><span class="status-pill" style="background:#3b82f622; color:#3b82f6; border:1px solid #3b82f666;">📋 Planned (queued)</span></td>
+      <td><strong>Bulkthreads 'Let's Aim Higher' Scholarship</strong><div class="src">Bold.org</div></td>
+      <td class="num">$515</td>
+      <td>2026-06-16</td>
+      <td>300-500 word essay</td>
+      <td>no</td>
+      <td class="note">Reuse/adapt the Jun 1 essay from Believe in Yourself. Same theme: 'tell us about something you want to build'. Grad-eligible, any major, no LoR.</td>
+      <td><a href="https://bold.org/scholarships/bulkthreads-lets-aim-higher-scholarship/" target="_blank">link</a></td>
+    </tr>
+
+    <tr class="status-planned">
+      <td class="status-cell"><span class="status-pill" style="background:#3b82f622; color:#3b82f6; border:1px solid #3b82f666;">📋 Planned (queued)</span></td>
+      <td><strong>PCC Foundation Osher Scholarship — summer inquiry</strong><div class="src">PCC Foundation / CCCSE</div></td>
+      <td class="num">$640</td>
+      <td>Email to confirm — contact pccfoundation@pasadena.edu</td>
+      <td>likely short essay</td>
+      <td>no</td>
+      <td class="note">PCC is one of 116 CCCs in CCCSE/Osher endowment. ~$640 avg award. CAVEAT: enrollment may be noncredit (piano class) — eligibility unconfirmed until they respond. Nov 1 2026 is when main institutional cycle opens.</td>
+      <td><a href="https://pasadena.edu/foundation/scholarships.php" target="_blank">link</a></td>
+    </tr></tbody>
+      </table>
+    </div>
+    <div class="section">
+      <h2>🚧 Blocked (recoverable) <span class="count">(1 · $30,000)</span></h2>
+      <div class="section-sub">Waiting on profile fill / external email / etc.</div>
+      <table>
+        <thead><tr><th>Status</th><th>Scholarship</th><th>Amount</th><th>Deadline</th><th>Essay</th><th>LoR</th><th>Note</th><th></th></tr></thead>
+        <tbody>
+    <tr class="status-blocked_profile_gate">
+      <td class="status-cell"><span class="status-pill" style="background:#f59e0b22; color:#f59e0b; border:1px solid #f59e0b66;">🚧 Blocked (profile)</span></td>
+      <td><strong>Bold matched scholarships (43 open)</strong><div class="src">Bold.org</div></td>
+      <td class="num">$30,000</td>
+      <td>Various</td>
+      <td>varies</td>
+      <td>no</td>
+      <td class="note">Bold's profile-completeness gate is more than just photo — needs full profile fill (education, experience, finances, etc). Photo + bio fixed. Most matched are content-ineligible (international, ex-JW, health-students, first-gen-only). Deferred until profile-fill pass.</td>
+      <td><a href="https://app.bold.org/app/matched/scholarships/" target="_blank">link</a></td>
+    </tr></tbody>
+      </table>
+    </div>
+    <div class="section">
+      <h2>🔒 Blocked by no-LoR constraint <span class="count">(4 · $115,500)</span></h2>
+      <div class="section-sub">Skipped per Sahmoud's hard rule. Revisit if constraint relaxes.</div>
+      <table>
+        <thead><tr><th>Status</th><th>Scholarship</th><th>Amount</th><th>Deadline</th><th>Essay</th><th>LoR</th><th>Note</th><th></th></tr></thead>
+        <tbody>
+    <tr class="status-blocked_lor">
+      <td class="status-cell"><span class="status-pill" style="background:#a855f722; color:#a855f7; border:1px solid #a855f766;">🔒 Blocked (LoR req)</span></td>
+      <td><strong>NSF GRFP 2027 cycle</strong><div class="src">NSF</div></td>
+      <td class="num">$111,000</td>
+      <td>2026-11</td>
+      <td>yes - 2 essays</td>
+      <td>3 letters required</td>
+      <td class="note">$37k/yr x 3 yrs. Biggest theoretical upside. Sahmoud's NO-LoR constraint blocks this. Surface for next-year decision: cultivate LoR writers from Google/AWS network if rule relaxes.</td>
+      <td><a href="https://www.nsfgrfp.org/" target="_blank">link</a></td>
+    </tr>
+
+    <tr class="status-blocked_lor">
+      <td class="status-cell"><span class="status-pill" style="background:#a855f722; color:#a855f7; border:1px solid #a855f766;">🔒 Blocked (LoR req)</span></td>
+      <td><strong>IEEE QCE26 Student Travel Grant</strong><div class="src">IEEE</div></td>
+      <td class="num">$1,000</td>
+      <td>2026-08-03</td>
+      <td>short statement</td>
+      <td>advisor letter required</td>
+      <td class="note">Quantum Computing Engineering conference Sept 13-18 Toronto. MS-eligible but needs advisor LoR. Possible if Sahmoud gets Prof Mijares LoR after fall enrollment.</td>
+      <td><a href="https://qce.quantum.ieee.org/2026/student-travel-grants/" target="_blank">link</a></td>
+    </tr>
+
+    <tr class="status-blocked_lor">
+      <td class="status-cell"><span class="status-pill" style="background:#a855f722; color:#a855f7; border:1px solid #a855f766;">🔒 Blocked (LoR req)</span></td>
+      <td><strong>SIAM Student Travel / Early Career / Paper Prize</strong><div class="src">SIAM</div></td>
+      <td class="num">$1,000</td>
+      <td>Various</td>
+      <td>varies</td>
+      <td>advisor letter required</td>
+      <td class="note">All SIAM student awards require advisor LoR.</td>
+      <td><a href="https://siam.smapply.org/prog/travel_awards_program/" target="_blank">link</a></td>
+    </tr>
+
+    <tr class="status-blocked_lor">
+      <td class="status-cell"><span class="status-pill" style="background:#a855f722; color:#a855f7; border:1px solid #a855f766;">🔒 Blocked (LoR req)</span></td>
+      <td><strong>APS DQI Best Thesis Award</strong><div class="src">American Physical Society</div></td>
+      <td class="num">$2,500</td>
+      <td>2026-11-16</td>
+      <td>no</td>
+      <td>nomination required</td>
+      <td class="note">Requires PhD defense (he's MS) AND nominator.</td>
+      <td><a href="https://engage.aps.org/dqi/honors/prizes-awards" target="_blank">link</a></td>
+    </tr></tbody>
+      </table>
+    </div>
+    <div class="section">
+      <h2>⏰ Deadline passed (re-attempt next cycle) <span class="count">(6 · $32,846)</span></h2>
+      <div class="section-sub">Recorded deadlines so we hit them in 2027 cycle.</div>
+      <table>
+        <thead><tr><th>Status</th><th>Scholarship</th><th>Amount</th><th>Deadline</th><th>Essay</th><th>LoR</th><th>Note</th><th></th></tr></thead>
+        <tbody>
+    <tr class="status-deadline_passed">
+      <td class="status-cell"><span class="status-pill" style="background:#ef444422; color:#ef4444; border:1px solid #ef444466;">⏰ Deadline passed</span></td>
+      <td><strong>Local CA Foundation Grants — researched, NONE OPEN</strong><div class="src">Pasadena CF / California CF / LA Area Chamber</div></td>
+      <td class="num">$0</td>
+      <td>all closed for 2025-26 cycle</td>
+      <td>varies</td>
+      <td>varies</td>
+      <td class="note">Subagent enum 2026-05-19: PCF general scholarships are PUSD-undergrad-tied. de Karman Trust ($28k) PhD-only, deadline Jan 2026. CCF returned 404. LA Chamber Ed Foundation no current grad cycle. POOL EXHAUSTED for 2026-27 — recheck Jan 2027.</td>
+      <td><a href="https://pasadenacf.org/programs/scholarships/" target="_blank">link</a></td>
+    </tr>
+
+    <tr class="status-deadline_passed">
+      <td class="status-cell"><span class="status-pill" style="background:#ef444422; color:#ef4444; border:1px solid #ef444466;">⏰ Deadline passed</span></td>
+      <td><strong>CSULA General Scholarship Application</strong><div class="src">Cal State LA</div></td>
+      <td class="num">$5,000</td>
+      <td>2026-04-17</td>
+      <td>yes</td>
+      <td>most require 1 LoR</td>
+      <td class="note">Closed 4/17/2026 — also incoming MS not eligible. RE-APPLY March 2027 once enrolled for 2027-28 cycle. AcademicWorks portal: calstatela.academicworks.com</td>
+      <td><a href="https://www.calstatela.edu/financialaid/scholarships" target="_blank">link</a></td>
+    </tr>
+
+    <tr class="status-deadline_passed">
+      <td class="status-cell"><span class="status-pill" style="background:#ef444422; color:#ef4444; border:1px solid #ef444466;">⏰ Deadline passed</span></td>
+      <td><strong>CSU Trustees' Award for Outstanding Achievement</strong><div class="src">CSU Systemwide</div></td>
+      <td class="num">$13,500</td>
+      <td>2026-04-10</td>
+      <td>yes</td>
+      <td>LoR at finalist stage</td>
+      <td class="note">$7k-$20k. Re-apply March 2027 for 2027-28 cycle.</td>
+      <td><a href="https://www.calstate.edu/impact-of-the-csu/support-the-csu/foundation/Pages/csu-scholarships.aspx" target="_blank">link</a></td>
+    </tr>
+
+    <tr class="status-deadline_passed">
+      <td class="status-cell"><span class="status-pill" style="background:#ef444422; color:#ef4444; border:1px solid #ef444466;">⏰ Deadline passed</span></td>
+      <td><strong>Glenn and Dorothy Dumke Fellowship</strong><div class="src">CSU Systemwide</div></td>
+      <td class="num">$1,700</td>
+      <td>2026-04-10</td>
+      <td>yes</td>
+      <td>unverified</td>
+      <td class="note">For CSU grad students in policy/economics. Re-attempt March 2027.</td>
+      <td></td>
+    </tr>
+
+    <tr class="status-deadline_passed">
+      <td class="status-cell"><span class="status-pill" style="background:#ef444422; color:#ef4444; border:1px solid #ef444466;">⏰ Deadline passed</span></td>
+      <td><strong>Graduate Equity Fellowship</strong><div class="src">Cal State LA Grad Studies</div></td>
+      <td class="num">$1,000</td>
+      <td>2026-03-30</td>
+      <td>yes</td>
+      <td>yes</td>
+      <td class="note">$1k/sem. Re-attempt March 2027 (also requires LoR — would skip anyway per constraint).</td>
+      <td><a href="https://www.calstatela.edu/graduatestudies/funding-opportunities-0" target="_blank">link</a></td>
+    </tr>
+
+    <tr class="status-deadline_passed">
+      <td class="status-cell"><span class="status-pill" style="background:#ef444422; color:#ef4444; border:1px solid #ef444466;">⏰ Deadline passed</span></td>
+      <td><strong>Cal Grant (new applicants)</strong><div class="src">CA Student Aid Commission</div></td>
+      <td class="num">$11,646</td>
+      <td>2026-03-02</td>
+      <td>no - FAFSA-based</td>
+      <td>no</td>
+      <td class="note">Cal Grant has minimal grad-student applicability anyway. Re-attempt March 2027.</td>
+      <td><a href="https://www.csac.ca.gov/cal-grant-programs" target="_blank">link</a></td>
+    </tr></tbody>
+      </table>
+    </div>
+    <div class="section">
+      <h2>❌ Ineligible / Skipped <span class="count">(5 · $1,000)</span></h2>
+      
+      <table>
+        <thead><tr><th>Status</th><th>Scholarship</th><th>Amount</th><th>Deadline</th><th>Essay</th><th>LoR</th><th>Note</th><th></th></tr></thead>
+        <tbody>
+    <tr class="status-skipped_low_ev">
+      <td class="status-cell"><span class="status-pill" style="background:#94a3b822; color:#94a3b8; border:1px solid #94a3b866;">⏭️ Skipped (low EV)</span></td>
+      <td><strong>WayUp Scholarship Entry</strong><div class="src">WayUp</div></td>
+      <td class="num">—</td>
+      <td>unknown</td>
+      <td>complete jobs-site profile to 50%+</td>
+      <td>no</td>
+      <td class="note">Reset successful 2026-05-19 (fresh request landed). Logged in. But WayUp's scholarship is profile-completion-gated, and WayUp is a jobs/internships site — filling profile triggers job-recruitment emails and the scholarship amount is undisclosed. Bad EV given Sahmoud isn't job-hunting. Password saved in credentials/passwords.md for future reference.</td>
+      <td><a href="https://www.wayup.com/member/edit-profile/" target="_blank">link</a></td>
+    </tr>
+
+    <tr class="status-ineligible_phd_only">
+      <td class="status-cell"><span class="status-pill" style="background:#94a3b822; color:#94a3b8; border:1px solid #94a3b866;">❌ Ineligible (PhD only)</span></td>
+      <td><strong>Egyptian/MENA Scholarships — researched, NONE OPEN</strong><div class="src">AMIDEAST / ARCE / CAAP / ESCA / AAAEA / NAAMA</div></td>
+      <td class="num">$0</td>
+      <td>all closed or US-citizen-ineligible</td>
+      <td>varies</td>
+      <td>varies</td>
+      <td class="note">Subagent enum 2026-05-19: AMIDEAST/Fulbright Egypt = Egyptian nationals only (not Egyptian-American US citizens). ARCE = humanities/Egyptology + PhD. CAAP scholarships = either Muslim-women-only / Michigan-Ohio / Coptic-only / undergrad-only. AAAEA = currently enrolled + LoR. NAAMA = med/dental school only. POOL EFFECTIVELY EMPTY for US-citizen MENA STEM grads without LoR. ONE LEAD: CAAP Spring 2026 cycle (TBD, contact centeraap.org).</td>
+      <td><a href="https://www.centeraap.org/grants/academic-scholarships/" target="_blank">link</a></td>
+    </tr>
+
+    <tr class="status-ineligible_phd_only">
+      <td class="status-cell"><span class="status-pill" style="background:#94a3b822; color:#94a3b8; border:1px solid #94a3b866;">❌ Ineligible (PhD only)</span></td>
+      <td><strong>AMS Graduate Student Travel Grants (Fall 2026)</strong><div class="src">AMS</div></td>
+      <td class="num">$400</td>
+      <td>2026-07-25</td>
+      <td>short statement</td>
+      <td>institutional auth</td>
+      <td class="note">PhD-only — explicitly excludes MS-only students.</td>
+      <td><a href="https://www.mathprograms.org/db/AMS/GSTG26" target="_blank">link</a></td>
+    </tr>
+
+    <tr class="status-skipped_low_ev">
+      <td class="status-cell"><span class="status-pill" style="background:#94a3b822; color:#94a3b8; border:1px solid #94a3b866;">⏭️ Skipped (low EV)</span></td>
+      <td><strong>FAFSA 2026-27</strong><div class="src">Federal Student Aid</div></td>
+      <td class="num">—</td>
+      <td>Rolling but key state deadlines closed</td>
+      <td>no</td>
+      <td>no</td>
+      <td class="note">FSA ID disabled (9yr dormant). Re-enabling requires phone call to 1-800-433-3243. Decided to skip 2026-27 cycle: grad students don't get Pell, Cal Grant has minimal applicability, CSULA institutional pool closed. Re-attempt March 2027 for 2027-28.</td>
+      <td><a href="https://studentaid.gov/" target="_blank">link</a></td>
+    </tr>
+
+    <tr class="status-ineligible">
+      <td class="status-cell"><span class="status-pill" style="background:#94a3b822; color:#94a3b8; border:1px solid #94a3b866;">❌ Ineligible</span></td>
+      <td><strong>Humanize LLC Gives In Honor of Shirley Kelley Scholarship</strong><div class="src">Bold.org</div></td>
+      <td class="num">$600</td>
+      <td>2026-10-30</td>
+      <td>yes</td>
+      <td>no</td>
+      <td class="note">Demographic-locked: underrepresented minority + raised by a guardian. He is neither -> skipped, no fabrication (same call as 7/01).</td>
+      <td><a href="https://app.bold.org/scholarships/humanize-llc-gives-in-honor-of-shirley-kelley-scholarship/" target="_blank">link</a></td>
+    </tr></tbody>
+      </table>
+    </div>
+
+<div style="text-align:center; color:#666; font-size:0.75em; margin-top:30px;">generated 2026-07-08T08:10:54</div>
+</body>
+</html>

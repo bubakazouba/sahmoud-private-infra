@@ -1,0 +1,3017 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KOPSA — Chat Stats</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --border: #30363d;
+      --text: #c9d1d9;
+      --muted: #8b949e;
+      --accent: #79c0ff;
+      --green: #3fb950;
+      --red: #f85149;
+      --yellow: #d29922;
+      --purple: #bc8cff;
+      --orange: #f0883e;
+      --mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+
+      --fb-color: #1877f2;
+      --ig-color: #e1306c;
+      --yt-color: #ff0000;
+      --other-color: #8b949e;
+
+      /* Message type colors */
+      --type-text:  #79c0ff;
+      --type-image: #3fb950;
+      --type-video-fb: #f0883e;
+      --type-video-yt: #ff0000;
+      --type-video-ig: #e1306c;
+      --type-link:  #bc8cff;
+      --type-gif:   #d29922;
+      --type-other: #8b949e;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 24px;
+    }
+    header h1 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--accent);
+      font-family: var(--mono);
+    }
+    header p {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 4px;
+    }
+    header .badges {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    header span.badge {
+      display: inline-block;
+      background: #1f6feb33;
+      border: 1px solid #1f6feb80;
+      color: var(--accent);
+      font-size: 11px;
+      font-family: var(--mono);
+      padding: 2px 10px;
+      border-radius: 20px;
+    }
+    header span.badge.green { background: #23863633; border-color: #23863680; color: var(--green); }
+    header span.badge.yellow { background: #6e400033; border-color: #6e400080; color: var(--yellow); }
+    header span.badge.warn {
+      background: #b45309aa;
+      border-color: #b4530980;
+      color: #fbbf24;
+    }
+
+    .main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 24px 48px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 760px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+    }
+    .card h2 {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 16px;
+      font-family: var(--mono);
+    }
+    .card.full { grid-column: 1 / -1; }
+
+    canvas { max-height: 340px; }
+    #weekly-chart-wrap canvas { max-height: 260px; }
+
+    /* Data table */
+    .table-wrap { overflow-x: auto; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    th, td {
+      padding: 8px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    th {
+      background: var(--bg);
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-family: var(--mono);
+      font-weight: 600;
+    }
+    tr:hover td { background: #ffffff08; }
+    td.num { font-family: var(--mono); text-align: right; }
+    td.name { font-weight: 600; color: var(--accent); }
+    .pill {
+      display: inline-block;
+      font-size: 11px;
+      font-family: var(--mono);
+      padding: 2px 8px;
+      border-radius: 12px;
+      border: 1px solid transparent;
+    }
+    .pill.fb { background:#1877f222; border-color:#1877f266; color:#64a8ff; }
+    .pill.ig { background:#e1306c22; border-color:#e1306c66; color:#f06292; }
+    .pill.yt { background:#ff000022; border-color:#ff000066; color:#ff5252; }
+    .pill.other { background:#8b949e22; border-color:#8b949e66; color:#8b949e; }
+    .pill.none { background:#30363d22; border-color:#30363d66; color:#484f58; }
+
+    /* Type pills in table */
+    .pill.type-text       { background:#79c0ff22; border-color:#79c0ff66; color:#79c0ff; }
+    .pill.type-image      { background:#3fb95022; border-color:#3fb95066; color:#3fb950; }
+    .pill.type-video-fb   { background:#f0883e22; border-color:#f0883e66; color:#f0883e; }
+    .pill.type-video-yt   { background:#ff000022; border-color:#ff000066; color:#ff5252; }
+    .pill.type-video-ig   { background:#e1306c22; border-color:#e1306c66; color:#f06292; }
+    .pill.type-link       { background:#bc8cff22; border-color:#bc8cff66; color:#bc8cff; }
+    .pill.type-gif        { background:#d2992222; border-color:#d2992266; color:#d29922; }
+
+    .gap-note {
+      background: #6e400033;
+      border: 1px solid #6e400080;
+      color: #fbbf24;
+      border-radius: 6px;
+      padding: 12px 16px;
+      font-size: 12px;
+      margin-bottom: 20px;
+      font-family: var(--mono);
+    }
+
+    .methodology-note {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-left: 3px solid #79c0ff;
+      color: #8b949e;
+      border-radius: 6px;
+      padding: 12px 16px;
+      font-size: 11px;
+      margin-bottom: 20px;
+      font-family: var(--mono);
+      line-height: 1.6;
+    }
+    .methodology-note strong {
+      color: #c9d1d9;
+    }
+
+    .section-divider {
+      margin: 28px 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-divider h3 {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      font-family: var(--mono);
+      white-space: nowrap;
+    }
+    .section-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ---- Drill-down modal ---- */
+    .dd-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      z-index: 1000;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 24px 16px;
+      overflow-y: auto;
+    }
+    .dd-modal-overlay.open {
+      display: flex;
+    }
+    .dd-modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      max-width: 780px;
+      width: 100%;
+      max-height: 88vh;
+      overflow-y: auto;
+      padding: 24px;
+      position: relative;
+    }
+    .dd-modal-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--accent);
+      font-family: var(--mono);
+      margin-bottom: 16px;
+      padding-right: 32px;
+    }
+    .dd-modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 16px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+    .dd-modal-close:hover { border-color: var(--red); color: var(--red); }
+    .dd-item {
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .dd-item:last-child { border-bottom: none; }
+    .dd-item-meta {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 4px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .dd-item-sender { font-weight: 600; color: var(--accent); }
+    .dd-item-content { color: var(--text); word-break: break-word; line-height: 1.5; }
+    .dd-thumbs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .dd-thumb {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+    .dd-thumb:hover { border-color: var(--accent); }
+    .dd-thumb-missing {
+      width: 120px;
+      height: 120px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: var(--muted);
+      font-family: var(--mono);
+    }
+    .dd-thumb-meta {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--muted);
+      text-align: center;
+      max-width: 120px;
+      word-break: break-word;
+    }
+    .click-hint {
+      font-size: 11px;
+      color: var(--muted);
+      font-family: var(--mono);
+      margin-bottom: 8px;
+      font-style: italic;
+    }
+    /* Make clickable chart labels */
+    canvas[data-drilldown] { cursor: pointer; }
+
+    /* ---- Filter bar ---- */
+    .filter-bar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin-bottom: 20px;
+    }
+    .filter-bar-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .filter-bar-header .filter-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      font-family: var(--mono);
+    }
+    .filter-bar-header .filter-status {
+      font-size: 11px;
+      font-family: var(--mono);
+      color: #7ee787;
+      margin-left: 4px;
+    }
+    .tooltip-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 1px solid var(--muted);
+      font-size: 10px;
+      color: var(--muted);
+      cursor: help;
+      position: relative;
+    }
+    .tooltip-icon:hover::after {
+      content: attr(data-tip);
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #161b22;
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 11px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      white-space: normal;
+      width: 280px;
+      line-height: 1.5;
+      z-index: 100;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+    }
+    .filter-btns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .filter-btn {
+      background: #0d1117;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 11px;
+      font-family: var(--mono);
+      padding: 4px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s, background 0.15s;
+    }
+    .filter-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .filter-btn.active {
+      background: #7ee787;
+      border-color: #7ee787;
+      color: #0d1117;
+      font-weight: 700;
+    }
+    .filter-btn.video-sub {
+      border-style: dashed;
+      font-size: 10px;
+      padding: 3px 10px;
+    }
+    .filter-btn.video-sub.active {
+      background: #f0883e;
+      border-color: #f0883e;
+      color: #0d1117;
+    }
+    #video-sub-row {
+      display: none;
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+    }
+    #video-sub-row.visible {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+    #video-sub-row .sub-label {
+      font-size: 10px;
+      color: var(--muted);
+      font-family: var(--mono);
+      margin-right: 2px;
+    }
+
+    /* ---- Date-window picker bar ---- */
+    .date-bar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 18px;
+      margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+    }
+    .date-bar-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      font-family: var(--mono);
+      white-space: nowrap;
+    }
+    .date-bar input[type="date"] {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      outline: none;
+      cursor: pointer;
+      color-scheme: dark;
+    }
+    .date-bar input[type="date"]:focus {
+      border-color: var(--accent);
+    }
+    .date-sep {
+      color: var(--muted);
+      font-size: 12px;
+      font-family: var(--mono);
+    }
+    .date-presets {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-left: 4px;
+    }
+    .date-preset-btn {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 10px;
+      font-family: var(--mono);
+      padding: 3px 10px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .date-preset-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .date-preset-btn.active {
+      background: #1f6feb33;
+      border-color: var(--accent);
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .date-bar-hint {
+      font-size: 10px;
+      color: var(--muted);
+      font-family: var(--mono);
+      margin-left: auto;
+      font-style: italic;
+      white-space: nowrap;
+    }
+    @media (max-width: 760px) {
+      .date-bar-hint { margin-left: 0; }
+    }
+    /* Whole-period badge shown on aggregated charts */
+    .whole-period-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-family: var(--mono);
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: #30363d44;
+      border: 1px solid #30363d;
+      color: var(--muted);
+      margin-left: 6px;
+      vertical-align: middle;
+      font-weight: 400;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>💬 KOPSA — Group Chat Stats</h1>
+  <p id="meta-line">Loading...</p>
+  <div class="badges">
+    <span class="badge" id="badge-source"></span>
+    <span class="badge green" id="badge-window"></span>
+    <span class="badge yellow" id="badge-msgs"></span>
+    <span class="badge" id="badge-members"></span>
+  </div>
+</header>
+
+<!-- Date-window filter bar -->
+<div class="date-bar" id="date-bar">
+  <span class="date-bar-label">Date window</span>
+  <input type="date" id="date-from" title="Start date">
+  <span class="date-sep">→</span>
+  <input type="date" id="date-to" title="End date">
+  <div class="date-presets">
+    <button class="date-preset-btn active" data-preset="all" title="Full data window">All time</button>
+    <button class="date-preset-btn" data-preset="90d" title="Last 90 days of data">Last 90d</button>
+    <button class="date-preset-btn" data-preset="30d" title="Last 30 days of data">Last 30d</button>
+    <button class="date-preset-btn" data-preset="7d" title="Last 7 days of data">Last 7d</button>
+  </div>
+  <span class="date-bar-hint">Applies to: ALL charts (re-aggregated from per-day data). Extended analyses (heatmap, reactions, latency, language, photos, pair-coactivity) cover the full data window.</span>
+</div>
+
+<div class="main">
+  <div class="gap-note" id="gap-note" style="display:none"></div>
+
+  <div class="methodology-note">
+    <strong>What's not counted:</strong> Phone/video calls, "Group video call" tiles, reactions, and system messages (joins/renames) are excluded from message counts.
+    <strong>How links are detected:</strong> Combined regex on full message text + href extraction from all anchor tags + l.messenger.com redirect decoding (real URL extracted from the u= param).
+    Facebook profile @mention links excluded. Domain classification via URL parser, not substring match.
+    <strong>Message type classifier:</strong> FB reels, FB video shares, YT links, and IG reel links are classified as LINK subtypes -- not "video". Only real camera-roll MP4 uploads (m["videos"] in DYI JSON) stay as type=video. Link subtypes: link_fb_reel, link_fb (all other Facebook shares), link_yt (YouTube), link_ig (Instagram), link_other.
+    <strong>Source:</strong> FB Data Download (DYI JSON archive) -- ground truth, no DOM scraping. Mojibake fixed via latin1-&gt;utf-8. Unsent/deleted messages excluded.
+    <span id="methodology-counts"></span>
+  </div>
+
+  <!-- Filter bar -->
+  <div class="filter-bar" id="filter-bar" style="display:none">
+    <div class="filter-bar-header">
+      <span class="filter-label">Filter</span>
+      <span class="tooltip-icon" data-tip="Click multiple type buttons to combine filters (OR logic). Active types are highlighted green. Click 'all' to reset. Link subtypes (FB / YT / IG / Other) appear below when Link is selected.">ⓘ</span>
+      <span class="filter-status" id="filter-status"></span>
+    </div>
+    <div class="filter-btns" id="filter-btns"></div>
+    <div id="video-sub-row">
+      <span class="sub-label">video subtypes:</span>
+      <!-- populated dynamically -->
+    </div>
+  </div>
+
+  <!-- SECTION: Message volume -->
+  <div class="section-divider"><h3>Message Volume</h3></div>
+
+  <!-- Row 1: Total messages by member + Domain distribution pie -->
+  <div class="grid-2">
+    <div class="card">
+      <h2 id="msgs-bar-title">Total Messages by Member</h2>
+      <canvas id="msgs-bar"></canvas>
+    </div>
+    <div class="card" id="domain-pie-card">
+      <h2>Link Type Distribution (Selected Window)</h2>
+      <canvas id="domain-pie"></canvas>
+    </div>
+  </div>
+
+  <!-- Row 2: Stacked bar of links by member -->
+  <div class="grid-2" id="links-stacked-row">
+    <div class="card full">
+      <h2>Link Shares by Member and Platform</h2>
+      <canvas id="links-stacked"></canvas>
+    </div>
+  </div>
+
+  <!-- SECTION: Message type breakdown -->
+  <div class="section-divider"><h3>Message Type Breakdown</h3></div>
+
+  <!-- Row 3: Type stacked bar + type donut -->
+  <div class="grid-2">
+    <div class="card full">
+      <h2 id="type-stacked-title">Message Type Breakdown by Member — Stacked</h2>
+      <canvas id="type-stacked"></canvas>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h2>Overall Message Type Distribution</h2>
+      <canvas id="type-donut"></canvas>
+    </div>
+    <div class="card">
+      <h2>Type Mix per Member (% stacked)</h2>
+      <canvas id="type-pct-stacked"></canvas>
+    </div>
+  </div>
+
+  <!-- Row: Weekly activity line chart -->
+  <div class="section-divider"><h3>Activity Over Time</h3></div>
+  <div class="grid-2">
+    <div class="card full" id="weekly-chart-wrap">
+      <h2>Weekly Message Activity — Top 5 Members <span class="whole-period-badge" id="weekly-date-badge" title="Sliced to your selected date window" style="background:#1f6feb22;border-color:#1f6feb66;color:var(--accent)">date-aware</span></h2>
+      <canvas id="weekly-line"></canvas>
+      <div id="weekly-filter-note" style="display:none; margin-top:12px; font-size:11px; color:var(--muted); font-family:var(--mono);">
+        Weekly activity is not broken down by message type — showing total weekly counts. Select "all" to see unfiltered weekly trends.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION: Pair Co-activity -->
+  <div class="section-divider"><h3>Pair Co-activity</h3></div>
+  <div class="card full" id="coactivity-card" style="margin-bottom:20px">
+    <h2>
+      Who Talks Together? &mdash; Pair Co-activity (60-min window)
+      <span class="tooltip-icon" style="margin-left:6px" data-tip="Pair co-activity: how often each pair both posted within a 60-minute window. Higher = they tend to chat at the same time. Source: FB fiber timestamps, Nov 2025 to May 2026, 1,066 messages.">&#9432;</span>
+      <span class="whole-period-badge" title="Extended analysis: pre-computed from all messages. Re-aggregating per day requires per-message statistics not stored in daily_messages.">whole period</span>
+    </h2>
+    <div id="coactivity-content" style="display:flex; gap:24px; flex-wrap:wrap; align-items:flex-start;">
+      <div id="coactivity-table-wrap" style="flex:1; min-width:300px; overflow-x:auto">
+        <table id="coactivity-table" style="font-family:var(--mono); font-size:12px; border-collapse:separate; border-spacing:3px;">
+          <thead id="coactivity-head"></thead>
+          <tbody id="coactivity-body"></tbody>
+        </table>
+        <div style="margin-top:10px; font-size:11px; color:var(--muted); font-family:var(--mono);">
+          Cell = (A msgs within 60min of B) + (B msgs within 60min of A). Symmetric. Darker = more co-active.
+        </div>
+      </div>
+      <div style="flex:1; min-width:260px;">
+        <div style="margin-bottom:16px">
+          <div style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; color:var(--muted); font-family:var(--mono); margin-bottom:8px">Top Pairs (co-active msgs)</div>
+          <div id="coactivity-top-pairs"></div>
+        </div>
+        <div>
+          <div style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; color:var(--muted); font-family:var(--mono); margin-bottom:8px">Per-member top partners</div>
+          <div id="coactivity-per-member"></div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:14px; font-size:11px; color:var(--muted); font-family:var(--mono); border-top:1px solid var(--border); padding-top:10px;">
+      <strong style="color:var(--text)">Method:</strong> Co-activity counts messages where both members sent within a 30-minute sliding window. The matrix and top-pairs list below are computed from the full KOPSA window.
+    </div>
+  </div>
+
+  <!-- SECTION: Image Analysis -->
+  <div class="section-divider"><h3>Image Analysis</h3></div>
+
+  <div class="grid-2" id="image-section" style="display:none">
+    <div class="card">
+      <h2>
+        Image Category Distribution
+        <span class="tooltip-icon" style="margin-left:6px" data-tip="Each photo classified by claude-sonnet-4-5 vision into one of: selfie, group_photo, kids, food, scene, document, screenshot, meme, religious, other. Click a slice to see examples.">&#9432;</span>
+      </h2>
+      <div class="click-hint">Click a slice to see example images</div>
+      <canvas id="image-cat-donut" data-drilldown="image"></canvas>
+    </div>
+    <div class="card">
+      <h2>
+        Image Categories by Member
+        <span class="tooltip-icon" style="margin-left:6px" data-tip="Stacked bar: which categories each member posts. Click a bar segment to see examples for that member + category.">&#9432;</span>
+      </h2>
+      <div class="click-hint">Click a bar segment to see examples</div>
+      <canvas id="image-cat-stacked" data-drilldown="image"></canvas>
+    </div>
+  </div>
+
+  <!-- SECTION: Topic Analysis -->
+  <div class="section-divider"><h3>Topic Analysis</h3></div>
+
+  <div class="methodology-note" id="topic-methodology-note" style="display:none">
+    <strong>Topic classification methodology:</strong>
+    <span id="topic-methodology-text"></span>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h2>
+        Topic Distribution (text msgs only)
+        <span class="tooltip-icon" style="margin-left:6px" data-tip="Classified 326 of 631 in-window messages that had >=3 words of text. The other 305 are media (images/video/audio) or very short replies. Classification by LLM (claude-sonnet-4-5), 11 topic labels.">&#9432;</span>
+        <span class="whole-period-badge" title="Extended analysis: pre-computed from all messages. Re-aggregating per day requires per-message statistics not stored in daily_messages.">whole period</span>
+      </h2>
+      <div class="click-hint" id="topic-donut-hint" style="display:none">Click a slice to see example messages</div>
+      <canvas id="topic-donut" data-drilldown="topic"></canvas>
+    </div>
+    <div class="card">
+      <h2>
+        Topic Initiators — Who Starts New Topics?
+        <span class="tooltip-icon" style="margin-left:6px" data-tip="A 'new topic start' is defined as any message preceded by >=60 minutes of silence in the chat. 205 topic-start events detected out of 631 total messages. media-share = opening with an image/video/audio. Cosine-similarity detection deferred at this corpus size.">&#9432;</span>
+        <span class="whole-period-badge" title="Extended analysis: pre-computed from all messages. Re-aggregating per day requires per-message statistics not stored in daily_messages.">whole period</span>
+      </h2>
+      <canvas id="topic-starters-bar"></canvas>
+    </div>
+  </div>
+
+  <div class="grid-2" id="topic-stacked-row">
+    <div class="card full">
+      <h2>
+        Topic-Start Breakdown by Member — What Topics Do They Initiate?
+        <span class="tooltip-icon" style="margin-left:6px" data-tip="Stacked by topic label. media-share = starting a new conversation with a photo/video/audio message. Only 105 of the 205 topic-starts had >=3 words; the rest were media or very short.">&#9432;</span>
+        <span class="whole-period-badge" title="Extended analysis: pre-computed from all messages. Re-aggregating per day requires per-message statistics not stored in daily_messages.">whole period</span>
+      </h2>
+      <canvas id="topic-stacked-bar"></canvas>
+    </div>
+  </div>
+
+  <!-- =====================================================
+       EXTENDED ANALYSES (v10)
+       ===================================================== -->
+  <div class="section-divider"><h3>Extended Analyses</h3></div>
+
+  <!-- 1. Time-of-day heatmap -->
+  <div class="card full" style="margin-bottom:20px" id="heatmap-card">
+    <h2>
+      Time-of-Day Activity Heatmap (24h × 7-day per member)
+      <span class="tooltip-icon" style="margin-left:6px" data-tip="For each member: a 24×7 grid (hour UTC × day of week). Cell colour = message count. Peak = darkest cell. UTC timestamps — LA is UTC-7/8 so 19:00 UTC ≈ noon PST.">&#9432;</span>
+      <span class="whole-period-badge" title="Extended analysis: pre-computed from all messages. Re-aggregating per day requires per-message statistics not stored in daily_messages.">whole period</span>
+    </h2>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6;">
+      When does each person typically post? Darker cells = more messages at that hour/day combo. Timestamps are UTC
+      (LA time = UTC−7 PDT). Each member's peak day and hour are labelled below.
+    </p>
+    <div style="margin-bottom:10px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <span style="font-size:11px;color:var(--muted);font-family:var(--mono)">Member:</span>
+      <div id="heatmap-member-btns" style="display:flex;flex-wrap:wrap;gap:6px"></div>
+    </div>
+    <div id="heatmap-wrap" style="overflow-x:auto"></div>
+  </div>
+
+  <!-- 2. Reactions analysis -->
+  <div class="grid-2">
+    <div class="card">
+      <h2>
+        Reactions Given vs Received
+        <span class="tooltip-icon" style="margin-left:6px" data-tip="Reactions given = total emoji reactions this member put on others' messages. Reactions received = total emoji reactions others put on this member's messages. From FB DYI reactions[] array.">&#9432;</span>
+        <span class="whole-period-badge" title="Extended analysis: pre-computed from all messages. Re-aggregating per day requires per-message statistics not stored in daily_messages.">whole period</span>
+      </h2>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6;">
+        Reactions given = emoji reactions a member placed on others' messages.
+        Reactions received = emoji reactions others placed on this member's messages.
+        See the bars below for each member's totals.
+      </p>
+      <canvas id="reactions-bar"></canvas>
+    </div>
+    <div class="card">
+      <h2>
+        Reaction-Pair Matrix — Who Reacts to Whom?
+        <span class="tooltip-icon" style="margin-left:6px" data-tip="Row = reactor, Column = author of message receiving the reaction. Higher number = row person reacts more to column person's messages.">&#9432;</span>
+        <span class="whole-period-badge" title="Extended analysis: pre-computed from all messages. Re-aggregating per day requires per-message statistics not stored in daily_messages.">whole period</span>
+      </h2>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6;">
+        Directed matrix: row reacts to column. ❤ is the unanimous favourite emoji across all members.
+      </p>
+      <div id="rxn-matrix-wrap" style="overflow-x:auto"></div>
+    </div>
+  </div>
+
+  <div class="card full" style="margin-bottom:20px" id="viral-card">
+    <h2>
+      Top 5 Most-Reacted Messages (Viral Moments)
+      <span class="tooltip-icon" style="margin-left:6px" data-tip="Ranked by total reaction count. Max is 4 reactions. Most viral posts are images/videos — media drives engagement over text.">&#9432;</span>
+      <span class="whole-period-badge" id="viral-badge" title="Filters to messages within your selected date window">date-aware</span>
+    </h2>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6;">
+      The five messages that received the most emoji reactions, ranked by total reaction count.
+    </p>
+    <div id="viral-list"></div>
+  </div>
+
+  <!-- 3. Response latency -->
+  <div class="grid-2">
+    <div class="card">
+      <h2>
+        Response Latency — Who Replies Fastest?
+        <span class="tooltip-icon" style="margin-left:6px" data-tip="For each message, we find the next message from a DIFFERENT member within 24h. The time delta is attributed to the replier. Avg across all such replies. Excludes cross-day gaps (>24h) to avoid penalising for sleep.">&#9432;</span>
+        <span class="whole-period-badge" title="Extended analysis: pre-computed from all messages. Re-aggregating per day requires per-message statistics not stored in daily_messages.">whole period</span>
+      </h2>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6;">
+        Average time to first reply from a different member, capped at 24h to exclude overnight gaps.
+        Members are ranked fastest to slowest below; occasional long delays still pull the average up.
+      </p>
+      <canvas id="latency-bar"></canvas>
+    </div>
+
+    <!-- 4. Message length -->
+    <div class="card">
+      <h2>
+        Message Length — Who Writes the Most?
+        <span class="tooltip-icon" style="margin-left:6px" data-tip="Average word count per text message per member. Only messages classified as 'text' (no media/link). p90 = 90th-percentile word count (most verbose single message).">&#9432;</span>
+        <span class="whole-period-badge" title="Extended analysis: pre-computed from all messages. Re-aggregating per day requires per-message statistics not stored in daily_messages.">whole period</span>
+      </h2>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6;">
+        Average, median, and 90th-percentile word count per member, for text messages only.
+        The histogram below buckets messages by length (1-5, 6-15, 16-30, 31-60, 60+ words).
+      </p>
+      <canvas id="length-bar"></canvas>
+    </div>
+  </div>
+
+  <!-- Word-count histogram -->
+  <div class="grid-2" style="margin-bottom:20px">
+    <div class="card full">
+      <h2>
+        Word-Count Distribution — Histogram by Member
+        <span class="tooltip-icon" style="margin-left:6px" data-tip="How are messages distributed by length? Buckets: 1-5, 6-15, 16-30, 31-60, 60+ words. Stacked bars per member. Almost everyone lives in the 1-5 word bucket.">&#9432;</span>
+        <span class="whole-period-badge" title="Extended analysis: pre-computed from all messages. Re-aggregating per day requires per-message statistics not stored in daily_messages.">whole period</span>
+      </h2>
+      <canvas id="length-hist"></canvas>
+    </div>
+  </div>
+
+  <!-- 5. Language ratio -->
+  <div class="grid-2">
+    <div class="card full">
+      <h2>
+        Language Ratio — Arabic / Franco-Arabic / English per Member
+        <span class="tooltip-icon" style="margin-left:6px" data-tip="3-bucket detection per text message. Arabic: >50% of letters are Arabic Unicode (U+0600-06FF). Franco-Arabic (Arabizi): Latin-dominant but contains Arabizi signals — digit [2,3,5,7,9] sandwiched by letters (e.g. 5lst, ba2y, ya3ny) OR common Egyptian Arabizi tokens (msh, ana, enta, keda, yalla, etc.). English: Latin-dominant, no Arabizi signals. Emoji/punctuation-only messages excluded from denominator.">&#9432;</span>
+        <span class="whole-period-badge" title="Bar chart percentages are whole-period; drill-down examples DO filter to your selected date window">bar: whole period · drill-down: date-aware</span>
+      </h2>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6;">
+        Per-member share of text messages in each language bucket. Franco-Arabic (Arabizi) = Arabic words spelled with Latin letters + digits, e.g. '5lst' = 'finished'.
+        Detection is heuristic (Arabic Unicode vs Latin letters + Arabizi signals).
+      </p>
+      <div class="click-hint" id="lang-bar-hint" style="display:none">Click a bar segment (Member x Language) to see example messages</div>
+      <canvas id="lang-bar" data-drilldown="language"></canvas>
+    </div>
+  </div>
+
+  <!-- 6. Photo leaderboard -->
+  <div class="grid-2">
+    <div class="card">
+      <h2>
+        Photo-Share Leaderboard
+        <span class="tooltip-icon" style="margin-left:6px" data-tip="Direct camera-roll uploads (photos[] array in DYI JSON). Does NOT count link previews with thumbnails — those are in the share{} field. Album = a single share event with >1 photo.">&#9432;</span>
+        <span class="whole-period-badge" title="Extended analysis: pre-computed from all messages. Re-aggregating per day requires per-message statistics not stored in daily_messages.">whole period</span>
+      </h2>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6;">
+        Direct camera-roll photo uploads per member (photos[] array). An album = one share event with more than one photo.
+        See per-member totals and album density below.
+      </p>
+      <canvas id="photo-bar"></canvas>
+    </div>
+
+    <!-- 7. Mentions -->
+    <div class="card">
+      <h2>
+        @Mention Analysis — Who Gets Tagged?
+        <span class="tooltip-icon" style="margin-left:6px" data-tip="FB DYI does not include structured mention metadata. Analysis uses @Name regex on message text. FB sometimes strips @-prefix in exports, so this undercounts real mentions. 34 messages with @mentions found.">&#9432;</span>
+        <span class="whole-period-badge" title="Extended analysis: pre-computed from all messages. Re-aggregating per day requires per-message statistics not stored in daily_messages.">whole period</span>
+      </h2>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6;">
+        Counts of @Name mentions found in message text, by tagger and by tagged member.
+        <strong style="color:var(--yellow)"> Note:</strong> FB DYI strips many @-prefixes — real count is higher.
+      </p>
+      <div id="mentions-wrap"></div>
+    </div>
+  </div>
+
+  <!-- Drill-down modal (shared) -->
+  <div class="dd-modal-overlay" id="dd-overlay" role="dialog" aria-modal="true">
+    <div class="dd-modal" id="dd-modal">
+      <div class="dd-modal-title" id="dd-modal-title">Examples</div>
+      <button class="dd-modal-close" id="dd-modal-close" aria-label="Close">&times;</button>
+      <div id="dd-modal-body"></div>
+    </div>
+  </div>
+
+  <!-- Full table -->
+  <div class="section-divider"><h3>Full Data Table</h3></div>
+  <div class="card full" style="margin-top:0">
+    <div class="table-wrap">
+      <table id="data-table">
+        <thead>
+          <tr>
+            <th>Member</th>
+            <th class="num" id="th-total">Total Msgs</th>
+            <th class="num">% of Total</th>
+            <th class="num">Text</th>
+            <th class="num">Image</th>
+            <th class="num">Video (upload)</th>
+            <th class="num">Link (all)</th>
+            <th class="num" style="color:#1877f2">FB Links</th>
+            <th class="num" style="color:#ff4444">YT Links</th>
+            <th class="num" style="color:#e1306c">IG Links</th>
+            <th class="num">Other Links</th>
+            <th class="num">GIF</th>
+            <th>First Msg</th>
+            <th>Last Msg</th>
+          </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+        <tfoot id="table-foot"></tfoot>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+// ---- Load data and render charts ----
+
+const TYPE_COLORS = {
+  text:           '#79c0ff',
+  image:          '#3fb950',
+  video:          '#ffa500',
+  video_uploaded: '#cc6699',
+  link:           '#bc8cff',
+  link_fb:        '#1877f2',
+  link_fb_reel:   '#f0883e',
+  link_yt:        '#ff4444',
+  link_ig:        '#e1306c',
+  link_other:     '#8b949e',
+  gif:            '#d29922',
+  audio:          '#7ee787',
+  other:          '#8b949e'
+};
+
+const TYPE_LABELS = {
+  text:           'Text',
+  image:          'Image',
+  video:          'Video (upload)',
+  video_uploaded: 'Uploaded Video',
+  link:           'Link',
+  link_fb:        'FB Link',
+  link_fb_reel:   'FB Reel',
+  link_yt:        'YouTube',
+  link_ig:        'IG Reel',
+  link_other:     'Other Link',
+  gif:            'GIF',
+  audio:          'Audio',
+  other:          'Other'
+};
+
+// Primary filter types (top row) — shown if present in data
+const PRIMARY_TYPES = ['all', 'text', 'image', 'video', 'link', 'gif', 'audio'];
+// Link subtypes
+const LINK_SUB_TYPES = ['link_fb', 'link_fb_reel', 'link_yt', 'link_ig', 'link_other'];
+
+const COLORS = {
+  facebook: '#1877f2',
+  instagram: '#e1306c',
+  youtube: '#ff3333',
+  other: '#8b949e'
+};
+
+const MEMBER_COLORS = [
+  '#79c0ff', '#3fb950', '#d29922', '#f0883e', '#bc8cff', '#f85149'
+];
+
+Chart.defaults.color = '#8b949e';
+Chart.defaults.borderColor = '#30363d';
+Chart.defaults.font.family = "'-apple-system', 'BlinkMacSystemFont', 'Segoe UI', system-ui, sans-serif";
+
+// Chart instance registry — we destroy before re-create
+const charts = {};
+
+// Multi-select: Set of active type filters. Empty = "all"
+let activeFilters = new Set();
+let globalData = null;
+
+// ---- Date-window global state ----
+// dateWindow.from / dateWindow.to are epoch ms (start-of-day UTC)
+let dateWindow = { from: null, to: null };
+
+// ---- Build filtered aggregates from daily_messages ----
+// Returns { members, typeTotals, totals } re-aggregated to the dateWindow.
+// members is sorted by total_msgs descending (same shape as members_sorted_by_msgs).
+// Falls back to original pre-aggregated data if daily_messages is absent.
+function buildDateFilteredAggregates(data) {
+  const daily = data.daily_messages;
+  if (!daily || !daily.length || !dateWindow.from || !dateWindow.to) {
+    return {
+      members: data.members_sorted_by_msgs,
+      typeTotals: data.type_totals,
+      totals: data.totals,
+    };
+  }
+
+  // Determine if this is the full window (no filtering needed for performance)
+  const meta = data.meta;
+  const fullFrom = dateStrToMs(meta.window_start);
+  const fullTo   = dateStrToMs(meta.window_end) + 86400000; // inclusive
+  const isFullWindow = (dateWindow.from <= fullFrom) && (dateWindow.to + 86400000 >= fullTo);
+
+  if (isFullWindow) {
+    return {
+      members: data.members_sorted_by_msgs,
+      typeTotals: data.type_totals,
+      totals: data.totals,
+    };
+  }
+
+  // Aggregate from daily_messages within [dateWindow.from, dateWindow.to] (both inclusive, day-level)
+  const memberTotals = {};
+  const MEMBER_KEYS = ['Omneya','Aly','Kathryn','Sahmoud','Preksha'];
+  MEMBER_KEYS.forEach(m => {
+    memberTotals[m] = {
+      total_msgs: 0, type_text: 0, type_image: 0, type_audio: 0, type_gif: 0,
+      type_video: 0, type_video_uploaded: 0,
+      type_link: 0, type_link_fb_reel: 0, type_link_fb: 0, type_link_yt: 0,
+      type_link_ig: 0, type_link_other: 0,
+      facebook: 0, youtube: 0, instagram: 0, other_links: 0,
+      first_day: null, last_day: null,
+    };
+  });
+  const ttAgg = {
+    text: 0, image: 0, audio: 0, gif: 0, video: 0, video_uploaded: 0,
+    link: 0, link_fb_reel: 0, link_fb: 0, link_yt: 0, link_ig: 0, link_other: 0,
+  };
+
+  // dateWindow.to is midnight UTC of the "to" day; include messages on that day
+  const toInclusive = dateWindow.to + 86400000 - 1;
+
+  for (const dayRec of daily) {
+    const dayMs = dateStrToMs(dayRec.date);
+    if (dayMs < dateWindow.from || dayMs > toInclusive) continue;
+    for (const [member, mc] of Object.entries(dayRec.members || {})) {
+      if (!memberTotals[member]) continue;
+      const mt = memberTotals[member];
+      mt.total_msgs     += mc.total || 0;
+      mt.type_text      += mc.text  || 0;
+      mt.type_image     += mc.image || 0;
+      mt.type_audio     += mc.audio || 0;
+      mt.type_gif       += mc.gif   || 0;
+      mt.type_video     += mc.video || 0;
+      mt.type_video_uploaded += mc.video || 0;
+      const ltotal = (mc.link_fb_reel || 0) + (mc.link_fb || 0) + (mc.link_yt || 0) + (mc.link_ig || 0) + (mc.link_other || 0);
+      mt.type_link      += ltotal;
+      mt.type_link_fb_reel += mc.link_fb_reel || 0;
+      mt.type_link_fb   += mc.link_fb       || 0;
+      mt.type_link_yt   += mc.link_yt       || 0;
+      mt.type_link_ig   += mc.link_ig       || 0;
+      mt.type_link_other+= mc.link_other    || 0;
+      mt.facebook       += mc.facebook      || 0;
+      mt.youtube        += mc.youtube       || 0;
+      mt.instagram      += mc.instagram     || 0;
+      mt.other_links    += mc.link_other    || 0;
+      // track first/last active day in window
+      if (mc.total > 0) {
+        if (mt.first_day === null) mt.first_day = dayRec.date;
+        mt.last_day = dayRec.date;
+      }
+      // type totals
+      ttAgg.text    += mc.text  || 0;
+      ttAgg.image   += mc.image || 0;
+      ttAgg.audio   += mc.audio || 0;
+      ttAgg.gif     += mc.gif   || 0;
+      ttAgg.video   += mc.video || 0;
+      ttAgg.video_uploaded += mc.video || 0;
+      ttAgg.link    += ltotal;
+      ttAgg.link_fb_reel += mc.link_fb_reel || 0;
+      ttAgg.link_fb += mc.link_fb       || 0;
+      ttAgg.link_yt += mc.link_yt       || 0;
+      ttAgg.link_ig += mc.link_ig       || 0;
+      ttAgg.link_other += mc.link_other || 0;
+    }
+  }
+
+  // Merge with original member records for static fields (first_msg, last_msg, display_name, most_shared_domain)
+  const originalByName = {};
+  (data.members_sorted_by_msgs || []).forEach(m => { originalByName[m.display_name] = m; });
+
+  const filteredMembers = MEMBER_KEYS.map(name => {
+    const orig = originalByName[name] || {};
+    const mt = memberTotals[name];
+    const domMax = Math.max(mt.facebook, mt.youtube, mt.instagram);
+    const most_shared = domMax === 0 ? 'none'
+      : mt.facebook >= mt.youtube && mt.facebook >= mt.instagram ? 'facebook'
+      : mt.youtube >= mt.instagram ? 'youtube' : 'instagram';
+    return {
+      display_name: name,
+      total_msgs: mt.total_msgs,
+      facebook: mt.facebook,
+      instagram: mt.instagram,
+      youtube: mt.youtube,
+      other_links: mt.other_links,
+      first_msg: mt.first_day || orig.first_msg,
+      last_msg: mt.last_day || orig.last_msg,
+      most_shared_domain: most_shared,
+      type_text: mt.type_text,
+      type_image: mt.type_image,
+      type_audio: mt.type_audio,
+      type_gif: mt.type_gif,
+      type_video: mt.type_video,
+      type_video_uploaded: mt.type_video_uploaded,
+      type_link: mt.type_link,
+      type_link_fb_reel: mt.type_link_fb_reel,
+      type_link_fb: mt.type_link_fb,
+      type_link_yt: mt.type_link_yt,
+      type_link_ig: mt.type_link_ig,
+      type_link_other: mt.type_link_other,
+    };
+  }).sort((a, b) => b.total_msgs - a.total_msgs);
+
+  const totalsAgg = {
+    facebook: ttAgg.link_fb_reel + ttAgg.link_fb,
+    instagram: ttAgg.link_ig,
+    youtube: ttAgg.link_yt,
+    other: ttAgg.link_other,
+  };
+
+  return { members: filteredMembers, typeTotals: ttAgg, totals: totalsAgg };
+}
+
+function dateStrToMs(s) {
+  // s = 'YYYY-MM-DD' -> epoch ms at midnight UTC
+  if (!s) return null;
+  return new Date(s + 'T00:00:00Z').getTime();
+}
+
+function msToDateStr(ms) {
+  if (ms == null) return '';
+  return new Date(ms).toISOString().slice(0, 10);
+}
+
+function initDateBar(data) {
+  const meta = data.meta;
+  const winStart = meta.window_start; // 'YYYY-MM-DD'
+  const winEnd   = meta.window_end;
+
+  dateWindow.from = dateStrToMs(winStart);
+  dateWindow.to   = dateStrToMs(winEnd);
+
+  const fromEl = document.getElementById('date-from');
+  const toEl   = document.getElementById('date-to');
+  fromEl.min = winStart; fromEl.max = winEnd; fromEl.value = winStart;
+  toEl.min   = winStart; toEl.max   = winEnd; toEl.value   = winEnd;
+
+  function applyDateWindow() {
+    const f = dateStrToMs(fromEl.value) || dateWindow.from;
+    const t = dateStrToMs(toEl.value)   || dateWindow.to;
+    dateWindow.from = f;
+    dateWindow.to   = t;
+    // Deactivate all presets when user types manually
+    document.querySelectorAll('.date-preset-btn').forEach(b => b.classList.remove('active'));
+    // Check if it's "all time"
+    if (fromEl.value === winStart && toEl.value === winEnd) {
+      document.querySelector('.date-preset-btn[data-preset="all"]').classList.add('active');
+    }
+    render(globalData);
+  }
+
+  fromEl.addEventListener('change', applyDateWindow);
+  toEl.addEventListener('change', applyDateWindow);
+
+  // Preset buttons
+  document.querySelectorAll('.date-preset-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const preset = btn.dataset.preset;
+      const endMs  = dateStrToMs(winEnd);
+      const startMs = dateStrToMs(winStart);
+      let fromMs;
+      if (preset === 'all') {
+        fromMs = startMs;
+      } else {
+        const days = parseInt(preset); // 90, 30, 7
+        fromMs = Math.max(endMs - days * 86400000, startMs);
+      }
+      dateWindow.from = fromMs;
+      dateWindow.to   = endMs;
+      fromEl.value = msToDateStr(fromMs);
+      toEl.value   = msToDateStr(endMs);
+      document.querySelectorAll('.date-preset-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      render(globalData);
+    });
+  });
+}
+
+fetch('kopsa-chat-data.json')
+  .then(r => r.json())
+  .then(data => {
+    globalData = data;
+    buildFilterBar(data);
+    initDateBar(data);
+    render(data);
+  })
+  .catch(e => {
+    document.getElementById('meta-line').textContent = 'Error loading data: ' + e.message;
+  });
+
+// ---- Filter bar construction ----
+function buildFilterBar(data) {
+  const typeTotals = data.type_totals || {};
+
+  // Primary buttons: 'all' always shown; others shown if key present in type_totals with count > 0
+  const primaryBtns = document.getElementById('filter-btns');
+  const shownTypes = PRIMARY_TYPES.filter(t => t !== 'all' && typeTotals[t] !== undefined && typeTotals[t] > 0);
+  const allTypes = ['all', ...shownTypes];
+
+  allTypes.forEach(type => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn' + (type === 'all' ? ' active' : '');
+    btn.dataset.type = type;
+    if (type === 'all') {
+      btn.textContent = 'all';
+    } else {
+      const count = typeTotals[type] || 0;
+      btn.textContent = `${TYPE_LABELS[type] || type} (${count})`;
+    }
+    btn.addEventListener('click', () => toggleFilter(type));
+    primaryBtns.appendChild(btn);
+  });
+
+  // Link sub-row
+  const subRow = document.getElementById('video-sub-row');
+  LINK_SUB_TYPES.forEach(type => {
+    if (!typeTotals[type] && typeTotals[type] !== 0) return;
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn video-sub';
+    btn.dataset.type = type;
+    const count = typeTotals[type] || 0;
+    btn.textContent = `${TYPE_LABELS[type] || type} (${count})`;
+    btn.addEventListener('click', () => toggleFilter(type));
+    subRow.appendChild(btn);
+  });
+
+  document.getElementById('filter-bar').style.display = '';
+}
+
+function toggleFilter(type) {
+  if (type === 'all') {
+    // 'all' resets everything
+    activeFilters.clear();
+  } else {
+    if (activeFilters.has(type)) {
+      activeFilters.delete(type);
+    } else {
+      activeFilters.add(type);
+    }
+  }
+
+  // Show/hide link sub-row
+  const subRow = document.getElementById('video-sub-row');
+  const linkActive = activeFilters.has('link') || activeFilters.size === 0;
+  subRow.classList.toggle('visible', activeFilters.has('link') || LINK_SUB_TYPES.some(t => activeFilters.has(t)));
+
+  // Update button active states
+  const isAll = activeFilters.size === 0;
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    const t = btn.dataset.type;
+    if (t === 'all') {
+      btn.classList.toggle('active', isAll);
+    } else {
+      btn.classList.toggle('active', activeFilters.has(t));
+    }
+  });
+
+  // Update status label
+  const status = document.getElementById('filter-status');
+  if (isAll) {
+    status.textContent = '';
+  } else {
+    const labels = [...activeFilters].map(t => TYPE_LABELS[t] || t).join(' + ');
+    status.textContent = `— Currently filtering: ${labels}`;
+  }
+
+  // Re-render all charts + table
+  renderCharts(globalData);
+  renderTable(globalData);
+}
+
+// ---- Helper: get filtered count for a member (multi-select aware) ----
+function getMemberValue(member, filters) {
+  // filters is a Set; empty = all
+  if (filters.size === 0) return member.total_msgs;
+  let total = 0;
+  for (const f of filters) {
+    if (f === 'video') {
+      total += member.type_video || 0;
+    } else if (f === 'link') {
+      total += member.type_link || 0;
+    } else {
+      // link subtypes stored as type_link_fb etc, primary types as type_text etc
+      total += member['type_' + f] || 0;
+    }
+  }
+  return total;
+}
+
+// ---- Rendering ----
+function render(data) {
+  const meta = data.meta;
+
+  // Compute filtered aggregates (used by header badge count + charts)
+  const filtered = buildDateFilteredAggregates(data);
+  const filteredTotal = filtered.members.reduce((s, m) => s + m.total_msgs, 0);
+
+  // Header
+  document.getElementById('meta-line').textContent =
+    `Source: ${meta.source} · "${meta.chat_name}" (id: ${meta.chat_id}) · Scraped ${meta.scraped_at}`;
+  document.getElementById('badge-source').textContent = `via ${meta.source}`;
+  document.getElementById('badge-window').textContent = `${msToDateStr(dateWindow.from)} → ${msToDateStr(dateWindow.to)} (${meta.days_covered} days total)`;
+  const isFullWindow = dateWindow.from <= dateStrToMs(meta.window_start) && dateWindow.to >= dateStrToMs(meta.window_end);
+  document.getElementById('badge-msgs').textContent = isFullWindow
+    ? `${meta.total_messages.toLocaleString()} messages`
+    : `${filteredTotal.toLocaleString()} messages (filtered)`;
+  document.getElementById('badge-members').textContent = `${meta.total_senders} members`;
+
+  // Gap note
+  if (meta.note) {
+    const n = document.getElementById('gap-note');
+    n.style.display = '';
+    n.textContent = 'Note: ' + meta.note;
+  }
+
+  // Methodology counts
+  const mc = document.getElementById('methodology-counts');
+  if (mc && (meta.call_events_filtered !== undefined)) {
+    mc.textContent = ` (Filtered: ${meta.call_events_filtered || 0} call events, ${meta.reaction_events_filtered || 0} reactions, ${meta.system_events_filtered || 0} system events.)`;
+  }
+
+  renderCharts(data);
+  renderTable(data);
+}
+
+function renderCharts(data) {
+  // Use date-filtered aggregates for all main charts
+  const agg = buildDateFilteredAggregates(data);
+  const members = agg.members;
+  const totals = agg.totals;
+  const typeTotals = agg.typeTotals;
+  const weekly = data.weekly_activity;
+  const filters = activeFilters; // Set
+  const isAll = filters.size === 0;
+
+  const names = members.map(m => m.display_name);
+
+  // Filtered message counts per member
+  const filteredCounts = members.map(m => getMemberValue(m, filters));
+  const filteredTotal = filteredCounts.reduce((a, b) => a + b, 0);
+
+  // -- Chart 1: Total messages by member (filtered) --
+  document.getElementById('msgs-bar-title').textContent = isAll
+    ? 'Total Messages by Member'
+    : ([...filters].map(t => TYPE_LABELS[t] || t).join(' + ') + ' Messages by Member');
+
+  const barBgColor = isAll ? MEMBER_COLORS
+    : (filters.size === 1 ? (TYPE_COLORS[[...filters][0]] || '#79c0ff') : '#79c0ff');
+
+  destroyChart('msgs-bar');
+  charts['msgs-bar'] = new Chart(document.getElementById('msgs-bar'), {
+    type: 'bar',
+    data: {
+      labels: names,
+      datasets: [{
+        label: isAll ? 'Total Messages' : [...filters].map(t => TYPE_LABELS[t] || t).join(' + '),
+        data: filteredCounts,
+        backgroundColor: barBgColor,
+        borderRadius: 4,
+      }]
+    },
+    options: {
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => {
+              const v = ctx.raw;
+              const pct = filteredTotal > 0 ? ((v / filteredTotal) * 100).toFixed(1) : 0;
+              return ` ${v} messages (${pct}% of filtered total)`;
+            }
+          }
+        }
+      },
+      scales: {
+        y: { beginAtZero: true, grid: { color: '#30363d' } },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+
+  // -- Link-platform charts: show when 'all', or 'link'/link-subtype is in filters --
+  const showLinkCharts = isAll || filters.has('link') || LINK_SUB_TYPES.some(t => filters.has(t));
+  document.getElementById('domain-pie-card').style.display = showLinkCharts ? '' : 'none';
+  document.getElementById('links-stacked-row').style.display = showLinkCharts ? '' : 'none';
+
+  if (showLinkCharts) {
+    // Chart 2: Link type distribution donut (FB, YT, IG, Other)
+    const pieTotal = totals.facebook + totals.youtube + totals.instagram + totals.other;
+    destroyChart('domain-pie');
+    charts['domain-pie'] = new Chart(document.getElementById('domain-pie'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Facebook (all)', 'YouTube', 'Instagram', 'Other'],
+        datasets: [{
+          data: [totals.facebook, totals.youtube, totals.instagram, totals.other],
+          backgroundColor: [COLORS.facebook, COLORS.youtube, COLORS.instagram, COLORS.other],
+          borderWidth: 2,
+          borderColor: '#161b22'
+        }]
+      },
+      options: {
+        plugins: {
+          legend: { position: 'right', labels: { padding: 16 } },
+          tooltip: {
+            callbacks: {
+              label: ctx => {
+                const v = ctx.raw;
+                const pct = pieTotal > 0 ? ((v / pieTotal) * 100).toFixed(1) : 0;
+                return ` ${ctx.label}: ${v} link${v !== 1 ? 's' : ''} (${pct}%)`;
+              }
+            }
+          }
+        }
+      }
+    });
+
+    // Chart 3: Stacked links by member
+    destroyChart('links-stacked');
+    charts['links-stacked'] = new Chart(document.getElementById('links-stacked'), {
+      type: 'bar',
+      data: {
+        labels: names,
+        datasets: [
+          { label: 'Facebook', data: members.map(m => m.facebook), backgroundColor: COLORS.facebook, stack: 'links' },
+          { label: 'YouTube', data: members.map(m => m.youtube), backgroundColor: COLORS.youtube, stack: 'links' },
+          { label: 'Instagram', data: members.map(m => m.instagram), backgroundColor: COLORS.instagram, stack: 'links' },
+          { label: 'Other', data: members.map(m => m.other_links), backgroundColor: COLORS.other, stack: 'links' }
+        ]
+      },
+      options: {
+        plugins: {
+          legend: { position: 'top' },
+          tooltip: {
+            mode: 'index', intersect: false,
+            callbacks: {
+              title: ctx => ctx[0].label + ' — link breakdown',
+              footer: items => {
+                const total = items.reduce((s, i) => s + i.raw, 0);
+                return `Total links: ${total}`;
+              }
+            }
+          }
+        },
+        scales: {
+          y: { beginAtZero: true, stacked: true, grid: { color: '#30363d' } },
+          x: { stacked: true, grid: { display: false } }
+        }
+      }
+    });
+  }
+
+  // -- Type breakdown charts --
+  const typeOrder = ['text', 'image', 'video', 'link', 'gif', 'audio'];
+
+  function isTypeActive(t) {
+    if (isAll) return true;
+    if (filters.has(t)) return true;
+    if (filters.has('link') && LINK_SUB_TYPES.includes(t)) return true;
+    return false;
+  }
+
+  document.getElementById('type-stacked-title').textContent = isAll
+    ? 'Message Type Breakdown by Member — Stacked'
+    : ([...filters].map(t => TYPE_LABELS[t] || t).join(' + ') + ' Messages by Member');
+
+  if (isAll) {
+    // Chart 4: Type stacked bar (all types)
+    destroyChart('type-stacked');
+    charts['type-stacked'] = new Chart(document.getElementById('type-stacked'), {
+      type: 'bar',
+      data: {
+        labels: names,
+        datasets: typeOrder.map(t => ({
+          label: TYPE_LABELS[t],
+          data: members.map(m => m['type_' + t] || 0),
+          backgroundColor: TYPE_COLORS[t],
+          stack: 'types'
+        }))
+      },
+      options: {
+        plugins: {
+          legend: { position: 'top' },
+          tooltip: {
+            mode: 'index', intersect: false,
+            callbacks: {
+              title: ctx => ctx[0].label + ' — message type breakdown',
+              label: ctx => {
+                const v = ctx.raw;
+                if (v === 0) return null;
+                const memberTotal = members[ctx.dataIndex].total_msgs;
+                const pct = ((v / memberTotal) * 100).toFixed(0);
+                return ` ${ctx.dataset.label}: ${v} (${pct}% of their msgs)`;
+              },
+              footer: items => {
+                const total = items.reduce((s,i) => s + i.raw, 0);
+                return `Total messages: ${total}`;
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true, stacked: true, grid: { color: '#30363d' },
+            title: { display: true, text: 'Messages', color: '#8b949e' }
+          },
+          x: { stacked: true, grid: { display: false } }
+        }
+      }
+    });
+
+    // Chart 5: Overall type donut
+    const typeDonutLabels = typeOrder.map(t => TYPE_LABELS[t]);
+    const typeDonutData = typeOrder.map(t => typeTotals[t] || 0);
+    const typeDonutColors = typeOrder.map(t => TYPE_COLORS[t]);
+    const typeTotal = typeDonutData.reduce((a,b) => a+b, 0);
+    destroyChart('type-donut');
+    charts['type-donut'] = new Chart(document.getElementById('type-donut'), {
+      type: 'doughnut',
+      data: {
+        labels: typeDonutLabels,
+        datasets: [{
+          data: typeDonutData,
+          backgroundColor: typeDonutColors,
+          borderWidth: 2,
+          borderColor: '#161b22'
+        }]
+      },
+      options: {
+        plugins: {
+          legend: { position: 'right', labels: { padding: 14 } },
+          tooltip: {
+            callbacks: {
+              label: ctx => {
+                const v = ctx.raw;
+                const pct = typeTotal > 0 ? ((v / typeTotal) * 100).toFixed(1) : 0;
+                return ` ${ctx.label}: ${v} messages (${pct}%)`;
+              }
+            }
+          }
+        }
+      }
+    });
+
+    // Chart 6: Type % stacked per member
+    destroyChart('type-pct-stacked');
+    charts['type-pct-stacked'] = new Chart(document.getElementById('type-pct-stacked'), {
+      type: 'bar',
+      data: {
+        labels: names,
+        datasets: typeOrder.map(t => ({
+          label: TYPE_LABELS[t],
+          data: members.map(m => {
+            const v = m['type_' + t] || 0;
+            const total = m.total_msgs;
+            return total > 0 ? parseFloat(((v / total) * 100).toFixed(1)) : 0;
+          }),
+          backgroundColor: TYPE_COLORS[t],
+          stack: 'pct'
+        }))
+      },
+      options: {
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            mode: 'index', intersect: false,
+            callbacks: {
+              title: ctx => ctx[0].label + ' — type mix',
+              label: ctx => {
+                const v = ctx.raw;
+                if (v === 0) return null;
+                return ` ${ctx.dataset.label}: ${v}%`;
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true, max: 100, stacked: true, grid: { color: '#30363d' },
+            title: { display: true, text: '% of member messages', color: '#8b949e' },
+            ticks: { callback: v => v + '%' }
+          },
+          x: { stacked: true, grid: { display: false } }
+        }
+      }
+    });
+
+  } else {
+    // Filtered mode
+    destroyChart('type-stacked');
+    if (filters.size === 1 && filters.has('link')) {
+      // Show link subtypes stacked
+      const subs = LINK_SUB_TYPES.filter(s => (typeTotals[s] || 0) > 0);
+      charts['type-stacked'] = new Chart(document.getElementById('type-stacked'), {
+        type: 'bar',
+        data: {
+          labels: names,
+          datasets: subs.map(s => ({
+            label: TYPE_LABELS[s],
+            data: members.map(m => m['type_' + s] || 0),
+            backgroundColor: TYPE_COLORS[s],
+            stack: 'types'
+          }))
+        },
+        options: {
+          plugins: {
+            legend: { position: 'top' },
+            tooltip: { mode: 'index', intersect: false }
+          },
+          scales: {
+            y: { beginAtZero: true, stacked: true, grid: { color: '#30363d' } },
+            x: { stacked: true, grid: { display: false } }
+          }
+        }
+      });
+    } else {
+      // Multi or single-type bar
+      const activeTypes = [...filters].filter(t => typeOrder.includes(t));
+      const datasets = activeTypes.length > 1
+        ? activeTypes.map(t => ({
+            label: TYPE_LABELS[t],
+            data: members.map(m => getMemberValue(m, new Set([t]))),
+            backgroundColor: TYPE_COLORS[t] || '#79c0ff',
+            stack: 'types'
+          }))
+        : [{
+            label: [...filters].map(t => TYPE_LABELS[t] || t).join(' + '),
+            data: filteredCounts,
+            backgroundColor: filters.size === 1 ? (TYPE_COLORS[[...filters][0]] || '#79c0ff') : '#79c0ff',
+            borderRadius: 4,
+          }];
+      charts['type-stacked'] = new Chart(document.getElementById('type-stacked'), {
+        type: 'bar',
+        data: { labels: names, datasets },
+        options: {
+          plugins: {
+            legend: { display: activeTypes.length > 1 },
+            tooltip: {
+              mode: activeTypes.length > 1 ? 'index' : 'nearest',
+              intersect: false,
+            }
+          },
+          scales: {
+            y: { beginAtZero: true, stacked: activeTypes.length > 1, grid: { color: '#30363d' } },
+            x: { stacked: activeTypes.length > 1, grid: { display: false } }
+          }
+        }
+      });
+    }
+
+    // Type donut: dim non-selected types
+    const typeDonutLabels = typeOrder.map(t => TYPE_LABELS[t]);
+    const typeDonutData = typeOrder.map(t => typeTotals[t] || 0);
+    const typeTotal = typeDonutData.reduce((a,b) => a+b, 0);
+    const donutColors = typeOrder.map(t => isTypeActive(t) ? TYPE_COLORS[t] : (TYPE_COLORS[t] + '33'));
+
+    destroyChart('type-donut');
+    charts['type-donut'] = new Chart(document.getElementById('type-donut'), {
+      type: 'doughnut',
+      data: {
+        labels: typeDonutLabels,
+        datasets: [{
+          data: typeDonutData,
+          backgroundColor: donutColors,
+          borderWidth: 2,
+          borderColor: '#161b22'
+        }]
+      },
+      options: {
+        plugins: {
+          legend: { position: 'right', labels: { padding: 14 } },
+          tooltip: {
+            callbacks: {
+              label: ctx => {
+                const v = ctx.raw;
+                const pct = typeTotal > 0 ? ((v / typeTotal) * 100).toFixed(1) : 0;
+                return ` ${ctx.label}: ${v} messages (${pct}%)`;
+              }
+            }
+          }
+        }
+      }
+    });
+
+    // Type % stacked: dim same way
+    destroyChart('type-pct-stacked');
+    charts['type-pct-stacked'] = new Chart(document.getElementById('type-pct-stacked'), {
+      type: 'bar',
+      data: {
+        labels: names,
+        datasets: typeOrder.map(t => ({
+          label: TYPE_LABELS[t],
+          data: members.map(m => {
+            const v = m['type_' + t] || 0;
+            const total = m.total_msgs;
+            return total > 0 ? parseFloat(((v / total) * 100).toFixed(1)) : 0;
+          }),
+          backgroundColor: isTypeActive(t) ? TYPE_COLORS[t] : (TYPE_COLORS[t] + '22'),
+          stack: 'pct'
+        }))
+      },
+      options: {
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            mode: 'index', intersect: false,
+            callbacks: {
+              title: ctx => ctx[0].label + ' — type mix',
+              label: ctx => {
+                const v = ctx.raw;
+                if (v === 0) return null;
+                return ` ${ctx.dataset.label}: ${v}%`;
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true, max: 100, stacked: true, grid: { color: '#30363d' },
+            title: { display: true, text: '% of member messages', color: '#8b949e' },
+            ticks: { callback: v => v + '%' }
+          },
+          x: { stacked: true, grid: { display: false } }
+        }
+      }
+    });
+  }
+
+  // -- Weekly line chart: filter to dateWindow + show total weekly, add note when type-filtered --
+  const top5 = names.slice(0, 5);
+  const allWeeks = weekly.weeks;
+  // Filter weeks to those within dateWindow (week start <= to AND week start + 6d >= from)
+  const weekIndices = [];
+  allWeeks.forEach((w, idx) => {
+    const wMs = dateStrToMs(w);
+    const wEndMs = wMs + 6 * 86400000; // week covers 7 days
+    if (wMs <= dateWindow.to && wEndMs >= dateWindow.from) {
+      weekIndices.push(idx);
+    }
+  });
+  const filteredWeeks = weekIndices.map(i => allWeeks[i]);
+  const weekLabels = filteredWeeks.map(w => {
+    const d = new Date(w + 'T00:00:00Z');
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
+  });
+  const weeklyDatasets = top5.map((name, i) => ({
+    label: name,
+    data: weekIndices.map(idx => (weekly.series[name] || [])[idx] || 0),
+    borderColor: MEMBER_COLORS[i],
+    backgroundColor: MEMBER_COLORS[i] + '33',
+    tension: 0.3,
+    fill: false,
+    pointRadius: 2,
+    borderWidth: isAll ? 2 : 1.5,
+  }));
+  destroyChart('weekly-line');
+  charts['weekly-line'] = new Chart(document.getElementById('weekly-line'), {
+    type: 'line',
+    data: { labels: weekLabels, datasets: weeklyDatasets },
+    options: {
+      plugins: {
+        legend: { position: 'top' },
+        tooltip: { mode: 'index', intersect: false }
+      },
+      scales: {
+        y: { beginAtZero: true, grid: { color: '#30363d' } },
+        x: {
+          grid: { color: '#30363d40' },
+          ticks: { maxTicksLimit: 12, maxRotation: 45 }
+        }
+      }
+    }
+  });
+
+  // Show/hide weekly filter note
+  document.getElementById('weekly-filter-note').style.display = !isAll ? '' : 'none';
+}
+
+function renderTable(data) {
+  const agg = buildDateFilteredAggregates(data);
+  const members = agg.members;
+  const totals = agg.totals;
+  const typeTotals = agg.typeTotals;
+  const filters = activeFilters;
+  const isAll = filters.size === 0;
+
+  const totalMsgs = members.reduce((s, m) => s + m.total_msgs, 0);
+  const filteredTotal = members.reduce((s, m) => s + getMemberValue(m, filters), 0);
+
+  // Update header for active column
+  document.getElementById('th-total').textContent = isAll
+    ? 'Total Msgs'
+    : ([...filters].map(t => TYPE_LABELS[t] || t).join('+') + ' Msgs');
+
+  const tbody = document.getElementById('table-body');
+  tbody.innerHTML = '';
+
+  members.forEach(m => {
+    const filteredVal = getMemberValue(m, filters);
+    // Hide rows with 0 when filtered
+    if (!isAll && filteredVal === 0) return;
+
+    const pct = isAll
+      ? ((m.total_msgs / totalMsgs) * 100).toFixed(1)
+      : (filteredTotal > 0 ? ((filteredVal / filteredTotal) * 100).toFixed(1) : '0.0');
+
+    const displayTotal = isAll ? m.total_msgs.toLocaleString() : filteredVal.toLocaleString();
+
+    const activeLink = filters.has('link') || LINK_SUB_TYPES.some(t => filters.has(t));
+
+    const tr = document.createElement('tr');
+    if (!isAll && filteredVal > 0) {
+      tr.style.background = '#7ee78708';
+    }
+    tr.innerHTML = `
+      <td class="name">${m.display_name}</td>
+      <td class="num" style="${!isAll ? 'color:#7ee787;font-weight:700' : ''}">${displayTotal}</td>
+      <td class="num">${pct}%</td>
+      <td class="num" style="${filters.has('text') ? 'color:#79c0ff;font-weight:700' : ''}">${m.type_text || 0}</td>
+      <td class="num" style="${filters.has('image') ? 'color:#3fb950;font-weight:700' : ''}">${m.type_image || 0}</td>
+      <td class="num" style="${filters.has('video') ? 'color:#ffa500;font-weight:700' : ''}">${m.type_video || 0}</td>
+      <td class="num" style="${activeLink ? 'color:#bc8cff;font-weight:700' : ''}">${m.type_link || 0}</td>
+      <td class="num" style="color:#1877f2${filters.has('link_fb') ? ';font-weight:700' : ''}">${m.type_link_fb || 0}</td>
+      <td class="num" style="color:#ff4444${filters.has('link_yt') ? ';font-weight:700' : ''}">${m.type_link_yt || 0}</td>
+      <td class="num" style="color:#e1306c${filters.has('link_ig') ? ';font-weight:700' : ''}">${m.type_link_ig || 0}</td>
+      <td class="num" style="${filters.has('link_other') ? 'color:#8b949e;font-weight:700' : ''}">${m.type_link_other || 0}</td>
+      <td class="num" style="${filters.has('gif') ? 'color:#d29922;font-weight:700' : ''}">${m.type_gif || 0}</td>
+      <td>${m.first_msg}</td>
+      <td>${m.last_msg}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  // Footer totals
+  const tfoot = document.getElementById('table-foot');
+  const footTotal = isAll ? totalMsgs : filteredTotal;
+  tfoot.innerHTML = `
+    <tr style="font-weight:700; color: var(--text); border-top: 2px solid var(--border);">
+      <td style="font-family:var(--mono); font-size:11px; color:var(--muted)">TOTAL</td>
+      <td class="num" style="${!isAll ? 'color:#7ee787' : ''}">${footTotal.toLocaleString()}</td>
+      <td class="num">100%</td>
+      <td class="num">${typeTotals.text || 0}</td>
+      <td class="num">${typeTotals.image || 0}</td>
+      <td class="num">${typeTotals.video || 0}</td>
+      <td class="num" style="color:#bc8cff">${typeTotals.link || 0}</td>
+      <td class="num" style="color:#1877f2">${typeTotals.link_fb || 0}</td>
+      <td class="num" style="color:#ff4444">${typeTotals.link_yt || 0}</td>
+      <td class="num" style="color:#e1306c">${typeTotals.link_ig || 0}</td>
+      <td class="num">${typeTotals.link_other || 0}</td>
+      <td class="num">${typeTotals.gif || 0}</td>
+      <td colspan="2"></td>
+    </tr>
+  `;
+}
+
+function destroyChart(id) {
+  if (charts[id]) {
+    charts[id].destroy();
+    charts[id] = null;
+  }
+}
+
+// ---- Co-activity heatmap ----
+function renderCoactivity(data) {
+  const pc = data.pair_coactivity;
+  if (!pc) return;
+
+  const members = pc.members_order;
+  const matrix = pc.option_a_coactive.matrix;
+  const topPairs = pc.option_a_coactive.top_pairs;
+  const perMember = pc.option_a_coactive.per_member_top3;
+
+  // Find min/max for color scaling
+  let minVal = Infinity, maxVal = 0;
+  members.forEach(a => members.forEach(b => {
+    if (a !== b) {
+      const v = matrix[a][b];
+      if (v < minVal) minVal = v;
+      if (v > maxVal) maxVal = v;
+    }
+  }));
+
+  function cellBg(val) {
+    if (val === 0) return '#2a2a4e';
+    const t = (val - minVal) / (maxVal - minVal);
+    // Interpolate from dark teal (#0d3349) to bright orange (#f0883e)
+    const r = Math.round(13 + t * (240 - 13));
+    const g = Math.round(51 + t * (136 - 51));
+    const b = Math.round(73 + t * (62 - 73));
+    return `rgb(${r},${g},${b})`;
+  }
+
+  function cellFg(val) {
+    if (val === 0) return '#555577';
+    const t = (val - minVal) / (maxVal - minVal);
+    return t > 0.55 ? '#0d1117' : '#c9d1d9';
+  }
+
+  // Header row
+  const thead = document.getElementById('coactivity-head');
+  let headHtml = '<tr><th style="background:transparent;color:var(--muted);font-size:10px;padding:4px 6px;border:none"></th>';
+  members.forEach(m => {
+    headHtml += `<th style="background:transparent;color:var(--accent);font-size:10px;padding:4px 6px;border:none;font-family:var(--mono);white-space:nowrap">${m}</th>`;
+  });
+  headHtml += '</tr>';
+  thead.innerHTML = headHtml;
+
+  // Body rows
+  const tbody = document.getElementById('coactivity-body');
+  let bodyHtml = '';
+  members.forEach(a => {
+    bodyHtml += `<tr><td style="color:var(--accent);font-size:10px;padding:4px 6px;font-family:var(--mono);white-space:nowrap;font-weight:600">${a}</td>`;
+    members.forEach(b => {
+      if (a === b) {
+        bodyHtml += `<td style="background:#1a1a2e;border-radius:4px;padding:6px 10px;text-align:center;color:#444466;font-size:12px">&#8212;</td>`;
+      } else {
+        const val = matrix[a][b];
+        const bg = cellBg(val);
+        const fg = cellFg(val);
+        bodyHtml += `<td title="${a} + ${b}: ${val}" style="background:${bg};border-radius:4px;padding:6px 10px;text-align:center;color:${fg};font-weight:600;font-size:12px;cursor:default">${val}</td>`;
+      }
+    });
+    bodyHtml += '</tr>';
+  });
+  tbody.innerHTML = bodyHtml;
+
+  // Top pairs list
+  const topEl = document.getElementById('coactivity-top-pairs');
+  const rankColors = ['#ffd700', '#c0c0c0', '#cd7f32', '#79c0ff', '#79c0ff'];
+  topEl.innerHTML = topPairs.slice(0, 5).map((p, i) => `
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px;font-family:var(--mono);font-size:12px">
+      <span style="color:${rankColors[i]};font-weight:700;min-width:18px">${i+1}.</span>
+      <span style="color:var(--accent)">${p.pair[0]}</span>
+      <span style="color:var(--muted)">+</span>
+      <span style="color:var(--accent)">${p.pair[1]}</span>
+      <span style="margin-left:auto;background:#ffffff12;border-radius:10px;padding:2px 10px;font-weight:700;color:var(--text)">${p.strength}</span>
+    </div>
+  `).join('');
+
+  // Per-member top partners
+  const pmEl = document.getElementById('coactivity-per-member');
+  pmEl.innerHTML = members.map(m => {
+    const partners = perMember[m];
+    const partsStr = partners.map(p => `<span style="color:var(--accent)">${p.partner}</span> <span style="color:var(--muted)">(${p.strength})</span>`).join(', ');
+    return `<div style="margin-bottom:6px;font-family:var(--mono);font-size:11px"><span style="color:var(--text);font-weight:600;min-width:100px;display:inline-block">${m}:</span> ${partsStr}</div>`;
+  }).join('');
+}
+
+// ---- Topic analysis charts ----
+function renderTopicCharts(data) {
+  const topicDist = data.topic_distribution;
+  const topicStarters = data.topic_starters;
+  const topicStartersByTopic = data.topic_starters_by_topic;
+
+  if (!topicDist && !topicStarters) return;
+
+  // Show methodology note
+  const metaNote = document.getElementById('topic-methodology-note');
+  if (metaNote && data.meta && data.meta.methodology_v7) {
+    metaNote.style.display = '';
+    document.getElementById('topic-methodology-text').textContent = data.meta.methodology_v7;
+  }
+
+  const TOPIC_COLORS = {
+    'family-coordination': '#79c0ff',
+    'call-coordination':   '#f0883e',
+    'sharing-link':        '#bc8cff',
+    'entertainment':       '#3fb950',
+    'religion-islamic':    '#d29922',
+    'food':                '#ff7b72',
+    'social-life':         '#7ee787',
+    'politics-news':       '#f85149',
+    'education-work':      '#a5d6ff',
+    'health-medical':      '#ffa657',
+    'other':               '#8b949e',
+    'media-share':         '#56d364',
+  };
+
+  const TOPIC_LABELS_MAP = {
+    'family-coordination': 'Family Coordination',
+    'call-coordination':   'Call Coordination',
+    'sharing-link':        'Sharing Link/Content',
+    'entertainment':       'Entertainment',
+    'religion-islamic':    'Religion / Islamic',
+    'food':                'Food',
+    'social-life':         'Social Life',
+    'politics-news':       'Politics / News',
+    'education-work':      'Education / Work',
+    'health-medical':      'Health / Medical',
+    'other':               'Other',
+    'media-share':         'Media Share (photo/video)',
+  };
+
+  // -- Topic Distribution Donut --
+  if (topicDist) {
+    const topicEntries = Object.entries(topicDist).sort((a, b) => b[1] - a[1]);
+    const topicKeys = topicEntries.map(([k]) => k);
+    const topicLabels = topicEntries.map(([k]) => TOPIC_LABELS_MAP[k] || k);
+    const topicData = topicEntries.map(([, v]) => v);
+    const topicColors = topicEntries.map(([k]) => TOPIC_COLORS[k] || '#8b949e');
+    const topicTotal = topicData.reduce((a, b) => a + b, 0);
+    const topicExamples = data.topic_examples;
+
+    destroyChart('topic-donut');
+    charts['topic-donut'] = new Chart(document.getElementById('topic-donut'), {
+      type: 'doughnut',
+      data: {
+        labels: topicLabels,
+        datasets: [{
+          data: topicData,
+          backgroundColor: topicColors,
+          borderWidth: 2,
+          borderColor: '#161b22'
+        }]
+      },
+      options: {
+        plugins: {
+          legend: { position: 'right', labels: { padding: 10, font: { size: 11 } } },
+          tooltip: {
+            callbacks: {
+              label: ctx => {
+                const v = ctx.raw;
+                const pct = topicTotal > 0 ? ((v / topicTotal) * 100).toFixed(1) : 0;
+                return ` ${ctx.label}: ${v} msgs (${pct}%)`;
+              }
+            }
+          }
+        },
+        onClick(evt, elements) {
+          if (!elements.length || !topicExamples) return;
+          const idx = elements[0].index;
+          const key = topicKeys[idx];
+          const label = topicLabels[idx];
+          const allExamples = topicExamples[key] || [];
+          // Filter to dateWindow
+          const examples = allExamples.filter(e => {
+            if (!e.date) return true;
+            const eMs = dateStrToMs(e.date);
+            return eMs >= dateWindow.from && eMs <= dateWindow.to;
+          });
+          const windowNote = examples.length < allExamples.length
+            ? `<div style="font-size:11px;color:var(--yellow);font-family:var(--mono);margin-bottom:10px">Showing ${examples.length} of ${allExamples.length} examples within your date window (${allExamples.length - examples.length} outside window).</div>`
+            : '';
+          const title = `Topic: ${label} — ${examples.length} example${examples.length !== 1 ? 's' : ''} in window (${topicData[idx]} total classified)`;
+          openModal(title, windowNote + buildMessageListHtml(examples, EXT_MEMBER_COLORS));
+        }
+      }
+    });
+
+    // Show hint when examples are available
+    if (topicExamples) {
+      const hint = document.getElementById('topic-donut-hint');
+      if (hint) hint.style.display = '';
+    }
+  }
+
+  // -- Topic Starters Bar --
+  if (topicStarters) {
+    const starterEntries = Object.entries(topicStarters).sort((a, b) => b[1] - a[1]);
+    const starterNames = starterEntries.map(([k]) => k);
+    const starterCounts = starterEntries.map(([, v]) => v);
+    const totalStarts = starterCounts.reduce((a, b) => a + b, 0);
+
+    destroyChart('topic-starters-bar');
+    charts['topic-starters-bar'] = new Chart(document.getElementById('topic-starters-bar'), {
+      type: 'bar',
+      data: {
+        labels: starterNames,
+        datasets: [{
+          label: 'Topic Starts',
+          data: starterCounts,
+          backgroundColor: MEMBER_COLORS,
+          borderRadius: 4,
+        }]
+      },
+      options: {
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: ctx => {
+                const v = ctx.raw;
+                const pct = totalStarts > 0 ? ((v / totalStarts) * 100).toFixed(1) : 0;
+                return ` ${v} topic starts (${pct}% of all)`;
+              }
+            }
+          }
+        },
+        scales: {
+          y: { beginAtZero: true, grid: { color: '#30363d' }, title: { display: true, text: '# new topic starts', color: '#8b949e' } },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+  }
+
+  // -- Topic Starters By Topic Stacked Bar --
+  if (topicStartersByTopic) {
+    const starterEntries = Object.entries(topicStarters || {}).sort((a, b) => b[1] - a[1]);
+    const starterNames = starterEntries.map(([k]) => k);
+
+    // Collect all topic labels present
+    const allTopics = new Set();
+    Object.values(topicStartersByTopic).forEach(topicMap => {
+      Object.keys(topicMap).forEach(t => allTopics.add(t));
+    });
+    const orderedTopics = [...allTopics].sort((a, b) => {
+      // Sort by total count desc
+      const aTotal = Object.values(topicStartersByTopic).reduce((s, m) => s + (m[a] || 0), 0);
+      const bTotal = Object.values(topicStartersByTopic).reduce((s, m) => s + (m[b] || 0), 0);
+      return bTotal - aTotal;
+    });
+
+    const datasets = orderedTopics.map(topic => ({
+      label: TOPIC_LABELS_MAP[topic] || topic,
+      data: starterNames.map(name => (topicStartersByTopic[name] || {})[topic] || 0),
+      backgroundColor: TOPIC_COLORS[topic] || '#8b949e',
+      stack: 'topics'
+    }));
+
+    destroyChart('topic-stacked-bar');
+    charts['topic-stacked-bar'] = new Chart(document.getElementById('topic-stacked-bar'), {
+      type: 'bar',
+      data: {
+        labels: starterNames,
+        datasets
+      },
+      options: {
+        plugins: {
+          legend: { position: 'top', labels: { font: { size: 11 } } },
+          tooltip: {
+            mode: 'index', intersect: false,
+            callbacks: {
+              title: ctx => ctx[0].label + ' — topic starts breakdown',
+              label: ctx => {
+                const v = ctx.raw;
+                if (v === 0) return null;
+                return ` ${ctx.dataset.label}: ${v}`;
+              },
+              footer: items => {
+                const total = items.reduce((s, i) => s + i.raw, 0);
+                return `Total: ${total} topic starts`;
+              }
+            }
+          }
+        },
+        scales: {
+          y: { beginAtZero: true, stacked: true, grid: { color: '#30363d' }, title: { display: true, text: '# topic starts', color: '#8b949e' } },
+          x: { stacked: true, grid: { display: false } }
+        }
+      }
+    });
+  }
+}
+
+// Patch render to also call renderCoactivity, renderTopicCharts, renderExtended, renderDrilldown
+const _origRender = render;
+render = function(data) {
+  _origRender(data);
+  renderCoactivity(data);
+  renderTopicCharts(data);
+  renderExtended(data);
+  renderDrilldown(data);
+};
+
+// ============================================================
+// EXTENDED ANALYSES (v10)
+// ============================================================
+
+const EXT_MEMBER_COLORS = {
+  'Omneya':   '#79c0ff',
+  'Aly':      '#3fb950',
+  'Kathryn':  '#d29922',
+  'Sahmoud':  '#f0883e',
+  'Preksha':  '#bc8cff',
+};
+
+function renderExtended(data) {
+  renderHeatmap(data);
+  renderReactions(data);
+  renderViralMessages(data);
+  renderLatency(data);
+  renderMessageLength(data);
+  renderLanguage(data);
+  renderPhotos(data);
+  renderMentions(data);
+}
+
+// ---- 1. Time-of-day heatmap ----
+function renderHeatmap(data) {
+  const hm = data.time_of_day_heatmap;
+  if (!hm) return;
+
+  const members = Object.keys(hm);
+  const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  let activeMember = members[0];
+
+  const btnWrap = document.getElementById('heatmap-member-btns');
+  btnWrap.innerHTML = '';
+  members.forEach(name => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn' + (name === activeMember ? ' active' : '');
+    btn.textContent = name;
+    btn.style.borderColor = EXT_MEMBER_COLORS[name] || '#79c0ff';
+    btn.addEventListener('click', () => {
+      activeMember = name;
+      btnWrap.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      drawGrid(name);
+    });
+    btnWrap.appendChild(btn);
+  });
+
+  function drawGrid(member) {
+    const grid = hm[member].grid; // grid[day][hour]
+    let maxVal = 0;
+    for (let d = 0; d < 7; d++) for (let h = 0; h < 24; h++) if (grid[d][h] > maxVal) maxVal = grid[d][h];
+
+    function cellBg(v) {
+      if (v === 0) return '#1a1f28';
+      const t = v / maxVal;
+      const r = Math.round(13 + t * (121 - 13));
+      const g = Math.round(51 + t * (192 - 51));
+      const b = Math.round(73 + t * (255 - 73));
+      return `rgb(${r},${g},${b})`;
+    }
+    function cellFg(v) {
+      if (v === 0) return '#444a55';
+      const t = v / maxVal;
+      return t > 0.55 ? '#0d1117' : '#c9d1d9';
+    }
+
+    const peak = hm[member];
+    let html = `<div style="font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:8px">`;
+    html += `Peak: <strong style="color:var(--accent)">${peak.peak_day} ${peak.peak_hour_label}</strong> (${peak.peak_count} msgs)</div>`;
+    html += '<div style="overflow-x:auto"><table style="border-collapse:separate;border-spacing:2px;font-family:var(--mono);font-size:10px">';
+
+    // Header row (hours)
+    html += '<thead><tr><td style="color:var(--muted);padding:2px 4px;min-width:32px">Day\\ Hr</td>';
+    for (let h = 0; h < 24; h++) {
+      html += `<td style="color:var(--muted);text-align:center;padding:2px 3px;min-width:26px">${h}</td>`;
+    }
+    html += '</tr></thead><tbody>';
+
+    for (let d = 0; d < 7; d++) {
+      html += `<tr><td style="color:var(--accent);font-weight:600;padding:2px 4px;white-space:nowrap">${DAYS[d]}</td>`;
+      for (let h = 0; h < 24; h++) {
+        const v = grid[d][h];
+        const bg = cellBg(v);
+        const fg = cellFg(v);
+        html += `<td title="${DAYS[d]} ${h}:00 UTC — ${v} msgs" style="background:${bg};color:${fg};text-align:center;padding:4px 2px;border-radius:3px;cursor:default">${v > 0 ? v : ''}</td>`;
+      }
+      html += '</tr>';
+    }
+    html += '</tbody></table></div>';
+    document.getElementById('heatmap-wrap').innerHTML = html;
+  }
+
+  drawGrid(activeMember);
+}
+
+// ---- 2. Reactions given vs received ----
+function renderReactions(data) {
+  const ra = data.reactions_analysis;
+  if (!ra) return;
+
+  const members = Object.keys(ra.given);
+  const sorted = [...members].sort((a, b) => (ra.received[b] || 0) - (ra.received[a] || 0));
+
+  destroyChart('reactions-bar');
+  charts['reactions-bar'] = new Chart(document.getElementById('reactions-bar'), {
+    type: 'bar',
+    data: {
+      labels: sorted,
+      datasets: [
+        {
+          label: 'Reactions Received',
+          data: sorted.map(m => ra.received[m] || 0),
+          backgroundColor: '#79c0ff',
+          borderRadius: 4,
+        },
+        {
+          label: 'Reactions Given',
+          data: sorted.map(m => ra.given[m] || 0),
+          backgroundColor: '#3fb950',
+          borderRadius: 4,
+        }
+      ]
+    },
+    options: {
+      plugins: {
+        legend: { position: 'top' },
+        tooltip: { mode: 'index', intersect: false }
+      },
+      scales: {
+        y: { beginAtZero: true, grid: { color: '#30363d' } },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+
+  // Reaction-pair matrix
+  const matrix = ra.who_reacts_to_whom;
+  const mems = Object.keys(EXT_MEMBER_COLORS);
+
+  // Find max for color
+  let maxV = 0;
+  mems.forEach(a => mems.forEach(b => { if (matrix[a] && matrix[a][b] > maxV) maxV = matrix[a][b]; }));
+
+  function bg(v) {
+    if (!v || v === 0) return '#1a1f28';
+    const t = v / maxV;
+    const r = Math.round(13 + t * (121 - 13));
+    const g = Math.round(51 + t * (192 - 51));
+    const b2 = Math.round(73 + t * (255 - 73));
+    return `rgb(${r},${g},${b2})`;
+  }
+  function fg(v) {
+    if (!v || v === 0) return '#444a55';
+    return (v / maxV) > 0.55 ? '#0d1117' : '#c9d1d9';
+  }
+
+  let html = '<table style="border-collapse:separate;border-spacing:2px;font-family:var(--mono);font-size:11px">';
+  html += '<thead><tr><th style="background:transparent;color:var(--muted);padding:3px 6px;border:none;font-size:10px">↓ reacts to →</th>';
+  mems.forEach(m => {
+    html += `<th style="background:transparent;color:var(--accent);padding:3px 5px;border:none;font-size:10px;white-space:nowrap">${m}</th>`;
+  });
+  html += '</tr></thead><tbody>';
+  mems.forEach(actor => {
+    html += `<tr><td style="color:var(--accent);font-weight:600;padding:3px 6px;white-space:nowrap;font-size:10px">${actor}</td>`;
+    mems.forEach(target => {
+      if (actor === target) {
+        html += `<td style="background:#1a1f28;border-radius:3px;padding:5px 6px;text-align:center;color:#444a55">—</td>`;
+      } else {
+        const v = (matrix[actor] && matrix[actor][target]) || 0;
+        html += `<td title="${actor} → ${target}: ${v}" style="background:${bg(v)};color:${fg(v)};border-radius:3px;padding:5px 6px;text-align:center;font-weight:600;cursor:default">${v || ''}</td>`;
+      }
+    });
+    html += '</tr>';
+  });
+  html += '</tbody></table>';
+  html += '<div style="margin-top:8px;font-size:10px;color:var(--muted);font-family:var(--mono)">Row = reactor. Col = message author. Darker = more reactions given.</div>';
+
+  // Fav emoji row
+  const favRow = Object.entries(ra.fav_emoji).map(([m, e]) => `<span style="font-family:var(--mono);font-size:11px;color:var(--muted)">${m}: <strong style="color:var(--text)">${e || '—'}</strong></span>`).join('  ');
+  html += `<div style="margin-top:10px;font-size:11px;padding:8px;background:#0d1117;border-radius:4px">Fav emoji: ${favRow}</div>`;
+
+  document.getElementById('rxn-matrix-wrap').innerHTML = html;
+}
+
+// ---- Viral messages ----
+function renderViralMessages(data) {
+  const viral = data.viral_messages;
+  if (!viral || !viral.top5) return;
+
+  // Filter to dateWindow (timestamp is 'YYYY-MM-DD')
+  const inWindow = viral.top5.filter(v => {
+    const vMs = dateStrToMs(v.timestamp);
+    return vMs >= dateWindow.from && vMs <= dateWindow.to;
+  });
+
+  const wrap = document.getElementById('viral-list');
+  const badge = document.getElementById('viral-badge');
+
+  // Update badge to reflect current window
+  const meta = data.meta;
+  const isFullWindow = dateWindow.from <= dateStrToMs(meta.window_start) && dateWindow.to >= dateStrToMs(meta.window_end);
+  if (badge) {
+    badge.textContent = isFullWindow ? 'date-aware' : `date-aware · ${inWindow.length} in window`;
+    badge.style.background = isFullWindow ? '#1f6feb22' : '#23863622';
+    badge.style.borderColor = isFullWindow ? '#1f6feb66' : '#23863666';
+    badge.style.color = isFullWindow ? 'var(--accent)' : 'var(--green)';
+  }
+
+  const ranks = ['🥇','🥈','🥉','4.','5.'];
+  let html = '';
+  if (inWindow.length === 0) {
+    html = '<div style="color:var(--muted);font-family:var(--mono);font-size:12px;padding:12px 0">No viral messages in the selected date window.</div>';
+  } else {
+    inWindow.forEach((v, i) => {
+      const color = EXT_MEMBER_COLORS[v.author] || '#79c0ff';
+      const rxnStr = v.reactions ? v.reactions.slice(0,6).join(' ') : '';
+      html += `
+        <div style="display:flex;align-items:flex-start;gap:14px;padding:12px 0;border-bottom:1px solid var(--border);">
+          <div style="font-size:20px;min-width:28px;text-align:center;margin-top:2px">${ranks[i] || (i+1) + '.'}</div>
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px">
+              <span style="font-weight:700;color:${color};font-family:var(--mono)">${v.author}</span>
+              <span style="font-size:11px;color:var(--muted);font-family:var(--mono)">${v.timestamp}</span>
+              <span style="background:#ffffff12;border-radius:10px;padding:2px 10px;font-weight:700;font-family:var(--mono);font-size:12px">
+                ${v.reaction_count} reactions
+              </span>
+            </div>
+            <div style="font-size:13px;color:var(--text);word-break:break-word">${v.content}</div>
+            <div style="font-size:18px;margin-top:4px">${rxnStr}</div>
+          </div>
+        </div>`;
+    });
+  }
+  wrap.innerHTML = html;
+}
+
+// ---- 3. Response latency ----
+function renderLatency(data) {
+  const rl = data.response_latency;
+  if (!rl) return;
+
+  const ranked = rl.ranked_fastest_to_slowest;
+  const stats = rl.per_member;
+
+  destroyChart('latency-bar');
+  charts['latency-bar'] = new Chart(document.getElementById('latency-bar'), {
+    type: 'bar',
+    data: {
+      labels: ranked,
+      datasets: [{
+        label: 'Avg reply time (min)',
+        data: ranked.map(m => stats[m].avg_min),
+        backgroundColor: ranked.map(m => EXT_MEMBER_COLORS[m] || '#79c0ff'),
+        borderRadius: 4,
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => {
+              const m = ranked[ctx.dataIndex];
+              const s = stats[m];
+              return ` ${s.avg_min} min avg · median ${Math.round(s.median_sec/60)} min · n=${s.count}`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: { beginAtZero: true, grid: { color: '#30363d' }, title: { display: true, text: 'avg minutes to reply', color: '#8b949e' } },
+        y: { grid: { display: false } }
+      }
+    }
+  });
+}
+
+// ---- 4. Message length ----
+function renderMessageLength(data) {
+  const ml = data.message_length;
+  if (!ml) return;
+
+  const members = Object.keys(EXT_MEMBER_COLORS);
+  const sorted = members.filter(m => ml.per_member[m] && ml.per_member[m].avg_words !== null)
+                        .sort((a, b) => ml.per_member[b].avg_words - ml.per_member[a].avg_words);
+
+  destroyChart('length-bar');
+  charts['length-bar'] = new Chart(document.getElementById('length-bar'), {
+    type: 'bar',
+    data: {
+      labels: sorted,
+      datasets: [
+        {
+          label: 'Avg words/msg',
+          data: sorted.map(m => ml.per_member[m].avg_words),
+          backgroundColor: '#79c0ff',
+          borderRadius: 4,
+        },
+        {
+          label: 'p90 words',
+          data: sorted.map(m => ml.per_member[m].p90_words),
+          backgroundColor: '#f0883e44',
+          borderColor: '#f0883e',
+          borderWidth: 1,
+          borderRadius: 4,
+          type: 'bar',
+        }
+      ]
+    },
+    options: {
+      plugins: {
+        legend: { position: 'top' },
+        tooltip: {
+          mode: 'index', intersect: false,
+          callbacks: {
+            title: ctx => ctx[0].label + ' — message length',
+            footer: items => {
+              const m = sorted[items[0].dataIndex];
+              return `n=${ml.per_member[m].n_text_msgs} text messages`;
+            }
+          }
+        }
+      },
+      scales: {
+        y: { beginAtZero: true, grid: { color: '#30363d' }, title: { display: true, text: 'words', color: '#8b949e' } },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+
+  // Histogram
+  const hist = ml.histogram;
+  const bucketLabels = hist.bucket_labels;
+  const HIST_COLORS = ['#79c0ff','#3fb950','#d29922','#f0883e','#bc8cff'];
+
+  destroyChart('length-hist');
+  charts['length-hist'] = new Chart(document.getElementById('length-hist'), {
+    type: 'bar',
+    data: {
+      labels: members,
+      datasets: bucketLabels.map((label, i) => ({
+        label: label + ' words',
+        data: members.map(m => (hist.per_member[m] || [])[i] || 0),
+        backgroundColor: HIST_COLORS[i],
+        stack: 'hist',
+        borderRadius: i === bucketLabels.length - 1 ? 4 : 0,
+      }))
+    },
+    options: {
+      plugins: {
+        legend: { position: 'top' },
+        tooltip: {
+          mode: 'index', intersect: false,
+          callbacks: {
+            title: ctx => ctx[0].label + ' — word count distribution',
+            label: ctx => {
+              const v = ctx.raw;
+              if (v === 0) return null;
+              return ` ${ctx.dataset.label}: ${v} msgs`;
+            }
+          }
+        }
+      },
+      scales: {
+        y: { beginAtZero: true, stacked: true, grid: { color: '#30363d' }, title: { display: true, text: '# text messages', color: '#8b949e' } },
+        x: { stacked: true, grid: { display: false } }
+      }
+    }
+  });
+}
+
+// ---- 5. Language ratio (3-bucket: arabic / franco_arabic / english) ----
+function renderLanguage(data) {
+  const lr = data.language_ratio;
+  if (!lr) return;
+
+  const langExamples = data.language_examples;
+  const members = Object.keys(EXT_MEMBER_COLORS);
+  const sorted = [...members].sort((a, b) => (lr.per_member[b].pct_arabic || 0) - (lr.per_member[a].pct_arabic || 0));
+
+  // dataset index -> language key mapping
+  const langDatasets = [
+    { label: 'English %',       key: 'english',       color: '#79c0ff' },
+    { label: 'Franco-Arabic %', key: 'franco_arabic', color: '#3fb950' },
+    { label: 'Arabic %',        key: 'arabic',        color: '#d29922' },
+  ];
+
+  destroyChart('lang-bar');
+  charts['lang-bar'] = new Chart(document.getElementById('lang-bar'), {
+    type: 'bar',
+    data: {
+      labels: sorted,
+      datasets: langDatasets.map(d => ({
+        label: d.label,
+        data: sorted.map(m => lr.per_member[m]['pct_' + d.key] || 0),
+        backgroundColor: d.color,
+        stack: 'lang',
+      }))
+    },
+    options: {
+      plugins: {
+        legend: { position: 'top' },
+        tooltip: {
+          mode: 'index', intersect: false,
+          callbacks: {
+            title: ctx => ctx[0].label + ' — language breakdown',
+            label: ctx => {
+              const v = ctx.raw;
+              if (v === 0) return null;
+              return ` ${ctx.dataset.label}: ${v}%`;
+            },
+            footer: items => {
+              const m = sorted[items[0].dataIndex];
+              const d = lr.per_member[m];
+              return `n=${d.letter_total || d.total || 0} letter-bearing msgs (${d.no_letters || 0} emoji-only excluded)`;
+            }
+          }
+        }
+      },
+      scales: {
+        y: { beginAtZero: true, max: 100, stacked: true, grid: { color: '#30363d' }, title: { display: true, text: '% of text messages', color: '#8b949e' }, ticks: { callback: v => v + '%' } },
+        x: { stacked: true, grid: { display: false } }
+      },
+      onClick(evt, elements) {
+        if (!elements.length || !langExamples) return;
+        const el = elements[0];
+        const member = sorted[el.index];
+        const langKey = langDatasets[el.datasetIndex].key;
+        const langLabel = langDatasets[el.datasetIndex].label.replace(' %', '');
+        const allMemberExamples = (langExamples[member] && langExamples[member][langKey]) || [];
+        // Filter to dateWindow
+        const memberExamples = allMemberExamples.filter(e => {
+          if (!e.date) return true;
+          const eMs = dateStrToMs(e.date);
+          return eMs >= dateWindow.from && eMs <= dateWindow.to;
+        });
+        const windowNote = memberExamples.length < allMemberExamples.length
+          ? `<div style="font-size:11px;color:var(--yellow);font-family:var(--mono);margin-bottom:10px">Showing ${memberExamples.length} of ${allMemberExamples.length} examples within your date window.</div>`
+          : '';
+        const title = `${member} — ${langLabel} messages (${memberExamples.length} in window of ${allMemberExamples.length} examples)`;
+        // Language examples don't have sender (they're per-member), so use member name
+        const exWithSender = memberExamples.map(e => ({...e, sender: member}));
+        openModal(title, windowNote + buildMessageListHtml(exWithSender, EXT_MEMBER_COLORS));
+      }
+    }
+  });
+
+  // Show hint if language examples are available
+  if (langExamples) {
+    const hint = document.getElementById('lang-bar-hint');
+    if (hint) hint.style.display = '';
+  }
+}
+
+// ---- 6. Photos ----
+function renderPhotos(data) {
+  const ps = data.photo_share;
+  if (!ps) return;
+
+  const ranked = ps.ranked;
+
+  destroyChart('photo-bar');
+  charts['photo-bar'] = new Chart(document.getElementById('photo-bar'), {
+    type: 'bar',
+    data: {
+      labels: ranked,
+      datasets: [
+        {
+          label: 'Photo-share events',
+          data: ranked.map(m => ps.photo_shares_per_member[m] || 0),
+          backgroundColor: '#3fb950',
+          borderRadius: 4,
+        },
+        {
+          label: 'Total photos (incl albums)',
+          data: ranked.map(m => ps.total_photos_per_member[m] || 0),
+          backgroundColor: '#79c0ff44',
+          borderColor: '#79c0ff',
+          borderWidth: 1,
+          borderRadius: 4,
+        }
+      ]
+    },
+    options: {
+      plugins: {
+        legend: { position: 'top' },
+        tooltip: {
+          mode: 'index', intersect: false,
+          callbacks: {
+            footer: items => {
+              const m = ranked[items[0].dataIndex];
+              const avg = ps.avg_photos_per_share[m];
+              const albums = ps.album_shares_per_member[m] || 0;
+              return `avg ${avg} photos/share · ${albums} album(s)`;
+            }
+          }
+        }
+      },
+      scales: {
+        y: { beginAtZero: true, grid: { color: '#30363d' } },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+}
+
+// ============================================================
+// DRILL-DOWN: Image categories, Topic examples, Language examples
+// ============================================================
+
+// ---- Modal helpers ----
+function openModal(title, bodyHtml) {
+  document.getElementById('dd-modal-title').textContent = title;
+  document.getElementById('dd-modal-body').innerHTML = bodyHtml;
+  document.getElementById('dd-overlay').classList.add('open');
+  document.getElementById('dd-modal').scrollTop = 0;
+}
+
+function closeModal() {
+  document.getElementById('dd-overlay').classList.remove('open');
+}
+
+document.getElementById('dd-modal-close').addEventListener('click', closeModal);
+document.getElementById('dd-overlay').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeModal();
+});
+
+// ---- Name normalization: "Amena Sahmoud" -> "Amena" ----
+const FULL_TO_SHORT = {
+  'Omneya Sultan': 'Omneya', 'Aly Sultan': 'Aly',
+  'Kathryn Vee': 'Kathryn', 'Abdulrahman Sahmoud': 'Sahmoud',
+  'Preksha Naik': 'Preksha'
+};
+function shortName(n) { return FULL_TO_SHORT[n] || n; }
+
+// ---- Build message list HTML ----
+function buildMessageListHtml(examples, memberColors) {
+  if (!examples || examples.length === 0) {
+    return '<div style="color:var(--muted);font-family:var(--mono);font-size:12px">No examples available.</div>';
+  }
+  return examples.map(ex => {
+    const senderRaw = ex.sender || '';
+    const sender = shortName(senderRaw);
+    const color = (memberColors && memberColors[sender]) || '#79c0ff';
+    const date = ex.date || '';
+    const content = (ex.content_preview || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return `<div class="dd-item">
+      <div class="dd-item-meta">
+        <span class="dd-item-sender" style="color:${color}">${sender}</span>
+        <span>${date}</span>
+      </div>
+      <div class="dd-item-content">${content || '<em style="color:var(--muted)">[no text]</em>'}</div>
+    </div>`;
+  }).join('');
+}
+
+// ---- Build thumbnail grid HTML ----
+function buildThumbGridHtml(examples) {
+  if (!examples || examples.length === 0) {
+    return '<div style="color:var(--muted);font-family:var(--mono);font-size:12px">No images available.</div>';
+  }
+  const items = examples.map(ex => {
+    const sender = ex.sender || '';
+    const date = ex.date || '';
+    if (ex.thumbnail_base64) {
+      return `<div style="text-align:center">
+        <img class="dd-thumb" src="data:image/jpeg;base64,${ex.thumbnail_base64}" alt="${sender} ${date}" title="${sender} · ${date}">
+        <div class="dd-thumb-meta">${sender}<br>${date}</div>
+      </div>`;
+    } else {
+      return `<div style="text-align:center">
+        <div class="dd-thumb-missing" title="${sender} · ${date}">no preview</div>
+        <div class="dd-thumb-meta">${sender}<br>${date}</div>
+      </div>`;
+    }
+  }).join('');
+  return `<div class="dd-thumbs">${items}</div>`;
+}
+
+// ---- Image category charts ----
+const IMAGE_CAT_COLORS = {
+  'selfie':      '#79c0ff',
+  'group_photo': '#3fb950',
+  'kids':        '#d29922',
+  'food':        '#ff7b72',
+  'scene':       '#bc8cff',
+  'document':    '#8b949e',
+  'screenshot':  '#f0883e',
+  'meme':        '#56d364',
+  'religious':   '#ffa657',
+  'other':       '#6e7681',
+};
+
+const IMAGE_CAT_LABELS = {
+  'selfie':      'Selfie',
+  'group_photo': 'Group Photo',
+  'kids':        'Kids',
+  'food':        'Food',
+  'scene':       'Scene / Place',
+  'document':    'Document',
+  'screenshot':  'Screenshot',
+  'meme':        'Meme',
+  'religious':   'Religious',
+  'other':       'Other',
+};
+
+function renderImageCharts(data) {
+  const imgCats = data.image_categories;
+  const imgByMember = data.image_categories_by_member;
+  const imgExamples = data.image_examples_by_category;
+  const imgMeta = data.image_classification_meta;
+
+  const section = document.getElementById('image-section');
+  if (!imgCats) { section.style.display = 'none'; return; }
+  section.style.display = '';
+
+  // Sort categories by count
+  const catEntries = Object.entries(imgCats).sort((a, b) => b[1] - a[1]);
+  const catKeys = catEntries.map(([k]) => k);
+  const catLabels = catKeys.map(k => IMAGE_CAT_LABELS[k] || k);
+  const catData = catEntries.map(([, v]) => v);
+  const catColors = catKeys.map(k => IMAGE_CAT_COLORS[k] || '#8b949e');
+  const catTotal = catData.reduce((a, b) => a + b, 0);
+
+  // Meta note
+  if (imgMeta) {
+    const metaNote = `${imgMeta.total_processed} of ${imgMeta.total_in_zip} photos classified`;
+    const existingNote = document.querySelector('#image-section .card h2 + .click-hint');
+    if (existingNote) existingNote.setAttribute('title', metaNote);
+  }
+
+  // Donut
+  destroyChart('image-cat-donut');
+  charts['image-cat-donut'] = new Chart(document.getElementById('image-cat-donut'), {
+    type: 'doughnut',
+    data: {
+      labels: catLabels,
+      datasets: [{ data: catData, backgroundColor: catColors, borderWidth: 2, borderColor: '#161b22' }]
+    },
+    options: {
+      plugins: {
+        legend: { position: 'right', labels: { padding: 10, font: { size: 11 } } },
+        tooltip: {
+          callbacks: {
+            label: ctx => {
+              const v = ctx.raw;
+              const pct = catTotal > 0 ? ((v / catTotal) * 100).toFixed(1) : 0;
+              return ` ${ctx.label}: ${v} photos (${pct}%)`;
+            }
+          }
+        }
+      },
+      onClick(evt, elements) {
+        if (!elements.length) return;
+        const idx = elements[0].index;
+        const cat = catKeys[idx];
+        const label = catLabels[idx];
+        const examples = (imgExamples && imgExamples[cat]) || [];
+        const title = `Images: ${label} (${catData[idx]} total)`;
+        const thumbHtml = buildThumbGridHtml(examples);
+        const note = examples.length < catData[idx]
+          ? `<div style="font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:10px">Showing ${examples.length} of ${catData[idx]} images (max 6 examples stored)</div>`
+          : '';
+        openModal(title, note + thumbHtml);
+      }
+    }
+  });
+
+  // Stacked bar by member
+  if (imgByMember) {
+    const memberOrder = Object.keys(EXT_MEMBER_COLORS);
+    const presentMembers = memberOrder.filter(m => imgByMember[m]);
+
+    destroyChart('image-cat-stacked');
+    charts['image-cat-stacked'] = new Chart(document.getElementById('image-cat-stacked'), {
+      type: 'bar',
+      data: {
+        labels: presentMembers,
+        datasets: catKeys.map(cat => ({
+          label: IMAGE_CAT_LABELS[cat] || cat,
+          data: presentMembers.map(m => (imgByMember[m] && imgByMember[m][cat]) || 0),
+          backgroundColor: IMAGE_CAT_COLORS[cat] || '#8b949e',
+          stack: 'cats',
+        }))
+      },
+      options: {
+        plugins: {
+          legend: { position: 'top', labels: { font: { size: 10 } } },
+          tooltip: {
+            mode: 'index', intersect: false,
+            callbacks: {
+              title: ctx => ctx[0].label + ' — image categories',
+              label: ctx => {
+                const v = ctx.raw;
+                if (v === 0) return null;
+                return ` ${ctx.dataset.label}: ${v}`;
+              }
+            }
+          }
+        },
+        scales: {
+          y: { beginAtZero: true, stacked: true, grid: { color: '#30363d' } },
+          x: { stacked: true, grid: { display: false } }
+        },
+        onClick(evt, elements) {
+          if (!elements.length) return;
+          const el = elements[0];
+          const member = presentMembers[el.index];
+          const cat = catKeys[el.datasetIndex];
+          const label = IMAGE_CAT_LABELS[cat] || cat;
+          // Filter examples to this member and category
+          const allExamples = (imgExamples && imgExamples[cat]) || [];
+          const memberExamples = allExamples.filter(e => e.sender === member);
+          const total = (imgByMember[member] && imgByMember[member][cat]) || 0;
+          const title = `${member} — ${label} (${total} total)`;
+          const thumbHtml = memberExamples.length
+            ? buildThumbGridHtml(memberExamples)
+            : `<div style="color:var(--muted);font-family:var(--mono);font-size:12px">No stored examples for ${member} / ${label} (examples stored are overall, not per-member). Total count: ${total}</div>`;
+          const note = total > 6
+            ? `<div style="font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:10px">Up to 6 examples stored per category across all members.</div>`
+            : '';
+          openModal(title, note + thumbHtml);
+        }
+      }
+    });
+  }
+}
+
+// ---- Topic examples drill-down ----
+function attachTopicDrilldown(data, topicEntries, topicLabelMap) {
+  const topicExamples = data.topic_examples;
+  if (!topicExamples) return;
+
+  // Show click hint
+  const hint = document.getElementById('topic-donut-hint');
+  if (hint) hint.style.display = '';
+
+  const canvas = document.getElementById('topic-donut');
+  if (!canvas) return;
+
+  // We use Chart.js onClick option - but we need to re-apply since chart is recreated in renderTopicCharts
+  // Store the handler on the canvas so we can re-apply it
+  canvas._ddTopicEntries = topicEntries;
+  canvas._ddTopicLabelMap = topicLabelMap;
+  canvas._ddExamples = topicExamples;
+}
+
+// ---- Language examples drill-down ----
+function attachLanguageDrilldown(data, sortedMembers) {
+  const langExamples = data.language_examples;
+  if (!langExamples) return;
+
+  const hint = document.getElementById('lang-bar-hint');
+  if (hint) hint.style.display = '';
+
+  const canvas = document.getElementById('lang-bar');
+  if (!canvas) return;
+
+  canvas._ddLangExamples = langExamples;
+  canvas._ddSortedMembers = sortedMembers;
+}
+
+function renderDrilldown(data) {
+  renderImageCharts(data);
+}
+
+// ---- 7. Mentions ----
+function renderMentions(data) {
+  const men = data.mentions;
+  if (!men) return;
+
+  const members = Object.keys(EXT_MEMBER_COLORS);
+  const received = men.mentions_received;
+  const sorted = [...members].sort((a, b) => (received[b] || 0) - (received[a] || 0));
+
+  let html = '<table style="width:100%;border-collapse:collapse;font-size:12px;font-family:var(--mono)">';
+  html += '<thead><tr>';
+  html += '<th style="text-align:left;padding:6px 8px;color:var(--muted);font-size:10px;text-transform:uppercase;border-bottom:1px solid var(--border)">Member</th>';
+  html += '<th style="text-align:right;padding:6px 8px;color:var(--muted);font-size:10px;text-transform:uppercase;border-bottom:1px solid var(--border)">Times tagged</th>';
+  html += '<th style="text-align:left;padding:6px 8px;color:var(--muted);font-size:10px;text-transform:uppercase;border-bottom:1px solid var(--border)">Most tagged by</th>';
+  html += '</tr></thead><tbody>';
+
+  sorted.forEach(m => {
+    const given = men.mentions_given || {};
+    // Find who tags this member most
+    let topTagger = '—';
+    let topCount = 0;
+    members.forEach(tagger => {
+      const cnt = (given[tagger] && given[tagger][m]) || 0;
+      if (cnt > topCount) { topCount = cnt; topTagger = `${tagger} (${cnt}×)`; }
+    });
+    const cnt = received[m] || 0;
+    const color = EXT_MEMBER_COLORS[m] || '#79c0ff';
+    html += `<tr>
+      <td style="padding:7px 8px;color:${color};font-weight:600">${m}</td>
+      <td style="padding:7px 8px;text-align:right;font-weight:700;color:var(--text)">${cnt}</td>
+      <td style="padding:7px 8px;color:var(--muted)">${topTagger}</td>
+    </tr>`;
+  });
+  html += '</tbody></table>';
+  html += `<div style="margin-top:8px;font-size:10px;color:var(--muted);font-family:var(--mono)">${men.note}</div>`;
+
+  document.getElementById('mentions-wrap').innerHTML = html;
+}
+</script>
+</body>
+</html>

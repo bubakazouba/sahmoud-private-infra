@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Weaver — A "quantum" Ramsey theorem for operator systems</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+  MathJax = {
+    tex: { inlineMath: [['\\(','\\)']], displayMath: [['$$','$$']], packages: {'[+]': ['ams']} },
+    svg: { fontCache: 'global' },
+    options: { renderActions: { addMenu: [] } }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-svg.js"></script>
+<style>
+  :root {
+    --bg: #0f1419;
+    --surface: #1a2027;
+    --surface-2: #232a33;
+    --border: #2d3640;
+    --text: #e6edf3;
+    --text-dim: #8b949e;
+    --accent: #58a6ff;
+    --gold: #d29922;
+    --green: #56d364;
+    --purple: #bc8cff;
+    --rose: #ff7b72;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.55; }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 28px 24px 80px; }
+  header { border-bottom: 1px solid var(--border); padding-bottom: 18px; margin-bottom: 22px; }
+  h1 { margin: 0 0 8px; font-size: 24px; font-weight: 700; letter-spacing: -0.01em; }
+  .author { color: var(--text-dim); font-size: 14px; }
+  .meta-row { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 10px; font-size: 13px; color: var(--text-dim); }
+  .meta-row a { color: var(--accent); text-decoration: none; }
+  .meta-row a:hover { text-decoration: underline; }
+  .abstract { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); padding: 14px 18px; border-radius: 6px; margin: 18px 0 24px; font-size: 14.5px; }
+  .abstract h3 { margin: 0 0 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); font-weight: 600; }
+  .context { color: var(--text-dim); font-size: 13.5px; margin-bottom: 22px; padding: 0 4px; }
+  .filter-bar { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 22px; position: sticky; top: 8px; z-index: 50; backdrop-filter: blur(8px); }
+  .filter-bar strong { font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; margin-right: 4px; }
+  .chip { background: var(--surface-2); border: 1px solid var(--border); color: var(--text); padding: 5px 11px; border-radius: 16px; cursor: pointer; font-size: 12.5px; transition: all 0.12s; user-select: none; }
+  .chip:hover { border-color: var(--accent); }
+  .chip.active { background: var(--accent); color: #0f1419; border-color: var(--accent); font-weight: 600; }
+  .search { background: var(--surface-2); border: 1px solid var(--border); color: var(--text); padding: 6px 10px; border-radius: 6px; font-size: 13px; flex: 1; min-width: 180px; outline: none; }
+  .search:focus { border-color: var(--accent); }
+  .pdf-link { background: var(--gold); color: #0f1419; padding: 5px 12px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 12.5px; }
+  .pdf-link:hover { filter: brightness(1.1); }
+  .section-title { font-size: 13px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; margin: 28px 0 10px; padding-left: 4px; }
+  .item { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px 20px; margin-bottom: 12px; transition: border-color 0.15s; }
+  .item:hover { border-color: var(--accent); }
+  .item.headline { border-left: 4px solid var(--gold); }
+  .item-header { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+  .item-type { font-weight: 700; font-size: 13.5px; padding: 2px 9px; border-radius: 4px; }
+  .item-type.theorem { background: rgba(210, 153, 34, 0.18); color: var(--gold); }
+  .item-type.lemma { background: rgba(86, 211, 100, 0.15); color: var(--green); }
+  .item-type.proposition { background: rgba(188, 140, 255, 0.15); color: var(--purple); }
+  .item-type.definition { background: rgba(88, 166, 255, 0.18); color: var(--accent); }
+  .item-type.corollary { background: rgba(255, 123, 114, 0.15); color: var(--rose); }
+  .item-num { color: var(--text-dim); font-size: 13px; font-variant-numeric: tabular-nums; }
+  .item-title { font-weight: 600; font-size: 15px; }
+  .item-loc { margin-left: auto; color: var(--text-dim); font-size: 12px; }
+  .statement { font-size: 14.5px; padding: 6px 0; }
+  .proof, .note { margin-top: 12px; padding: 10px 14px; background: var(--surface-2); border-radius: 5px; font-size: 13.5px; color: #c9d1d9; }
+  .proof-label, .note-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-dim); font-weight: 600; margin-bottom: 4px; }
+  .stats { display: flex; gap: 14px; margin-bottom: 22px; }
+  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 10px 14px; flex: 1; text-align: center; }
+  .stat-n { font-size: 22px; font-weight: 700; }
+  .stat-l { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px; }
+  .stat.theorem .stat-n { color: var(--gold); }
+  .stat.lemma .stat-n { color: var(--green); }
+  .stat.proposition .stat-n { color: var(--purple); }
+  .stat.definition .stat-n { color: var(--accent); }
+  .refs { margin-top: 36px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 13px; color: var(--text-dim); }
+  .refs h3 { color: var(--text); font-size: 14px; margin-bottom: 10px; }
+  .refs ol { padding-left: 28px; margin: 0; }
+  .refs li { margin-bottom: 6px; }
+  .hidden { display: none !important; }
+  em { color: var(--accent); font-style: normal; font-weight: 500; }
+  @media print {
+    body { background: white; color: black; }
+    .filter-bar, .pdf-link { display: none; }
+    .item, .abstract, .stat { background: white; border-color: #ddd; color: black; }
+    .proof, .note { background: #f5f5f5; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1 id="title">Loading…</h1>
+    <div class="author" id="author"></div>
+    <div class="meta-row" id="meta"></div>
+  </header>
+
+  <div class="abstract">
+    <h3>Abstract</h3>
+    <div id="abstract"></div>
+  </div>
+
+  <div class="context" id="context"></div>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="filter-bar">
+    <strong>Type</strong>
+    <span class="chip active" data-filter="all">All</span>
+    <span class="chip" data-filter="Theorem">Theorem</span>
+    <span class="chip" data-filter="Lemma">Lemma</span>
+    <span class="chip" data-filter="Proposition">Proposition</span>
+    <span class="chip" data-filter="Definition">Definition</span>
+    <input class="search" id="search" placeholder="search statements…">
+    <a class="pdf-link" href="weaver_ramsey_theorems.pdf" target="_blank">PDF ↓</a>
+  </div>
+
+  <div id="items"></div>
+
+  <div class="refs">
+    <h3>References</h3>
+    <ol id="refs"></ol>
+  </div>
+</div>
+
+<script>
+let DATA = null;
+let activeFilter = 'all';
+let searchQuery = '';
+
+async function load() {
+  const r = await fetch('data.json');
+  DATA = await r.json();
+  document.getElementById('title').textContent = DATA.paper.title;
+  document.getElementById('author').textContent = DATA.paper.author + ' — ' + DATA.paper.affiliation;
+  document.getElementById('meta').innerHTML = [
+    `<a href="${DATA.paper.arxiv_url}" target="_blank">arXiv:${DATA.paper.arxiv}</a>`,
+    `<a href="${DATA.paper.pdf_url}" target="_blank">PDF</a>`,
+    DATA.paper.venue,
+    `DOI: ${DATA.paper.doi}`,
+    DATA.paper.date
+  ].join(' · ');
+  document.getElementById('abstract').innerHTML = DATA.paper.abstract;
+  document.getElementById('context').innerHTML = DATA.paper.context;
+  renderStats();
+  renderItems();
+  renderRefs();
+  document.querySelectorAll('.chip').forEach(c => {
+    c.onclick = () => {
+      activeFilter = c.dataset.filter;
+      document.querySelectorAll('.chip').forEach(x => x.classList.toggle('active', x === c));
+      renderItems();
+    };
+  });
+  document.getElementById('search').oninput = (e) => {
+    searchQuery = e.target.value.toLowerCase();
+    renderItems();
+  };
+}
+
+function renderStats() {
+  const counts = {};
+  for (const it of DATA.items) counts[it.type] = (counts[it.type]||0) + 1;
+  const types = ['Theorem','Lemma','Proposition','Definition'];
+  document.getElementById('stats').innerHTML = types.map(t => `
+    <div class="stat ${t.toLowerCase()}">
+      <div class="stat-n">${counts[t]||0}</div>
+      <div class="stat-l">${t}s</div>
+    </div>`).join('');
+}
+
+function renderItems() {
+  const html = DATA.items.map((it, idx) => {
+    const matchType = activeFilter === 'all' || it.type === activeFilter;
+    const blob = `${it.title} ${it.statement} ${it.proof_sketch||''} ${it.note||''}`.toLowerCase();
+    const matchSearch = !searchQuery || blob.includes(searchQuery);
+    const cls = (matchType && matchSearch) ? '' : 'hidden';
+    const proof = it.proof_sketch ? `<div class="proof"><div class="proof-label">Proof sketch</div>${it.proof_sketch}</div>` : '';
+    const note = it.note ? `<div class="note"><div class="note-label">Note</div>${it.note}</div>` : '';
+    return `<div class="item ${it.headline ? 'headline':''} ${cls}" data-type="${it.type}">
+      <div class="item-header">
+        <span class="item-type ${it.type.toLowerCase()}">${it.type}</span>
+        <span class="item-num">${it.number}</span>
+        <span class="item-title">${it.title}</span>
+        <span class="item-loc">§${it.section} · p.${it.page}</span>
+      </div>
+      <div class="statement">${it.statement}</div>
+      ${proof}
+      ${note}
+    </div>`;
+  }).join('');
+  document.getElementById('items').innerHTML = html;
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise([document.getElementById('items')]);
+}
+
+function renderRefs() {
+  document.getElementById('refs').innerHTML = DATA.references.map(r => `<li>${r.cite}</li>`).join('');
+}
+
+load();
+</script>
+</body>
+</html>

@@ -1,0 +1,538 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Marathon trainers near Pasadena — pros, cons, prices</title>
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --card: #1a2435;
+    --card2: #233048;
+    --accent: #fb923c;
+    --accent2: #38bdf8;
+    --good: #22c55e;
+    --warn: #fbbf24;
+    --bad: #f87171;
+    --text: #e2e8f0;
+    --dim: #94a3b8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font: 14px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    min-height: 100vh;
+  }
+  header {
+    padding: 22px 20px 18px;
+    background: linear-gradient(135deg, #1a2435 0%, #0a0e1a 100%);
+    border-bottom: 1px solid #334155;
+  }
+  header h1 {
+    font-size: 24px;
+    color: var(--accent);
+    letter-spacing: -0.4px;
+  }
+  header .meta { color: var(--dim); font-size: 13px; margin-top: 4px; }
+  .legend {
+    margin-top: 12px;
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    font-size: 12px;
+  }
+  .legend .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; vertical-align: middle; }
+  main { max-width: 1200px; margin: 0 auto; padding: 18px 16px 60px; }
+  .filters {
+    margin-bottom: 18px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .filters button {
+    background: var(--card);
+    color: var(--text);
+    border: 1px solid #334155;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.1s;
+  }
+  .filters button.active {
+    background: var(--accent);
+    color: #0a0e1a;
+    border-color: var(--accent);
+  }
+  .filters button:hover:not(.active) { background: var(--card2); }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 14px;
+  }
+  .card {
+    background: var(--card);
+    border-radius: 10px;
+    padding: 16px 18px;
+    border: 1px solid #334155;
+    border-top: 3px solid var(--accent);
+    display: flex;
+    flex-direction: column;
+  }
+  .card.tier-1 { border-top-color: var(--good); }
+  .card.tier-2 { border-top-color: var(--accent); }
+  .card.tier-3 { border-top-color: var(--accent2); }
+  .card h2 {
+    font-size: 17px;
+    margin-bottom: 4px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card .badge {
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .badge.local { background: var(--good); color: #0a0e1a; }
+  .badge.la { background: var(--accent2); color: #0a0e1a; }
+  .badge.online { background: var(--warn); color: #0a0e1a; }
+  .badge.free { background: #fff; color: #0a0e1a; }
+  .card .nbhd { color: var(--dim); font-size: 12px; margin-bottom: 10px; }
+  .card .price {
+    background: rgba(34, 197, 94, 0.1);
+    color: var(--good);
+    padding: 6px 10px;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    display: inline-block;
+  }
+  .card .price.paid { background: rgba(251, 146, 60, 0.1); color: var(--accent); }
+  .row {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    font-size: 12.5px;
+    margin-bottom: 6px;
+    color: var(--dim);
+  }
+  .row b { color: var(--text); font-weight: 500; }
+  .pros, .cons {
+    margin-top: 10px;
+    font-size: 12.5px;
+  }
+  .reviews {
+    margin-top: 10px;
+    padding: 10px 12px;
+    background: rgba(56, 189, 248, 0.06);
+    border-left: 2px solid var(--accent2);
+    border-radius: 4px;
+    font-size: 12px;
+  }
+  .reviews .review-label {
+    color: var(--accent2);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 4px;
+  }
+  .reviews .quote {
+    color: var(--text);
+    font-style: italic;
+    margin-bottom: 4px;
+    line-height: 1.45;
+  }
+  .reviews .src {
+    color: var(--dim);
+    font-size: 10.5px;
+  }
+  .pros li, .cons li {
+    list-style: none;
+    margin-bottom: 3px;
+    padding-left: 16px;
+    position: relative;
+  }
+  .pros li::before { content: "+"; color: var(--good); position: absolute; left: 0; font-weight: 700; }
+  .cons li::before { content: "−"; color: var(--bad); position: absolute; left: 0; font-weight: 700; }
+  .links {
+    margin-top: auto;
+    padding-top: 10px;
+    border-top: 1px solid #334155;
+    font-size: 11.5px;
+    color: var(--dim);
+  }
+  .links a {
+    color: var(--accent2);
+    text-decoration: none;
+    margin-right: 10px;
+  }
+  .links a:hover { text-decoration: underline; }
+  footer {
+    text-align: center;
+    color: var(--dim);
+    font-size: 11px;
+    padding: 24px 14px;
+    border-top: 1px solid #334155;
+  }
+  @media (max-width: 600px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Marathon trainers near Pasadena</h1>
+  <div class="meta">For Preksha · 9 options · with Reddit/Yelp/Trustpilot reviews · 2026-04-26</div>
+  <div class="legend">
+    <span><span class="dot" style="background:#22c55e"></span>tier 1: highly recommended for u</span>
+    <span><span class="dot" style="background:#fb923c"></span>tier 2: solid alternative</span>
+    <span><span class="dot" style="background:#38bdf8"></span>tier 3: niche / supplementary</span>
+  </div>
+</header>
+<main>
+<div class="filters">
+  <button data-filter="all" class="active">all (9)</button>
+  <button data-filter="local">Pasadena local</button>
+  <button data-filter="la">LA-area drivable</button>
+  <button data-filter="online">Online only</button>
+  <button data-filter="free">Free</button>
+  <button data-filter="female">Female coach</button>
+</div>
+
+<div class="grid" id="grid">
+
+<div class="card tier-1" data-tags="local free female group">
+  <h2>Pasadena Pacers <span class="badge free">FREE</span></h2>
+  <div class="nbhd">Pasadena · Rose Bowl Aquatics Center</div>
+  <div class="price">$0/month — completely free</div>
+  <div class="row"><span>Format:</span> <b>Group, structured 16-20 wk marathon program</b></div>
+  <div class="row"><span>Schedule:</span> <b>Sat 6:50 AM, Tue/Thu 6 PM</b></div>
+  <div class="row"><span>Coach:</span> <b>Edgar Mejia (RRCA-certified marathon coach) + others</b></div>
+  <div class="row"><span>Levels:</span> <b>Beginner-friendly to advanced</b></div>
+  <div class="row"><span>Includes:</span> <b>Coached pace groups, training plan, race-day support</b></div>
+  <ul class="pros">
+    <li>Free — best value of any option here</li>
+    <li>Local community + accountability built-in</li>
+    <li>Structured marathon-specific buildup with weekly long runs</li>
+    <li>Multiple weekly meetups (3x/wk) so missing one doesn't derail</li>
+    <li>Edgar is a respected RRCA cert + many runners speak well of him</li>
+  </ul>
+  <ul class="cons">
+    <li>Group-based, less 1:1 personal attention</li>
+    <li>Saturday 6:50 AM start is early</li>
+    <li>Pace groups may not exactly match your pace</li>
+  </ul>
+  <div class="reviews">
+    <div class="review-label">reviews · yelp 29 reviews + first-hand reports</div>
+    <div class="quote">"groups for every level — way to get fit in a supportive and structured environment. Half Marathon, Full Marathon, and 20-mile challenge groups, with 10% off RunWithUs and free refreshments at end of runs."</div>
+    <div class="src">— Yelp / runpacers.org program page</div>
+    <div class="quote" style="margin-top:6px">"completely FREE Run Club offering multiple training runs weekly with Pacer Leaders offering expert training/advice"</div>
+    <div class="src">— RunGroop best-clubs roundup, 2026</div>
+  </div>
+  <div class="links">
+    <a href="https://runpacers.org/pasadena/training-programs/marathon/">marathon program</a>
+    <a href="mailto:Pasadenapacers@gmail.com">enroll</a>
+    <a href="https://runpacers.org/pasadena/meet-edgar-marathon-coach/">edgar's bio</a>
+    <a href="https://www.yelp.com/biz/pasadena-pacers-pasadena">yelp</a>
+  </div>
+</div>
+
+<div class="card tier-1" data-tags="local female">
+  <h2>Kirsten Larsen <span class="badge local">PASADENA</span></h2>
+  <div class="nbhd">Pasadena · Team RunRun (in-person + remote plan)</div>
+  <div class="price paid">$125/mo (sign-up fee waived w/ code 'signuplarsen')</div>
+  <div class="row"><span>Format:</span> <b>1:1 personal coaching, in-person assessments + remote plan</b></div>
+  <div class="row"><span>Schedule:</span> <b>Sessions arranged individually, plan via Final Surge</b></div>
+  <div class="row"><span>Coach:</span> <b>Kirsten Larsen (female, holistic, injury-rebuild specialty)</b></div>
+  <div class="row"><span>Levels:</span> <b>Beginner→intermediate, 5K through marathon</b></div>
+  <div class="row"><span>Includes:</span> <b>Form analysis, mobility/strength assessment, unlimited email/text, custom plan</b></div>
+  <ul class="pros">
+    <li>1:1 personalization for body type + injury history</li>
+    <li>Female coach (per ur preference)</li>
+    <li>Holistic approach — mobility, strength, nutrition, not just running</li>
+    <li>Strong reviews specifically mention injury-rebuild work</li>
+    <li>Unlimited email/text w/ 24-hr response</li>
+  </ul>
+  <ul class="cons">
+    <li>$125/mo not free</li>
+    <li>1:1 = less peer accountability than group</li>
+    <li>Less mention of marathon PR-chasing — better for finishing your first</li>
+  </ul>
+  <div class="reviews">
+    <div class="review-label">reviews · Team RunRun client testimonials</div>
+    <div class="quote">"Coach Kirsten was easy to talk with and is very knowledgeable in strength and mobility. Gave great stretches and exercises to incorporate in daily routine."</div>
+    <div class="src">— Team RunRun client review</div>
+    <div class="quote" style="margin-top:6px">"I absolutely LOVE working with Kirsten. Had been looking for a running coach for a long time due to injuries, but feel very hopeful about getting back to running consistently."</div>
+    <div class="src">— Team RunRun client review</div>
+    <div class="quote" style="margin-top:6px">No Reddit or Yelp reviews surfaced under "Kirsten Larsen" specifically — she works exclusively through Team RunRun's verified review system.</div>
+  </div>
+  <div class="links">
+    <a href="https://teamrunrun.com/coach/kirsten-larsen-pasadena-running-coach/">profile + reviews</a>
+  </div>
+</div>
+
+<div class="card tier-2" data-tags="la female">
+  <h2>Coach Kim Silverstein <span class="badge la">LA</span></h2>
+  <div class="nbhd">LA-area · in-person + virtual</div>
+  <div class="price paid">$199/mo (running group)</div>
+  <div class="row"><span>Format:</span> <b>Virtual marathon plan + LA in-person sessions</b></div>
+  <div class="row"><span>Schedule:</span> <b>Per individual arrangement</b></div>
+  <div class="row"><span>Coach:</span> <b>Kim Silverstein (female, RRCA cert 2020)</b></div>
+  <div class="row"><span>Levels:</span> <b>First-time marathoners + experienced PR-chasers</b></div>
+  <div class="row"><span>Background:</span> <b>7 marathons, 13 half-marathons, 2 sprint tris finished</b></div>
+  <ul class="pros">
+    <li>Female coach who's run 7 marathons herself</li>
+    <li>Reviewers cite her positive + motivating style during hardest miles</li>
+    <li>Customized plan from intake interview (not template)</li>
+  </ul>
+  <ul class="cons">
+    <li>$199/mo (most expensive Pasadena-adjacent option)</li>
+    <li>LA-based, not Pasadena — drive needed for in-person</li>
+    <li>Less specific schedule info publicly</li>
+  </ul>
+  <div class="reviews">
+    <div class="review-label">reviews · client testimonials on coachkim.la</div>
+    <div class="quote">"Kim is a positive, motivating coach who helped break down the hardest miles of a race, running next to them and making it feel manageable."</div>
+    <div class="src">— client testimonial, coachkim.la</div>
+    <div class="quote" style="margin-top:6px">Aligns with HAES (Health At Every Size) philosophy — "anyone in any body size can be a runner." Works without weight-loss focus. Good fit if u're sensitive to body-comp pressure from coaches.</div>
+    <div class="src">— Coach Kim philosophy statement</div>
+  </div>
+  <div class="links">
+    <a href="https://www.coachkim.la/">website</a>
+  </div>
+</div>
+
+<div class="card tier-2" data-tags="la group">
+  <h2>LA Road Runners <span class="badge la">LA</span></h2>
+  <div class="nbhd">Santa Monica + Griffith Park + Encino</div>
+  <div class="price paid">$100 add-on to LA Marathon registration (early-bird)</div>
+  <div class="row"><span>Format:</span> <b>26-week group program (Sept-March), official LA Marathon training</b></div>
+  <div class="row"><span>Schedule:</span> <b>Sat or Sun 7 AM (location varies), Thu 6:30 PM online coach chat</b></div>
+  <div class="row"><span>Coach:</span> <b>Multiple coaches per location, run by McCourt Foundation</b></div>
+  <div class="row"><span>Levels:</span> <b>Pace groups 3:00 to 6:30+ marathon goal time</b></div>
+  <div class="row"><span>Includes:</span> <b>Training shirt, racing singlet, Rose Bowl locker access on race day, Corral B at LA Marathon</b></div>
+  <ul class="pros">
+    <li>Best price-per-week ($100 / 26 wks ≈ $4/wk) of any structured program</li>
+    <li>Race-day perks (locker, corral B, meetup area at LA Marathon)</li>
+    <li>3 location options — pick whichever's least painful drive</li>
+    <li>Walkers + run/walk groups welcome (zero pressure)</li>
+    <li>26 weeks = proper marathon buildup, not crash course</li>
+  </ul>
+  <ul class="cons">
+    <li>None of the locations are Pasadena (closest = Griffith, ~25 min)</li>
+    <li>Need to be racing the LA Marathon to register (the $100 is an add-on)</li>
+    <li>Saturday 7 AM at Santa Monica = 6 AM wake</li>
+    <li>Non-refundable</li>
+  </ul>
+  <div class="reviews">
+    <div class="review-label">reviews · 17 yelp reviews</div>
+    <div class="quote">"LARR trains and supports those who wish to participate in the LA Marathon, Santa Monica Classic, and Rose Bowl Half through training programs, expert coaching, social events."</div>
+    <div class="src">— McCourt Foundation overview</div>
+    <div class="quote" style="margin-top:6px">Coach David's training plans cover Levels 1-5; 26 weeks; kicks off mid-September. Wednesday coached track nights at Santa Monica High School. Now also has Sprintcrowd digital partner for off-day workouts.</div>
+    <div class="src">— Endurance Sportswire / Running USA, 2024 partnership announcement</div>
+  </div>
+  <div class="links">
+    <a href="https://www.mccourtfoundation.org/larr-training/">program details</a>
+    <a href="https://register.hakuapp.com/?event=79ee7356e1846302b5c2">register</a>
+    <a href="https://www.yelp.com/biz/la-road-runners-los-angeles">yelp</a>
+  </div>
+</div>
+
+<div class="card tier-2" data-tags="local free group">
+  <h2>Run With Us (Pasadena) <span class="badge free">FREE</span></h2>
+  <div class="nbhd">235 N Lake Ave, Pasadena (the running shoe store)</div>
+  <div class="price">$0 — free social run</div>
+  <div class="row"><span>Format:</span> <b>Casual social run, NOT a marathon program per se</b></div>
+  <div class="row"><span>Schedule:</span> <b>Mondays 6 PM</b></div>
+  <div class="row"><span>Distance:</span> <b>4 mi or 6 mi run + 2 mi walk option</b></div>
+  <div class="row"><span>Includes:</span> <b>Test the latest shoes, raffle prizes (shoes, race entries, gift cards)</b></div>
+  <ul class="pros">
+    <li>Free + 5 min from anywhere in Pasadena</li>
+    <li>Try-before-you-buy on running shoes from the shop</li>
+    <li>Social — meet local runners, low pressure</li>
+    <li>Pairs perfectly w/ Pasadena Pacers (different days)</li>
+  </ul>
+  <ul class="cons">
+    <li>NOT a structured marathon training program — just a social run</li>
+    <li>Caps at ~6 mi, so won't replace long-run training</li>
+    <li>No coaching, no pace groups, no plan</li>
+  </ul>
+  <div class="reviews">
+    <div class="review-label">reviews · 583 yelp reviews on the store</div>
+    <div class="quote">"Azari's outstanding help — incredibly knowledgeable about all the different shoe options and really took his time throughout the entire process."</div>
+    <div class="src">— Yelp 2026</div>
+    <div class="quote" style="margin-top:6px">"Chose an Asics shoe and completed five half marathons and one full marathon in the same model over four years; when another brand didn't work out, the store fully refunded my money with no questions asked."</div>
+    <div class="src">— Yelp customer</div>
+    <div class="quote" style="margin-top:6px">"The store is tiny and easy to miss on a very busy street, but I'm seriously stoked on my new running shoes."</div>
+    <div class="src">— Yelp 2026</div>
+  </div>
+  <div class="links">
+    <a href="https://www.clubrunwithus.com/">website</a>
+    <a href="https://maps.google.com/?q=235+N+Lake+Ave+Pasadena">map</a>
+    <a href="https://www.yelp.com/biz/run-with-us-pasadena">yelp (583 reviews)</a>
+  </div>
+</div>
+
+<div class="card tier-3" data-tags="la group">
+  <h2>LA Leggers <span class="badge la">LA</span></h2>
+  <div class="nbhd">Santa Monica · 1450 Ocean Ave (near Pier)</div>
+  <div class="price">~$150-200/season (per typical SoCal training club rates; verify on registration)</div>
+  <div class="row"><span>Format:</span> <b>Mentor-led pace groups, Saturday long runs</b></div>
+  <div class="row"><span>Schedule:</span> <b>Saturdays AM (start times vary by distance)</b></div>
+  <div class="row"><span>Coaches:</span> <b>Volunteer mentors per pace group</b></div>
+  <div class="row"><span>Levels:</span> <b>Boston-qualifying down to 18-min/mi walkers</b></div>
+  <div class="row"><span>Includes:</span> <b>Educational clinics (shoes/injury/race-day), training calendar, race-day support stations</b></div>
+  <ul class="pros">
+    <li>Wide pace range (BQ to 18-min/mi walking)</li>
+    <li>Educational clinics on shoes + injury prevention</li>
+    <li>Long history (one of LA's oldest training clubs)</li>
+    <li>Race-day support stations during training runs</li>
+  </ul>
+  <ul class="cons">
+    <li>Santa Monica drive (45-60 min from Pasadena, brutal traffic)</li>
+    <li>Pricing not posted publicly — must inquire</li>
+    <li>Saturday-only (no midweek group runs)</li>
+  </ul>
+  <div class="reviews">
+    <div class="review-label">reviews · 30 yelp reviews</div>
+    <div class="quote">"It was my first time joining Leggers to train for the LA Marathon and it was a wonderful experience."</div>
+    <div class="src">— Yelp first-timer</div>
+    <div class="quote" style="margin-top:6px">"I am very lucky to be in a pace group where the mentors are really motivating (I'm sure they all are)."</div>
+    <div class="src">— Yelp pace-group review</div>
+  </div>
+  <div class="links">
+    <a href="https://laleggers.org/how-it-works/">how it works</a>
+    <a href="https://www.yelp.com/biz/la-leggers-santa-monica-3">yelp (30 reviews)</a>
+  </div>
+</div>
+
+<div class="card tier-3" data-tags="online female">
+  <h2>Run To The Finish (Coach Stacey) <span class="badge online">ONLINE</span></h2>
+  <div class="nbhd">Online 1:1 coaching</div>
+  <div class="price paid">$165/mo</div>
+  <div class="row"><span>Format:</span> <b>1:1 plan + check-ins, no in-person</b></div>
+  <div class="row"><span>Coach:</span> <b>Stacey (female, masters distance + strength specialty)</b></div>
+  <div class="row"><span>Levels:</span> <b>Marathon to ultra, intermediate to advanced</b></div>
+  <div class="row"><span>Specialty:</span> <b>50% of athletes are masters women, injury-prevention focus</b></div>
+  <ul class="pros">
+    <li>Specifically experienced w/ female athletes + masters runners</li>
+    <li>Fully remote — no commute, work around your schedule</li>
+    <li>Injury-prevention emphasis</li>
+  </ul>
+  <ul class="cons">
+    <li>No in-person — no form analysis, no running buddies</li>
+    <li>Need to self-motivate for solo long runs</li>
+    <li>$165/mo, comparable to in-person but fewer touchpoints</li>
+  </ul>
+  <div class="reviews">
+    <div class="review-label">reviews · founder Amanda Brooks book + general program reputation</div>
+    <div class="quote">Amanda Brooks (founder, Run To The Finish since 2007) wrote a runner's guide that's been described as "lighthearted, witty, written to the middle of the pack runner rather than the elite runner."</div>
+    <div class="src">— Goodreads on "Run to the Finish: The Everyday Runner's Guide"</div>
+    <div class="quote" style="margin-top:6px">Coach Stacey Gross specifically — coaching team since 2021, also handles gear reviews "for middle and back of the pack runners."</div>
+    <div class="src">— RunToTheFinish about page</div>
+    <div class="quote" style="margin-top:6px">No prominent Reddit reviews surfaced for Stacey-specifically; reviews are mostly via the program's own community testimonials + Brooks's book reviews.</div>
+  </div>
+  <div class="links">
+    <a href="https://runtothefinish.com/online-running-coach/">coaching page</a>
+    <a href="https://runtothefinish.com/about-amanda-brooks/">about Amanda</a>
+  </div>
+</div>
+
+<div class="card tier-3" data-tags="online">
+  <h2>Run Your Personal Best (RYPB) <span class="badge online">ONLINE</span></h2>
+  <div class="nbhd">Online 1:1 coaching</div>
+  <div class="price paid">$159/mo</div>
+  <div class="row"><span>Format:</span> <b>1:1 plan built week-by-week, every workout reviewed</b></div>
+  <div class="row"><span>Coaches:</span> <b>Multiple — get matched at intake</b></div>
+  <div class="row"><span>Levels:</span> <b>PR-chasers + Boston Qualifier prep</b></div>
+  <div class="row"><span>Reviews:</span> <b>170+ on site, well-rated</b></div>
+  <ul class="pros">
+    <li>Highly individualized — every workout reviewed + adjusted</li>
+    <li>PR + BQ specialty (good if u want a fast time)</li>
+    <li>170+ verified reviews</li>
+  </ul>
+  <ul class="cons">
+    <li>Fully remote, no in-person</li>
+    <li>$159/mo</li>
+    <li>Vibe is more competitive than community-oriented</li>
+  </ul>
+  <div class="reviews">
+    <div class="review-label">reviews · 170+ 5-star on Trustpilot / Google / FB</div>
+    <div class="quote">"My running and overall fitness improved far beyond what I ever thought possible — including qualifying for Boston, running a sub-90 half-marathon, and setting massive PRs at every distance."</div>
+    <div class="src">— Trustpilot client</div>
+    <div class="quote" style="margin-top:6px">"Personalized coaching tailored not just to running goals but to actual life — Brandon adjusted workouts when needed and truly listened to feedback."</div>
+    <div class="src">— Trustpilot client</div>
+    <div class="quote" style="margin-top:6px">"Not just faster and more confident, but actually having fun with my training."</div>
+    <div class="src">— Trustpilot client</div>
+  </div>
+  <div class="links">
+    <a href="https://www.runyourpersonalbest.com/online-running-coaching">website</a>
+    <a href="https://www.trustpilot.com/review/runyourpersonalbest.com">trustpilot reviews</a>
+  </div>
+</div>
+
+<div class="card tier-3" data-tags="la female">
+  <h2>Coached by Mireille <span class="badge la">LA</span></h2>
+  <div class="nbhd">LA-area · autoimmune-athlete specialty</div>
+  <div class="price paid">Free intro call; pricing not posted</div>
+  <div class="row"><span>Format:</span> <b>Personalized plan, free initial call</b></div>
+  <div class="row"><span>Coach:</span> <b>Mireille (female, autoimmune-athlete focus)</b></div>
+  <div class="row"><span>Specialty:</span> <b>AIP / autoimmune protocol runners</b></div>
+  <ul class="pros">
+    <li>Free intro call to assess fit</li>
+    <li>Niche expertise in autoimmune-friendly training (low-inflammation, recovery-focused)</li>
+    <li>Female coach</li>
+  </ul>
+  <ul class="cons">
+    <li>Pricing opaque — must inquire</li>
+    <li>Niche focus — overkill if u don't have an autoimmune condition</li>
+    <li>Smaller operation, less reviews online</li>
+  </ul>
+  <div class="reviews">
+    <div class="review-label">reviews · client testimonials + press features</div>
+    <div class="quote">"She goes well beyond just providing a training plan — offered the support, accountability and helpful tips needed to hit my running goals."</div>
+    <div class="src">— Coached by Mireille testimonial</div>
+    <div class="quote" style="margin-top:6px">"She is understanding, listens to your goals, creates plans that work for your lifestyle, and she's encouraging!"</div>
+    <div class="src">— Coached by Mireille testimonial</div>
+    <div class="quote" style="margin-top:6px">Mireille has been featured in Outside Online + Yoga Journal for her work coaching autoimmune athletes; she's a lupus survivor + ran the Speed Project ultra-relay with Unlimited Women.</div>
+    <div class="src">— Outside Online + Yoga Journal articles, "Running, Coaching, and Living with an Autoimmune Disease"</div>
+  </div>
+  <div class="links">
+    <a href="https://www.coachedbymireille.com">website</a>
+    <a href="https://www.coachedbymireille.com/testimonials">all testimonials</a>
+    <a href="https://www.outsideonline.com/health/training-performance/running-coaching-and-living-with-an-autoimmune-disease/">Outside Online feature</a>
+  </div>
+</div>
+
+</div>
+
+<div style="margin-top:30px;padding:14px 18px;background:var(--card);border-radius:8px;border-left:3px solid var(--good);">
+  <strong style="color:var(--good)">My pick for you:</strong>
+  Start with <strong>Pasadena Pacers</strong> (free, local, structured, group support — perfect for a first marathon). If u want extra 1:1 attention or hit knee issues, layer <strong>Kirsten Larsen</strong> ($125/mo) for personalized form + injury work. That's "$125/mo + free group" vs. the alternatives at $159-199/mo solo.
+</div>
+
+</main>
+<footer>9 options scouted from runpacers.org · teamrunrun.com · coachkim.la · mccourtfoundation.org · laleggers.org · clubrunwithus.com · runtothefinish.com · runyourpersonalbest.com · coachedbymireille.com</footer>
+
+<script>
+const buttons = document.querySelectorAll('.filters button');
+const cards = document.querySelectorAll('.card');
+buttons.forEach(b => b.addEventListener('click', () => {
+  buttons.forEach(bb => bb.classList.remove('active'));
+  b.classList.add('active');
+  const f = b.dataset.filter;
+  cards.forEach(c => {
+    const tags = c.dataset.tags || '';
+    c.style.display = (f === 'all' || tags.includes(f)) ? '' : 'none';
+  });
+}));
+</script>
+</body>
+</html>

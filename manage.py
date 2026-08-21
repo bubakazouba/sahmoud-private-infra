@@ -168,6 +168,61 @@ def _svc_status(svc):
         print(f"[{svc}] not running")
 
 
+def cmd_acl(args):
+    db.init_schema()
+    name = args.app_name
+    a = db.get_app(name)
+    if not a:
+        print(f"[acl] error: app {name!r} not registered")
+        sys.exit(1)
+
+    action = args.acl_action
+
+    if action == "show":
+        acl = db.get_acl(name)
+        if acl is None:
+            print(f"[acl] {name}: using global ALLOWED_EMAILS (no per-app ACL set)")
+        else:
+            print(f"[acl] {name}: {', '.join(sorted(acl)) or '(empty — nobody can access)'}")
+
+    elif action == "set":
+        if not args.emails:
+            print("[acl] error: 'set' requires at least one email")
+            sys.exit(1)
+        result = db.set_acl(name, args.emails)
+        print(f"[acl] {name}: set to {result}")
+
+    elif action == "clear":
+        db.set_acl(name, None)
+        print(f"[acl] {name}: cleared - reverted to global ALLOWED_EMAILS")
+
+    elif action == "add":
+        if not args.emails:
+            print("[acl] error: 'add' requires at least one email")
+            sys.exit(1)
+        current = db.get_acl(name) or set()
+        new_emails = {e.strip().lower() for e in args.emails if e.strip()}
+        merged = current | new_emails
+        result = db.set_acl(name, merged)
+        print(f"[acl] {name}: updated to {result}")
+
+    elif action == "remove":
+        if not args.emails:
+            print("[acl] error: 'remove' requires at least one email")
+            sys.exit(1)
+        current = db.get_acl(name)
+        if current is None:
+            print(f"[acl] {name}: no per-app ACL set — nothing to remove")
+            sys.exit(1)
+        to_remove = {e.strip().lower() for e in args.emails if e.strip()}
+        remaining = current - to_remove
+        result = db.set_acl(name, remaining)
+        if result is None:
+            print(f"[acl] {name}: all emails removed — ACL is now empty (nobody can access). Use 'clear' to revert to global.")
+        else:
+            print(f"[acl] {name}: updated to {result}")
+
+
 def cmd_supervisor(args):
     {"start": lambda: _svc_start("supervisor", "supervisor.py"),
      "stop":  lambda: _svc_stop("supervisor"),
@@ -204,6 +259,13 @@ def main():
 
     l = sub.add_parser("logs"); l.set_defaults(func=cmd_logs)
     l.add_argument("name"); l.add_argument("n", type=int, nargs="?")
+
+    acl_p = sub.add_parser("acl", help="manage per-app email ACL")
+    acl_p.set_defaults(func=cmd_acl)
+    acl_p.add_argument("app_name", metavar="app")
+    acl_p.add_argument("acl_action", metavar="action",
+                       choices=["show", "set", "clear", "add", "remove"])
+    acl_p.add_argument("emails", nargs="*", metavar="email")
 
     for svc in ("supervisor", "console"):
         s = sub.add_parser(svc); s.set_defaults(func=globals()[f"cmd_{svc}"])

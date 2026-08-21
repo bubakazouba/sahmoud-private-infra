@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang=en>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width, initial-scale=1">
+<title>The Saga of NB</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --panel: #161b22;
+    --border: #21262d;
+    --text: #c9d1d9;
+    --muted: #8b949e;
+    --nb-red: #cf2d2d;
+    --gold: #f0b820;
+    --green: #7ee787;
+    --plot-twist: #d2a8ff;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text);
+    font-family: -apple-system, "Segoe UI", system-ui, sans-serif; line-height: 1.55; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 32px 20px 80px; }
+  header { text-align: center; margin-bottom: 36px; }
+  h1 { margin: 0 0 6px; font-size: 36px; letter-spacing: -0.02em; }
+  h1 .nb { color: var(--nb-red); font-weight: 900; }
+  .sub { color: var(--muted); font-size: 14px; max-width: 520px; margin: 0 auto; }
+  .stat-bar { display: flex; gap: 14px; justify-content: center; margin: 22px 0 8px; flex-wrap: wrap; }
+  .stat { background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
+    padding: 10px 16px; min-width: 120px; }
+  .stat .label { color: var(--muted); font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.06em; }
+  .stat .value { font-size: 22px; font-weight: 700; }
+  .stat .footnote { color: var(--muted); font-size: 10px; margin-top: 2px; font-style: italic; }
+  .stat.refund .value { color: var(--green); }
+  .stat.received .value { color: var(--nb-red); }
+  .stat.credit .value { color: var(--gold); }
+
+  /* Timeline */
+  .timeline { position: relative; margin-top: 40px; padding-left: 28px; }
+  .timeline::before { content: ''; position: absolute; left: 8px; top: 4px; bottom: 4px;
+    width: 2px; background: linear-gradient(180deg, var(--green) 0%, var(--gold) 50%, var(--nb-red) 100%); }
+  .beat { position: relative; margin-bottom: 28px; }
+  .beat::before { content: ''; position: absolute; left: -28px; top: 6px; width: 18px; height: 18px;
+    border-radius: 50%; background: var(--bg); border: 3px solid var(--gold); z-index: 2; }
+  .beat.win::before { border-color: var(--green); }
+  .beat.bad::before { border-color: var(--nb-red); }
+  .beat.twist::before { border-color: var(--plot-twist); }
+
+  .when { color: var(--muted); font-size: 12px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+  .what { font-size: 17px; font-weight: 600; margin: 0 0 6px; line-height: 1.35; }
+  .why { color: var(--text); font-size: 14px; opacity: 0.85; }
+  .why em { color: var(--gold); font-style: normal; }
+  blockquote { border-left: 3px solid var(--nb-red); margin: 8px 0 0; padding: 6px 12px;
+    background: #1a1115; color: #ffb1b1; font-size: 13px; font-style: italic; }
+  blockquote.win { border-left-color: var(--green); background: #0f1a14; color: #b1ffd0; }
+  .tag { display: inline-block; padding: 1px 8px; border-radius: 12px; font-size: 11px;
+    font-weight: 600; margin-left: 8px; vertical-align: middle; }
+  .tag-win { background: #0c2c1c; color: var(--green); }
+  .tag-bad { background: #2c0c0c; color: #ff8585; }
+  .tag-twist { background: #1f1530; color: var(--plot-twist); }
+
+  /* Punchline */
+  .punchline { margin-top: 50px; background: var(--panel); border: 2px dashed var(--nb-red);
+    border-radius: 12px; padding: 24px; text-align: center; }
+  .punchline h2 { margin: 0 0 10px; color: var(--nb-red); font-size: 22px; }
+  .punchline .code { display: inline-block; background: #1a0c0c; padding: 6px 12px;
+    border-radius: 6px; font-family: monospace; color: var(--gold); margin: 8px 0; }
+  .punchline .nb-says { color: var(--muted); font-size: 13px; margin-top: 12px; }
+  .punchline .epitaph { margin-top: 18px; font-size: 15px; font-style: italic;
+    color: var(--muted); }
+
+  /* Sequence diagram */
+  .seq-section { margin-top: 50px; }
+  .seq-section h2 { color: var(--gold); margin: 0 0 16px; font-size: 22px; }
+  .seq-section .blurb { color: var(--muted); font-size: 13px; margin-bottom: 18px; }
+  .seq-wrap { background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
+    padding: 18px; overflow-x: auto; }
+  .seq-wrap svg { display: block; margin: 0 auto; min-width: 700px; }
+
+  footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--border);
+    text-align: center; color: #6e7681; font-size: 11px; }
+  footer a { color: #79c0ff; }
+</style>
+</head>
+<body>
+<div class=wrap>
+
+<header>
+  <h1>The Saga of <span class=nb>NB</span></h1>
+  <div class=sub>One pair of $154.69 running shoes. One hole in the upper mesh. One bureaucratic odyssey across two continents and three different New Balance entities.</div>
+  <div class=stat-bar>
+    <div class="stat refund"><div class=label>refund sought</div><div class=value>$154.69</div></div>
+    <div class="stat credit"><div class=label>received</div><div class=value>$150.00</div><div class=footnote>NB.com store credit · single-use · refund: $0</div></div>
+    <div class=stat><div class=label>days elapsed</div><div class=value>83</div></div>
+    <div class=stat><div class=label>NB entities involved</div><div class=value>3</div></div>
+  </div>
+</header>
+
+<div class=seq-section>
+<h2>The sequence diagram</h2>
+<div class=blurb>Three NB entities. Two BBB phases. One customer doing all the orchestration.</div>
+<div class=seq-wrap>
+<svg viewBox="0 0 920 940" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,system-ui,sans-serif" font-size="12">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#c9d1d9"/>
+    </marker>
+    <marker id="arrow-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#cf2d2d"/>
+    </marker>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#7ee787"/>
+    </marker>
+    <marker id="arrow-gold" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#f0b820"/>
+    </marker>
+  </defs>
+
+  <!-- Headers / actor boxes -->
+  <g font-weight="700" font-size="13" text-anchor="middle">
+    <rect x="40" y="20" width="120" height="36" rx="6" fill="#1a2332" stroke="#7ee787" stroke-width="2"/>
+    <text x="100" y="43" fill="#7ee787">Sahmoud</text>
+
+    <rect x="220" y="20" width="120" height="36" rx="6" fill="#1a2332" stroke="#79c0ff" stroke-width="2"/>
+    <text x="280" y="43" fill="#79c0ff">Run With Us</text>
+
+    <rect x="400" y="20" width="120" height="36" rx="6" fill="#1a2332" stroke="#f0b820" stroke-width="2"/>
+    <text x="460" y="43" fill="#f0b820">NB Australia</text>
+
+    <rect x="580" y="20" width="120" height="36" rx="6" fill="#1a2332" stroke="#cf2d2d" stroke-width="2"/>
+    <text x="640" y="43" fill="#cf2d2d">BBB</text>
+
+    <rect x="760" y="20" width="140" height="36" rx="6" fill="#1a2332" stroke="#d2a8ff" stroke-width="2"/>
+    <text x="830" y="43" fill="#d2a8ff">NB Corporate (US)</text>
+  </g>
+
+  <!-- Lifelines -->
+  <g stroke="#21262d" stroke-width="1" stroke-dasharray="4 4">
+    <line x1="100" y1="60" x2="100" y2="900"/>
+    <line x1="280" y1="60" x2="280" y2="900"/>
+    <line x1="460" y1="60" x2="460" y2="900"/>
+    <line x1="640" y1="60" x2="640" y2="900"/>
+    <line x1="830" y1="60" x2="830" y2="900"/>
+  </g>
+
+  <!-- Beat 1: Feb 6 — purchase -->
+  <g>
+    <text x="20" y="92" fill="#8b949e" font-size="10" font-weight="600">FEB 6</text>
+    <line x1="100" y1="100" x2="280" y2="100" stroke="#7ee787" stroke-width="2" marker-end="url(#arrow-green)"/>
+    <text x="190" y="93" text-anchor="middle" fill="#7ee787">$154.69 → M86014D</text>
+    <line x1="280" y1="115" x2="100" y2="115" stroke="#7ee787" stroke-width="2" marker-end="url(#arrow-green)"/>
+    <text x="190" y="130" text-anchor="middle" fill="#c9d1d9" font-size="11">shoes (with hidden defect)</text>
+  </g>
+
+  <!-- Beat 2: ~March — hole appears -->
+  <g>
+    <text x="20" y="170" fill="#8b949e" font-size="10" font-weight="600">~MAR</text>
+    <text x="100" y="170" text-anchor="middle" fill="#ff8585" font-size="11">[hole forms in upper mesh]</text>
+  </g>
+
+  <!-- Beat 3: April — back to Run With Us -->
+  <g>
+    <text x="20" y="210" fill="#8b949e" font-size="10" font-weight="600">APR (early)</text>
+    <line x1="100" y1="220" x2="280" y2="220" stroke="#c9d1d9" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <text x="190" y="213" text-anchor="middle" fill="#c9d1d9">"this is defective"</text>
+    <line x1="280" y1="240" x2="100" y2="240" stroke="#cf2d2d" stroke-width="1.5" marker-end="url(#arrow-red)"/>
+    <text x="190" y="255" text-anchor="middle" fill="#ff8585">"talk to NB"</text>
+  </g>
+
+  <!-- Beat 4: April — contacts NB → routed to AU -->
+  <g>
+    <text x="20" y="295" fill="#8b949e" font-size="10" font-weight="600">APR (early)</text>
+    <path d="M 100 305 Q 280 290 460 305" fill="none" stroke="#d2a8ff" stroke-width="1.5" marker-end="url(#arrow)" stroke-dasharray="3 3"/>
+    <text x="280" y="290" text-anchor="middle" fill="#d2a8ff" font-size="11">contacts NB.com — routed to AU 🦘</text>
+    <line x1="460" y1="320" x2="100" y2="320" stroke="#f0b820" stroke-width="1.5" marker-end="url(#arrow-gold)"/>
+    <text x="280" y="335" text-anchor="middle" fill="#f0b820">cases #781506, #780688</text>
+  </g>
+
+  <!-- Beat 5: 20% voucher -->
+  <g>
+    <text x="20" y="370" fill="#8b949e" font-size="10" font-weight="600">APR (mid)</text>
+    <line x1="460" y1="380" x2="100" y2="380" stroke="#cf2d2d" stroke-width="1.5" marker-end="url(#arrow-red)"/>
+    <text x="280" y="373" text-anchor="middle" fill="#ff8585">"20% off goodwill voucher"</text>
+    <line x1="100" y1="400" x2="460" y2="400" stroke="#c9d1d9" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <text x="280" y="415" text-anchor="middle" fill="#c9d1d9">declined</text>
+  </g>
+
+  <!-- Beat 6: BBB filed -->
+  <g>
+    <text x="20" y="450" fill="#8b949e" font-size="10" font-weight="600">APR 13</text>
+    <line x1="100" y1="460" x2="640" y2="460" stroke="#c9d1d9" stroke-width="2" marker-end="url(#arrow)"/>
+    <text x="370" y="453" text-anchor="middle" fill="#c9d1d9" font-weight="600">files complaint #24745800 — refund $154.69</text>
+  </g>
+
+  <!-- Beat 7: BBB → NB (via Boston offices). NB-corp gets the ping. -->
+  <g>
+    <text x="20" y="500" fill="#8b949e" font-size="10" font-weight="600">APR 14</text>
+    <line x1="640" y1="510" x2="830" y2="510" stroke="#c9d1d9" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <text x="735" y="503" text-anchor="middle" fill="#c9d1d9">forwards complaint</text>
+  </g>
+
+  <!-- Beat 8 (act vii): NB-AU-side response via BBB: "customer is in Australia" -->
+  <g>
+    <text x="20" y="555" fill="#8b949e" font-size="10" font-weight="600">APR 27</text>
+    <line x1="830" y1="565" x2="640" y2="565" stroke="#cf2d2d" stroke-width="1.5" marker-end="url(#arrow-red)"/>
+    <text x="735" y="558" text-anchor="middle" fill="#ff8585">"customer is in Australia"</text>
+    <line x1="640" y1="585" x2="100" y2="585" stroke="#cf2d2d" stroke-width="1.5" marker-end="url(#arrow-red)"/>
+    <text x="370" y="600" text-anchor="middle" fill="#ff8585">[BBB relays canned dismissal]</text>
+  </g>
+
+  <!-- Beat 9: Tim from Corp pings Sahmoud directly via email -->
+  <g>
+    <text x="20" y="640" fill="#8b949e" font-size="10" font-weight="600">APR 28</text>
+    <line x1="830" y1="650" x2="100" y2="650" stroke="#d2a8ff" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <text x="465" y="643" text-anchor="middle" fill="#d2a8ff">Tim email: "AU was a routing error, send proof"</text>
+    <line x1="100" y1="670" x2="830" y2="670" stroke="#7ee787" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+    <text x="465" y="685" text-anchor="middle" fill="#7ee787">12 photos + receipt + invoice #295951</text>
+  </g>
+
+  <!-- Beat 10: Sahmoud rejects business response on BBB -->
+  <g>
+    <text x="20" y="725" fill="#8b949e" font-size="10" font-weight="600">APR 28</text>
+    <line x1="100" y1="735" x2="640" y2="735" stroke="#c9d1d9" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <text x="370" y="728" text-anchor="middle" fill="#c9d1d9">REJECT business response (cite Tim's email)</text>
+  </g>
+
+  <!-- Beat 11: Tim returns with verdict + $150 promo -->
+  <g>
+    <text x="20" y="785" fill="#8b949e" font-size="10" font-weight="600">APR 29</text>
+    <line x1="830" y1="795" x2="100" y2="795" stroke="#cf2d2d" stroke-width="1.5" marker-end="url(#arrow-red)"/>
+    <text x="465" y="788" text-anchor="middle" fill="#ff8585">"outsoles indicate heavy wear" + $150 promo (NB.com only)</text>
+  </g>
+
+  <!-- Status -->
+  <g>
+    <text x="20" y="850" fill="#8b949e" font-size="10" font-weight="600">NOW</text>
+    <rect x="80" y="858" width="800" height="36" rx="6" fill="#2c0c0c" stroke="#cf2d2d"/>
+    <text x="480" y="881" text-anchor="middle" fill="#ff8585" font-weight="600">UNRESOLVED · refund: $0 · NB-only credit: $150 · 83 days elapsed</text>
+  </g>
+
+</svg>
+</div>
+</div>
+
+
+<div class=timeline>
+
+<div class="beat win">
+  <div class=when>act i · Feb 6, 2026</div>
+  <h3 class=what>The Purchase <span class="tag tag-win">happy</span></h3>
+  <div class=why>Sahmoud walks into Run With Us at 235 N Lake Ave, Pasadena. Maria rings up an M86014D in size 12.5 D for $139.99 plus $14.70 tax. Total: <em>$154.69 on Visa 5590</em>. The shoes are beautiful. The shoes will run many miles.</div>
+</div>
+
+<div class=beat>
+  <div class=when>act ii · ~March 2026</div>
+  <h3 class=what>The Hole</h3>
+  <div class=why>After under 2 months of normal use, a hole appears through the upper mesh. <em>Not the sole.</em> Not the laces. The mesh. Above the toes. As if the shoe was actively trying to breathe.</div>
+</div>
+
+<div class="beat bad">
+  <div class=when>act iii · early April</div>
+  <h3 class=what>"Talk to New Balance" <span class="tag tag-bad">classic</span></h3>
+  <div class=why>Sahmoud returns to Run With Us. Run With Us, the authorized New Balance retailer, suggests Sahmoud talk to <em>New Balance</em>. The buck is officially passed.</div>
+</div>
+
+<div class="beat twist">
+  <div class=when>act iv · early April · plot twist</div>
+  <h3 class=what>...Australia? <span class="tag tag-twist">geography</span></h3>
+  <div class=why>Sahmoud contacts New Balance customer service from his computer in Pasadena, California. Through some routing alchemy unknown to mortals, his ticket lands in the inbox of <em>New Balance Australia.</em> Cases <em>#781506</em> and <em>#780688</em> are opened. The Pacific Ocean was not consulted.</div>
+</div>
+
+<div class="beat bad">
+  <div class=when>act v · mid-April</div>
+  <h3 class=what>The 20% Goodwill Voucher</h3>
+  <div class=why>NB Australia's offer: a <em>20% off goodwill voucher</em>. Toward a future NB purchase. From the company that made the shoe that has a hole in it. Sahmoud declines.</div>
+</div>
+
+<div class=beat>
+  <div class=when>act vi · April 13</div>
+  <h3 class=what>The BBB Files</h3>
+  <div class=why>Sahmoud files BBB complaint <em>#24745800</em> against New Balance Athletics, Inc. Desired settlement: refund. The Better Business Bureau has been notified.</div>
+</div>
+
+<div class="beat bad">
+  <div class=when>act vii · April 27 · the gaslight</div>
+  <h3 class=what>"The customer lives in Australia" <span class="tag tag-bad">galaxy brain</span></h3>
+  <div class=why>NB's response via BBB:</div>
+  <blockquote>"The customer lives in Australia and has reached our US-based website, but we are only able to assist with US inquiries."</blockquote>
+  <div class=why style=margin-top:8px>The customer does not live in Australia. <em>The customer lives in Pasadena.</em> The Australian cases were opened by NB themselves, by accident, three weeks ago. New Balance is now using <em>their own routing error</em> as grounds to dismiss the complaint.</div>
+</div>
+
+<div class="beat twist">
+  <div class=when>act viii · April 28 · the cavalry</div>
+  <h3 class=what>Tim from Corporate <span class="tag tag-twist">a hero arrives</span></h3>
+  <div class=why>Tim, Customer Experience Associate at the New Balance corporate office in Boston, USA, sends an email:</div>
+  <blockquote class=win>"I apologize for any confusion regarding the Australian team you have been communicating with. We do not have any access into your communication with them."</blockquote>
+  <div class=why style=margin-top:8px>Tim asks for photos and proof of purchase. Sahmoud sends <em>12 shoe photos</em> and the receipt. Hope flickers.</div>
+</div>
+
+<div class=beat>
+  <div class=when>act ix · April 28 · the response</div>
+  <h3 class=what>Reject Business Response</h3>
+  <div class=why>Sahmoud rejects NB's BBB-side dismissal, citing Tim's email as evidence that NB US has explicitly taken jurisdiction. The two parallel arms of New Balance — BBB-facing and corporate-facing — have, at this point, told entirely different stories about whether Sahmoud is from Australia.</div>
+</div>
+
+<div class="beat bad">
+  <div class=when>act x · April 29 · Tim returns</div>
+  <h3 class=what>The Verdict <span class="tag tag-bad">surprise</span></h3>
+  <div class=why>Tim, having reviewed the 12 photos, the receipt, the case numbers, and the timeline, delivers his findings:</div>
+  <blockquote>"While the purchase was made recently, the wear on the outsoles and midsoles do indicate the shoes have been heavily worn in that timeframe."</blockquote>
+  <div class=why style=margin-top:8px>The hole, you see, is in the <em>upper mesh.</em> Not the outsole. Not the midsole. Tim's reply <em>does not mention the upper mesh.</em></div>
+</div>
+
+</div>
+
+<div class=punchline>
+  <h2>The Resolution</h2>
+  <div>For the inconvenience of a hole in your $154.69 shoe — caused, somehow, by you wearing it normally — please accept:</div>
+  <div class=code>CCGW_150-H56K-RXHQ-B2N7-B5XG</div>
+  <div>a <strong>$150 promo code</strong>, redeemable on <strong>NewBalance.com</strong>. Expires July 28, 2026.</div>
+  <div class=nb-says>One-time use. Not combinable with other promos. Forfeited on returned orders.<br>To redeem, simply enter the promo code at NewBalance.com under "Redeem Promo Code" and click Apply.</div>
+  <div class=epitaph>The solution to your defective New Balance shoe<br>is, of course, more New Balance shoes.</div>
+  <div style="margin-top:18px;padding-top:14px;border-top:1px solid var(--border);font-size:12px;color:var(--muted)">
+    where to redeem: the v14 you bought has been discontinued; the successor is the<br>
+    <a href="https://www.newbalance.com/pd/fresh-foam-x-860v15/M860V15_RU-FTW-802888.html" target="_blank" style="color:var(--gold)">Fresh Foam X 860v15</a>
+    — same line, next gen, $149.99, sizes 7-16 incl 12.5 D
+  </div>
+</div>
+
+<footer>
+  cumulative refund: $0.00 · cumulative store credit (in NB.com only): $150 · cumulative time invested: <span id=hours>~25</span> hours<br>
+  filed: BBB #24745800 · NB AU cases: #781506, #780688 · NB US thread: xqcq-D6FdwKBqCIR8aUUUDE<br>
+  <span style=opacity:0.7>last updated <span id=updated></span> · status: <strong style=color:#ff8585>unresolved</strong></span>
+</footer>
+
+</div>
+<script>
+  document.getElementById("updated").textContent = new Date().toISOString().slice(0,16).replace("T", " ") + " UTC";
+</script>
+</body>
+</html>

@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Cultivar Registry — Buckwheat Spectator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Cormorant+SC:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.filter-bar { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem; align-items: center; }
+.filter-bar label { font-family: 'Cormorant SC', serif; font-size: 0.68rem; letter-spacing: 0.14em; color: var(--burgundy); }
+.filter-bar select { font-family: 'EB Garamond', serif; font-size: 0.9rem; padding: 0.35rem 0.6rem; border: 1px solid var(--rule); background: var(--cream); color: var(--ink); }
+</style>
+</head>
+<body>
+<div class="masthead">
+  Buckwheat Spectator &nbsp;&middot;&nbsp; Est. 1987 &nbsp;&middot;&nbsp;
+  <a href="index.html">Vol. XXXVIII, No. 4</a> &nbsp;&middot;&nbsp; The International Journal of Fagopyrum Scholarship
+</div>
+<nav>
+  <a href="index.html">Home</a>
+  <a href="cultivars.html" class="active">Cultivars</a>
+  <a href="regions.html">Regions</a>
+  <a href="aromas.html">Aromas</a>
+  <a href="vintages.html">Vintages</a>
+  <a href="pairings.html">Pairings</a>
+  <a href="certification.html">Certification</a>
+  <a href="critics.html">Critics</a>
+  <a href="events.html">Events</a>
+  <a href="visit.html">Visit</a>
+  <a href="reserve.html">Reserve</a>
+  <a href="concours.html">Concours</a>
+  <a href="about.html">About</a>
+</nav>
+
+<div class="hero" style="padding:3.5rem 2rem 3rem;">
+  <div style="position:relative;z-index:1;">
+    <p class="hero-kicker">Complete Registry &nbsp;&middot;&nbsp; 2026 Edition</p>
+    <h1>The Cultivar Registry</h1>
+    <p class="hero-subtitle">Every distinguished groat evaluated by the Buckwheat Spectator tasting panel under controlled milling conditions at 12&#176;C ambient. Scores issued on the 100-point Estienne-Beauvoir scale.</p>
+  </div>
+</div>
+
+<section class="full-bleed">
+  <div class="section-inner">
+    <span class="section-label">Filter the Registry</span>
+    <div class="filter-bar">
+      <label>Region:
+        <select id="f-region" onchange="filterCultivars()">
+          <option value="">All Regions</option>
+          <option value="Allegheny">Allegheny Plateau</option>
+          <option value="Volga">Volga Basin</option>
+          <option value="Brittany">Brittany</option>
+          <option value="Hokkaido">Hokkaido</option>
+          <option value="Niigata">Niigata</option>
+          <option value="Pennsylvania">Pennsylvania Dutch Country</option>
+          <option value="California">California</option>
+        </select>
+      </label>
+      <label>Min Score:
+        <select id="f-score" onchange="filterCultivars()">
+          <option value="0">Any Score</option>
+          <option value="90">90+</option>
+          <option value="93">93+</option>
+          <option value="96">96+</option>
+        </select>
+      </label>
+      <label>Price:
+        <select id="f-price" onchange="filterCultivars()">
+          <option value="">Any Price</option>
+          <option value="under100">Under $100</option>
+          <option value="100to200">$100&ndash;$200</option>
+          <option value="over200">Over $200</option>
+        </select>
+      </label>
+    </div>
+  </div>
+  <div class="cultivar-grid" id="cultivar-grid">
+
+    <div class="cultivar-card prestige" data-region="Allegheny" data-score="98" data-price="285">
+      <div class="card-score legendary">98<small>pts</small></div>
+      <div class="card-name"><a href="cultivars/mancan.html">Domaine Mancan Reserve</a></div>
+      <div class="card-vintage-region">2019 &nbsp;&middot;&nbsp; Allegheny Plateau, Pennsylvania</div>
+      <div class="card-tasting">
+        <strong>Nose:</strong> Roasted hazelnut, warm beeswax, dried apricot. <strong>Palate:</strong> Assertive nuttiness, malted earth, iron-rich mineral depth; finish lingers forty seconds.
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$285 <small>/lb</small></span>
+        <span class="card-badge legendary-badge">Legendary</span>
+      </div>
+    </div>
+
+    <div class="cultivar-card prestige" data-region="Volga" data-score="97" data-price="220">
+      <div class="card-score legendary">97<small>pts</small></div>
+      <div class="card-name"><a href="cultivars/petrovsky-reserve.html">Domaine de Petrovsky Reserve</a></div>
+      <div class="card-vintage-region">2020 &nbsp;&middot;&nbsp; Saratov Oblast, Volga Basin</div>
+      <div class="card-tasting">
+        <strong>Nose:</strong> Black loam, toasted rye, faint smoke. <strong>Palate:</strong> Profound mineral weight, dark crust, leather with fennel seed, tremendous length.
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$220 <small>/lb</small></span>
+        <span class="card-badge legendary-badge">Legendary</span>
+      </div>
+    </div>
+
+    <div class="cultivar-card prestige" data-region="Brittany" data-score="96" data-price="195">
+      <div class="card-score legendary">96<small>pts</small></div>
+      <div class="card-name"><a href="cultivars/bourgeois-lefebvre.html">Chateau Bourgeois-Lefebvre Grand Cru</a></div>
+      <div class="card-vintage-region">2018 &nbsp;&middot;&nbsp; Finistere, Brittany</div>
+      <div class="card-tasting">
+        <strong>Nose:</strong> Atlantic salt spray, wild heather, grilled walnut. <strong>Palate:</strong> Taut acidity, coastal mineral, floral finish of exceptional persistence.
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$195 <small>/lb</small></span>
+        <span class="card-badge prestige-badge">Grand Cru</span>
+      </div>
+    </div>
+
+    <div class="cultivar-card" data-region="Hokkaido" data-score="95" data-price="145">
+      <div class="card-score">95<small>pts</small></div>
+      <div class="card-name"><a href="cultivars/koto.html">Koto Single-Origin Estate</a></div>
+      <div class="card-vintage-region">2021 &nbsp;&middot;&nbsp; Hokkaido Prefecture, Japan</div>
+      <div class="card-tasting">
+        <strong>Nose:</strong> Steamed rice, jasmine, white mineral. <strong>Palate:</strong> Pristine clarity, delicate umami undertone, extraordinary length on the finish.
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$145 <small>/lb</small></span>
+        <span class="card-badge prestige-badge">Estate</span>
+      </div>
+    </div>
+
+    <div class="cultivar-card" data-region="Allegheny" data-score="94" data-price="125">
+      <div class="card-score">94<small>pts</small></div>
+      <div class="card-name"><a href="cultivars/manor.html">Manor Select Harvest</a></div>
+      <div class="card-vintage-region">2021 &nbsp;&middot;&nbsp; Allegheny Plateau, Pennsylvania</div>
+      <div class="card-tasting">
+        <strong>Nose:</strong> Almond paste, warm earth, dried fig. <strong>Palate:</strong> Structured and serious, with a mid-palate of toasted grain and a clean, mineral finish.
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$125 <small>/lb</small></span>
+        <span class="card-badge">Estate Select</span>
+      </div>
+    </div>
+
+    <div class="cultivar-card" data-region="Niigata" data-score="93" data-price="138">
+      <div class="card-score">93<small>pts</small></div>
+      <div class="card-name"><a href="cultivars/koban.html">Koban Reserve Niigata</a></div>
+      <div class="card-vintage-region">2022 &nbsp;&middot;&nbsp; Niigata Prefecture, Japan</div>
+      <div class="card-tasting">
+        <strong>Nose:</strong> Green tea, river stone, young wheat. <strong>Palate:</strong> Clean and precise, with a silky texture and a long, subtly sweet finish.
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$138 <small>/lb</small></span>
+        <span class="card-badge">Reserve</span>
+      </div>
+    </div>
+
+    <div class="cultivar-card" data-region="Allegheny" data-score="93" data-price="112">
+      <div class="card-score">93<small>pts</small></div>
+      <div class="card-name"><a href="cultivars/horizon.html">Horizon Reserve Allegheny</a></div>
+      <div class="card-vintage-region">2020 &nbsp;&middot;&nbsp; Allegheny Plateau, Pennsylvania</div>
+      <div class="card-tasting">
+        <strong>Nose:</strong> Sunflower seed, pale honey, limestone dust. <strong>Palate:</strong> Open and generous with a pleasant weight and a finish of toasted oat and slate.
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$112 <small>/lb</small></span>
+        <span class="card-badge">Reserve</span>
+      </div>
+    </div>
+
+    <div class="cultivar-card" data-region="Pennsylvania" data-score="92" data-price="95">
+      <div class="card-score">92<small>pts</small></div>
+      <div class="card-name"><a href="cultivars/pennquad.html">Pennquad Heritage</a></div>
+      <div class="card-vintage-region">2020 &nbsp;&middot;&nbsp; Pennsylvania Dutch Country</div>
+      <div class="card-tasting">
+        <strong>Nose:</strong> Fresh grain, chamomile, mild wood smoke. <strong>Palate:</strong> Approachable richness, mid-weight body, long finish of cream and toasted rye.
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$95 <small>/lb</small></span>
+        <span class="card-badge">Heritage</span>
+      </div>
+    </div>
+
+    <div class="cultivar-card" data-region="Volga" data-score="92" data-price="88">
+      <div class="card-score">92<small>pts</small></div>
+      <div class="card-name">Manisoba Volga Classic</div>
+      <div class="card-vintage-region">2021 &nbsp;&middot;&nbsp; Tambov Oblast, Volga Basin</div>
+      <div class="card-tasting">
+        <strong>Nose:</strong> Rich loam, dried mushroom, hazelnuts. <strong>Palate:</strong> Earthy and satisfying, with a structured backbone and a finish of dark mineral.
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$88 <small>/lb</small></span>
+        <span class="card-badge">Classic</span>
+      </div>
+    </div>
+
+    <div class="cultivar-card" data-region="Pennsylvania" data-score="91" data-price="78">
+      <div class="card-score">91<small>pts</small></div>
+      <div class="card-name">Common Gray Estate Reserve</div>
+      <div class="card-vintage-region">2022 &nbsp;&middot;&nbsp; Lancaster County, Pennsylvania</div>
+      <div class="card-tasting">
+        <strong>Nose:</strong> Linseed, wildflower honey, mild grain dust. <strong>Palate:</strong> Understated and composed; finishes with a delicate mineral precision that rewards patience.
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$78 <small>/lb</small></span>
+        <span class="card-badge">Estate</span>
+      </div>
+    </div>
+
+    <div class="cultivar-card" data-region="California" data-score="91" data-price="168">
+      <div class="card-score">91<small>pts</small></div>
+      <div class="card-name">Estienne-Beauvoir Estate Ojai</div>
+      <div class="card-vintage-region">2022 &nbsp;&middot;&nbsp; Upper Ojai, California</div>
+      <div class="card-tasting">
+        <strong>Nose:</strong> Chaparral smoke, sage, volcanic mineral. <strong>Palate:</strong> Mediterranean warmth, a sunny and generous mid-palate, finishing with surprising cool mineral restraint.
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$168 <small>/lb</small></span>
+        <span class="card-badge prestige-badge">Estate</span>
+      </div>
+    </div>
+
+    <div class="cultivar-card" data-region="Brittany" data-score="90" data-price="105">
+      <div class="card-score">90<small>pts</small></div>
+      <div class="card-name">Springfield Atlantique</div>
+      <div class="card-vintage-region">2021 &nbsp;&middot;&nbsp; Morbihan, Brittany</div>
+      <div class="card-tasting">
+        <strong>Nose:</strong> Butter, warm brioche, salted seaweed. <strong>Palate:</strong> Richly textured with a pleasant salinity; finish lingers with notes of cream and ocean fog.
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$105 <small>/lb</small></span>
+        <span class="card-badge">Appellation</span>
+      </div>
+    </div>
+
+    <div class="cultivar-card" data-region="Volga" data-score="90" data-price="72">
+      <div class="card-score">90<small>pts</small></div>
+      <div class="card-name">Solberg-Ostrowski Stepnaya</div>
+      <div class="card-vintage-region">2021 &nbsp;&middot;&nbsp; Saratov Oblast, Volga Basin</div>
+      <div class="card-tasting">
+        <strong>Nose:</strong> Dry steppe grass, anise seed, mild charcoal. <strong>Palate:</strong> Spare and direct; a cultivar of intellectual rather than hedonistic appeal.
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$72 <small>/lb</small></span>
+        <span class="card-badge">Stepnaya Selection</span>
+      </div>
+    </div>
+
+    <div class="cultivar-card" data-region="Hokkaido" data-score="89" data-price="118">
+      <div class="card-score">89<small>pts</small></div>
+      <div class="card-name">Nakamura Northern Terroir</div>
+      <div class="card-vintage-region">2022 &nbsp;&middot;&nbsp; Hokkaido Prefecture, Japan</div>
+      <div class="card-tasting">
+        <strong>Nose:</strong> Yuzu, miso, pine resin. <strong>Palate:</strong> Exceptionally clean with a pronounced savoury quality; finishes on a long note of cold mineral and kelp.
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$118 <small>/lb</small></span>
+        <span class="card-badge">Northern Select</span>
+      </div>
+    </div>
+
+    <div class="cultivar-card" data-region="Allegheny" data-score="89" data-price="65">
+      <div class="card-score">89<small>pts</small></div>
+      <div class="card-name">Allegheny Common Reserve</div>
+      <div class="card-vintage-region">2022 &nbsp;&middot;&nbsp; Allegheny Plateau, Pennsylvania</div>
+      <div class="card-tasting">
+        <strong>Nose:</strong> Nutmeg, bran, gentle honey. <strong>Palate:</strong> Pleasant and straightforward; an admirable daily cultivar of consistent quality.
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$65 <small>/lb</small></span>
+        <span class="card-badge">Reserve</span>
+      </div>
+    </div>
+
+    <div class="cultivar-card" data-region="Brittany" data-score="88" data-price="82">
+      <div class="card-score">88<small>pts</small></div>
+      <div class="card-name">Morin-Duhamel Sarrasin de Brest</div>
+      <div class="card-vintage-region">2022 &nbsp;&middot;&nbsp; Finistere, Brittany</div>
+      <div class="card-tasting">
+        <strong>Nose:</strong> Crepe batter, butter, wild thyme. <strong>Palate:</strong> Pleasantly rustic; a generous mid-weight cultivar suited to informal occasions.
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$82 <small>/lb</small></span>
+        <span class="card-badge">Appellation</span>
+      </div>
+    </div>
+
+    <div class="cultivar-card" data-region="California" data-score="88" data-price="135">
+      <div class="card-score">88<small>pts</small></div>
+      <div class="card-name">Ojai Valley Tartary Nouveau</div>
+      <div class="card-vintage-region">2023 &nbsp;&middot;&nbsp; Upper Ojai, California</div>
+      <div class="card-tasting">
+        <strong>Nose:</strong> Eucalyptus, citrus peel, warm sandstone. <strong>Palate:</strong> Bright and forward with West Coast exuberance; the finish is shorter than one might wish.
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$135 <small>/lb</small></span>
+        <span class="card-badge">Nouveau</span>
+      </div>
+    </div>
+
+    <div class="cultivar-card" data-region="Volga" data-score="87" data-price="58">
+      <div class="card-score">87<small>pts</small></div>
+      <div class="card-name">Volkov-Brennan Chernozem</div>
+      <div class="card-vintage-region">2022 &nbsp;&middot;&nbsp; Voronezh Oblast, Volga Basin</div>
+      <div class="card-tasting">
+        <strong>Nose:</strong> Black earth, beet, autumn wood. <strong>Palate:</strong> Heavy and satisfying; an honest cultivar from an honest terroir.
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$58 <small>/lb</small></span>
+        <span class="card-badge">Chernozem</span>
+      </div>
+    </div>
+
+    <div class="cultivar-card" data-region="Niigata" data-score="87" data-price="92">
+      <div class="card-score">87<small>pts</small></div>
+      <div class="card-name">Niigata Snow Country Select</div>
+      <div class="card-vintage-region">2022 &nbsp;&middot;&nbsp; Niigata Prefecture, Japan</div>
+      <div class="card-tasting">
+        <strong>Nose:</strong> Cold mountain air, rice bran, white peach. <strong>Palate:</strong> Delicate and restrained, with a fine silkiness and an honest mineral close.
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$92 <small>/lb</small></span>
+        <span class="card-badge">Select</span>
+      </div>
+    </div>
+
+    <div class="cultivar-card" data-region="Pennsylvania" data-score="86" data-price="48">
+      <div class="card-score">86<small>pts</small></div>
+      <div class="card-name">Czernowitz-Hale Lancaster Plain</div>
+      <div class="card-vintage-region">2023 &nbsp;&middot;&nbsp; Lancaster County, Pennsylvania</div>
+      <div class="card-tasting">
+        <strong>Nose:</strong> Grain barn, fresh straw, mild caramel. <strong>Palate:</strong> Sturdy and uncomplicated; a capable cultivar for everyday use.
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$48 <small>/lb</small></span>
+        <span class="card-badge">Plain</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section style="background:var(--parchment);">
+  <span class="section-label">Deep-Dive Profiles</span>
+  <h2 class="section-title">Extended Tasting Notes</h2>
+  <p class="section-intro">Our eight most distinguished cultivars receive the full critical treatment: 200-word tasting notes, provenance history, harvest year scores, cellar recommendations, and pairing counsel.</p>
+  <div class="home-nav-tiles">
+    <a href="cultivars/mancan.html" class="home-nav-tile">
+      <span class="home-nav-tile-title">Domaine Mancan Reserve</span>
+      <span class="home-nav-tile-desc">98 pts &middot; Allegheny Plateau</span>
+    </a>
+    <a href="cultivars/manor.html" class="home-nav-tile">
+      <span class="home-nav-tile-title">Manor Select Harvest</span>
+      <span class="home-nav-tile-desc">94 pts &middot; Allegheny Plateau</span>
+    </a>
+    <a href="cultivars/koto.html" class="home-nav-tile">
+      <span class="home-nav-tile-title">Koto Single-Origin Estate</span>
+      <span class="home-nav-tile-desc">95 pts &middot; Hokkaido</span>
+    </a>
+    <a href="cultivars/horizon.html" class="home-nav-tile">
+      <span class="home-nav-tile-title">Horizon Reserve Allegheny</span>
+      <span class="home-nav-tile-desc">93 pts &middot; Allegheny Plateau</span>
+    </a>
+    <a href="cultivars/pennquad.html" class="home-nav-tile">
+      <span class="home-nav-tile-title">Pennquad Heritage</span>
+      <span class="home-nav-tile-desc">92 pts &middot; Pennsylvania Dutch Country</span>
+    </a>
+    <a href="cultivars/koban.html" class="home-nav-tile">
+      <span class="home-nav-tile-title">Koban Reserve Niigata</span>
+      <span class="home-nav-tile-desc">93 pts &middot; Niigata</span>
+    </a>
+    <a href="cultivars/petrovsky-reserve.html" class="home-nav-tile">
+      <span class="home-nav-tile-title">Domaine de Petrovsky Reserve</span>
+      <span class="home-nav-tile-desc">97 pts &middot; Volga Basin</span>
+    </a>
+    <a href="cultivars/bourgeois-lefebvre.html" class="home-nav-tile">
+      <span class="home-nav-tile-title">Chateau Bourgeois-Lefebvre</span>
+      <span class="home-nav-tile-desc">96 pts &middot; Brittany</span>
+    </a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-title">Buckwheat Spectator</div>
+  <div class="footer-strap">The International Journal of Fagopyrum Scholarship &nbsp;&middot;&nbsp; Established 1987</div>
+  <div class="footer-links">
+    <a href="index.html">Home</a>
+    <a href="cultivars.html">Cultivar Registry</a>
+    <a href="regions.html">Regions</a>
+    <a href="events.html">Events</a>
+    <a href="reserve.html">Reserve a Tasting</a>
+    <a href="about.html">About</a>
+  </div>
+  <hr class="footer-rule">
+  <div class="footer-masthead">
+    Margaux Estienne-Beauvoir &nbsp;&middot;&nbsp; Editor-in-Chief<br>
+    Henrik Solberg-Ostrowski MB &nbsp;&middot;&nbsp; Eastern European Affairs<br>
+    Yuki Nakamura-Estienne MBA &nbsp;&middot;&nbsp; Asia-Pacific Bureau
+  </div>
+  <div class="footer-copyright">
+    &copy; 2026 Buckwheat Spectator. All groat scores are the independent opinion of the tasting panel.
+  </div>
+</footer>
+
+<script>
+function filterCultivars() {
+  const region = document.getElementById('f-region').value;
+  const minScore = parseInt(document.getElementById('f-score').value) || 0;
+  const price = document.getElementById('f-price').value;
+  document.querySelectorAll('.cultivar-card').forEach(card => {
+    const r = card.dataset.region || '';
+    const s = parseInt(card.dataset.score) || 0;
+    const p = parseInt(card.dataset.price) || 0;
+    let show = true;
+    if (region && !r.includes(region)) show = false;
+    if (s < minScore) show = false;
+    if (price === 'under100' && p >= 100) show = false;
+    if (price === '100to200' && (p < 100 || p > 200)) show = false;
+    if (price === 'over200' && p <= 200) show = false;
+    card.style.display = show ? '' : 'none';
+  });
+}
+</script>
+</body>
+</html>

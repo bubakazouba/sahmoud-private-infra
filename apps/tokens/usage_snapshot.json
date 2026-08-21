@@ -1,0 +1,21 @@
+{
+  "sampled_at": "2026-08-21T11:45:07.073556+00:00",
+  "buckets": {
+    "session": {
+      "label": "session",
+      "pct": 11,
+      "resets": "Aug 21, 8:59am"
+    },
+    "week_all": {
+      "label": "week (all models)",
+      "pct": 12,
+      "resets": "Aug 27, 9:59am"
+    },
+    "week_fable": {
+      "label": "week (Fable)",
+      "pct": 0,
+      "resets": "Aug 27, 9:59am"
+    }
+  },
+  "raw": "You are currently using your subscription to power your Claude Code usage\n\nCurrent session: 11% used Â· resets Aug 21, 8:59am (America/Los_Angeles)\nCurrent week (all models): 12% used Â· resets Aug 27, 9:59am (America/Los_Angeles)\nCurrent week (Fable): 0% used Â· resets Aug 27, 9:59am (America/Los_Angeles)\n\nWhat's contributing to your limits usage?\nApproximate, based on local sessions on this machine â€” does not include other devices or claude.ai. Behaviors are independent characteristics, not a breakdown.\n\nLast 24h Â· 512 requests Â· 32 sessions\n  88% of your usage was at >150k context\n  83% of your usage came from sessions active for 8+ hours\n  Top MCP servers: claude-in-chrome 19%\n\nLast 7d Â· 4139 requests Â· 264 sessions\n  88% of your usage was at >150k context\n  88% of your usage came from subagent-heavy sessions\n  88% of your usage came from sessions active for 8+ hours\n  Top skills: /messenger-send 1%\n  Top subagents: general-purpose 2%\n  Top MCP servers: claude-in-chrome 22%"
+}

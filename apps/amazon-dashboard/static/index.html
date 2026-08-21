@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Amazon Expenses</title>
+<style>
+  :root {
+    --bg:#0f1419; --panel:#1a212b; --panel2:#232b37; --border:#2d3744;
+    --text:#e6ecf3; --text-dim:#8b97a7;
+    --accent:#ff9900;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:14px;line-height:1.5}
+  .container{max-width:1140px;margin:0 auto;padding:16px}
+  header{padding:20px 0 8px}
+  h1{font-size:22px;margin:0 0 4px}
+  h1 span{color:var(--accent)}
+  .meta-line{color:var(--text-dim);font-size:13px}
+  /* view tabs */
+  .view-tabs{display:flex;gap:0;margin:16px 0;border-bottom:1px solid var(--border)}
+  .view-tab{padding:8px 20px;cursor:pointer;font-size:14px;font-weight:600;color:var(--text-dim);border-bottom:2px solid transparent;margin-bottom:-1px}
+  .view-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+  .view-section{display:none}
+  .view-section.active{display:block}
+  /* year tabs */
+  .year-tabs{display:flex;gap:6px;margin:14px 0;flex-wrap:wrap}
+  .year-tab{padding:6px 16px;border:1px solid var(--border);background:var(--panel);color:var(--text-dim);border-radius:6px;cursor:pointer;font-size:13px;font-weight:600}
+  .year-tab.active{background:var(--accent);color:#000;border-color:var(--accent)}
+  /* cards */
+  .topcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:18px}
+  .topcard{padding:12px 14px;background:var(--panel);border:1px solid var(--border);border-radius:6px}
+  .topcard h3{margin:0 0 4px;font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px}
+  .topcard .big{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--accent)}
+  .topcard .sub{font-size:11px;color:var(--text-dim);margin-top:2px}
+  /* chart */
+  .chart{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:16px;margin-bottom:18px}
+  .chart h3{margin:0 0 12px;font-size:15px}
+  .chart svg{width:100%;display:block}
+  /* bar rows */
+  .bar-row{display:grid;grid-template-columns:200px 1fr 90px;gap:8px;align-items:center;margin:5px 0;font-size:13px}
+  .bar-label{font-weight:500}
+  .bar-track{background:var(--panel2);height:22px;border-radius:3px;overflow:hidden}
+  .bar-fill{height:100%;border-radius:3px}
+  .bar-amount{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+  .bar-tx{color:var(--text-dim);font-size:11px}
+  @media (max-width:600px){.bar-row{grid-template-columns:1fr 80px}.bar-track{grid-column:1/-1}}
+  /* bucket cards (bank-tx) */
+  .bucket-detail{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:16px;margin-bottom:18px}
+  .bucket-detail h3{margin:0 0 10px;font-size:15px}
+  .bucket-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px}
+  .bucket-card{padding:10px 12px;background:var(--panel2);border-radius:5px;border-left:3px solid var(--accent);cursor:pointer}
+  .bucket-card:hover{background:#2a3340}
+  .bucket-card .top{display:flex;justify-content:space-between;align-items:baseline}
+  .bucket-card .name{font-weight:600;font-size:13px}
+  .bucket-card .name::after{content:" \25b8";color:var(--text-dim);font-size:10px}
+  .bucket-card.open .name::after{content:" \25be"}
+  .bucket-card .amt{font-weight:700;font-variant-numeric:tabular-nums;font-size:14px;color:var(--accent)}
+  .bucket-card .meta{color:var(--text-dim);font-size:11px;margin-top:2px}
+  .bucket-card .txlist{display:none;margin-top:8px;max-height:400px;overflow-y:auto}
+  .bucket-card.open .txlist{display:block}
+  .bucket-card .txlist table{width:100%;border-collapse:collapse;font-size:11px;font-variant-numeric:tabular-nums}
+  .bucket-card .txlist td{padding:4px 5px;color:var(--text-dim);vertical-align:top;border-top:1px solid var(--border)}
+  .bucket-card .txlist td.amt{text-align:right;color:var(--text);font-weight:600;white-space:nowrap}
+  .bucket-card .txlist td.date{white-space:nowrap}
+  .bucket-card .txlist td.desc{font-size:10px}
+  /* top tables */
+  table.top-table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--border);border-radius:6px;overflow:hidden;font-size:12px;font-variant-numeric:tabular-nums;margin-bottom:18px}
+  table.top-table th,table.top-table td{padding:8px 10px;border-top:1px solid var(--border);text-align:left}
+  table.top-table th{background:var(--panel2);color:var(--text-dim);font-size:11px;text-transform:uppercase;letter-spacing:0.5px;border-top:none}
+  table.top-table td.amt{text-align:right;color:var(--accent);font-weight:700}
+  table.top-table td.count{text-align:center;color:var(--text-dim)}
+  table.top-table tr:hover td{background:rgba(255,153,0,0.04)}
+  /* item list */
+  .item-list{background:var(--panel);border:1px solid var(--border);border-radius:6px;overflow:hidden;margin-bottom:18px}
+  .item-list h3{padding:12px 16px 0;font-size:15px;margin:0 0 8px}
+  .item-list table{width:100%;border-collapse:collapse;font-size:12px;font-variant-numeric:tabular-nums}
+  .item-list th,.item-list td{padding:7px 12px;border-top:1px solid var(--border);text-align:left}
+  .item-list th{background:var(--panel2);color:var(--text-dim);font-size:11px;text-transform:uppercase;letter-spacing:0.5px;border-top:none}
+  .item-list td.amt{text-align:right;color:var(--accent);font-weight:700}
+  .item-list td.date{color:var(--text-dim);white-space:nowrap}
+  .item-list td.cat{font-size:10px;color:var(--text-dim)}
+  .item-list td.qty{text-align:center;color:var(--text-dim)}
+  .item-list tr:hover td{background:rgba(255,153,0,0.04)}
+  .badge-zero{font-size:9px;padding:1px 5px;border-radius:3px;background:#2d3744;color:#8b97a7;vertical-align:middle;margin-left:4px}
+  /* cat bar chart for items */
+  .cat-bars{margin-bottom:18px}
+  /* freq dots */
+  .freq-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent);margin-right:4px;vertical-align:middle;opacity:0.8}
+  /* section heading */
+  .section-h{font-size:15px;font-weight:700;margin:20px 0 10px}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px}
+  @media (max-width:720px){.two-col{grid-template-columns:1fr}}
+  footer{margin:24px 0 32px;padding-top:14px;border-top:1px solid var(--border);color:var(--text-dim);font-size:12px}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1><span>Amazon</span> Expenses Dashboard</h1>
+    <div class="meta-line" id="meta-line"></div>
+  </header>
+
+  <!-- Top-level view switcher -->
+  <div class="view-tabs">
+    <div class="view-tab active" data-view="items">Items (from order emails)</div>
+    <div class="view-tab" data-view="bank">Bank Transactions (Empower)</div>
+  </div>
+
+  <!-- ============ ITEMS VIEW ============ -->
+  <div class="view-section active" id="view-items">
+    <div class="topcards" id="items-grand-cards"></div>
+    <div class="year-tabs" id="items-year-tabs"></div>
+    <div class="topcards" id="items-year-cards"></div>
+    <div class="chart" id="items-monthly-chart"></div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-h">Top items by spend</div>
+        <table class="top-table" id="items-top-amt">
+          <thead><tr><th>#</th><th>Item</th><th>Category</th><th>Date</th><th style="text-align:right">Total</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div>
+        <div class="section-h">Top items by frequency (all years)</div>
+        <table class="top-table" id="items-top-freq">
+          <thead><tr><th>#</th><th>Item</th><th style="text-align:center">Orders</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="section-h">Items by category — <span id="items-cat-year-label"></span></div>
+    <div id="items-cat-bars" class="chart cat-bars"></div>
+
+    <div class="section-h">All items — <span id="items-list-year-label"></span></div>
+    <div class="item-list">
+      <table id="items-all-table">
+        <thead><tr><th>Date</th><th>Item</th><th>Category</th><th style="text-align:center">Qty</th><th style="text-align:right">Price</th></tr></thead>
+        <tbody id="items-all-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ============ BANK VIEW ============ -->
+  <div class="view-section" id="view-bank">
+    <div class="topcards" id="grand-cards"></div>
+    <div class="year-tabs" id="year-tabs"></div>
+    <div class="topcards" id="year-cards"></div>
+    <div class="chart" id="monthly-chart"></div>
+    <div class="chart" id="bar-chart"></div>
+    <div class="bucket-detail" id="subtype-detail"></div>
+    <h2 style="margin-top:24px;font-size:16px">Top 30 Amazon transactions all-time</h2>
+    <table class="top-table" id="top-table">
+      <thead><tr><th>Date</th><th>Merchant</th><th>Description</th><th style="text-align:right">Amount</th></tr></thead>
+      <tbody id="top-body"></tbody>
+    </table>
+  </div>
+
+  <footer id="footer-line">
+    Items: parsed from ahssahmoud@gmail.com order confirmation emails (2023-2026). Ship-to filter: PASADENA, CA only. Items with unknown price (old email format) excluded from spend totals.
+    Bank txs: Empower transaction dump.
+  </footer>
+</div>
+<script>
+const COLORS = ['#ff9900','#3fb950','#58a6ff','#d29922','#ff7b72','#a371f7','#56d4dd','#bc8cff'];
+let DATA, BANK_YEAR, ITEMS_YEAR;
+
+function fmt(n){if(n==null||isNaN(n)||n===0)return '—';return Math.abs(n)>=1000?'$'+Math.round(n).toLocaleString():'$'+n.toFixed(2)}
+function fmtExact(n){if(n==null||isNaN(n))return '—';return '$'+n.toFixed(2)}
+function escH(s){return (s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+
+// ---- VIEW SWITCHING ----
+document.querySelectorAll('.view-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.view-tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.view-section').forEach(s=>s.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('view-'+tab.dataset.view).classList.add('active');
+  });
+});
+
+async function load(){
+  const r=await fetch('data.json?v='+Date.now());
+  DATA=await r.json();
+  // Bank view: last year
+  BANK_YEAR=DATA.years[DATA.years.length-1];
+  // Items view: last available year
+  const itemYears = Object.keys(DATA.items.years).sort();
+  ITEMS_YEAR = itemYears[itemYears.length-1];
+  renderItems();
+  renderBank();
+}
+
+// =========== ITEMS RENDER ===========
+function renderItems(){
+  const D = DATA.items;
+  // Meta
+  document.getElementById('meta-line').textContent =
+    D.grand_item_count + ' items across 4 years · from order confirmation emails';
+
+  // Grand cards
+  document.getElementById('items-grand-cards').innerHTML = `
+    <div class="topcard"><h3>Total spend (priced items)</h3><div class="big">${fmt(D.grand_total_usd)}</div><div class="sub">${D.grand_item_count} items total</div></div>
+    <div class="topcard"><h3>Items with price</h3><div class="big">${D.grand_item_count - D.grand_zero_price_count}</div><div class="sub">${D.grand_zero_price_count} without exact price</div></div>
+    <div class="topcard"><h3>Email filter</h3><div class="big" style="font-size:14px">Pasadena CA</div><div class="sub">Sahmoud's orders only</div></div>
+    <div class="topcard"><h3>Emails parsed</h3><div class="big">${D.meta.new_format_emails + D.meta.old_format_emails}</div><div class="sub">${D.meta.skipped_no_pasadena} skipped (no Pasadena)</div></div>
+  `;
+
+  // Year tabs
+  const yearOrder = ['2026','2025','2024','2023'];
+  const yt = document.getElementById('items-year-tabs');
+  yt.innerHTML = yearOrder.map(y=>
+    `<button class="year-tab ${y===ITEMS_YEAR?'active':''}" data-year="${y}">${y}</button>`
+  ).join('');
+  yt.querySelectorAll('.year-tab').forEach(b=>b.addEventListener('click',()=>{
+    ITEMS_YEAR=b.dataset.year; renderItemsYear();
+  }));
+
+  // All-time top by amount (all years combined)
+  const topAmt = D.top_by_amount_all_time||[];
+  document.querySelector('#items-top-amt tbody').innerHTML = topAmt.map((item,i)=>`
+    <tr>
+      <td style="color:var(--text-dim)">${i+1}</td>
+      <td>${escH(item.item_name)}</td>
+      <td class="cat">${escH(item.category)}</td>
+      <td class="date">${item.date}</td>
+      <td class="amt">${fmtExact(item.price_usd*item.qty)}</td>
+    </tr>
+  `).join('');
+
+  // All-time top by frequency
+  const topFreq = D.top_by_frequency_all_time||[];
+  document.querySelector('#items-top-freq tbody').innerHTML = topFreq.map((item,i)=>`
+    <tr>
+      <td style="color:var(--text-dim)">${i+1}</td>
+      <td>${escH(item.item_name)}</td>
+      <td class="count">${item.count}x</td>
+    </tr>
+  `).join('');
+
+  renderItemsYear();
+}
+
+function renderItemsYear(){
+  const D = DATA.items;
+  const yr = D.years[ITEMS_YEAR];
+  if(!yr) return;
+
+  // Year cards
+  const priced_count = yr.item_count - yr.zero_price_count;
+  document.getElementById('items-year-cards').innerHTML = `
+    <div class="topcard"><h3>${ITEMS_YEAR} spend (priced)</h3><div class="big">${fmt(yr.total_usd)}</div><div class="sub">${yr.item_count} items</div></div>
+    <div class="topcard"><h3>Items with price</h3><div class="big">${priced_count}</div><div class="sub">${yr.zero_price_count} without exact price</div></div>
+    <div class="topcard"><h3>Categories</h3><div class="big">${yr.categories.length}</div><div class="sub">distinct item types</div></div>
+  `;
+
+  // Monthly chart
+  const W=480,H=180,P={l:42,r:12,t:14,b:24};
+  const iw=W-P.l-P.r,ih=H-P.t-P.b;
+  const ms = yr.monthly||[];
+  const mxM = Math.max(...ms.map(x=>x.total),1);
+  const bw = ms.length? iw/ms.length*0.7 : 1;
+  const gap = ms.length? iw/ms.length : 1;
+  document.getElementById('items-monthly-chart').innerHTML = `
+    <h3>${ITEMS_YEAR} monthly spend (order emails)</h3>
+    <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet">
+      ${ms.map((m,i)=>{
+        const x=P.l+gap*i+(gap-bw)/2;
+        const bh=(m.total/mxM)*ih;
+        const y=P.t+ih-bh;
+        const mon=m.month.slice(5); // "MM"
+        const label=['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][parseInt(mon)||0];
+        return `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${bh.toFixed(1)}" fill="#ff9900" rx="2"/>
+                <text x="${(x+bw/2).toFixed(1)}" y="${(y-3).toFixed(1)}" text-anchor="middle" fill="#e6ecf3" font-size="9">$${Math.round(m.total)}</text>
+                <text x="${(x+bw/2).toFixed(1)}" y="${H-8}" text-anchor="middle" fill="#8b97a7" font-size="9">${label}</text>`;
+      }).join('')}
+    </svg>
+  `;
+
+  // Category bars
+  document.getElementById('items-cat-year-label').textContent = ITEMS_YEAR;
+  const cats = yr.categories||[];
+  const mxCat = Math.max(...cats.map(c=>c.total),1);
+  document.getElementById('items-cat-bars').innerHTML = cats.map((c,i)=>{
+    const pct=(c.total/mxCat)*100;
+    return `<div class="bar-row">
+      <div class="bar-label">${escH(c.name)}<br><span class="bar-tx">${c.count} items</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct.toFixed(1)}%; background:${COLORS[i%COLORS.length]}"></div></div>
+      <div class="bar-amount">${fmt(c.total)}</div>
+    </div>`;
+  }).join('');
+
+  // All items list
+  document.getElementById('items-list-year-label').textContent = ITEMS_YEAR;
+  const allItems = yr.all_items||[];
+  document.getElementById('items-all-body').innerHTML = allItems.map(item=>{
+    const totalPrice = item.price_usd > 0 ? fmtExact(item.price_usd*item.qty) : '<span class="badge-zero">price unknown</span>';
+    return `<tr>
+      <td class="date">${item.date}</td>
+      <td>${escH(item.item_name)}${item.qty>1?' <span style="font-size:10px;color:var(--text-dim)">x'+item.qty+'</span>':''}</td>
+      <td class="cat">${escH(item.category)}</td>
+      <td class="qty">${item.qty}</td>
+      <td class="amt">${totalPrice}</td>
+    </tr>`;
+  }).join('');
+}
+
+// =========== BANK RENDER ===========
+function renderBank(){
+  document.getElementById('grand-cards').innerHTML = `
+    <div class="topcard"><h3>Grand total (all years)</h3><div class="big">${fmt(DATA.grand_total)}</div><div class="sub">${DATA.grand_tx_count} txs</div></div>
+  `;
+  const yt = document.getElementById('year-tabs');
+  yt.innerHTML = DATA.years.map(y=>`<button class="year-tab ${y.year===BANK_YEAR.year?'active':''}" data-year="${y.year}">${y.year_label}</button>`).join('');
+  yt.querySelectorAll('.year-tab').forEach(b=>b.addEventListener('click',()=>{BANK_YEAR=DATA.years.find(y=>y.year===b.dataset.year);renderBankYear()}));
+  renderBankYear();
+  // Top txs (all time)
+  document.getElementById('top-body').innerHTML = (DATA.top_transactions_all_time||[]).map(t=>`
+    <tr><td>${t.date}</td><td>${escH(t.merchant)}</td><td>${escH((t.description||'').slice(0,60))}</td><td class="amt">${fmt(t.amount)}</td></tr>
+  `).join('');
+}
+
+function renderBankYear(){
+  const CY = BANK_YEAR;
+  document.getElementById('year-cards').innerHTML = `
+    <div class="topcard"><h3>${CY.year_label} total</h3><div class="big">${fmt(CY.total)}</div><div class="sub">${CY.tx_count} txs</div></div>
+    <div class="topcard"><h3>Subtypes</h3><div class="big">${CY.subtypes.length}</div><div class="sub">distinct Amazon categories</div></div>
+  `;
+  const W=480,H=180,P={l:42,r:12,t:14,b:24};
+  const iw=W-P.l-P.r,ih=H-P.t-P.b;
+  const ms=CY.monthly||[];
+  const mxM=Math.max(...ms.map(x=>x.amount),1);
+  const bw=ms.length?iw/ms.length*0.7:1;
+  const gap=ms.length?iw/ms.length:1;
+  document.getElementById('monthly-chart').innerHTML = `
+    <h3>${CY.year_label} monthly Amazon spend (bank txs)</h3>
+    <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet">
+      ${ms.map((m,i)=>{
+        const x=P.l+gap*i+(gap-bw)/2;
+        const y=P.t+ih-(m.amount/mxM)*ih;
+        const h=P.t+ih-y;
+        return `<rect x="${x}" y="${y}" width="${bw}" height="${h}" fill="#ff9900" rx="2"/>
+                <text x="${x+bw/2}" y="${y-3}" text-anchor="middle" fill="#e6ecf3" font-size="9">$${(m.amount).toFixed(0)}</text>
+                <text x="${x+bw/2}" y="${H-8}" text-anchor="middle" fill="#8b97a7" font-size="9">${m.month}</text>`;
+      }).join('')}
+    </svg>
+  `;
+  const mxS=Math.max(...CY.subtypes.map(s=>s.amount),1);
+  document.getElementById('bar-chart').innerHTML = `<h3>Subtypes — ${CY.year_label}</h3>`+CY.subtypes.map((s,i)=>{
+    const pct=(s.amount/mxS)*100;
+    return `<div class="bar-row">
+      <div class="bar-label">${escH(s.name)}<br><span class="bar-tx">${s.tx_count} tx</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%; background:${COLORS[i%COLORS.length]}"></div></div>
+      <div class="bar-amount">${fmt(s.amount)}</div>
+    </div>`;
+  }).join('');
+  const dEl=document.getElementById('subtype-detail');
+  dEl.innerHTML = `<h3>Subtype detail — ${CY.year_label} <span style="color:var(--text-dim);font-size:12px;font-weight:normal">(click any to drill into its transactions)</span></h3>
+  <div class="bucket-grid">`+CY.subtypes.map((s,i)=>{
+    const rows=(s.transactions||[]).map(t=>`<tr><td class="date">${t.date||''}</td><td class="amt">${fmt(t.amount)}</td><td class="desc">${escH((t.description||'').slice(0,80))}</td></tr>`).join('');
+    return `<div class="bucket-card" data-i="${i}">
+      <div class="top"><div class="name">${escH(s.name)}</div><div class="amt">${fmt(s.amount)}</div></div>
+      <div class="meta">${s.tx_count} txs</div>
+      <div class="txlist"><table>${rows}</table></div>
+    </div>`;
+  }).join('')+'</div>';
+  dEl.querySelectorAll('.bucket-card').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('open')));
+  // Highlight active year tab
+  document.querySelectorAll('#year-tabs .year-tab').forEach(b=>{
+    b.classList.toggle('active', b.dataset.year===BANK_YEAR.year);
+  });
+}
+
+load();
+</script>
+</body>
+</html>

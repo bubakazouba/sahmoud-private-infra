@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>San Diego — things to do</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --card2: #273449;
+    --accent: #f97316;
+    --accent2: #38bdf8;
+    --text: #e2e8f0;
+    --dim: #94a3b8;
+    --warn: #fbbf24;
+    --good: #4ade80;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  }
+  header {
+    padding: 22px 18px 14px;
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border-bottom: 1px solid #334155;
+  }
+  header h1 { margin: 0 0 6px; font-size: 24px; letter-spacing: -0.3px; }
+  header .meta { color: var(--dim); font-size: 13px; }
+  .weather {
+    margin: 10px 0 0;
+    padding: 10px 12px;
+    background: rgba(251, 191, 36, 0.1);
+    border-left: 3px solid var(--warn);
+    border-radius: 4px;
+    font-size: 13px;
+  }
+  .weather strong { color: var(--warn); }
+  main { padding: 14px 14px 60px; max-width: 880px; margin: 0 auto; }
+  h2 {
+    font-size: 18px;
+    margin: 22px 0 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #334155;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  h2 .badge {
+    font-size: 11px;
+    background: var(--accent);
+    color: #0f172a;
+    padding: 2px 7px;
+    border-radius: 10px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+  h2 .badge.cool { background: var(--accent2); }
+  h2 .badge.good { background: var(--good); }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 10px;
+  }
+  .card {
+    background: var(--card);
+    border-radius: 10px;
+    padding: 12px 13px;
+    border: 1px solid #334155;
+    transition: transform 0.1s, border-color 0.1s;
+  }
+  .card:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .card h3 {
+    margin: 0 0 4px;
+    font-size: 15px;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .card h3 .nbhd {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--accent2);
+    background: rgba(56, 189, 248, 0.12);
+    padding: 1px 7px;
+    border-radius: 8px;
+    white-space: nowrap;
+  }
+  .card .why {
+    font-size: 13px;
+    color: var(--text);
+    margin: 4px 0 8px;
+  }
+  .card .meta {
+    font-size: 11.5px;
+    color: var(--dim);
+    border-top: 1px solid #334155;
+    padding-top: 6px;
+    margin-top: 6px;
+  }
+  .card .meta a {
+    color: var(--accent2);
+    text-decoration: none;
+  }
+  .card .meta a:hover { text-decoration: underline; }
+  .card .indoor::before { content: "🏛️ "; }
+  .card .outdoor::before { content: "🌊 "; }
+  .card .food::before { content: "🍽️ "; }
+  .card .neighborhood::before { content: "🚶 "; }
+  .card .unique::before { content: "✨ "; }
+  footer {
+    text-align: center;
+    color: var(--dim);
+    font-size: 11px;
+    padding: 24px 14px;
+    border-top: 1px solid #334155;
+    margin-top: 30px;
+  }
+  @media (max-width: 480px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>San Diego — things to do</h1>
+  <div class="meta">For Sahmoud + Preksha · Saturday 2026-04-25</div>
+  <div class="weather">
+    <strong>Today:</strong> 60-65°F coastal, light winds, ~50% chance drizzle by late afternoon.
+    Peak warmth 1-3 PM. <strong>Indoor + sheltered options prioritized.</strong> Bring a layer.
+  </div>
+</header>
+<main>
+
+<h2>Indoor — best for today's weather <span class="badge">cold-day pick</span></h2>
+<div class="grid">
+
+<div class="card">
+  <h3><span class="indoor">Birch Aquarium</span><span class="nbhd">La Jolla</span></h3>
+  <div class="why">Scripps research aquarium — kelp forests, jellyfish, leafy seadragons. Better-curated than Sea World, no crowds. ~1.5 hr visit.</div>
+  <div class="meta">2300 Expedition Way · <a href="https://maps.google.com/?q=Birch+Aquarium+La+Jolla">map</a></div>
+</div>
+
+<div class="card">
+  <h3><span class="indoor">USS Midway Museum</span><span class="nbhd">downtown</span></h3>
+  <div class="why">Active aircraft carrier converted to museum. Below-deck exhibits stay dry. Walk the flight deck even if drizzling. ~2-3 hr.</div>
+  <div class="meta">910 N Harbor Dr · <a href="https://maps.google.com/?q=USS+Midway+Museum">map</a></div>
+</div>
+
+<div class="card">
+  <h3><span class="indoor">Balboa Park museums</span><span class="nbhd">Balboa</span></h3>
+  <div class="why">15+ museums in Spanish-Colonial buildings. Pick 2: Photographic Arts (small + great), Air & Space, Museum of Us, Natural History.</div>
+  <div class="meta">1549 El Prado · <a href="https://maps.google.com/?q=Balboa+Park+Museums">map</a></div>
+</div>
+
+<div class="card">
+  <h3><span class="indoor">San Diego Museum of Art</span><span class="nbhd">Balboa</span></h3>
+  <div class="why">Solid permanent collection (Goya, O'Keeffe, Diebenkorn). Smaller than LACMA, walkable in 90 min.</div>
+  <div class="meta">1450 El Prado · <a href="https://maps.google.com/?q=San+Diego+Museum+of+Art">map</a></div>
+</div>
+
+<div class="card">
+  <h3><span class="indoor">Mingei International Museum</span><span class="nbhd">Balboa</span></h3>
+  <div class="why">Folk art + craft from around the world. Recently renovated, the courtyard cafe (Artifact at Mingei) is a great drizzle hideout.</div>
+  <div class="meta">1439 El Prado · <a href="https://maps.google.com/?q=Mingei+International+Museum">map</a></div>
+</div>
+
+<div class="card">
+  <h3><span class="indoor">Liberty Public Market</span><span class="nbhd">Liberty Station</span></h3>
+  <div class="why">Indoor food hall in a former naval base — 30+ vendors (oysters, ramen, pasta, ice cream). Decent for warming up + grazing.</div>
+  <div class="meta">2820 Historic Decatur Rd · <a href="https://maps.google.com/?q=Liberty+Public+Market">map</a></div>
+</div>
+
+<div class="card">
+  <h3><span class="indoor">Maritime Museum of San Diego</span><span class="nbhd">downtown</span></h3>
+  <div class="why">Star of India (1863 tall ship — oldest active sailing ship in world) + USS Dolphin sub + Soviet sub. Climb through, mostly indoor below decks. ~2 hr.</div>
+  <div class="meta">1492 N Harbor Dr · <a href="https://maps.google.com/?q=Maritime+Museum+San+Diego">map</a></div>
+</div>
+
+<div class="card">
+  <h3><span class="indoor">Reuben H. Fleet Science Center + IMAX</span><span class="nbhd">Balboa</span></h3>
+  <div class="why">Hands-on science museum + giant-dome IMAX. The dome shows are the actual draw — book a 1 PM or 3 PM screening to nail the rainy hours.</div>
+  <div class="meta">1875 El Prado · <a href="https://maps.google.com/?q=Fleet+Science+Center">map</a></div>
+</div>
+
+<div class="card">
+  <h3><span class="indoor">SD Air & Space Museum</span><span class="nbhd">Balboa</span></h3>
+  <div class="why">Real Spirit of St. Louis replica, Apollo 9 capsule, WWII fighters. Smaller than Smithsonian but well-curated. ~90 min.</div>
+  <div class="meta">2001 Pan American Plaza · <a href="https://maps.google.com/?q=SD+Air+and+Space+Museum">map</a></div>
+</div>
+
+<div class="card">
+  <h3><span class="indoor">Museum of Us</span><span class="nbhd">Balboa</span></h3>
+  <div class="why">Anthropology museum in the iconic California Tower. "Race: Are We So Different?" + "Cannibals" exhibits are excellent. Tower climb adds $$.</div>
+  <div class="meta">1350 El Prado · <a href="https://maps.google.com/?q=Museum+of+Us+Balboa">map</a></div>
+</div>
+
+<div class="card">
+  <h3><span class="indoor">MCASD downtown (Jacobs Building)</span><span class="nbhd">downtown</span></h3>
+  <div class="why">Contemporary art museum — recently expanded. Two adjacent buildings, free admission. Smaller La Jolla branch is also good if u're up there.</div>
+  <div class="meta">1100 Kettner Blvd · <a href="https://maps.google.com/?q=MCASD+Downtown">map</a></div>
+</div>
+
+<div class="card">
+  <h3><span class="indoor">Whaley House Museum</span><span class="nbhd">Old Town</span></h3>
+  <div class="why">Allegedly America's most haunted house (per the Travel Channel). 1857 Greek Revival, courthouse + theater inside. Self-guided, 30 min, weird.</div>
+  <div class="meta">2476 San Diego Ave · <a href="https://maps.google.com/?q=Whaley+House+Museum">map</a></div>
+</div>
+
+<div class="card">
+  <h3><span class="indoor">Old Town State Historic Park (museums)</span><span class="nbhd">Old Town</span></h3>
+  <div class="why">Free historic district — multiple small indoor museums (Mason Street Schoolhouse, Wells Fargo, blacksmith, Robinson-Rose). Wander, duck in.</div>
+  <div class="meta">4002 Wallace St · <a href="https://maps.google.com/?q=Old+Town+San+Diego+State+Historic+Park">map</a></div>
+</div>
+
+<div class="card">
+  <h3><span class="indoor">Spanish Village Art Center</span><span class="nbhd">Balboa</span></h3>
+  <div class="why">35+ artist studios in a colorful tiled courtyard, behind the Natural History Museum. Free, indoor galleries you can wander between under cover.</div>
+  <div class="meta">1770 Village Pl · <a href="https://maps.google.com/?q=Spanish+Village+Art+Center">map</a></div>
+</div>
+
+<div class="card">
+  <h3><span class="indoor">Mister A's (rooftop bar)</span><span class="nbhd">Bankers Hill</span></h3>
+  <div class="why">12th-floor bar w/ 270° view over downtown + airport runway. Watch planes land at eye level. Cocktail or coffee. Drizzle = moody view.</div>
+  <div class="meta">2550 5th Ave · <a href="https://maps.google.com/?q=Mister+As+San+Diego">map</a></div>
+</div>
+
+<div class="card">
+  <h3><span class="indoor">Modern Times Lomaland Fermentorium</span><span class="nbhd">Point Loma</span></h3>
+  <div class="why">Massive indoor brewery covered floor-to-ceiling in art installations (Post Malone mural, Kerouac portrait in Pop-Tarts). Vegan kitchen.</div>
+  <div class="meta">3725 Greenwood St · <a href="https://maps.google.com/?q=Modern+Times+Lomaland">map</a></div>
+</div>
+
+<div class="card">
+  <h3><span class="indoor">Verbatim Books</span><span class="nbhd">North Park</span></h3>
+  <div class="why">Indie bookshop, well-curated used + new. Couches in back, browse for an hour. Pair w/ Communal Coffee 2 blocks away.</div>
+  <div class="meta">3793 30th St · <a href="https://maps.google.com/?q=Verbatim+Books+San+Diego">map</a></div>
+</div>
+
+<div class="card">
+  <h3><span class="indoor">iFly Indoor Skydiving</span><span class="nbhd">Mission Valley</span></h3>
+  <div class="why">Vertical wind tunnel — actual skydive feel without the plane. 2-flight First Time Flyer ~$105-120/person on Sat (Mon-Fri Super Saver is $75 but that's weekday only). ~1.5 hr total. Reservations recommended.</div>
+  <div class="meta">2385 Camino Del Rio N · <a href="https://maps.google.com/?q=iFly+San+Diego">map</a></div>
+</div>
+
+<div class="card">
+  <h3><span class="indoor">The LOT Liberty Station</span><span class="nbhd">Liberty Station</span></h3>
+  <div class="why">Luxury cinema w/ in-theater food + cocktails (couches, recliners). If u just want to nap-watch a movie indoors as it drizzles, this is it.</div>
+  <div class="meta">2620 Truxtun Rd · <a href="https://maps.google.com/?q=The+LOT+Liberty+Station">map</a></div>
+</div>
+
+</div>
+
+<h2>Outdoor scenic — if drizzle holds off <span class="badge cool">scenic</span></h2>
+<div class="grid">
+
+<div class="card">
+  <h3><span class="outdoor">La Jolla Cove + Children's Pool</span><span class="nbhd">La Jolla</span></h3>
+  <div class="why">Sea lions + harbor seals on rocks year-round. Paved cliff boardwalk = knee-friendly. Cafes 30 sec away on Prospect for warmup.</div>
+  <div class="meta">1100 Coast Blvd · <a href="https://maps.google.com/?q=La+Jolla+Cove">map</a></div>
+</div>
+
+<div class="card">
+  <h3><span class="outdoor">Sunset Cliffs Natural Park</span><span class="nbhd">Point Loma</span></h3>
+  <div class="why">Dramatic eroded sandstone cliffs over Pacific. Best at golden hour ~7 PM today (sunset 7:34 PM). Stay on the path — cliffs crumble.</div>
+  <div class="meta">Sunset Cliffs Blvd · <a href="https://maps.google.com/?q=Sunset+Cliffs+Natural+Park">map</a></div>
+</div>
+
+<div class="card">
+  <h3><span class="outdoor">Cabrillo National Monument</span><span class="nbhd">Point Loma</span></h3>
+  <div class="why">Old Spanish lighthouse + WWII military bunkers + best skyline view of SD. $20/car. Tidepools at low tide (check today: ~12:30 PM low).</div>
+  <div class="meta">1800 Cabrillo Memorial Dr · <a href="https://maps.google.com/?q=Cabrillo+National+Monument">map</a></div>
+</div>
+
+<div class="card">
+  <h3><span class="outdoor">Coronado Beach + Hotel Del</span><span class="nbhd">Coronado</span></h3>
+  <div class="why">Wide flat sand (more wind exposed than La Jolla). Walk to Hotel Del for warmth, lobby + Sunset Bar even if not staying.</div>
+  <div class="meta">Ocean Blvd · <a href="https://maps.google.com/?q=Coronado+Beach">map</a></div>
+</div>
+
+<div class="card">
+  <h3><span class="outdoor">Torrey Pines State Reserve</span><span class="nbhd">N. La Jolla</span></h3>
+  <div class="why">Cliffside trails over the ocean. Razor Point + Beach Trail are 0.5-1 mi each, mild. Knee considerations: pick Razor Point (flatter).</div>
+  <div class="meta">12600 N Torrey Pines Rd · <a href="https://maps.google.com/?q=Torrey+Pines+State+Reserve">map</a></div>
+</div>
+
+</div>
+
+<h2>Food / coffee <span class="badge good">eat well</span></h2>
+<div class="grid">
+
+<div class="card">
+  <h3><span class="food">Bracero Cocina</span><span class="nbhd">Little Italy</span></h3>
+  <div class="why">Modern Mexican — chef Javier Plascencia. Brunch on weekends. Mole, churros, mezcal flights. Reservations recommended.</div>
+  <div class="meta">1490 Kettner Blvd · <a href="https://maps.google.com/?q=Bracero+Cocina+San+Diego">map</a></div>
+</div>
+
+<div class="card">
+  <h3><span class="food">Communal Coffee + Tribute Pizza</span><span class="nbhd">North Park</span></h3>
+  <div class="why">Two spots side-by-side in same lot. Coffee is third-wave; pizza is wood-fired NY-style. Dog-friendly patio.</div>
+  <div class="meta">2335 University Ave · <a href="https://maps.google.com/?q=Communal+Coffee+North+Park">map</a></div>
+</div>
+
+<div class="card">
+  <h3><span class="food">Convoy Street (Kearny Mesa)</span><span class="nbhd">Kearny Mesa</span></h3>
+  <div class="why">SD's Asian food district. Picks: Din Tai Fung (Westfield), Tasty Noodle House (hand-pulled), Tofu House (Korean), Kearny Mesa Sake.</div>
+  <div class="meta">Convoy St · <a href="https://maps.google.com/?q=Convoy+Street+San+Diego">map</a></div>
+</div>
+
+<div class="card">
+  <h3><span class="food">Hodad's</span><span class="nbhd">Ocean Beach</span></h3>
+  <div class="why">Iconic SD burger spot since 1969. Bacon double cheeseburger is the order. Long wait at peak — go before noon or after 2.</div>
+  <div class="meta">5010 Newport Ave · <a href="https://maps.google.com/?q=Hodads+Ocean+Beach">map</a></div>
+</div>
+
+<div class="card">
+  <h3><span class="food">Lola 55</span><span class="nbhd">East Village</span></h3>
+  <div class="why">Tacos elevated — al pastor, carne asada, pollo Yucateco. Margaritas + mezcal. Casual, no reservations.</div>
+  <div class="meta">1290 F St · <a href="https://maps.google.com/?q=Lola+55+San+Diego">map</a></div>
+</div>
+
+<div class="card">
+  <h3><span class="food">Holy Matcha</span><span class="nbhd">North Park</span></h3>
+  <div class="why">Matcha lattes + neon-pink interior (insta moment). Pair with a walk down 30th Street for breweries + boutiques.</div>
+  <div class="meta">3118 University Ave · <a href="https://maps.google.com/?q=Holy+Matcha+San+Diego">map</a></div>
+</div>
+
+</div>
+
+<h2>Neighborhoods to walk <span class="badge cool">vibes</span></h2>
+<div class="grid">
+
+<div class="card">
+  <h3><span class="neighborhood">Little Italy</span><span class="nbhd">downtown-adjacent</span></h3>
+  <div class="why">India St. has the cafes + restaurants. Saturday Mercato (farmers market) runs 8 AM - 2 PM, Cedar to Date St. — perfect timing today.</div>
+  <div class="meta">India St + W Date St · <a href="https://maps.google.com/?q=Little+Italy+San+Diego">map</a></div>
+</div>
+
+<div class="card">
+  <h3><span class="neighborhood">North Park / South Park</span><span class="nbhd">central</span></h3>
+  <div class="why">Local hip neighborhoods. 30th + University = breweries, vintage shops, cafes. Walkable, residential, less touristy than Gaslamp.</div>
+  <div class="meta">University Ave + 30th · <a href="https://maps.google.com/?q=North+Park+San+Diego">map</a></div>
+</div>
+
+<div class="card">
+  <h3><span class="neighborhood">Hillcrest</span><span class="nbhd">central</span></h3>
+  <div class="why">SD's LGBTQ neighborhood, dense restaurants + bars on University. Hillcrest Farmers Market Sundays — but skip today.</div>
+  <div class="meta">University Ave + 5th Ave · <a href="https://maps.google.com/?q=Hillcrest+San+Diego">map</a></div>
+</div>
+
+<div class="card">
+  <h3><span class="neighborhood">Coronado downtown</span><span class="nbhd">Coronado</span></h3>
+  <div class="why">Orange Ave is the main strip — boutiques, ice cream, restaurants. Walkable from beach. Sleepy + clean, like a beach town movie set.</div>
+  <div class="meta">Orange Ave · <a href="https://maps.google.com/?q=Orange+Ave+Coronado">map</a></div>
+</div>
+
+</div>
+
+<h2>Unique / one-offs <span class="badge">special</span></h2>
+<div class="grid">
+
+<div class="card">
+  <h3><span class="unique">Old Globe Theatre</span><span class="nbhd">Balboa</span></h3>
+  <div class="why">Tony-winning regional theater. Check tonight's show — often premieres before Broadway. Tickets often available day-of.</div>
+  <div class="meta">1363 Old Globe Way · <a href="https://www.theoldglobe.org/">tickets</a></div>
+</div>
+
+<div class="card">
+  <h3><span class="unique">Mission Basilica San Diego de Alcalá</span><span class="nbhd">Mission Valley</span></h3>
+  <div class="why">First of the 21 California missions, founded 1769. Active church + small museum. ~30 min visit. Quiet + historic.</div>
+  <div class="meta">10818 San Diego Mission Rd · <a href="https://maps.google.com/?q=Mission+Basilica+San+Diego">map</a></div>
+</div>
+
+<div class="card">
+  <h3><span class="unique">Stone Brewing Liberty Station</span><span class="nbhd">Liberty Station</span></h3>
+  <div class="why">Beer garden in former naval mess hall. Big indoor + outdoor space, decent food. Even if not drinking, ambiance is good.</div>
+  <div class="meta">2816 Historic Decatur Rd · <a href="https://maps.google.com/?q=Stone+Brewing+Liberty+Station">map</a></div>
+</div>
+
+<div class="card">
+  <h3><span class="unique">Self Realization Fellowship Encinitas</span><span class="nbhd">Encinitas</span></h3>
+  <div class="why">Free meditation gardens + ocean views, hidden gem. Closed Mondays, open Sat 9-5. Quiet escape from tourist crowds.</div>
+  <div class="meta">215 K St, Encinitas · <a href="https://maps.google.com/?q=Self+Realization+Fellowship+Encinitas">map</a></div>
+</div>
+
+</div>
+
+</main>
+<footer>
+  Drive from Pasadena: ~2-2.5 hr (I-5 S). Built 2026-04-25.
+</footer>
+</body>
+</html>

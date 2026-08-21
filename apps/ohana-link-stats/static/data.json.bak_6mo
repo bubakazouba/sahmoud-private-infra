@@ -1,0 +1,2796 @@
+{
+  "meta": {
+    "source": "FB Data Download (DYI JSON archive)",
+    "chat_name": "Ohana means Family",
+    "chat_id": "962639783771350",
+    "scraped_at": "2026-05-08",
+    "window_start": "2025-11-08",
+    "window_end": "2026-05-08",
+    "days_covered": 181,
+    "total_messages": 1082,
+    "total_senders": 6,
+    "call_events_filtered": 0,
+    "reaction_events_filtered": 0,
+    "system_events_filtered": 6,
+    "cutoff_reached": true,
+    "oldest_msg_seen": "2025-11-08",
+    "cutoff_requested": "2025-11-08",
+    "archive_file": "facebook-bubakazouba-2026-05-08-otsvpzYw.zip",
+    "archive_date_range_in_zip": "2025-05-09 to 2026-05-08",
+    "methodology": "Scraped via Messenger CDP (scroll-to-top loop, ~150 passes). EXCLUDED: audio/video call events, group video call tiles, reactions, system messages (join/leave/rename). LINKS detected via: (1) all a[href] in article DOM, (2) regex on full text body, (3) l.messenger.com redirect URLs decoded (u= param). Domain classification via urllib.parse hostname (not substring). Facebook profile mention links excluded.",
+    "methodology_v2": "Type classifier v2 applied to raw 635 records. Priority order: gif (forwarded a GIF text) > image (messenger_media anchor OR sent N photos text) > video (facebook.com/share/v/ or share/r/ anchor) > link (any real external URL, profile @mentions excluded) > text (default). Call events excluded upstream. YouTube/IG shares counted as \"link\", not \"video\". Types are mutually exclusive (first match wins).",
+    "methodology_v3": "Video classifier v3 (2026-05-05): Split video into subtypes. ZERO direct uploads found -- messenger_media anchors are images only; all prev \"video\" entries were FB link previews, not camera-roll uploads. video_fb = facebook.com/share/v/ (FB native video) OR /share/r/ (FB reel) -- 27 total. video_yt = youtu.be / youtube.com/watch / youtube.com/shorts -- 14 total. video_ig = instagram.com/reel or /p/ -- 2 total. video_uploaded = 0 (none detected; DOM does not expose media type for messenger_media attachments). DOM signatures: FB reel anchor href=facebook.com/share/r/<id>/ with page title as text; YT via l.messenger.com redirect decoded (u= param) to youtu.be/<id>.",
+    "methodology_v4": "Re-scrape v4 (2026-05-05): Full history captured via React fiber loadPrevious() loop (CDP). 3359 DOM articles total, 737 window messages (vs 589 prior). @-mention profile URLs (facebook.com/<numeric_id>/) now excluded from FB link counts. video_uploaded=0 confirmed: all messenger_media anchors have imgAlt=\"Open photo\", never \"Open video\". Totals: video_fb=33, video_yt=18, video_ig=2, type_video=53.",
+    "methodology_v5": "FB Data Download (DYI) JSON archive -- ground truth, no DOM scraping. Archive: facebook-bubakazouba-2026-05-08-otsvpzYw.zip (1.27 GB, 1 of 1 parts). Thread: ohanameansfamily_962639783771350/message_1.json. 2581 total msgs in archive (2025-05-09 to 2026-05-08), 1082 in 6-month window (excl 6 unsent/deleted). Type classifier: audio > gif > video_uploaded (mp4 direct) > image (photos[]) > share.link domain (video_fb: /reel/ /videos/, video_yt: youtu.be/youtube.com, video_ig: /reel/ /p/) > link_facebook > link_other > text. DOM was blind to: 18 direct video uploads (mp4 camera-roll) which had imgAlt=Open photo in CDP. CDP total 737 vs DYI 1082 = 345 missed messages (47% undercount).",
+    "prior_cdp_total": 737,
+    "dyi_total": 1082,
+    "delta_vs_cdp": 345,
+    "methodology_v6": "Reclassification v6 (2026-05-05): Per Sahmoud request, FB reels, FB video shares, YT video links, and IG reel links are now classified as LINK subtypes -- not video. Only m[videos] (real camera-roll MP4 uploads) remain as type=video. New link subtypes: link_fb (old video_fb + old link_facebook = all FB shares), link_yt (old video_yt = YouTube links), link_ig (old video_ig + link_instagram), link_other (old link_other + link_text). link_fb_reel=0 because archive zip was deleted before reel/non-reel split could be applied; all FB shares folded into link_fb. type_totals.link=65 == donut_sum(fb=41+yt=18+ig=0+other=6). Fixes bug: filter Link(18) vs donut Facebook=41 were inconsistent.",
+    "methodology_v7": "Topic analysis v7 (2026-05-05): LLM classification (claude-sonnet-4-5) on 326/631 in-window messages with >=3 words of text (remaining 305 are media/reactions/1-2 word). 11 topic labels. Topic initiation: message preceded by >=60min silence = new topic start (205 events from 631 messages). media-share = initiating with image/video/audio (no text extracted). Cosine-similarity rule deferred at this corpus size.",
+    "methodology_v8": "Topic analysis v8 (2026-05-09): FB DYI archive re-downloaded (facebook-bubakazouba-2026-05-09-1jOrsfXE.zip, 1.27 GB). 1080 windowed messages (Nov 8, 2025 - May 9, 2026). Filtered to 686 messages with >=3 words text, then excluded 446 FB system messages (joined/started call, sent attachment, reactions etc) leaving 240 real user messages for LLM classification. 11 topic labels: family-coordination, call-coordination, sharing-link, entertainment, religion-islamic, food, health-medical, money-finance, work-school, jokes-memes, other. Topic initiation: >=60min silence = new topic start (243 events). Model: claude-sonnet-4-5, batch size 25.",
+    "methodology_v9": "Link subtypes re-classified from FB DYI archive (was deferred in v6 due to deleted zip; now corrected with persistent archive facebook-bubakazouba-2026-05-09-1jOrsfXE.zip). Reel detection: URL path contains /reel/ = fb_reel; all other facebook.com/fb.com = fb. Also corrected: 2 IG links (Aya) previously mislabeled as link_other -- both are instagram.com links (1 via share.link, 1 via content URL regex). link_fb=15, link_fb_reel=26, link_yt=18, link_ig=2, link_other=4. Total link=65 unchanged.",
+    "archive_file_v8": "facebook-bubakazouba-2026-05-09-1jOrsfXE.zip",
+    "methodology_v10": "Extended analyses v10 (2026-05-05): 8 new sections computed from FB DYI persistent archive. (1) Time-of-day heatmap: 24×7 (hour × day-of-week UTC) per member. (2) Reactions: who gives/receives, emoji preferences, reaction-pair matrix, top-5 viral msgs. (3) Response latency: time-to-first-reply from a different member, avg/median per member (24h cap). (4) Message length: avg/median/p90 word count for text messages; histogram in 5 buckets. (5) Language ratio: per-message heuristic (Arabic U+0600-06FF chars vs Latin alpha); arabic/english/mixed/other. (6) Photo leaderboard: direct uploads (photos[]) per member, album vs single, avg per share. (7) Mention analysis: @Name regex search; FB DYI has no structured mention metadata. (8) Viral messages: top-5 by reaction count.",
+    "methodology_v11": "Language detection now distinguishes Franco-Arabic (Arabizi) from English (v11, 2026-05-05). Three buckets: arabic (>50% of letters are Arabic Unicode U+0600-06FF, or >40% in mixed messages), franco_arabic (Latin-dominant but contains Arabizi signals: digit [2,3,5,7,9] sandwiched by letters on both sides, e.g. 5lst/ba2y/ya3ny; OR presence of common Egyptian Arabizi tokens e.g. msh/ana/enta/keda/yalla), english (Latin-dominant, no Arabizi signals). Messages with no letter characters (emoji/punctuation only) are excluded from the percentage denominator. Short ambiguous messages default to english unless Arabizi signals are present."
+  },
+  "totals": {
+    "facebook": 41,
+    "instagram": 2,
+    "youtube": 18,
+    "other": 4
+  },
+  "members": [
+    {
+      "display_name": "Aya",
+      "total_msgs": 237,
+      "facebook": 4,
+      "instagram": 2,
+      "youtube": 0,
+      "other_links": 0,
+      "first_msg": "2025-11-08",
+      "last_msg": "2026-05-08",
+      "most_shared_domain": "facebook",
+      "type_text": 192,
+      "type_image": 22,
+      "type_audio": 0,
+      "type_gif": 5,
+      "type_video": 12,
+      "type_video_uploaded": 12,
+      "type_link_other": 0,
+      "type_link": 6,
+      "type_link_fb": 1,
+      "type_link_fb_reel": 3,
+      "type_link_yt": 0,
+      "type_link_ig": 2
+    },
+    {
+      "display_name": "Ali",
+      "total_msgs": 187,
+      "facebook": 0,
+      "instagram": 0,
+      "youtube": 0,
+      "other_links": 0,
+      "first_msg": "2025-11-08",
+      "last_msg": "2026-05-08",
+      "most_shared_domain": "none",
+      "type_text": 181,
+      "type_image": 4,
+      "type_audio": 1,
+      "type_gif": 1,
+      "type_video": 0,
+      "type_video_uploaded": 0,
+      "type_link_other": 0,
+      "type_link": 0,
+      "type_link_fb": 0,
+      "type_link_fb_reel": 0,
+      "type_link_yt": 0,
+      "type_link_ig": 0
+    },
+    {
+      "display_name": "Abdulrahman",
+      "total_msgs": 177,
+      "facebook": 0,
+      "instagram": 0,
+      "youtube": 1,
+      "other_links": 3,
+      "first_msg": "2025-11-08",
+      "last_msg": "2026-05-07",
+      "most_shared_domain": "youtube",
+      "type_text": 142,
+      "type_image": 27,
+      "type_audio": 0,
+      "type_gif": 1,
+      "type_video": 3,
+      "type_video_uploaded": 3,
+      "type_link_other": 3,
+      "type_link": 4,
+      "type_link_fb": 0,
+      "type_link_fb_reel": 0,
+      "type_link_yt": 1,
+      "type_link_ig": 0
+    },
+    {
+      "display_name": "Amena",
+      "total_msgs": 175,
+      "facebook": 2,
+      "instagram": 0,
+      "youtube": 4,
+      "other_links": 1,
+      "first_msg": "2025-11-08",
+      "last_msg": "2026-05-01",
+      "most_shared_domain": "youtube",
+      "type_text": 146,
+      "type_image": 21,
+      "type_audio": 0,
+      "type_gif": 0,
+      "type_video": 1,
+      "type_video_uploaded": 1,
+      "type_link_other": 1,
+      "type_link": 7,
+      "type_link_fb": 2,
+      "type_link_fb_reel": 0,
+      "type_link_yt": 4,
+      "type_link_ig": 0
+    },
+    {
+      "display_name": "Hanan",
+      "total_msgs": 158,
+      "facebook": 8,
+      "instagram": 0,
+      "youtube": 13,
+      "other_links": 0,
+      "first_msg": "2025-11-08",
+      "last_msg": "2026-05-04",
+      "most_shared_domain": "youtube",
+      "type_text": 131,
+      "type_image": 4,
+      "type_audio": 0,
+      "type_gif": 1,
+      "type_video": 1,
+      "type_video_uploaded": 1,
+      "type_link_other": 0,
+      "type_link": 21,
+      "type_link_fb": 6,
+      "type_link_fb_reel": 2,
+      "type_link_yt": 13,
+      "type_link_ig": 0
+    },
+    {
+      "display_name": "Hatem",
+      "total_msgs": 148,
+      "facebook": 27,
+      "instagram": 0,
+      "youtube": 0,
+      "other_links": 0,
+      "first_msg": "2025-11-08",
+      "last_msg": "2026-05-07",
+      "most_shared_domain": "facebook",
+      "type_text": 115,
+      "type_image": 5,
+      "type_audio": 0,
+      "type_gif": 0,
+      "type_video": 1,
+      "type_video_uploaded": 1,
+      "type_link_other": 0,
+      "type_link": 27,
+      "type_link_fb": 6,
+      "type_link_fb_reel": 21,
+      "type_link_yt": 0,
+      "type_link_ig": 0
+    }
+  ],
+  "members_sorted_by_msgs": [
+    {
+      "display_name": "Aya",
+      "total_msgs": 237,
+      "facebook": 4,
+      "instagram": 2,
+      "youtube": 0,
+      "other_links": 0,
+      "first_msg": "2025-11-08",
+      "last_msg": "2026-05-08",
+      "most_shared_domain": "facebook",
+      "type_text": 192,
+      "type_image": 22,
+      "type_audio": 0,
+      "type_gif": 5,
+      "type_video": 12,
+      "type_video_uploaded": 12,
+      "type_link_other": 0,
+      "type_link": 6,
+      "type_link_fb": 1,
+      "type_link_fb_reel": 3,
+      "type_link_yt": 0,
+      "type_link_ig": 2
+    },
+    {
+      "display_name": "Ali",
+      "total_msgs": 187,
+      "facebook": 0,
+      "instagram": 0,
+      "youtube": 0,
+      "other_links": 0,
+      "first_msg": "2025-11-08",
+      "last_msg": "2026-05-08",
+      "most_shared_domain": "none",
+      "type_text": 181,
+      "type_image": 4,
+      "type_audio": 1,
+      "type_gif": 1,
+      "type_video": 0,
+      "type_video_uploaded": 0,
+      "type_link_other": 0,
+      "type_link": 0,
+      "type_link_fb": 0,
+      "type_link_fb_reel": 0,
+      "type_link_yt": 0,
+      "type_link_ig": 0
+    },
+    {
+      "display_name": "Abdulrahman",
+      "total_msgs": 177,
+      "facebook": 0,
+      "instagram": 0,
+      "youtube": 1,
+      "other_links": 3,
+      "first_msg": "2025-11-08",
+      "last_msg": "2026-05-07",
+      "most_shared_domain": "youtube",
+      "type_text": 142,
+      "type_image": 27,
+      "type_audio": 0,
+      "type_gif": 1,
+      "type_video": 3,
+      "type_video_uploaded": 3,
+      "type_link_other": 3,
+      "type_link": 4,
+      "type_link_fb": 0,
+      "type_link_fb_reel": 0,
+      "type_link_yt": 1,
+      "type_link_ig": 0
+    },
+    {
+      "display_name": "Amena",
+      "total_msgs": 175,
+      "facebook": 2,
+      "instagram": 0,
+      "youtube": 4,
+      "other_links": 1,
+      "first_msg": "2025-11-08",
+      "last_msg": "2026-05-01",
+      "most_shared_domain": "youtube",
+      "type_text": 146,
+      "type_image": 21,
+      "type_audio": 0,
+      "type_gif": 0,
+      "type_video": 1,
+      "type_video_uploaded": 1,
+      "type_link_other": 1,
+      "type_link": 7,
+      "type_link_fb": 2,
+      "type_link_fb_reel": 0,
+      "type_link_yt": 4,
+      "type_link_ig": 0
+    },
+    {
+      "display_name": "Hanan",
+      "total_msgs": 158,
+      "facebook": 8,
+      "instagram": 0,
+      "youtube": 13,
+      "other_links": 0,
+      "first_msg": "2025-11-08",
+      "last_msg": "2026-05-04",
+      "most_shared_domain": "youtube",
+      "type_text": 131,
+      "type_image": 4,
+      "type_audio": 0,
+      "type_gif": 1,
+      "type_video": 1,
+      "type_video_uploaded": 1,
+      "type_link_other": 0,
+      "type_link": 21,
+      "type_link_fb": 6,
+      "type_link_fb_reel": 2,
+      "type_link_yt": 13,
+      "type_link_ig": 0
+    },
+    {
+      "display_name": "Hatem",
+      "total_msgs": 148,
+      "facebook": 27,
+      "instagram": 0,
+      "youtube": 0,
+      "other_links": 0,
+      "first_msg": "2025-11-08",
+      "last_msg": "2026-05-07",
+      "most_shared_domain": "facebook",
+      "type_text": 115,
+      "type_image": 5,
+      "type_audio": 0,
+      "type_gif": 0,
+      "type_video": 1,
+      "type_video_uploaded": 1,
+      "type_link_other": 0,
+      "type_link": 27,
+      "type_link_fb": 6,
+      "type_link_fb_reel": 21,
+      "type_link_yt": 0,
+      "type_link_ig": 0
+    }
+  ],
+  "weekly_activity": {
+    "weeks": [
+      "2025-11-03",
+      "2025-11-10",
+      "2025-11-17",
+      "2025-11-24",
+      "2025-12-01",
+      "2025-12-08",
+      "2025-12-15",
+      "2025-12-22",
+      "2025-12-29",
+      "2026-01-05",
+      "2026-01-12",
+      "2026-01-19",
+      "2026-01-26",
+      "2026-02-02",
+      "2026-02-09",
+      "2026-02-16",
+      "2026-02-23",
+      "2026-03-02",
+      "2026-03-09",
+      "2026-03-16",
+      "2026-03-23",
+      "2026-03-30",
+      "2026-04-06",
+      "2026-04-13",
+      "2026-04-20",
+      "2026-04-27",
+      "2026-05-04"
+    ],
+    "series": {
+      "Aya": [
+        10,
+        26,
+        44,
+        19,
+        6,
+        3,
+        2,
+        1,
+        10,
+        16,
+        3,
+        27,
+        11,
+        0,
+        8,
+        0,
+        2,
+        5,
+        13,
+        4,
+        7,
+        3,
+        6,
+        1,
+        5,
+        4,
+        1
+      ],
+      "Ali": [
+        12,
+        8,
+        34,
+        8,
+        4,
+        5,
+        5,
+        10,
+        2,
+        2,
+        5,
+        2,
+        7,
+        5,
+        5,
+        8,
+        4,
+        13,
+        6,
+        4,
+        4,
+        8,
+        4,
+        5,
+        8,
+        7,
+        2
+      ],
+      "Abdulrahman": [
+        8,
+        12,
+        12,
+        0,
+        1,
+        3,
+        10,
+        5,
+        7,
+        6,
+        10,
+        2,
+        3,
+        3,
+        4,
+        6,
+        2,
+        21,
+        10,
+        7,
+        11,
+        13,
+        3,
+        12,
+        1,
+        4,
+        1
+      ],
+      "Amena": [
+        8,
+        4,
+        3,
+        14,
+        2,
+        1,
+        10,
+        1,
+        9,
+        9,
+        14,
+        26,
+        1,
+        1,
+        15,
+        2,
+        8,
+        8,
+        7,
+        0,
+        9,
+        14,
+        1,
+        3,
+        3,
+        2,
+        0
+      ],
+      "Hanan": [
+        7,
+        12,
+        6,
+        8,
+        4,
+        3,
+        5,
+        0,
+        0,
+        5,
+        3,
+        9,
+        1,
+        5,
+        6,
+        2,
+        5,
+        14,
+        6,
+        5,
+        9,
+        10,
+        6,
+        5,
+        14,
+        7,
+        1
+      ],
+      "Hatem": [
+        3,
+        2,
+        5,
+        8,
+        3,
+        4,
+        2,
+        8,
+        7,
+        4,
+        3,
+        11,
+        2,
+        5,
+        8,
+        6,
+        4,
+        8,
+        4,
+        2,
+        10,
+        8,
+        7,
+        6,
+        10,
+        6,
+        2
+      ]
+    }
+  },
+  "type_totals": {
+    "text": 907,
+    "image": 83,
+    "audio": 1,
+    "gif": 8,
+    "video": 18,
+    "video_uploaded": 18,
+    "link": 65,
+    "link_fb": 15,
+    "link_fb_reel": 26,
+    "link_yt": 18,
+    "link_ig": 2,
+    "link_other": 4
+  },
+  "pair_coactivity": {
+    "method": "co_active_windows_and_clusters",
+    "window_minutes": 60,
+    "total_messages_analyzed": 1066,
+    "data_source": "FB React fiber items (ohana_fiber_items.json), ms-precision timestamps",
+    "window_start": "2025-11-08",
+    "computed_at": "2026-05-08",
+    "members_order": [
+      "Abdulrahman",
+      "Ali",
+      "Amena",
+      "Aya",
+      "Hanan",
+      "Hatem"
+    ],
+    "sensitivity": {
+      "30min_top_pair": "Ali + Aya (670)",
+      "60min_top_pair": "Abdulrahman + Ali (896)",
+      "120min_top_pair": "Abdulrahman + Ali (1190)",
+      "note": "Rankings stable across windows; relative order unchanged"
+    },
+    "option_a_coactive": {
+      "description": "pair_strength = count[A->B within 60min] + count[B->A within 60min], symmetric",
+      "matrix": {
+        "Abdulrahman": {
+          "Abdulrahman": 0,
+          "Ali": 896,
+          "Amena": 502,
+          "Aya": 526,
+          "Hanan": 494,
+          "Hatem": 432
+        },
+        "Ali": {
+          "Abdulrahman": 896,
+          "Ali": 0,
+          "Amena": 502,
+          "Aya": 884,
+          "Hanan": 568,
+          "Hatem": 592
+        },
+        "Amena": {
+          "Abdulrahman": 502,
+          "Ali": 502,
+          "Amena": 0,
+          "Aya": 790,
+          "Hanan": 482,
+          "Hatem": 534
+        },
+        "Aya": {
+          "Abdulrahman": 526,
+          "Ali": 884,
+          "Amena": 790,
+          "Aya": 0,
+          "Hanan": 432,
+          "Hatem": 546
+        },
+        "Hanan": {
+          "Abdulrahman": 494,
+          "Ali": 568,
+          "Amena": 482,
+          "Aya": 432,
+          "Hanan": 0,
+          "Hatem": 386
+        },
+        "Hatem": {
+          "Abdulrahman": 432,
+          "Ali": 592,
+          "Amena": 534,
+          "Aya": 546,
+          "Hanan": 386,
+          "Hatem": 0
+        }
+      },
+      "top_pairs": [
+        {
+          "pair": [
+            "Abdulrahman",
+            "Ali"
+          ],
+          "strength": 896
+        },
+        {
+          "pair": [
+            "Ali",
+            "Aya"
+          ],
+          "strength": 884
+        },
+        {
+          "pair": [
+            "Amena",
+            "Aya"
+          ],
+          "strength": 790
+        },
+        {
+          "pair": [
+            "Ali",
+            "Hatem"
+          ],
+          "strength": 592
+        },
+        {
+          "pair": [
+            "Ali",
+            "Hanan"
+          ],
+          "strength": 568
+        },
+        {
+          "pair": [
+            "Aya",
+            "Hatem"
+          ],
+          "strength": 546
+        },
+        {
+          "pair": [
+            "Amena",
+            "Hatem"
+          ],
+          "strength": 534
+        },
+        {
+          "pair": [
+            "Abdulrahman",
+            "Aya"
+          ],
+          "strength": 526
+        },
+        {
+          "pair": [
+            "Abdulrahman",
+            "Amena"
+          ],
+          "strength": 502
+        },
+        {
+          "pair": [
+            "Ali",
+            "Amena"
+          ],
+          "strength": 502
+        },
+        {
+          "pair": [
+            "Abdulrahman",
+            "Hanan"
+          ],
+          "strength": 494
+        },
+        {
+          "pair": [
+            "Amena",
+            "Hanan"
+          ],
+          "strength": 482
+        },
+        {
+          "pair": [
+            "Abdulrahman",
+            "Hatem"
+          ],
+          "strength": 432
+        },
+        {
+          "pair": [
+            "Aya",
+            "Hanan"
+          ],
+          "strength": 432
+        },
+        {
+          "pair": [
+            "Hanan",
+            "Hatem"
+          ],
+          "strength": 386
+        }
+      ],
+      "per_member_top3": {
+        "Abdulrahman": [
+          {
+            "partner": "Ali",
+            "strength": 896
+          },
+          {
+            "partner": "Aya",
+            "strength": 526
+          },
+          {
+            "partner": "Amena",
+            "strength": 502
+          }
+        ],
+        "Ali": [
+          {
+            "partner": "Abdulrahman",
+            "strength": 896
+          },
+          {
+            "partner": "Aya",
+            "strength": 884
+          },
+          {
+            "partner": "Hatem",
+            "strength": 592
+          }
+        ],
+        "Amena": [
+          {
+            "partner": "Aya",
+            "strength": 790
+          },
+          {
+            "partner": "Hatem",
+            "strength": 534
+          },
+          {
+            "partner": "Abdulrahman",
+            "strength": 502
+          }
+        ],
+        "Aya": [
+          {
+            "partner": "Ali",
+            "strength": 884
+          },
+          {
+            "partner": "Amena",
+            "strength": 790
+          },
+          {
+            "partner": "Hatem",
+            "strength": 546
+          }
+        ],
+        "Hanan": [
+          {
+            "partner": "Ali",
+            "strength": 568
+          },
+          {
+            "partner": "Abdulrahman",
+            "strength": 494
+          },
+          {
+            "partner": "Amena",
+            "strength": 482
+          }
+        ],
+        "Hatem": [
+          {
+            "partner": "Ali",
+            "strength": 592
+          },
+          {
+            "partner": "Aya",
+            "strength": 546
+          },
+          {
+            "partner": "Amena",
+            "strength": 534
+          }
+        ]
+      }
+    },
+    "option_b_clusters": {
+      "description": "Count of conversation clusters (max 60min gap) where both members appear",
+      "total_clusters": 239,
+      "avg_cluster_size": 4.5,
+      "largest_cluster_size": 42,
+      "matrix": {
+        "Abdulrahman": {
+          "Abdulrahman": 0,
+          "Ali": 33,
+          "Amena": 25,
+          "Aya": 35,
+          "Hanan": 29,
+          "Hatem": 23
+        },
+        "Ali": {
+          "Abdulrahman": 33,
+          "Ali": 0,
+          "Amena": 20,
+          "Aya": 32,
+          "Hanan": 29,
+          "Hatem": 26
+        },
+        "Amena": {
+          "Abdulrahman": 25,
+          "Ali": 20,
+          "Amena": 0,
+          "Aya": 29,
+          "Hanan": 27,
+          "Hatem": 25
+        },
+        "Aya": {
+          "Abdulrahman": 35,
+          "Ali": 32,
+          "Amena": 29,
+          "Aya": 0,
+          "Hanan": 26,
+          "Hatem": 31
+        },
+        "Hanan": {
+          "Abdulrahman": 29,
+          "Ali": 29,
+          "Amena": 27,
+          "Aya": 26,
+          "Hanan": 0,
+          "Hatem": 29
+        },
+        "Hatem": {
+          "Abdulrahman": 23,
+          "Ali": 26,
+          "Amena": 25,
+          "Aya": 31,
+          "Hanan": 29,
+          "Hatem": 0
+        }
+      },
+      "top_pairs": [
+        {
+          "pair": [
+            "Abdulrahman",
+            "Aya"
+          ],
+          "clusters": 35
+        },
+        {
+          "pair": [
+            "Abdulrahman",
+            "Ali"
+          ],
+          "clusters": 33
+        },
+        {
+          "pair": [
+            "Ali",
+            "Aya"
+          ],
+          "clusters": 32
+        },
+        {
+          "pair": [
+            "Aya",
+            "Hatem"
+          ],
+          "clusters": 31
+        },
+        {
+          "pair": [
+            "Abdulrahman",
+            "Hanan"
+          ],
+          "clusters": 29
+        },
+        {
+          "pair": [
+            "Ali",
+            "Hanan"
+          ],
+          "clusters": 29
+        },
+        {
+          "pair": [
+            "Amena",
+            "Aya"
+          ],
+          "clusters": 29
+        },
+        {
+          "pair": [
+            "Hanan",
+            "Hatem"
+          ],
+          "clusters": 29
+        },
+        {
+          "pair": [
+            "Amena",
+            "Hanan"
+          ],
+          "clusters": 27
+        },
+        {
+          "pair": [
+            "Ali",
+            "Hatem"
+          ],
+          "clusters": 26
+        },
+        {
+          "pair": [
+            "Aya",
+            "Hanan"
+          ],
+          "clusters": 26
+        },
+        {
+          "pair": [
+            "Abdulrahman",
+            "Amena"
+          ],
+          "clusters": 25
+        },
+        {
+          "pair": [
+            "Amena",
+            "Hatem"
+          ],
+          "clusters": 25
+        },
+        {
+          "pair": [
+            "Abdulrahman",
+            "Hatem"
+          ],
+          "clusters": 23
+        },
+        {
+          "pair": [
+            "Ali",
+            "Amena"
+          ],
+          "clusters": 20
+        }
+      ],
+      "per_member_top3": {
+        "Abdulrahman": [
+          {
+            "partner": "Aya",
+            "clusters": 35
+          },
+          {
+            "partner": "Ali",
+            "clusters": 33
+          },
+          {
+            "partner": "Hanan",
+            "clusters": 29
+          }
+        ],
+        "Ali": [
+          {
+            "partner": "Abdulrahman",
+            "clusters": 33
+          },
+          {
+            "partner": "Aya",
+            "clusters": 32
+          },
+          {
+            "partner": "Hanan",
+            "clusters": 29
+          }
+        ],
+        "Amena": [
+          {
+            "partner": "Aya",
+            "clusters": 29
+          },
+          {
+            "partner": "Hanan",
+            "clusters": 27
+          },
+          {
+            "partner": "Abdulrahman",
+            "clusters": 25
+          }
+        ],
+        "Aya": [
+          {
+            "partner": "Abdulrahman",
+            "clusters": 35
+          },
+          {
+            "partner": "Ali",
+            "clusters": 32
+          },
+          {
+            "partner": "Hatem",
+            "clusters": 31
+          }
+        ],
+        "Hanan": [
+          {
+            "partner": "Abdulrahman",
+            "clusters": 29
+          },
+          {
+            "partner": "Ali",
+            "clusters": 29
+          },
+          {
+            "partner": "Hatem",
+            "clusters": 29
+          }
+        ],
+        "Hatem": [
+          {
+            "partner": "Aya",
+            "clusters": 31
+          },
+          {
+            "partner": "Hanan",
+            "clusters": 29
+          },
+          {
+            "partner": "Ali",
+            "clusters": 26
+          }
+        ]
+      }
+    }
+  },
+  "topic_distribution": {
+    "family-coordination": 124,
+    "call-coordination": 31,
+    "entertainment": 13,
+    "religion-islamic": 14,
+    "food": 5,
+    "health-medical": 0,
+    "money-finance": 16,
+    "work-school": 2,
+    "jokes-memes": 2,
+    "sharing-link": 1,
+    "other": 32
+  },
+  "topic_starters": {
+    "Hanan": 50,
+    "Aya": 45,
+    "Hatem": 44,
+    "Abdulrahman": 37,
+    "Ali": 35,
+    "Amena": 32
+  },
+  "topic_starters_by_topic": {
+    "Ali": {
+      "other": 22,
+      "family-coordination": 8,
+      "call-coordination": 3,
+      "money-finance": 1,
+      "religion-islamic": 1
+    },
+    "Aya": {
+      "other": 31,
+      "family-coordination": 13,
+      "money-finance": 1
+    },
+    "Abdulrahman": {
+      "other": 28,
+      "family-coordination": 6,
+      "entertainment": 2,
+      "call-coordination": 1
+    },
+    "Hanan": {
+      "other": 43,
+      "family-coordination": 4,
+      "religion-islamic": 2,
+      "food": 1
+    },
+    "Amena": {
+      "other": 25,
+      "entertainment": 3,
+      "family-coordination": 2,
+      "food": 1,
+      "work-school": 1
+    },
+    "Hatem": {
+      "other": 38,
+      "religion-islamic": 4,
+      "family-coordination": 2
+    }
+  },
+  "time_of_day_heatmap": {
+    "Aya": {
+      "peak_day": "Sat",
+      "peak_hour": 19,
+      "peak_hour_label": "19:00 UTC",
+      "peak_count": 34,
+      "grid": [
+        [
+          0,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          3
+        ],
+        [
+          1,
+          0,
+          2,
+          0,
+          0,
+          1,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          5,
+          0,
+          1,
+          4,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          0,
+          2,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          2,
+          2,
+          3,
+          15,
+          3,
+          1
+        ],
+        [
+          1,
+          0,
+          0,
+          2,
+          9,
+          3,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          9,
+          5,
+          5,
+          0,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          3,
+          3,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          1,
+          5,
+          5,
+          4,
+          4,
+          0
+        ],
+        [
+          1,
+          7,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          13,
+          34,
+          14,
+          7,
+          3,
+          0
+        ],
+        [
+          2,
+          0,
+          1,
+          0,
+          1,
+          1,
+          2,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          3,
+          1,
+          0,
+          0,
+          3,
+          0
+        ]
+      ]
+    },
+    "Ali": {
+      "peak_day": "Sat",
+      "peak_hour": 19,
+      "peak_hour_label": "19:00 UTC",
+      "peak_count": 47,
+      "grid": [
+        [
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          3,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          6,
+          6,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          2,
+          9,
+          2,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          5,
+          0,
+          6,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          3,
+          5,
+          1
+        ],
+        [
+          0,
+          2,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          13,
+          30,
+          47,
+          12,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          2,
+          0,
+          0,
+          3,
+          4,
+          1
+        ]
+      ]
+    },
+    "Abdulrahman": {
+      "peak_day": "Sat",
+      "peak_hour": 19,
+      "peak_hour_label": "19:00 UTC",
+      "peak_count": 35,
+      "grid": [
+        [
+          0,
+          2,
+          1,
+          3,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          3,
+          0,
+          0,
+          0,
+          0,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          3,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          4,
+          6,
+          0,
+          1,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          2,
+          1,
+          5,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          2,
+          0,
+          0,
+          2,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          3,
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          11,
+          18,
+          35,
+          25,
+          2,
+          2,
+          1
+        ],
+        [
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          9,
+          1,
+          0,
+          0,
+          0,
+          0
+        ]
+      ]
+    },
+    "Amena": {
+      "peak_day": "Sat",
+      "peak_hour": 19,
+      "peak_hour_label": "19:00 UTC",
+      "peak_count": 26,
+      "grid": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0,
+          3,
+          3,
+          1,
+          5,
+          1,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          1,
+          0,
+          7,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          2,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          6,
+          7,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          4,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          6,
+          3,
+          3,
+          5,
+          1,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          0,
+          0,
+          2,
+          0,
+          0,
+          0,
+          1,
+          0,
+          2,
+          0,
+          3,
+          0,
+          3,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          0,
+          0,
+          0,
+          1,
+          0,
+          5,
+          18,
+          26,
+          12,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          3,
+          0,
+          3,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          3,
+          2,
+          1,
+          1,
+          0,
+          2,
+          0
+        ]
+      ]
+    },
+    "Hanan": {
+      "peak_day": "Sat",
+      "peak_hour": 19,
+      "peak_hour_label": "19:00 UTC",
+      "peak_count": 30,
+      "grid": [
+        [
+          0,
+          0,
+          0,
+          0,
+          4,
+          0,
+          0,
+          1,
+          2,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          5,
+          4,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          2,
+          3,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          2,
+          2,
+          3,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          1,
+          1,
+          3,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          3,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          2,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          2,
+          0,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          8,
+          10,
+          30,
+          14,
+          4,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          1,
+          1,
+          3,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          9,
+          0,
+          0,
+          1,
+          0,
+          0
+        ]
+      ]
+    },
+    "Hatem": {
+      "peak_day": "Sat",
+      "peak_hour": 19,
+      "peak_hour_label": "19:00 UTC",
+      "peak_count": 32,
+      "grid": [
+        [
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          2,
+          4,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          2,
+          0,
+          1,
+          3,
+          0,
+          0,
+          0,
+          3,
+          2,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          2,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          5,
+          4,
+          1,
+          3
+        ],
+        [
+          0,
+          0,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          2,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          2,
+          0,
+          2,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          9,
+          13,
+          32,
+          14,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          0,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          3,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ]
+    }
+  },
+  "reactions_analysis": {
+    "given": {
+      "Aya": 20,
+      "Ali": 31,
+      "Abdulrahman": 18,
+      "Amena": 32,
+      "Hanan": 31,
+      "Hatem": 2
+    },
+    "received": {
+      "Aya": 56,
+      "Ali": 5,
+      "Abdulrahman": 19,
+      "Amena": 22,
+      "Hanan": 18,
+      "Hatem": 14
+    },
+    "fav_emoji": {
+      "Aya": "❤",
+      "Ali": "❤",
+      "Abdulrahman": "❤",
+      "Amena": "❤",
+      "Hanan": "❤",
+      "Hatem": "❤"
+    },
+    "emoji_given_breakdown": {
+      "Aya": {
+        "👍": 5,
+        "😆": 6,
+        "❤": 7,
+        "😮": 2
+      },
+      "Ali": {
+        "❤": 19,
+        "😮": 7,
+        "😆": 4,
+        "👍": 1
+      },
+      "Abdulrahman": {
+        "😮": 4,
+        "❤": 12,
+        "👏": 2
+      },
+      "Amena": {
+        "❤": 30,
+        "😭": 1,
+        "😮": 1
+      },
+      "Hanan": {
+        "❤": 18,
+        "😆": 3,
+        "😡": 2,
+        "👍": 6,
+        "😮": 2
+      },
+      "Hatem": {
+        "❤": 1,
+        "😮": 1
+      }
+    },
+    "who_reacts_to_whom": {
+      "Aya": {
+        "Ali": 3,
+        "Hatem": 6,
+        "Amena": 3,
+        "Abdulrahman": 4,
+        "Aya": 1,
+        "Hanan": 3
+      },
+      "Ali": {
+        "Aya": 13,
+        "Abdulrahman": 5,
+        "Amena": 5,
+        "Hatem": 5,
+        "Hanan": 3
+      },
+      "Abdulrahman": {
+        "Aya": 6,
+        "Amena": 6,
+        "Ali": 1,
+        "Hatem": 2,
+        "Hanan": 3
+      },
+      "Amena": {
+        "Aya": 19,
+        "Abdulrahman": 6,
+        "Hatem": 1,
+        "Hanan": 6
+      },
+      "Hanan": {
+        "Aya": 17,
+        "Amena": 7,
+        "Ali": 1,
+        "Abdulrahman": 4,
+        "Hanan": 2
+      },
+      "Hatem": {
+        "Amena": 1,
+        "Hanan": 1
+      }
+    },
+    "top5_reacted": [
+      {
+        "author": "Aya",
+        "timestamp": "2025-12-15",
+        "content": "[image]",
+        "reaction_count": 4,
+        "reactions": [
+          "❤",
+          "❤",
+          "❤",
+          "❤"
+        ],
+        "top_reactor": "Hanan"
+      },
+      {
+        "author": "Abdulrahman",
+        "timestamp": "2026-03-23",
+        "content": "[video]",
+        "reaction_count": 4,
+        "reactions": [
+          "😮",
+          "😮",
+          "😮",
+          "😮"
+        ],
+        "top_reactor": "Hanan"
+      },
+      {
+        "author": "Aya",
+        "timestamp": "2026-03-29",
+        "content": "[image]",
+        "reaction_count": 4,
+        "reactions": [
+          "❤",
+          "❤",
+          "❤",
+          "❤"
+        ],
+        "top_reactor": "Hanan"
+      },
+      {
+        "author": "Aya",
+        "timestamp": "2025-11-08",
+        "content": "[image]",
+        "reaction_count": 3,
+        "reactions": [
+          "❤",
+          "❤",
+          "❤"
+        ],
+        "top_reactor": "Hanan"
+      },
+      {
+        "author": "Aya",
+        "timestamp": "2025-11-09",
+        "content": "[video]",
+        "reaction_count": 3,
+        "reactions": [
+          "😆",
+          "❤",
+          "😮"
+        ],
+        "top_reactor": "Hanan"
+      }
+    ]
+  },
+  "response_latency": {
+    "per_member": {
+      "Aya": {
+        "avg_sec": 5624,
+        "median_sec": 117,
+        "count": 204,
+        "avg_min": 93.7
+      },
+      "Ali": {
+        "avg_sec": 4983,
+        "median_sec": 396,
+        "count": 157,
+        "avg_min": 83.1
+      },
+      "Abdulrahman": {
+        "avg_sec": 7679,
+        "median_sec": 653,
+        "count": 159,
+        "avg_min": 128.0
+      },
+      "Amena": {
+        "avg_sec": 6806,
+        "median_sec": 175,
+        "count": 163,
+        "avg_min": 113.4
+      },
+      "Hanan": {
+        "avg_sec": 13337,
+        "median_sec": 1157,
+        "count": 167,
+        "avg_min": 222.3
+      },
+      "Hatem": {
+        "avg_sec": 7178,
+        "median_sec": 165,
+        "count": 159,
+        "avg_min": 119.6
+      }
+    },
+    "ranked_fastest_to_slowest": [
+      "Ali",
+      "Aya",
+      "Amena",
+      "Hatem",
+      "Abdulrahman",
+      "Hanan"
+    ]
+  },
+  "message_length": {
+    "per_member": {
+      "Aya": {
+        "n_text_msgs": 192,
+        "avg_words": 4.4,
+        "median_words": 5.0,
+        "p90_words": 8,
+        "avg_chars": 22.9
+      },
+      "Ali": {
+        "n_text_msgs": 181,
+        "avg_words": 4.2,
+        "median_words": 5,
+        "p90_words": 6,
+        "avg_chars": 21.6
+      },
+      "Abdulrahman": {
+        "n_text_msgs": 142,
+        "avg_words": 5.6,
+        "median_words": 4.0,
+        "p90_words": 8,
+        "avg_chars": 28.5
+      },
+      "Amena": {
+        "n_text_msgs": 146,
+        "avg_words": 3.6,
+        "median_words": 3.0,
+        "p90_words": 6,
+        "avg_chars": 19.5
+      },
+      "Hanan": {
+        "n_text_msgs": 131,
+        "avg_words": 4.4,
+        "median_words": 5,
+        "p90_words": 5,
+        "avg_chars": 24.7
+      },
+      "Hatem": {
+        "n_text_msgs": 115,
+        "avg_words": 4.0,
+        "median_words": 5,
+        "p90_words": 5,
+        "avg_chars": 21.8
+      }
+    },
+    "histogram": {
+      "bucket_labels": [
+        "1-5",
+        "6-15",
+        "16-30",
+        "31-60",
+        "60+"
+      ],
+      "per_member": {
+        "Aya": [
+          150,
+          39,
+          3,
+          0,
+          0
+        ],
+        "Ali": [
+          155,
+          25,
+          1,
+          0,
+          0
+        ],
+        "Abdulrahman": [
+          125,
+          12,
+          2,
+          2,
+          1
+        ],
+        "Amena": [
+          125,
+          21,
+          0,
+          0,
+          0
+        ],
+        "Hanan": [
+          119,
+          10,
+          0,
+          1,
+          1
+        ],
+        "Hatem": [
+          112,
+          3,
+          0,
+          0,
+          0
+        ]
+      }
+    }
+  },
+  "language_ratio": {
+    "per_member": {
+      "Aya": {
+        "total": 192,
+        "letter_total": 180,
+        "arabic": 36,
+        "franco_arabic": 23,
+        "english": 121,
+        "no_letters": 12,
+        "pct_arabic": 20.0,
+        "pct_franco_arabic": 12.8,
+        "pct_english": 67.2
+      },
+      "Ali": {
+        "total": 181,
+        "letter_total": 166,
+        "arabic": 1,
+        "franco_arabic": 14,
+        "english": 151,
+        "no_letters": 15,
+        "pct_arabic": 0.6,
+        "pct_franco_arabic": 8.4,
+        "pct_english": 91.0
+      },
+      "Abdulrahman": {
+        "total": 142,
+        "letter_total": 138,
+        "arabic": 0,
+        "franco_arabic": 20,
+        "english": 118,
+        "no_letters": 4,
+        "pct_arabic": 0.0,
+        "pct_franco_arabic": 14.5,
+        "pct_english": 85.5
+      },
+      "Amena": {
+        "total": 146,
+        "letter_total": 137,
+        "arabic": 19,
+        "franco_arabic": 18,
+        "english": 100,
+        "no_letters": 9,
+        "pct_arabic": 13.9,
+        "pct_franco_arabic": 13.1,
+        "pct_english": 73.0
+      },
+      "Hanan": {
+        "total": 131,
+        "letter_total": 122,
+        "arabic": 20,
+        "franco_arabic": 1,
+        "english": 101,
+        "no_letters": 9,
+        "pct_arabic": 16.4,
+        "pct_franco_arabic": 0.8,
+        "pct_english": 82.8
+      },
+      "Hatem": {
+        "total": 115,
+        "letter_total": 105,
+        "arabic": 28,
+        "franco_arabic": 0,
+        "english": 77,
+        "no_letters": 10,
+        "pct_arabic": 26.7,
+        "pct_franco_arabic": 0.0,
+        "pct_english": 73.3
+      }
+    }
+  },
+  "photo_share": {
+    "photo_shares_per_member": {
+      "Aya": 22,
+      "Ali": 4,
+      "Abdulrahman": 27,
+      "Amena": 21,
+      "Hanan": 4,
+      "Hatem": 5
+    },
+    "total_photos_per_member": {
+      "Aya": 27,
+      "Ali": 4,
+      "Abdulrahman": 33,
+      "Amena": 55,
+      "Hanan": 4,
+      "Hatem": 5
+    },
+    "album_shares_per_member": {
+      "Aya": 1,
+      "Ali": 0,
+      "Abdulrahman": 3,
+      "Amena": 7,
+      "Hanan": 0,
+      "Hatem": 0
+    },
+    "avg_photos_per_share": {
+      "Aya": 1.2,
+      "Ali": 1.0,
+      "Abdulrahman": 1.2,
+      "Amena": 2.6,
+      "Hanan": 1.0,
+      "Hatem": 1.0
+    },
+    "ranked": [
+      "Abdulrahman",
+      "Aya",
+      "Amena",
+      "Hatem",
+      "Ali",
+      "Hanan"
+    ],
+    "note": "photos[] = direct camera-roll uploads only. Link previews go in the share{} field (link type)."
+  },
+  "mentions": {
+    "total_mention_msgs": 34,
+    "note": "FB DYI JSON does not include structured mention metadata (users[] field absent). Searched for @Name in message text only. Found 34 msgs with @mentions. This undercounts since FB Messenger often strips @-prefix in the archive.",
+    "mentions_given": {
+      "Aya": {
+        "Hanan": 4,
+        "Ali": 3,
+        "Abdulrahman": 2,
+        "Amena": 2,
+        "Hatem": 3
+      },
+      "Ali": {
+        "Abdulrahman": 7,
+        "Aya": 5,
+        "Amena": 2,
+        "Hanan": 3,
+        "Hatem": 2
+      },
+      "Abdulrahman": {
+        "Amena": 2,
+        "Hanan": 2,
+        "Ali": 3,
+        "Aya": 1
+      },
+      "Amena": {
+        "Ali": 3,
+        "Abdulrahman": 5
+      },
+      "Hanan": {},
+      "Hatem": {}
+    },
+    "mentions_received": {
+      "Aya": 6,
+      "Ali": 9,
+      "Abdulrahman": 14,
+      "Amena": 6,
+      "Hanan": 9,
+      "Hatem": 5
+    }
+  },
+  "viral_messages": {
+    "top5": [
+      {
+        "author": "Aya",
+        "timestamp": "2025-12-15",
+        "content": "[image]",
+        "reaction_count": 4,
+        "reactions": [
+          "❤",
+          "❤",
+          "❤",
+          "❤"
+        ],
+        "top_reactor": "Hanan"
+      },
+      {
+        "author": "Abdulrahman",
+        "timestamp": "2026-03-23",
+        "content": "[video]",
+        "reaction_count": 4,
+        "reactions": [
+          "😮",
+          "😮",
+          "😮",
+          "😮"
+        ],
+        "top_reactor": "Hanan"
+      },
+      {
+        "author": "Aya",
+        "timestamp": "2026-03-29",
+        "content": "[image]",
+        "reaction_count": 4,
+        "reactions": [
+          "❤",
+          "❤",
+          "❤",
+          "❤"
+        ],
+        "top_reactor": "Hanan"
+      },
+      {
+        "author": "Aya",
+        "timestamp": "2025-11-08",
+        "content": "[image]",
+        "reaction_count": 3,
+        "reactions": [
+          "❤",
+          "❤",
+          "❤"
+        ],
+        "top_reactor": "Hanan"
+      },
+      {
+        "author": "Aya",
+        "timestamp": "2025-11-09",
+        "content": "[video]",
+        "reaction_count": 3,
+        "reactions": [
+          "😆",
+          "❤",
+          "😮"
+        ],
+        "top_reactor": "Hanan"
+      }
+    ],
+    "note": "Ranked by total reaction count. Content shown as first 80 chars or media type placeholder."
+  }
+}

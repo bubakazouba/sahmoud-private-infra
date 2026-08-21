@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Reserve a Tasting — Buckwheat Spectator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Cormorant+SC:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="masthead">
+  Buckwheat Spectator &nbsp;&middot;&nbsp; Est. 1987 &nbsp;&middot;&nbsp;
+  <a href="index.html">Vol. XXXVIII, No. 4</a> &nbsp;&middot;&nbsp; The International Journal of Fagopyrum Scholarship
+</div>
+<nav>
+  <a href="index.html">Home</a>
+  <a href="cultivars.html">Cultivars</a>
+  <a href="regions.html">Regions</a>
+  <a href="aromas.html">Aromas</a>
+  <a href="vintages.html">Vintages</a>
+  <a href="pairings.html">Pairings</a>
+  <a href="certification.html">Certification</a>
+  <a href="critics.html">Critics</a>
+  <a href="events.html">Events</a>
+  <a href="visit.html">Visit</a>
+  <a href="reserve.html" class="active">Reserve</a>
+  <a href="concours.html">Concours</a>
+  <a href="about.html">About</a>
+</nav>
+
+<div class="hero" style="padding:3.5rem 2rem 3rem;">
+  <div style="position:relative;z-index:1;">
+    <p class="hero-kicker">Estienne-Beauvoir Estate &nbsp;&middot;&nbsp; Upper Ojai, California</p>
+    <h1>Reserve a Tasting</h1>
+    <p class="hero-subtitle">Securing a tasting appointment at the Estate is a matter of some consequence. We ask that you select your date, tier, and preferences with care. Reservations may be cancelled or modified up to 72 hours in advance.</p>
+  </div>
+</div>
+
+<section class="full-bleed alt-bg">
+  <div class="section-inner">
+    <span class="section-label">Tasting Tiers</span>
+    <h2 class="section-title">The Estate Tasting Programme</h2>
+    <div class="home-nav-tiles">
+      <div class="home-nav-tile" style="border-top:3px solid var(--rule);">
+        <span class="home-nav-tile-title">Standard</span>
+        <span class="home-nav-tile-desc">$145 per person. Four current-release cultivars. 60 minutes. Notes provided.</span>
+      </div>
+      <div class="home-nav-tile" style="border-top:3px solid var(--gold);">
+        <span class="home-nav-tile-title">Reserve</span>
+        <span class="home-nav-tile-desc">$285 per person. Seven cultivars including estate exclusives. 90 minutes. Pairing notes and cheese board.</span>
+      </div>
+      <div class="home-nav-tile" style="border-top:3px solid var(--burgundy);">
+        <span class="home-nav-tile-title">Grand Cru</span>
+        <span class="home-nav-tile-desc">$625 per person. Three highest-scoring cultivars across two vintages. 2 hours. Private room, personal host.</span>
+      </div>
+      <div class="home-nav-tile" style="border-top:3px solid #8b0000;background:#fdf8f0;">
+        <span class="home-nav-tile-title">Vertical Flight</span>
+        <span class="home-nav-tile-desc">$1,250 per person. Five vintages of Estate Reserve. 3 hours. Personal notes from the Editor-in-Chief's collection.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="form-section">
+  <span class="section-label">Availability Calendar</span>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;color:var(--burgundy);border-bottom:1px solid var(--rule);padding-bottom:0.5rem;margin-bottom:1rem;">Select Your Date</h2>
+  <p style="font-family:'EB Garamond',serif;font-style:italic;font-size:0.9rem;color:var(--ink-light);margin-bottom:1.5rem;">The tasting room is open Wednesday through Sunday. Select a date to see availability. Dates shown for the next 90 days.</p>
+
+  <div class="cal-wrap">
+    <div class="cal-header">
+      <button class="cal-nav" id="cal-prev">&laquo; Prev</button>
+      <span class="cal-month-label" id="cal-label"></span>
+      <button class="cal-nav" id="cal-next">Next &raquo;</button>
+    </div>
+    <div class="cal-grid" id="cal-grid">
+      <div class="cal-day-head">Sun</div>
+      <div class="cal-day-head">Mon</div>
+      <div class="cal-day-head">Tue</div>
+      <div class="cal-day-head">Wed</div>
+      <div class="cal-day-head">Thu</div>
+      <div class="cal-day-head">Fri</div>
+      <div class="cal-day-head">Sat</div>
+    </div>
+    <div class="cal-legend">
+      <div class="cal-legend-item"><span class="cal-swatch" style="background:#e8f4e8;border:1px solid #3a6b2f;"></span>Available</div>
+      <div class="cal-legend-item"><span class="cal-swatch" style="background:#fdf5e0;border:1px solid #8a6000;"></span>Limited Tables</div>
+      <div class="cal-legend-item"><span class="cal-swatch" style="background:#fde8e8;border:1px solid #6b1010;"></span>Fully Booked</div>
+      <div class="cal-legend-item"><span class="cal-swatch" style="background:#ede8db;border:1px solid #c9b98a;"></span>Closed</div>
+    </div>
+    <div id="avail-note" style="margin-top:0.5rem;"></div>
+  </div>
+
+  <hr style="border:none;border-top:1px solid var(--rule);margin:2rem 0;">
+  <span class="section-label">Reservation Details</span>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;color:var(--burgundy);border-bottom:1px solid var(--rule);padding-bottom:0.5rem;margin-bottom:1.5rem;">Your Information</h2>
+
+  <form id="reserve-form" novalidate>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="r-name">Full Name</label>
+        <input type="text" id="r-name" placeholder="Margaux Estienne-Beauvoir">
+        <div class="form-error" id="err-name">Please enter your full name.</div>
+      </div>
+      <div class="form-group">
+        <label for="r-email">Email Address</label>
+        <input type="email" id="r-email" placeholder="m.esteiene@fagopyrum.fr">
+        <div class="form-error" id="err-email">A valid email address is required.</div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="r-phone">Telephone</label>
+        <input type="tel" id="r-phone" placeholder="+1 (805) 555-0000">
+      </div>
+      <div class="form-group">
+        <label for="r-party">Party Size (1&ndash;12)</label>
+        <select id="r-party">
+          <option value="">Select</option>
+          <option>1</option><option>2</option><option>3</option><option>4</option>
+          <option>5</option><option>6</option><option>7</option><option>8</option>
+          <option>9</option><option>10</option><option>11</option><option>12</option>
+        </select>
+        <div class="form-error" id="err-party">Please select a party size.</div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="r-date">Preferred Date</label>
+        <input type="date" id="r-date">
+        <div class="form-error" id="err-date">Please select an available date.</div>
+      </div>
+      <div class="form-group">
+        <label for="r-time">Preferred Time</label>
+        <select id="r-time">
+          <option value="">Select</option>
+          <option>11:00 AM</option>
+          <option>1:00 PM</option>
+          <option>3:00 PM</option>
+          <option>5:00 PM</option>
+          <option>7:00 PM</option>
+        </select>
+        <div class="form-error" id="err-time">Please select a preferred time.</div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="r-tier">Tasting Tier</label>
+      <select id="r-tier">
+        <option value="">Select a Tier</option>
+        <option value="Standard">Standard &mdash; $145 per person</option>
+        <option value="Reserve">Reserve &mdash; $285 per person</option>
+        <option value="Grand Cru">Grand Cru &mdash; $625 per person</option>
+        <option value="Vertical Flight">Vertical Flight &mdash; $1,250 per person</option>
+      </select>
+      <div class="form-error" id="err-tier">Please select a tasting tier.</div>
+    </div>
+    <div class="form-group">
+      <label for="r-dietary">Dietary Restrictions</label>
+      <input type="text" id="r-dietary" placeholder="Gluten-free, nut allergy, etc. (or none)">
+    </div>
+    <div class="form-group">
+      <label for="r-requests">Special Requests</label>
+      <textarea id="r-requests" placeholder="Anniversary celebration, specific cultivar requests, accessibility requirements, etc."></textarea>
+    </div>
+    <div id="submit-block-msg" class="availability-note booked" style="display:none;margin-bottom:1rem;">This date is fully booked and cannot accept additional reservations.</div>
+    <button type="submit" class="btn-primary">Confirm Reservation</button>
+  </form>
+
+  <!-- Your Reservations -->
+  <div class="saved-entries" id="saved-reservations" style="display:none;">
+    <h3>Your Reservations</h3>
+    <div id="saved-list"></div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="document.getElementById('modal').classList.remove('open')">Close &times;</button>
+    <div class="modal-title">Reservation Confirmed</div>
+    <div class="modal-conf-num" id="modal-conf-num"></div>
+    <div class="modal-summary" id="modal-summary"></div>
+    <p class="modal-note">A confirmation email will arrive within 24 hours. Reservations may be cancelled or modified up to 72 hours in advance via your Connoisseur Portal at buckwheatspectator.com/portal.</p>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-title">Buckwheat Spectator</div>
+  <div class="footer-strap">The International Journal of Fagopyrum Scholarship &nbsp;&middot;&nbsp; Established 1987</div>
+  <div class="footer-links">
+    <a href="index.html">Home</a>
+    <a href="visit.html">Visit the Estate</a>
+    <a href="events.html">Events</a>
+    <a href="about.html">About</a>
+  </div>
+  <hr class="footer-rule">
+  <div class="footer-copyright">&copy; 2026 Buckwheat Spectator. This reservation system is satirical and does not process real bookings.</div>
+</footer>
+
+<script>
+// ── Calendar ──
+const today = new Date();
+today.setHours(0,0,0,0);
+const maxDate = new Date(today);
+maxDate.setDate(maxDate.getDate() + 90);
+
+let calYear = today.getFullYear();
+let calMonth = today.getMonth();
+let selectedDate = null;
+
+function hashDate(dateStr) {
+  let h = 0;
+  for (let i = 0; i < dateStr.length; i++) {
+    h = ((h << 5) - h + dateStr.charCodeAt(i)) | 0;
+  }
+  return Math.abs(h);
+}
+
+function getStatus(d) {
+  // Closed Mon-Tue
+  const dow = d.getDay(); // 0=Sun, 1=Mon, 2=Tue
+  if (dow === 1 || dow === 2) return 'closed';
+  // Past
+  if (d < today) return 'past';
+  // Beyond 90 days
+  if (d > maxDate) return 'past';
+  const ds = d.toISOString().slice(0, 10);
+  const h = hashDate(ds) % 100;
+  if (h < 5) return 'closed';
+  if (h < 30) return 'booked';
+  if (h < 65) return 'limited';
+  return 'avail';
+}
+
+function renderCal() {
+  const grid = document.getElementById('cal-grid');
+  // Remove old day cells (keep header)
+  while (grid.children.length > 7) grid.removeChild(grid.lastChild);
+
+  const months = ['January','February','March','April','May','June',
+                  'July','August','September','October','November','December'];
+  document.getElementById('cal-label').textContent = months[calMonth] + ' ' + calYear;
+
+  const first = new Date(calYear, calMonth, 1);
+  const startDow = first.getDay();
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+
+  for (let i = 0; i < startDow; i++) {
+    const el = document.createElement('div');
+    el.className = 'cal-day empty';
+    grid.appendChild(el);
+  }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const date = new Date(calYear, calMonth, d);
+    const status = getStatus(date);
+    const el = document.createElement('div');
+    el.className = 'cal-day ' + status;
+    el.textContent = d;
+    const ds = date.toISOString().slice(0, 10);
+    if (selectedDate === ds) el.classList.add('selected');
+
+    if (status !== 'past' && status !== 'closed') {
+      el.onclick = function() {
+        selectedDate = ds;
+        document.getElementById('r-date').value = ds;
+        updateAvailNote(status);
+        renderCal();
+      };
+    }
+    grid.appendChild(el);
+  }
+}
+
+function updateAvailNote(status) {
+  const note = document.getElementById('avail-note');
+  const block = document.getElementById('submit-block-msg');
+  note.className = 'availability-note ' + status;
+  if (status === 'booked') {
+    note.textContent = 'This date is fully booked. Please select another date.';
+    block.style.display = 'block';
+  } else if (status === 'limited') {
+    note.textContent = 'Limited tables remaining for this date. We recommend booking promptly.';
+    block.style.display = 'none';
+  } else if (status === 'avail') {
+    note.textContent = 'This date is available. We look forward to your visit.';
+    block.style.display = 'none';
+  }
+}
+
+document.getElementById('cal-prev').onclick = function() {
+  calMonth--;
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  renderCal();
+};
+document.getElementById('cal-next').onclick = function() {
+  calMonth++;
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  renderCal();
+};
+renderCal();
+
+// ── Form validation and submission ──
+document.getElementById('reserve-form').onsubmit = function(e) {
+  e.preventDefault();
+  let ok = true;
+
+  function req(id, errId) {
+    const v = document.getElementById(id).value.trim();
+    document.getElementById(errId).classList.toggle('visible', !v);
+    if (!v) ok = false;
+    return v;
+  }
+
+  const name = req('r-name', 'err-name');
+  const email = document.getElementById('r-email').value.trim();
+  const emailOk = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email);
+  document.getElementById('err-email').classList.toggle('visible', !emailOk);
+  if (!emailOk) ok = false;
+
+  req('r-party', 'err-party');
+  const date = req('r-date', 'err-date');
+  req('r-time', 'err-time');
+  req('r-tier', 'err-tier');
+
+  // Check if booked
+  if (date) {
+    const d = new Date(date + 'T12:00:00');
+    const status = getStatus(d);
+    if (status === 'booked' || status === 'closed' || status === 'past') {
+      document.getElementById('err-date').textContent = 'This date is not available for reservations.';
+      document.getElementById('err-date').classList.add('visible');
+      ok = false;
+    }
+  }
+
+  if (!ok) return;
+
+  const tier = document.getElementById('r-tier').value;
+  const party = document.getElementById('r-party').value;
+  const time = document.getElementById('r-time').value;
+  const conf = 'BWS-2026-' + Math.random().toString(36).substr(2, 6).toUpperCase();
+
+  const entry = { conf, name, email, date, time, tier, party };
+  const saved = JSON.parse(localStorage.getItem('bws_reservations') || '[]');
+  saved.push(entry);
+  localStorage.setItem('bws_reservations', JSON.stringify(saved));
+
+  document.getElementById('modal-conf-num').textContent = 'Confirmation No. ' + conf;
+  document.getElementById('modal-summary').innerHTML =
+    '<strong>Name:</strong> ' + name + '<br>' +
+    '<strong>Date:</strong> ' + date + '<br>' +
+    '<strong>Time:</strong> ' + time + '<br>' +
+    '<strong>Party Size:</strong> ' + party + '<br>' +
+    '<strong>Tasting Tier:</strong> ' + tier + '<br>' +
+    '<strong>Email:</strong> ' + email;
+  document.getElementById('modal').classList.add('open');
+
+  document.getElementById('reserve-form').reset();
+  selectedDate = null;
+  renderCal();
+  loadSaved();
+};
+
+function loadSaved() {
+  const saved = JSON.parse(localStorage.getItem('bws_reservations') || '[]');
+  const panel = document.getElementById('saved-reservations');
+  const list = document.getElementById('saved-list');
+  if (!saved.length) { panel.style.display = 'none'; return; }
+  panel.style.display = 'block';
+  list.innerHTML = saved.map(e =>
+    '<div class="saved-entry"><span class="saved-entry-num">' + e.conf + '</span>' +
+    e.name + ' &mdash; ' + e.date + ' ' + e.time + ' &mdash; ' + e.tier + ' &mdash; Party of ' + e.party + '</div>'
+  ).join('');
+}
+loadSaved();
+</script>
+</body>
+</html>

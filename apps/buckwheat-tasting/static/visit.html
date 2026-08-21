@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Visit the Estate — Buckwheat Spectator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Cormorant+SC:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="masthead">
+  Buckwheat Spectator &nbsp;&middot;&nbsp; Est. 1987 &nbsp;&middot;&nbsp;
+  <a href="index.html">Vol. XXXVIII, No. 4</a> &nbsp;&middot;&nbsp; The International Journal of Fagopyrum Scholarship
+</div>
+<nav>
+  <a href="index.html">Home</a>
+  <a href="cultivars.html">Cultivars</a>
+  <a href="regions.html">Regions</a>
+  <a href="aromas.html">Aromas</a>
+  <a href="vintages.html">Vintages</a>
+  <a href="pairings.html">Pairings</a>
+  <a href="certification.html">Certification</a>
+  <a href="critics.html">Critics</a>
+  <a href="events.html">Events</a>
+  <a href="visit.html" class="active">Visit</a>
+  <a href="reserve.html">Reserve</a>
+  <a href="concours.html">Concours</a>
+  <a href="about.html">About</a>
+</nav>
+
+<div class="estate-hero">
+  <p class="hero-kicker">Upper Ojai, California &nbsp;&middot;&nbsp; Est. 1991</p>
+  <h1 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:300;color:var(--cream);margin:0.5rem 0 0.5rem;letter-spacing:0.04em;">Estienne-Beauvoir Estate</h1>
+  <p style="font-family:'EB Garamond',serif;font-style:italic;font-size:1.1rem;color:var(--gold-pale);max-width:600px;margin:0 auto;">Where volcanic loam meets Mediterranean light, and buckwheat reaches its Western hemisphere apotheosis.</p>
+</div>
+
+<!-- Estate photography -->
+<div class="visit-photo-row three-col" style="margin:0;gap:2px;">
+  <figure class="visit-photo-frame" style="margin:0;">
+    <img src="img/visit-vineyard-rows.jpg" alt="Aerial view of estate vineyard rows in afternoon light" style="height:260px;">
+    <figcaption>Estate vineyard rows &mdash; Unsplash</figcaption>
+  </figure>
+  <figure class="visit-photo-frame" style="margin:0;">
+    <img src="img/visit-tasting-room.jpg" alt="Wine tasting materials arranged on evaluation table" style="height:260px;">
+    <figcaption>Evaluation suite &mdash; Unsplash</figcaption>
+  </figure>
+  <figure class="visit-photo-frame" style="margin:0;">
+    <img src="img/visit-cellar-barrels.jpg" alt="Oak barrels in estate cellar corridor, warm moody light" style="height:260px;">
+    <figcaption>Production cellar, Napa Valley &mdash; Jim Harris / Unsplash</figcaption>
+  </figure>
+</div>
+
+<div class="estate-body">
+
+  <!-- Estate map SVG -->
+  <div class="estate-map-wrap">
+    <svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;background:#ede8db;border:1px solid #c9b98a;">
+      <!-- Mountain range backdrop -->
+      <path d="M0,180 L80,120 L130,150 L200,80 L270,130 L320,90 L400,140 L460,100 L560,160 L560,320 L0,320 Z" fill="#c9b98a" opacity="0.4"/>
+      <!-- Estate boundary -->
+      <rect x="180" y="130" width="200" height="140" fill="none" stroke="#4a1529" stroke-width="1.5" stroke-dasharray="6,3"/>
+      <text x="185" y="148" font-family="'Cormorant SC',serif" font-size="8" fill="#4a1529" letter-spacing="1">ESTATE BOUNDARY — 47 ACRES</text>
+      <!-- Main lodge -->
+      <rect x="250" y="175" width="50" height="35" fill="#4a1529"/>
+      <polygon points="250,175 300,175 275,155" fill="#6b2040"/>
+      <text x="275" y="230" font-family="'Cormorant SC',serif" font-size="7" fill="#4a1529" text-anchor="middle" letter-spacing="1">LODGE 1907</text>
+      <!-- Production facility -->
+      <rect x="315" y="185" width="40" height="25" fill="#7a5230" opacity="0.8"/>
+      <text x="335" y="225" font-family="'Cormorant SC',serif" font-size="6" fill="#4a1529" text-anchor="middle" letter-spacing="1">PRODUCTION</text>
+      <!-- Experimental plots -->
+      <g>
+        <rect x="190" y="175" width="50" height="30" fill="#3a6b2f" opacity="0.4" stroke="#3a6b2f" stroke-width="1"/>
+        <line x1="205" y1="175" x2="205" y2="205" stroke="#3a6b2f" stroke-width="0.5"/>
+        <line x1="220" y1="175" x2="220" y2="205" stroke="#3a6b2f" stroke-width="0.5"/>
+        <line x1="235" y1="175" x2="235" y2="205" stroke="#3a6b2f" stroke-width="0.5"/>
+        <text x="215" y="222" font-family="'Cormorant SC',serif" font-size="6" fill="#3a6b2f" text-anchor="middle" letter-spacing="1">CULTIVAR PLOTS</text>
+      </g>
+      <!-- Road -->
+      <path d="M0,280 Q100,260 180,240 Q250,225 280,210" stroke="#b8860b" stroke-width="3" fill="none" stroke-dasharray="8,4"/>
+      <text x="90" y="295" font-family="'Cormorant SC',serif" font-size="8" fill="#4a1529" letter-spacing="1">SULPHUR MOUNTAIN ROAD</text>
+      <!-- Compass rose -->
+      <g transform="translate(515,50)">
+        <line x1="0" y1="-18" x2="0" y2="18" stroke="#4a1529" stroke-width="1"/>
+        <line x1="-18" y1="0" x2="18" y2="0" stroke="#4a1529" stroke-width="1"/>
+        <text x="0" y="-22" font-family="'Cormorant SC',serif" font-size="8" fill="#4a1529" text-anchor="middle">N</text>
+      </g>
+      <!-- Title -->
+      <text x="15" y="22" font-family="'Cormorant Garamond',serif" font-size="14" fill="#4a1529" font-weight="600">Estienne-Beauvoir Estate</text>
+      <text x="15" y="38" font-family="'Cormorant SC',serif" font-size="8" fill="#6b5e4a" letter-spacing="2">UPPER OJAI, CALIFORNIA</text>
+    </svg>
+    <p style="font-family:'Cormorant SC',serif;font-size:0.65rem;letter-spacing:0.12em;color:var(--ink-light);text-align:center;margin-top:0.4rem;">Schematic estate map, not to scale.</p>
+  </div>
+
+  <div class="estate-two-col">
+    <div>
+      <h2 class="section-title" style="margin-top:0;">Estate Information</h2>
+      <div class="estate-info-block">
+        <span class="estate-info-label">Address</span>
+        <div class="estate-info-val">14250 Sulphur Mountain Road<br>Upper Ojai, CA 93023</div>
+      </div>
+      <div class="estate-info-block">
+        <span class="estate-info-label">Telephone</span>
+        <div class="estate-info-val">(805) 555-0179</div>
+      </div>
+      <div class="estate-info-block">
+        <span class="estate-info-label">Tasting Room Hours</span>
+        <div class="estate-info-val">Wednesday through Sunday<br>11:00 AM &ndash; 7:00 PM<br>Closed Monday and Tuesday</div>
+      </div>
+      <div class="estate-info-block">
+        <span class="estate-info-label">Distance from Los Angeles</span>
+        <div class="estate-info-val">Approximately 95 minutes<br><em style="font-size:0.85rem;color:var(--ink-light);">Via US-101 North to CA-33 North</em></div>
+      </div>
+      <div class="estate-info-block">
+        <span class="estate-info-label">Reservations</span>
+        <div class="estate-info-val">Strongly advised for all tastings. Walk-ins accommodated subject to availability.<br><a href="reserve.html" style="color:var(--burgundy);font-family:'Cormorant SC',serif;font-size:0.72rem;letter-spacing:0.1em;">Reserve a Tasting &rarr;</a></div>
+      </div>
+    </div>
+
+    <div>
+      <h2 class="section-title" style="margin-top:0;">About the Estate</h2>
+      <p style="font-family:'EB Garamond',serif;font-size:0.95rem;color:var(--ink-mid);line-height:1.7;">The Estienne-Beauvoir Estate was founded in 1991 by Margaux Estienne-Beauvoir following her departure from the Institut National Agronomique in Paris. Having spent a decade establishing the theoretical foundations of buckwheat criticism in France, she sought to demonstrate that the discipline's highest ideals could be realised in a New World terroir of sufficient geological distinction.</p>
+      <p style="font-family:'EB Garamond',serif;font-size:0.95rem;color:var(--ink-mid);line-height:1.7;">The Upper Ojai Valley, sheltered from the Pacific by the Santa Ynez Mountains and underlain by volcanic loam of the Transverse Range, proved adequate to the proposition. The estate's 47 acres have been cultivated sustainably since 2003; the volcanic loam and Mediterranean microclimate produce groats of a character that is specifically Californian and, the founder maintains, impossible to replicate elsewhere on the continent.</p>
+      <p style="font-family:'EB Garamond',serif;font-size:0.95rem;color:var(--ink-mid);line-height:1.7;">The tasting room occupies a restored 1907 Craftsman lodge at the centre of the property. The glass-walled production facility, added in 2008, allows visitors to observe the milling process through a complete cycle during scheduled tour sessions.</p>
+    </div>
+  </div>
+
+  <hr style="border:none;border-top:1px solid var(--rule);margin:2.5rem 0;">
+
+  <h2 class="section-title">Getting Here from Los Angeles</h2>
+  <div class="directions-narrative">
+    Take the 101 north past the Conejo Grade as the Pacific haze yields to chaparral and the valley begins to breathe with a different quality of air. Continue through Thousand Oaks without lingering; the freeway has nothing to offer until Ventura, where the ocean appears to the left with the sudden conviction of something long withheld. At Ventura, transfer to the 33 North, which climbs immediately into the interior. The chaparral closes on both sides of the road; the temperature drops two degrees for every hundred feet of elevation gained. Sulphur Mountain Road appears on the right at the 22-mile mark. The estate gates are set back 400 yards from the road; follow the gravel drive to the lodge. Allow 95 minutes from the 101/405 interchange in conditions of normal traffic. Do not arrive before 11:00 AM; the tasting room is not open and the staff are engaged in preparation.
+  </div>
+
+  <h2 class="section-title">What to Expect</h2>
+  <div class="estate-two-col">
+    <div>
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;color:var(--burgundy);margin:0 0 0.6rem;">The Tasting Room</h3>
+      <p style="font-family:'EB Garamond',serif;font-size:0.9rem;color:var(--ink-mid);line-height:1.7;">The restored 1907 Craftsman lodge houses the estate's principal tasting room, with seating for up to 28 at the long communal evaluation table, or private rooms for parties of four to eight. The architecture has been preserved in its original character; the original Douglas fir floors and white oak ceiling beams provide the appropriate atmosphere of unhurried seriousness. Temperature is maintained at 14&#176;C during tasting sessions.</p>
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;color:var(--burgundy);margin:1rem 0 0.6rem;">Guided Estate Tour</h3>
+      <p style="font-family:'EB Garamond',serif;font-size:0.9rem;color:var(--ink-mid);line-height:1.7;">One-hour guided tours depart at 12:00 and 15:00 Wednesday through Sunday. Tours encompass the 8-acre experimental cultivar plots (currently trialling seven Tartary varieties alongside the estate's flagship Common), the glass-walled production facility where visitors may observe milling in progress, and a concluding visit to the estate's temperature-controlled evaluation cellar. Tours conclude with a single evaluatory pour of the current estate release.</p>
+    </div>
+    <div>
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;color:var(--burgundy);margin:0 0 0.6rem;">Tasting Experiences</h3>
+      <p style="font-family:'EB Garamond',serif;font-size:0.9rem;color:var(--ink-mid);line-height:1.7;">The estate offers four tasting programmes, from the Standard ($145) encompassing four current-release cultivars to the Grand Cru Experience ($625) featuring the estate's three highest-scoring cultivars across current and previous vintages. The Vertical Flight ($1,250) presents five consecutive vintages of the Estate Reserve alongside notes from Margaux Estienne-Beauvoir's personal evaluation records. All tasting programmes are available for reservation at <a href="reserve.html" style="color:var(--burgundy);">the reservation page</a>.</p>
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;color:var(--burgundy);margin:1rem 0 0.6rem;">Estate Etiquette</h3>
+      <p style="font-family:'EB Garamond',serif;font-size:0.9rem;color:var(--ink-mid);line-height:1.7;">The estate requests that guests refrain from the use of perfume or scented products on tasting days, as such compounds interfere with the aromatic evaluation of cultivars at the level of precision this establishment requires. Photography is permitted in the grounds; it is not permitted during formal tasting sessions. Children are welcome in the gardens; the tasting room is available to guests aged 16 and above.</p>
+    </div>
+  </div>
+
+</div>
+
+<div style="background:var(--parchment);padding:2rem;">
+  <div style="max-width:900px;margin:0 auto;text-align:center;">
+    <p style="font-family:'Cormorant SC',serif;font-size:0.72rem;letter-spacing:0.18em;color:var(--gold);margin-bottom:0.5rem;">Ready to Visit?</p>
+    <a href="reserve.html" style="display:inline-block;background:var(--burgundy);color:var(--gold-pale);font-family:'Cormorant SC',serif;font-size:0.78rem;letter-spacing:0.18em;padding:0.8rem 2.5rem;text-decoration:none;">Reserve Your Tasting</a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-title">Buckwheat Spectator</div>
+  <div class="footer-strap">The International Journal of Fagopyrum Scholarship &nbsp;&middot;&nbsp; Established 1987</div>
+  <div class="footer-links">
+    <a href="index.html">Home</a>
+    <a href="reserve.html">Reserve a Tasting</a>
+    <a href="events.html">Events</a>
+    <a href="about.html">About</a>
+  </div>
+  <hr class="footer-rule">
+  <div class="footer-copyright">&copy; 2026 Buckwheat Spectator. Estienne-Beauvoir Estate is a fictitious location created for satirical purposes.</div>
+</footer>
+</body>
+</html>

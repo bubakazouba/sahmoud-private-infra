@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="refresh" content="60">
+<title>Busy City Vacation — Jun 21-28, 2026</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f0f23; color: #e0e0e0; padding: 20px; max-width: 1400px; margin: 0 auto; }
+.header { margin-bottom: 20px; }
+.header h1 { font-size: 1.7em; color: #22c55e; margin-bottom: 4px; }
+.header .subtitle { color: #999; font-size: 0.9em; }
+.header .meta { color: #666; font-size: 0.75em; margin-top: 4px; }
+.summary { background: linear-gradient(135deg, #1a3a1a, #205020); border-radius: 10px; padding: 14px 16px; margin-bottom: 20px; border: 1px solid #2a5a2a; }
+.summary h2 { color: #22c55e; font-size: 1em; margin-bottom: 6px; }
+.summary p { color: #ccc; font-size: 0.88em; line-height: 1.5; }
+table { width: 100%; border-collapse: collapse; background: #1a1a3e; border-radius: 10px; overflow: hidden; }
+th { background: #252560; color: #fbbf24; padding: 10px 8px; text-align: left; font-size: 0.78em; text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 1px solid #3a3a6a; }
+td { padding: 10px 8px; border-bottom: 1px solid #2a2a4a; font-size: 0.88em; vertical-align: top; }
+tr:hover td { background: #1f1f4a; }
+.money { font-family: 'SF Mono', Monaco, monospace; color: #22c55e; font-weight: 600; }
+.miles { color: #93c5fd; }
+.tbd { color: #f59e0b; font-style: italic; font-size: 0.8em; }
+.recommend-drive { background: #1e3a1e; color: #22c55e; padding: 3px 8px; border-radius: 4px; font-size: 0.75em; font-weight: 600; }
+.recommend-fly { background: #1e2a4a; color: #60a5fa; padding: 3px 8px; border-radius: 4px; font-size: 0.75em; font-weight: 600; }
+.notes { color: #999; font-size: 0.8em; font-style: italic; }
+.town-name { font-weight: 600; color: #e0e0e0; }
+.town-state { color: #888; font-size: 0.8em; }
+a { color: #60a5fa; text-decoration: none; }
+a:hover { text-decoration: underline; }
+.empty { text-align: center; padding: 40px 20px; color: #999; }
+.empty h3 { color: #fbbf24; margin-bottom: 10px; }
+.cheapest { background: #1e3a1e !important; }
+.cheapest .money { color: #4ade80; }
+.footer { color: #555; font-size: 0.7em; margin-top: 16px; text-align: center; }
+</style>
+</head>
+<body>
+  <div class="header">
+    <h1>🌃 Busy City Vacation — Jun 21-28, 2026</h1>
+    <div class="subtitle">7 nights · 2 adults · 1BR Airbnb · from Pasadena</div>
+    <div class="meta" id="meta">loading…</div>
+  </div>
+
+  <div class="summary" id="summary" style="display:none;">
+    <h2>📋 Summary</h2>
+    <p id="summary-text"></p>
+  </div>
+
+  <div id="content">
+    <div class="empty">
+      <h3>⏳ Loading vacation data...</h3>
+      <p>Subagent is researching real Airbnb + flight prices across 10 mountain towns. This page auto-refreshes every 60s.</p>
+    </div>
+  </div>
+
+  <div class="footer">
+    Page auto-refreshes every 60s · Prices are snapshot-in-time
+  </div>
+
+<script>
+async function load() {
+  try {
+    const r = await fetch('data.json', {cache: 'no-store'});
+    const j = await r.json();
+    document.getElementById('meta').textContent = 'status: ' + (j.status || 'unknown');
+    if (!j.towns || j.towns.length === 0) {
+      return;  // keep loading state
+    }
+    render(j.towns);
+  } catch (e) {
+    document.getElementById('meta').textContent = 'error: ' + e.message;
+  }
+}
+
+function fmtMoney(n) {
+  if (n === null || n === undefined) return '<span class="tbd">TBD</span>';
+  return '$' + Number(n).toLocaleString();
+}
+
+function fmtMode(rec) {
+  if (rec === 'drive') return '<span class="recommend-drive">DRIVE</span>';
+  if (rec === 'fly') return '<span class="recommend-fly">FLY</span>';
+  return '<span class="tbd">?</span>';
+}
+
+function bestTotal(t) {
+  const d = t.drive_total_usd;
+  const f = t.fly_total_usd;
+  if (d == null && f == null) return null;
+  if (d == null) return f;
+  if (f == null) return d;
+  return Math.min(d, f);
+}
+
+function render(towns) {
+  // Sort by best total ascending
+  const sorted = [...towns].sort((a,b) => {
+    const ba = bestTotal(a) ?? 1e9;
+    const bb = bestTotal(b) ?? 1e9;
+    return ba - bb;
+  });
+  const cheapest3 = new Set(sorted.slice(0,3).map(t => t.town));
+  const totals = sorted.map(t => bestTotal(t)).filter(x => x != null);
+  const summary = `<strong>${sorted.length} towns evaluated.</strong> ` +
+    `Cheapest: ${sorted[0]?.town} (${fmtMoney(bestTotal(sorted[0]))}). ` +
+    `Most expensive: ${sorted[sorted.length-1]?.town} (${fmtMoney(bestTotal(sorted[sorted.length-1]))}). ` +
+    `Median: ${fmtMoney(totals[Math.floor(totals.length/2)])}.`;
+  document.getElementById('summary-text').innerHTML = summary;
+  document.getElementById('summary').style.display = 'block';
+
+  const rows = sorted.map(t => {
+    const drive = t.drive_total_usd;
+    const fly = t.fly_total_usd;
+    const best = bestTotal(t);
+    const cheapClass = cheapest3.has(t.town) ? ' class="cheapest"' : '';
+    return `<tr${cheapClass}>
+      <td>
+        <div class="town-name">${t.town}</div>
+        ${t.notes ? `<div class="notes">${t.notes}</div>` : ''}
+      </td>
+      <td>${t.drive_miles ? `<span class="miles">${t.drive_miles} mi · ${t.drive_time_hr}h</span>` : '—'}</td>
+      <td>${fmtMoney(t.drive_gas_cost_usd)}</td>
+      <td>${fmtMoney(t.fly_rt_2pax_usd)}</td>
+      <td>${t.airbnb_listing_url ? `<a href="${t.airbnb_listing_url}" target="_blank">listing →</a>` : '—'}<br>${fmtMoney(t.airbnb_7night_total_usd)}</td>
+      <td class="money">${fmtMoney(drive)}</td>
+      <td class="money">${fmtMoney(fly)}</td>
+      <td class="money">${fmtMoney(best)}</td>
+      <td>${fmtMode(t.recommend)}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('content').innerHTML = `
+    <table>
+      <thead><tr>
+        <th>Town</th>
+        <th>Drive</th>
+        <th>Gas RT</th>
+        <th>Fly 2pax RT</th>
+        <th>Airbnb 7n</th>
+        <th>Drive total</th>
+        <th>Fly total</th>
+        <th>Best</th>
+        <th>Mode</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+load();
+</script>
+</body>
+</html>

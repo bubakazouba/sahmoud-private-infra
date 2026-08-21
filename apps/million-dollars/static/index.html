@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>$1M in $1 bills — what does it actually look like?</title>
+<style>
+  :root {
+    --bg: #0b1220;
+    --card: #1a2540;
+    --accent: #4ade80;
+    --money: #2d6a4f;
+    --gold: #fbbf24;
+    --text: #e2e8f0;
+    --dim: #94a3b8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  header {
+    padding: 14px 20px;
+    background: linear-gradient(135deg, #1a2540 0%, #0b1220 100%);
+    border-bottom: 1px solid #334155;
+    flex-shrink: 0;
+  }
+  header h1 {
+    font-size: 20px;
+    color: var(--accent);
+    letter-spacing: -0.3px;
+  }
+  header .sub { color: var(--dim); font-size: 12px; margin-top: 2px; }
+  main {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    overflow: hidden;
+  }
+  #canvas-wrap {
+    position: relative;
+    background: radial-gradient(ellipse at center, #1a2540 0%, #0b1220 100%);
+  }
+  #canvas-wrap canvas { display: block; }
+  .controls {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    display: flex;
+    gap: 6px;
+    z-index: 10;
+  }
+  .controls button {
+    background: var(--card);
+    color: var(--text);
+    border: 1px solid #334155;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .controls button.active {
+    background: var(--money);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  .controls button:hover:not(.active) {
+    background: #273449;
+  }
+  .legend {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    background: rgba(11, 18, 32, 0.85);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 11px;
+    color: var(--dim);
+    z-index: 10;
+  }
+  .legend .row { display: flex; align-items: center; gap: 8px; }
+  .legend .swatch { width: 12px; height: 12px; border-radius: 2px; }
+  aside {
+    background: var(--card);
+    padding: 18px 18px;
+    overflow-y: auto;
+    border-left: 1px solid #334155;
+  }
+  aside h2 {
+    font-size: 13px;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+  .fact-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+  .fact {
+    background: rgba(0,0,0,0.2);
+    padding: 8px 10px;
+    border-radius: 5px;
+    border-left: 2px solid var(--money);
+  }
+  .fact .label { font-size: 10px; color: var(--dim); text-transform: uppercase; letter-spacing: 0.5px; }
+  .fact .value { font-size: 15px; color: var(--text); font-weight: 600; margin-top: 2px; }
+  .fact .extra { font-size: 11px; color: var(--dim); margin-top: 2px; }
+  .alt-section {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid #334155;
+  }
+  .alt-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    font-size: 12px;
+    color: var(--dim);
+  }
+  .alt-row b { color: var(--text); }
+  footer {
+    text-align: center;
+    color: var(--dim);
+    font-size: 10px;
+    padding: 8px;
+    border-top: 1px solid #334155;
+    flex-shrink: 0;
+  }
+  @media (max-width: 720px) {
+    main { grid-template-columns: 1fr; grid-template-rows: 1fr auto; }
+    aside { border-left: none; border-top: 1px solid #334155; max-height: 40vh; }
+    #canvas-wrap { min-height: 50vh; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>$1M in $1 bills — what does it actually look like?</h1>
+  <div class="sub">Drag to rotate · scroll to zoom · human silhouette = 6 ft for scale</div>
+</header>
+<main>
+  <div id="canvas-wrap">
+    <div class="controls">
+      <button data-amount="1000000" class="active">$1M</button>
+      <button data-amount="1000000000">$1B</button>
+      <button data-amount="1000000000000">$1T</button>
+    </div>
+    <div class="legend">
+      <div class="row"><div class="swatch" style="background: #2d6a4f"></div>green = $1 bills</div>
+      <div class="row"><div class="swatch" style="background: #ff6464"></div>red = 6 ft human (you)</div>
+    </div>
+  </div>
+  <aside>
+    <h2>$<span id="amt-label">1,000,000</span> in $1 bills</h2>
+    <div class="fact-grid">
+      <div class="fact">
+        <div class="label">Cuboid dimensions</div>
+        <div class="value" id="dim-val">5.1' × 2.2' × 3.6'</div>
+        <div class="extra" id="dim-extra">~40 cu ft · about a bookshelf</div>
+      </div>
+      <div class="fact">
+        <div class="label">Weight</div>
+        <div class="value" id="wt-val">2,200 lbs</div>
+        <div class="extra" id="wt-extra">~1 US ton</div>
+      </div>
+      <div class="fact">
+        <div class="label">Total bills</div>
+        <div class="value" id="bills-val">1,000,000</div>
+        <div class="extra">arranged 1000 bricks of 1000 bills each, in a 10×10×10 grid</div>
+      </div>
+      <div class="fact">
+        <div class="label">Time to count by hand (1 bill / sec)</div>
+        <div class="value" id="time-val">11.6 days</div>
+        <div class="extra">non-stop, no sleep</div>
+      </div>
+    </div>
+
+    <div class="alt-section">
+      <h2>Alternate arrangements</h2>
+      <div class="alt-row">Single stack height: <b id="stack-val">358 ft</b></div>
+      <div class="alt-row">End-to-end length: <b id="line-val">96.8 mi</b></div>
+      <div class="alt-row">Side-by-side area: <b id="area-val">~3,000 sq ft</b></div>
+    </div>
+
+    <div class="alt-section">
+      <h2>Real $1 bill specs</h2>
+      <div class="alt-row">Width: <b>6.14"</b> (155.96 mm)</div>
+      <div class="alt-row">Length: <b>2.61"</b> (66.29 mm)</div>
+      <div class="alt-row">Thickness: <b>0.0043"</b> (0.11 mm)</div>
+      <div class="alt-row">Weight: <b>1.0 g</b></div>
+    </div>
+  </aside>
+</main>
+<footer>built 2026-04-25 · three.js · single page · no analytics</footer>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+// real bill dimensions in inches
+const BILL_W = 6.14;
+const BILL_D = 2.61;
+const BILL_T = 0.0043;
+const BILLS_PER_BRICK = 1000;
+const BRICK_T = BILL_T * BILLS_PER_BRICK; // 4.3"
+const HUMAN_FT = 6;
+
+const wrap = document.getElementById('canvas-wrap');
+let renderer, scene, camera, controls, cuboidGroup, human;
+let currentAmount = 1000000;
+
+function fmtNum(n) {
+  if (n >= 1e12) return (n / 1e12).toFixed(0) + 'T';
+  if (n >= 1e9)  return (n / 1e9).toFixed(0) + 'B';
+  if (n >= 1e6)  return (n / 1e6).toFixed(0) + 'M';
+  return n.toLocaleString();
+}
+function fmtCommas(n) { return n.toLocaleString(); }
+
+function feetInchesStr(inches) {
+  const ft = inches / 12;
+  if (ft >= 100) return ft.toFixed(0) + ' ft';
+  if (ft >= 10) return ft.toFixed(1) + ' ft';
+  return ft.toFixed(2) + ' ft';
+}
+
+function dimsForAmount(amount) {
+  // amount = $ in $1 bills. Bricks of 1000.
+  const bricks = amount / BILLS_PER_BRICK;
+  // Make brick grid roughly cubic.
+  const sideBricks = Math.round(Math.cbrt(bricks));
+  // Inches
+  const widthIn = sideBricks * BILL_W;
+  const depthIn = sideBricks * BILL_D;
+  const heightIn = sideBricks * BRICK_T;
+  return { widthIn, depthIn, heightIn, sideBricks, bricks, totalBills: amount };
+}
+
+function buildCuboid(amount) {
+  if (cuboidGroup) scene.remove(cuboidGroup);
+  cuboidGroup = new THREE.Group();
+  const d = dimsForAmount(amount);
+  // Convert inches to scene units (1 unit = 1 ft for camera-friendly distances)
+  const wFt = d.widthIn / 12;
+  const dFt = d.depthIn / 12;
+  const hFt = d.heightIn / 12;
+
+  // Single textured cuboid for performance — we don't actually render millions of bills
+  const geo = new THREE.BoxGeometry(wFt, hFt, dFt);
+  // Procedural texture: stripes to suggest stacked bills
+  const mat = makeBillMaterial(d.sideBricks);
+  const cube = new THREE.Mesh(geo, mat);
+  cube.position.set(0, hFt / 2, 0);
+  cube.castShadow = true;
+  cube.receiveShadow = true;
+  cuboidGroup.add(cube);
+
+  // Edges for visual definition
+  const edges = new THREE.EdgesGeometry(geo);
+  const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x66ff99, linewidth: 1 }));
+  line.position.set(0, hFt / 2, 0);
+  cuboidGroup.add(line);
+
+  scene.add(cuboidGroup);
+
+  // Position human at a constant 6 ft tall, beside the cuboid
+  if (human) scene.remove(human);
+  human = makeHuman(HUMAN_FT);
+  human.position.set(wFt / 2 + 2, 0, dFt / 2 + 2);
+  scene.add(human);
+
+  // Adjust camera so the cuboid fits in view
+  const maxDim = Math.max(wFt, hFt, dFt, HUMAN_FT * 1.5);
+  const camDist = maxDim * 2.2;
+  camera.position.set(camDist, maxDim * 1.1, camDist);
+  controls.target.set(0, hFt / 2, 0);
+  controls.maxDistance = maxDim * 8;
+  controls.update();
+
+  // Update side panel
+  document.getElementById('amt-label').textContent = fmtCommas(amount);
+  document.getElementById('dim-val').textContent =
+    `${feetInchesStr(d.widthIn)} × ${feetInchesStr(d.depthIn)} × ${feetInchesStr(d.heightIn)}`;
+  const cuFt = (d.widthIn * d.depthIn * d.heightIn) / 1728;
+  let dimExtra;
+  if (amount === 1e6) dimExtra = `~${cuFt.toFixed(0)} cu ft · about a bookshelf`;
+  else if (amount === 1e9) dimExtra = `~${cuFt.toFixed(0)} cu ft · a 4-story building footprint`;
+  else dimExtra = `~${(cuFt/1000).toFixed(0)}k cu ft · a small skyscraper`;
+  document.getElementById('dim-extra').textContent = dimExtra;
+  // Weight: 1g per bill = 0.0022 lbs
+  const lbs = Math.round(amount * 0.0022);
+  document.getElementById('wt-val').textContent =
+    lbs >= 2000 ? `${(lbs/2000).toLocaleString(undefined, {maximumFractionDigits:0})} tons` : `${fmtCommas(lbs)} lbs`;
+  document.getElementById('wt-extra').textContent =
+    amount === 1e6 ? '~1 US ton'
+    : amount === 1e9 ? '~1,100 tons · a heavy semi-truck × 25'
+    : '~1.1 million tons · ~3 Empire State Buildings';
+  document.getElementById('bills-val').textContent = fmtCommas(amount);
+  // Time to count: 1 bill/sec
+  const secs = amount;
+  let timeStr;
+  if (secs < 86400) timeStr = `${(secs/3600).toFixed(1)} hours`;
+  else if (secs < 86400 * 365) timeStr = `${(secs/86400).toFixed(1)} days`;
+  else timeStr = `${(secs/86400/365).toFixed(0)} years`;
+  document.getElementById('time-val').textContent = timeStr;
+  // Single stack
+  const stackFt = (amount * BILL_T) / 12;
+  document.getElementById('stack-val').textContent =
+    stackFt >= 5280 ? `${(stackFt/5280).toFixed(1)} mi` : `${stackFt.toFixed(0)} ft`;
+  // End-to-end length (longest dimension)
+  const lineMi = (amount * BILL_W) / 12 / 5280;
+  document.getElementById('line-val').textContent =
+    lineMi >= 1 ? `${lineMi.toFixed(0).toLocaleString()} mi` : `${(lineMi*5280).toFixed(0)} ft`;
+  // Side-by-side area (each bill flat)
+  const areaSqFt = (amount * BILL_W * BILL_D) / 144;
+  let areaStr;
+  if (areaSqFt < 5000) areaStr = `~${areaSqFt.toFixed(0).toLocaleString()} sq ft`;
+  else if (areaSqFt < 27878400) areaStr = `~${(areaSqFt/43560).toFixed(1)} acres`;
+  else areaStr = `~${(areaSqFt/27878400).toFixed(2)} sq mi`;
+  document.getElementById('area-val').textContent = areaStr;
+}
+
+function makeBillMaterial(sideBricks) {
+  // Procedural canvas texture: green base with horizontal stripes for bill stacks
+  const c = document.createElement('canvas');
+  const size = 512;
+  c.width = c.height = size;
+  const ctx = c.getContext('2d');
+  // Base green
+  ctx.fillStyle = '#2d6a4f';
+  ctx.fillRect(0, 0, size, size);
+  // Horizontal stripes — each stripe = one brick
+  const stripeH = size / Math.max(sideBricks, 8);
+  for (let y = 0; y < size; y += stripeH) {
+    ctx.fillStyle = (y / stripeH) % 2 < 1 ? '#2d6a4f' : '#1f4d3a';
+    ctx.fillRect(0, y, size, stripeH);
+    // Hairline highlight
+    ctx.fillStyle = 'rgba(255,255,255,0.05)';
+    ctx.fillRect(0, y, size, 1);
+  }
+  // Subtle "ONE" lettering scattered
+  ctx.fillStyle = 'rgba(255,255,255,0.08)';
+  ctx.font = 'bold 24px serif';
+  for (let i = 0; i < 6; i++) {
+    ctx.fillText('1', Math.random() * size, Math.random() * size);
+  }
+  const tex = new THREE.CanvasTexture(c);
+  tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+  return new THREE.MeshStandardMaterial({ map: tex, roughness: 0.85, metalness: 0.05 });
+}
+
+function makeHuman(heightFt) {
+  // Simple stylized human for scale
+  const g = new THREE.Group();
+  const mat = new THREE.MeshStandardMaterial({ color: 0xff6464, roughness: 0.6 });
+  const headR = heightFt * 0.07;
+  const head = new THREE.Mesh(new THREE.SphereGeometry(headR, 16, 16), mat);
+  head.position.y = heightFt - headR;
+  g.add(head);
+  const torso = new THREE.Mesh(new THREE.CylinderGeometry(heightFt * 0.1, heightFt * 0.12, heightFt * 0.4, 12), mat);
+  torso.position.y = heightFt * 0.65;
+  g.add(torso);
+  const legs = new THREE.Mesh(new THREE.CylinderGeometry(heightFt * 0.07, heightFt * 0.06, heightFt * 0.45, 12), mat);
+  legs.position.y = heightFt * 0.225;
+  g.add(legs);
+  return g;
+}
+
+function init() {
+  scene = new THREE.Scene();
+  scene.fog = new THREE.Fog(0x0b1220, 80, 600);
+
+  camera = new THREE.PerspectiveCamera(45, wrap.clientWidth / wrap.clientHeight, 0.1, 5000);
+  camera.position.set(15, 8, 15);
+
+  renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(wrap.clientWidth, wrap.clientHeight);
+  renderer.setClearColor(0x0b1220, 1);
+  renderer.shadowMap.enabled = true;
+  wrap.appendChild(renderer.domElement);
+
+  controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.08;
+  controls.minDistance = 1;
+
+  // Lights
+  scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+  const dl = new THREE.DirectionalLight(0xffffff, 0.9);
+  dl.position.set(40, 80, 40);
+  dl.castShadow = true;
+  dl.shadow.mapSize.set(1024, 1024);
+  scene.add(dl);
+
+  // Ground
+  const groundMat = new THREE.MeshStandardMaterial({ color: 0x16213a, roughness: 0.9 });
+  const ground = new THREE.Mesh(new THREE.PlaneGeometry(2000, 2000), groundMat);
+  ground.rotation.x = -Math.PI / 2;
+  ground.position.y = 0;
+  ground.receiveShadow = true;
+  scene.add(ground);
+
+  // Grid
+  const grid = new THREE.GridHelper(200, 50, 0x334155, 0x1e293b);
+  scene.add(grid);
+
+  buildCuboid(currentAmount);
+
+  // Buttons
+  document.querySelectorAll('.controls button').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.controls button').forEach(bb => bb.classList.remove('active'));
+      b.classList.add('active');
+      currentAmount = parseInt(b.dataset.amount, 10);
+      buildCuboid(currentAmount);
+    });
+  });
+
+  window.addEventListener('resize', onResize);
+  animate();
+}
+
+function onResize() {
+  camera.aspect = wrap.clientWidth / wrap.clientHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(wrap.clientWidth, wrap.clientHeight);
+}
+
+function animate() {
+  requestAnimationFrame(animate);
+  controls.update();
+  renderer.render(scene, camera);
+}
+
+init();
+</script>
+</body>
+</html>

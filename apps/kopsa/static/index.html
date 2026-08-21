@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KOPSA Activities Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #fff;
+            min-height: 100vh;
+        }
+        .header {
+            text-align: center;
+            padding: 40px 20px 20px;
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, #f093fb, #f5576c, #fda085);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+        .header p {
+            color: #aaa;
+            font-size: 1.1rem;
+        }
+        .section-title {
+            text-align: center;
+            font-size: 1.4rem;
+            color: #f5576c;
+            margin: 30px 0 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 24px;
+            padding: 20px 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .card {
+            background: rgba(255,255,255,0.08);
+            border-radius: 16px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(245,87,108,0.2);
+        }
+        .card-img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+        .card-body {
+            padding: 20px;
+        }
+        .card-body h2 {
+            font-size: 1.3rem;
+            margin-bottom: 6px;
+        }
+        .card-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 10px 0;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .badge-price { background: #f5576c; color: #fff; }
+        .badge-date { background: rgba(240,147,251,0.3); color: #f093fb; }
+        .badge-duration { background: rgba(253,160,133,0.3); color: #fda085; }
+        .badge-location { background: rgba(255,255,255,0.15); color: #ccc; }
+        .card-desc {
+            color: #bbb;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin: 12px 0;
+        }
+        .card-includes {
+            color: #999;
+            font-size: 0.82rem;
+            line-height: 1.6;
+            margin: 8px 0;
+        }
+        .card-includes strong { color: #ddd; }
+        .btn {
+            display: inline-block;
+            padding: 10px 24px;
+            background: linear-gradient(90deg, #f5576c, #f093fb);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            transition: opacity 0.2s;
+        }
+        .btn:hover { opacity: 0.85; }
+        .master-plan {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 30px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .master-plan h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #f093fb;
+        }
+        .plan-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .plan-date {
+            min-width: 100px;
+            color: #f5576c;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        .plan-name { flex: 1; font-size: 0.95rem; }
+        .plan-price { color: #fda085; font-weight: 600; min-width: 80px; text-align: right; }
+        .plan-status {
+            min-width: 24px;
+            text-align: center;
+            font-size: 1.1rem;
+            margin-left: 10px;
+        }
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-size: 0.8rem;
+        }
+        @media (max-width: 600px) {
+            .grid { padding: 15px; }
+            .header h1 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>KOPSA Activities</h1>
+        <p>Curated experiences for the crew - Spring/Summer 2026</p>
+    </div>
+
+    <div class="section-title">Featured Experiences</div>
+    <div class="grid">
+
+        <div class="card">
+            <img class="card-img" src="https://images.unsplash.com/photo-1534430480872-3498386e7856?w=600&h=400&fit=crop" alt="Queen Mary Ship">
+            <div class="card-body">
+                <h2>Murder on the High Seas</h2>
+                <div class="card-meta">
+                    <span class="badge badge-price">~$117/person</span>
+                    <span class="badge badge-date">Apr 18 · May 1 · May 23</span>
+                    <span class="badge badge-duration">2.5 hours</span>
+                    <span class="badge badge-location">Long Beach</span>
+                </div>
+                <p class="card-desc">Agatha Christie-style comedy murder mystery dinner aboard the Queen Mary, inspired by the ship's real 1967 "Last Great Cruise." Solve a murder between courses while characters burst into song and dance.</p>
+                <div class="card-includes">
+                    <strong>Includes:</strong> 3-course dinner (salad, choice of salmon/chicken/vegan tofu, mango chocolate tart dessert)<br>
+                    <strong>Schedule:</strong> Doors 6:45pm, Show 7:00-9:30pm<br>
+                    <strong>Dress code:</strong> Business casual (no shorts/flip flops)<br>
+                    <strong>Note:</strong> Ages 13+. Drinks available for purchase. Family-style seating.
+                </div>
+                <a class="btn" href="https://fareharbor.com/embeds/book/thequeenmary-attractions/items/696207/calendar/2026/04/?full-items=yes" target="_blank">Book Tickets</a>
+            </div>
+        </div>
+
+        <div class="card" id="trapeze">
+            <img class="card-img" src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&h=400&fit=crop" alt="Trapeze">
+            <div class="card-body">
+                <h2>Trapeze Class</h2>
+                <div class="card-meta">
+                    <span class="badge badge-price">$50-60/person</span>
+                    <span class="badge badge-duration">2 hours</span>
+                    <span class="badge badge-location">Santa Monica Pier</span>
+                </div>
+                <p class="card-desc">TSNY flying trapeze on the iconic Santa Monica Pier overlooking the Pacific. Professional instructors teach you to swing, release, and do knee-hang catches in your very first session. No experience needed.</p>
+                <div class="card-includes">
+                    <strong>Price:</strong> $50-60/class (flying trapeze). Silks, lyra, trampoline: $35/person<br>
+                    <strong>Location:</strong> 370 Santa Monica Pier, Santa Monica, CA 90401<br>
+                    <strong>Tip:</strong> Check Groupon for deals!<br>
+                    <strong>Contact:</strong> (310) 394-5800
+                </div>
+                <a class="btn" href="https://losangeles.trapezeschool.com/" target="_blank">Book Class</a>
+            </div>
+        </div>
+
+        <div class="card" id="flyboarding">
+            <img class="card-img" src="https://images.unsplash.com/photo-1530870110042-98b2cb110834?w=600&h=400&fit=crop" alt="Flyboarding">
+            <div class="card-body">
+                <h2>Flyboarding</h2>
+                <div class="card-meta">
+                    <span class="badge badge-price">$99-149/person</span>
+                    <span class="badge badge-duration">30 min session</span>
+                    <span class="badge badge-location">Marina del Rey</span>
+                </div>
+                <p class="card-desc">SoCal's premier ocean flyboarding at LA Flyboard. You fly solo on the board while an instructor on a nearby jet ski controls the water pressure. 5-10 min to learn, then soar up to 30 feet above the Pacific. No experience needed.</p>
+                <div class="card-includes">
+                    <strong>Provider:</strong> LA Flyboard — laflyboard.com<br>
+                    <strong>Location:</strong> 13477 Fiji Way, Marina del Rey, CA 90292<br>
+                    <strong>Hours:</strong> Open 9am-7pm daily<br>
+                    <strong>Gear:</strong> Life vest + helmet provided<br>
+                    <strong>Tip:</strong> Check Groupon for deals (up to 52% off)
+                </div>
+                <a class="btn" href="https://www.groupon.com/deals/la-flyboard-1" target="_blank">Check Groupon Deal</a>
+            </div>
+        </div>
+
+        <div class="card" id="superman">
+            <img class="card-img" src="https://images.unsplash.com/photo-1531259683007-016a7b628fc3?w=600&h=400&fit=crop" alt="Superman Experience">
+            <div class="card-body">
+                <h2>Superman Experience: Defenders Unite</h2>
+                <div class="card-meta">
+                    <span class="badge badge-price">$39/person (add-on) | $99 bundle</span>
+                    <span class="badge badge-date">Opens Apr 18</span>
+                    <span class="badge badge-duration">~1 hour</span>
+                    <span class="badge badge-location">Burbank</span>
+                </div>
+                <p class="card-desc">Motion capture + active 3D glasses experience: fly alongside Superman, battle Darkseid, and compete in mini-games. Audio-animatronics, interactive sets, and photo ops. Relax in the Fortress of Solitude lounge with themed snacks (Ma Kent's Grilled Cheese, The Lois Lane Shake).</p>
+                <div class="card-includes">
+                    <strong>Price:</strong> $39/adult standalone, or $99 bundle (Studio Tour + Superman). Parking $15.<br>
+                    <strong>Location:</strong> Warner Bros. Studio Tour Hollywood, 3400 Warner Blvd, Burbank<br>
+                    <strong>Hours:</strong> Thu-Mon 12pm-8pm (closed Tue/Wed). Ages 5+.<br>
+                    <strong>Opens:</strong> April 18 (Superman Day!)
+                </div>
+                <a class="btn" href="https://www.supermanexperience.com/plan-your-visit/" target="_blank">Get Tickets</a>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="section-title">More Options</div>
+    <div class="grid">
+
+        <div class="card">
+            <img class="card-img" src="https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=600&h=400&fit=crop" alt="Renaissance Faire">
+            <div class="card-body">
+                <h2>Renaissance Pleasure Faire</h2>
+                <div class="card-meta">
+                    <span class="badge badge-date">Weekends thru May 17</span>
+                    <span class="badge badge-location">Irwindale</span>
+                </div>
+                <p class="card-desc">The oldest Ren Faire in the country. Jousting, turkey legs, queen's tea parties, rides, games, and plenty of ales across 20 acres.</p>
+                <a class="btn" href="https://www.showclix.com/events/29447" target="_blank">Get Tickets</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <img class="card-img" src="https://images.unsplash.com/photo-1440186347098-386b7459ad6b?w=600&h=400&fit=crop" alt="Meteor Shower">
+            <div class="card-body">
+                <h2>Lyrid Meteor Shower</h2>
+                <div class="card-meta">
+                    <span class="badge badge-price">FREE</span>
+                    <span class="badge badge-date">Night of Apr 22-23</span>
+                </div>
+                <p class="card-desc">The oldest recorded meteor shower (since 687 BC). 10-20 meteors per hour at peak. Best viewed between moonset and sunrise from dark sky locations.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <img class="card-img" src="https://images.unsplash.com/photo-1572120086263-a31b5765dbf2?w=600&h=400&fit=crop" alt="Rooftop Movies">
+            <div class="card-body">
+                <h2>Rooftop Movies at Montalban</h2>
+                <div class="card-meta">
+                    <span class="badge badge-date">Thru July 2026</span>
+                    <span class="badge badge-location">Hollywood</span>
+                </div>
+                <p class="card-desc">Watch classic films on a gorgeous Hollywood rooftop with wireless headphones. Wagyu burgers and drinks from the on-site kitchen.</p>
+                <a class="btn" href="https://www.themontalban.com/rooftopevents" target="_blank">See Schedule</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <img class="card-img" src="https://images.unsplash.com/photo-1567095761054-7a02e69e5c43?w=600&h=400&fit=crop" alt="Magic Market">
+            <div class="card-body">
+                <h2>Magic Market</h2>
+                <div class="card-meta">
+                    <span class="badge badge-price">$15/person</span>
+                    <span class="badge badge-date">Apr 18-19</span>
+                    <span class="badge badge-location">Heritage Square Museum</span>
+                </div>
+                <p class="card-desc">75+ mystic vendors in a Victorian museum setting. Crystals, tarot readings, aura photography, sound baths, and vegan food. Sells out fast!</p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="master-plan">
+        <h2>Master Plan Timeline</h2>
+        <div class="plan-item">
+            <span class="plan-date">Apr 18-19</span>
+            <span class="plan-name">Magic Market / Superman Experience</span>
+            <span class="plan-price">$15-29/pp</span>
+            <span class="plan-status">🗳️</span>
+        </div>
+        <div class="plan-item">
+            <span class="plan-date">Apr 18</span>
+            <span class="plan-name">Murder Mystery Dinner @ Queen Mary</span>
+            <span class="plan-price">~$117/pp</span>
+            <span class="plan-status">🗳️</span>
+        </div>
+        <div class="plan-item">
+            <span class="plan-date">Apr 22-23</span>
+            <span class="plan-name">Lyrid Meteor Shower</span>
+            <span class="plan-price">FREE</span>
+            <span class="plan-status">🗳️</span>
+        </div>
+        <div class="plan-item">
+            <span class="plan-date">May 9</span>
+            <span class="plan-name">Dirt Bikes @ MotoVentures, Anza</span>
+            <span class="plan-price">$275/pp</span>
+            <span class="plan-status">⭐</span>
+        </div>
+        <div class="plan-item">
+            <span class="plan-date">May 16</span>
+            <span class="plan-name">Hang Gliding @ Dockweiler</span>
+            <span class="plan-price">$160/pp</span>
+            <span class="plan-status">⭐</span>
+        </div>
+        <div class="plan-item">
+            <span class="plan-date">TBD</span>
+            <span class="plan-name">Flyboarding</span>
+            <span class="plan-price">$99-149/pp</span>
+            <span class="plan-status">🗳️</span>
+        </div>
+        <div class="plan-item">
+            <span class="plan-date">TBD</span>
+            <span class="plan-name">Trapeze Class</span>
+            <span class="plan-price">$50-60/pp</span>
+            <span class="plan-status">🗳️</span>
+        </div>
+        <div style="text-align: center; margin-top: 15px; color: #888; font-size: 0.8rem;">
+            ⭐ = Locked &nbsp; 🗳️ = Voting
+        </div>
+    </div>
+
+    <footer>
+        Built by PianoBot & Miss Hanan | KOPSA 2026
+    </footer>
+</body>
+</html>

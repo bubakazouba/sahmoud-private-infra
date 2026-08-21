@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Family Calls - Mom & Dad</title>
+<style>
+ :root{--bg:#0e1117;--panel:#161c26;--panel2:#1e2733;--border:#2b3542;--text:#e8edf3;--dim:#93a1b3;--you:#5fb0ff;--them:#ff9e64;--other:#7a8699;--good:#3ecf8e;--bad:#ff5a6a;--star:#ffd44d;}
+ *{box-sizing:border-box}
+ body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:14px;line-height:1.5}
+ .wrap{max-width:1000px;margin:0 auto;padding:22px 18px 60px}
+ h1{font-size:23px;margin:0 0 4px}
+ .sub{color:var(--dim);font-size:13.5px;margin-bottom:14px}
+ .toggle{display:inline-flex;background:var(--panel2);border:1px solid var(--border);border-radius:24px;padding:4px;margin-bottom:16px}
+ .toggle button{background:none;border:none;color:var(--dim);padding:8px 22px;border-radius:20px;font-size:14px;font-weight:600;cursor:pointer}
+ .toggle button.on{background:var(--you);color:#0e1117}
+ .note{background:rgba(255,180,84,.08);border:1px solid #4a3a1f;border-radius:10px;padding:11px 14px;color:#d9c39a;font-size:12.5px;margin-bottom:18px}
+ .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:11px;margin-bottom:20px}
+ .card{background:var(--panel);border:1px solid var(--border);border-radius:11px;padding:13px 15px}
+ .card .n{font-size:21px;font-weight:700}
+ .card .l{color:var(--dim);font-size:12px;margin-top:3px}
+ .card.you .n{color:var(--you)} .card.them .n{color:var(--them)}
+ h2{font-size:15px;margin:22px 0 10px}
+ .box{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:15px 16px;margin-bottom:16px}
+ .row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+ .row .name{width:150px;font-size:13px;flex-shrink:0}
+ .row .bar{flex:1;background:#0f1620;border-radius:5px;height:22px;position:relative;overflow:hidden}
+ .row .fill{height:100%;border-radius:5px;display:flex;align-items:center;padding:0 8px;font-size:11.5px;font-weight:700;color:#0e1117;min-width:26px}
+ .row .rt{width:74px;text-align:right;color:var(--dim);font-size:11.5px;flex-shrink:0}
+ .split{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+ @media(max-width:620px){.split{grid-template-columns:1fr}.row .name{width:110px}}
+ .timeline{display:flex;align-items:flex-end;gap:2px;height:130px;padding-top:8px;overflow-x:auto}
+ .tcol{display:flex;flex-direction:column-reverse;flex:1;min-width:7px;height:100%;justify-content:flex-start}
+ .seg{width:100%}
+ .seg.you{background:var(--you)} .seg.them{background:var(--them)} .seg.other{background:var(--other)}
+ .tlabels{display:flex;gap:2px;margin-top:4px;color:var(--dim);font-size:9px}
+ .tlabels span{flex:1;min-width:7px;text-align:center;overflow:hidden;white-space:nowrap}
+ .legend{display:flex;gap:16px;font-size:12px;color:var(--dim);margin:8px 0}
+ .sw{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:middle}
+ table{width:100%;border-collapse:collapse;font-size:13px}
+ th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--border)}
+ th{color:var(--dim);font-weight:600;font-size:11.5px;text-transform:uppercase;letter-spacing:.4px}
+ td.num,th.num{text-align:right}
+ .src{color:var(--dim);font-size:11.5px;margin-top:18px}
+ .filterbox{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px 15px;margin-bottom:18px}
+ .frow{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+ .flabel{color:var(--dim);font-size:12.5px}
+ .dash{color:var(--dim);font-size:12px}
+ input[type=date]{background:var(--panel2);border:1px solid var(--border);color:var(--text);border-radius:7px;padding:5px 9px;font-size:12.5px;color-scheme:dark}
+ .chips{display:flex;gap:6px;flex-wrap:wrap;margin-left:6px}
+ .chip{background:var(--panel2);border:1px solid var(--border);color:var(--dim);border-radius:16px;padding:5px 11px;font-size:12px;cursor:pointer}
+ .chip:hover{border-color:var(--you)} .chip.on{background:var(--you);color:#0e1117;border-color:var(--you);font-weight:700}
+ .fcount{color:var(--dim);font-size:12px;margin-top:8px}
+</style></head>
+<body><div class="wrap">
+ <h1>Family Calls</h1>
+ <div class="sub" id="sub"></div>
+ <div class="toggle" id="toggle"></div>
+ <div class="note" id="note"></div>
+ <div class="filterbox" id="filterbox">
+   <div class="frow">
+     <span class="flabel">Date range:</span>
+     <input type="date" id="from"> <span class="dash">to</span> <input type="date" id="to">
+     <span class="chips" id="presets"></span>
+   </div>
+   <div class="fcount" id="fcount"></div>
+ </div>
+ <div class="cards" id="cards"></div>
+
+ <h2>Who starts the call?</h2>
+ <div class="box"><div id="initiators"></div></div>
+
+ <div class="split">
+  <div><h2>Answered vs missed</h2><div class="box" id="pickup"></div></div>
+  <div><h2>Call length (answered)</h2><div class="box" id="durations"></div></div>
+ </div>
+
+ <h2>Calls over time</h2>
+ <div class="box">
+   <div class="legend" id="tlegend"></div>
+   <div class="timeline" id="timeline"></div>
+   <div class="tlabels" id="tlabels"></div>
+ </div>
+
+ <h2>Which family thread</h2>
+ <div class="box"><table id="groups"><thead><tr><th>Thread (participants besides you)</th><th class="num">Calls</th><th class="num">Answered</th><th class="num">Talk time</th></tr></thead><tbody></tbody></table></div>
+
+ <div class="src" id="src"></div>
+</div>
+<script>
+let DATA=null, CUR='Mom', FROM=null, TO=null, PRESET='all';
+const fmtDur=s=>{s=Math.round(s);const h=Math.floor(s/3600),m=Math.floor(s%3600/60),sec=s%60;return h?`${h}h ${m}m`:(m?`${m}m ${sec}s`:`${sec}s`);};
+const barColor=(name,them)=> name==='You'?'var(--you)': (name===them?'var(--them)':'var(--other)');
+const YEAR=365.25*864e5;
+
+// compute all aggregates client-side from raw (date-filtered) calls
+function compute(calls, personName){
+ const byInit={}, started={}, monthly={}, byGroup={};
+ const buckets={'<1m':0,'1-5m':0,'5-15m':0,'15-30m':0,'30-60m':0,'60m+':0};
+ let answered=0, talk=0, youInit=0, themInit=0;
+ for(const c of calls){
+   byInit[c.caller]=(byInit[c.caller]||0)+1;
+   (started[c.caller]=started[c.caller]||[0,0])[1]++;
+   const ans=c.dur>0;
+   if(ans){answered++; talk+=c.dur; started[c.caller][0]++;}
+   if(c.caller==='You') youInit++; else if(c.caller===personName) themInit++;
+   const d=new Date(c.ts), ym=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+   const mm=(monthly[ym]=monthly[ym]||{you:0,them:0,other:0});
+   mm[c.caller==='You'?'you':(c.caller===personName?'them':'other')]++;
+   if(ans){const m=c.dur/60; buckets[m<1?'<1m':m<5?'1-5m':m<15?'5-15m':m<30?'15-30m':m<60?'30-60m':'60m+']++;}
+   const g=(byGroup[c.group]=byGroup[c.group]||{calls:0,answered:0,talk:0}); g.calls++; if(ans){g.answered++; g.talk+=c.dur;}
+ }
+ const total=calls.length;
+ return {
+   totals:{calls:total, answered, missed:total-answered, answer_rate:Math.round(100*answered/Math.max(1,total)),
+           total_talk_seconds:talk, avg_answered_seconds:Math.floor(talk/Math.max(1,answered)),
+           you_initiated:youInit, them_initiated:themInit},
+   by_initiator:Object.entries(byInit).sort((a,b)=>b[1]-a[1]).map(([n,ct])=>({name:n,calls:ct,answer_rate:Math.round(100*started[n][0]/Math.max(1,started[n][1]))})),
+   monthly:Object.keys(monthly).sort().map(m=>({month:m,...monthly[m]})),
+   duration_buckets:buckets,
+   by_group:Object.entries(byGroup).map(([g,v])=>({group:g,...v})).sort((a,b)=>b.calls-a.calls),
+ };
+}
+function tabCalls(){
+ let c=DATA.people[CUR].calls;
+ if(FROM!=null) c=c.filter(x=>x.ts>=FROM);
+ if(TO!=null) c=c.filter(x=>x.ts<=TO);
+ return c;
+}
+
+function render(){
+ const P=DATA.people[CUR], grp=P.is_group, them=P.name;
+ const calls=tabCalls(), p=compute(calls, them), t=p.totals;
+ const iso=ms=>new Date(ms).toISOString().slice(0,10);
+ const win = calls.length ? `${iso(calls[0].ts)} to ${iso(calls[calls.length-1].ts)}` : `${P.range.start} to ${P.range.end}`;
+ document.getElementById('sub').textContent = grp
+   ? `Call activity across your family group chats - ${win}`
+   : `Call activity with ${them} (${CUR}) - ${win}`;
+ // toggle
+ document.getElementById('toggle').innerHTML=Object.keys(DATA.people).map(k=>
+   `<button class="${k===CUR?'on':''}" data-k="${k}">${k}</button>`).join('');
+ document.getElementById('note').textContent = grp
+   ? "Family GROUP chats (3+ members, all immediate family). 'Initiator' = who placed each group call. A 0-second call = rang but no-answer/declined; duration = length of an answered call. Separate from the Mom/Dad 1:1 DM tabs."
+   : DATA.note;
+ // cards (adaptive: 1:1 shows "them started", group shows "others started")
+ const card3 = grp
+   ? [t.calls - t.you_initiated, 'others started']
+   : [t.them_initiated, `${CUR} started`];
+ document.getElementById('cards').innerHTML=[
+  ['card','',t.calls,'total calls logged'],
+  ['card you','',t.you_initiated,'you started'],
+  ['card them','',card3[0],card3[1]],
+  ['card','',t.answer_rate+'%','answered (rest rang out)'],
+  ['card','',fmtDur(t.total_talk_seconds),'total talk time'],
+  ['card','',fmtDur(t.avg_answered_seconds),'avg answered call'],
+ ].map(c=>`<div class="${c[0]}"><div class="n">${c[2]}</div><div class="l">${c[3]}</div></div>`).join('');
+ // filter count + empty guard
+ document.getElementById('fcount').textContent = `${t.calls} call${t.calls===1?'':'s'} in this window`+((FROM==null&&TO==null)?' (all time)':'');
+ if(!t.calls){
+   document.getElementById('initiators').innerHTML='<div class="none">No calls in this date range.</div>';
+   ['pickup','durations','timeline','tlabels','tlegend'].forEach(id=>document.getElementById(id).innerHTML='');
+   document.querySelector('#groups tbody').innerHTML='';
+   return;
+ }
+ // initiators
+ const mx=Math.max(...p.by_initiator.map(i=>i.calls));
+ document.getElementById('initiators').innerHTML=p.by_initiator.map(i=>{
+   const w=Math.max(6,100*i.calls/mx);
+   const nm=i.name==='Abdulrahman Sahmoud'?'You':i.name;
+   return `<div class="row"><div class="name">${nm}</div><div class="bar"><div class="fill" style="width:${w}%;background:${barColor(i.name,them)}">${i.calls}</div></div><div class="rt">${i.answer_rate}% picked up</div></div>`;
+ }).join('');
+ // pickup
+ const ans=t.answered, mis=t.missed, tot=t.calls;
+ document.getElementById('pickup').innerHTML=
+   `<div class="row"><div class="name">Answered</div><div class="bar"><div class="fill" style="width:${100*ans/tot}%;background:var(--good)">${ans}</div></div><div class="rt">${Math.round(100*ans/tot)}%</div></div>`+
+   `<div class="row"><div class="name">No answer</div><div class="bar"><div class="fill" style="width:${100*mis/tot}%;background:var(--bad)">${mis}</div></div><div class="rt">${Math.round(100*mis/tot)}%</div></div>`;
+ // durations
+ const db=p.duration_buckets, dmx=Math.max(1,...Object.values(db));
+ const DORD=['<1m','1-5m','5-15m','15-30m','30-60m','60m+'];
+ document.getElementById('durations').innerHTML=DORD.map(k=>[k,db[k]||0]).map(([k,v])=>
+   `<div class="row"><div class="name">${k}</div><div class="bar"><div class="fill" style="width:${Math.max(v?6:0,100*v/dmx)}%;background:var(--you)">${v||''}</div></div><div class="rt"></div></div>`).join('');
+ // timeline legend (adaptive)
+ document.getElementById('tlegend').innerHTML = grp
+   ? `<span><span class="sw" style="background:var(--you)"></span>You started</span>`+
+     `<span><span class="sw" style="background:var(--other)"></span>Family member started</span>`
+   : `<span><span class="sw" style="background:var(--you)"></span>You started</span>`+
+     `<span><span class="sw" style="background:var(--them)"></span>${CUR} started</span>`+
+     `<span><span class="sw" style="background:var(--other)"></span>Sibling started</span>`;
+ // timeline
+ const mo=p.monthly, tmx=Math.max(1,...mo.map(m=>m.you+m.them+m.other));
+ document.getElementById('timeline').innerHTML=mo.map(m=>{
+   const h=v=>100*v/tmx;
+   return `<div class="tcol" title="${m.month}: you ${m.you}, them ${m.them}, sibling ${m.other}">`+
+     `<div class="seg you" style="height:${h(m.you)}%"></div>`+
+     `<div class="seg them" style="height:${h(m.them)}%"></div>`+
+     `<div class="seg other" style="height:${h(m.other)}%"></div></div>`;
+ }).join('');
+ // sparse labels (every ~6th month)
+ document.getElementById('tlabels').innerHTML=mo.map((m,i)=>
+   `<span>${i%6===0?m.month.slice(2):''}</span>`).join('');
+ // groups
+ document.querySelector('#groups tbody').innerHTML=p.by_group.map(g=>
+   `<tr><td>${g.group}</td><td class="num">${g.calls}</td><td class="num">${g.answered}</td><td class="num">${fmtDur(g.talk)}</td></tr>`).join('');
+ document.getElementById('src').textContent='Source: '+DATA.source+'. Rebuild: scripts/family_calls_build.py';
+}
+// ---- filter wiring ----
+const PRESETS=[['all','All time'],['1y','Last 12mo'],['3y','Last 3yr'],['5y','Last 5yr']];
+function fullRange(){ // union of all tabs
+ let mn=Infinity,mx=-Infinity;
+ for(const k in DATA.people) for(const c of DATA.people[k].calls){ if(c.ts<mn)mn=c.ts; if(c.ts>mx)mx=c.ts; }
+ return [mn,mx];
+}
+function syncInputs(){
+ const iso=ms=>new Date(ms).toISOString().slice(0,10);
+ document.getElementById('from').value = FROM!=null?iso(FROM):'';
+ document.getElementById('to').value   = TO!=null?iso(TO):'';
+ [...document.querySelectorAll('#presets .chip')].forEach(c=>c.classList.toggle('on',c.dataset.p===PRESET));
+}
+function applyPreset(p){
+ PRESET=p;
+ // relative to the CURRENT tab's latest call (so "last 12mo" always shows real
+ // recent activity for that relationship, not an empty window)
+ const ts=DATA.people[CUR].calls.map(c=>c.ts), mx=ts.length?Math.max(...ts):Date.now();
+ if(p==='all'){ FROM=null; TO=null; }
+ else { const yrs={'1y':1,'3y':3,'5y':5}[p]; TO=mx; FROM=mx-yrs*YEAR; }
+ syncInputs(); render();
+}
+function initFilter(){
+ const [mn,mx]=fullRange(), iso=ms=>new Date(ms).toISOString().slice(0,10);
+ const fi=document.getElementById('from'), ti=document.getElementById('to');
+ fi.min=ti.min=iso(mn); fi.max=ti.max=iso(mx);
+ document.getElementById('presets').innerHTML=PRESETS.map(([p,l])=>`<span class="chip" data-p="${p}">${l}</span>`).join('');
+ document.getElementById('presets').addEventListener('click',e=>{if(e.target.dataset.p)applyPreset(e.target.dataset.p);});
+ fi.addEventListener('change',()=>{FROM=fi.value?new Date(fi.value+'T00:00:00').getTime():null;PRESET='custom';syncInputs();render();});
+ ti.addEventListener('change',()=>{TO=ti.value?new Date(ti.value+'T23:59:59').getTime():null;PRESET='custom';syncInputs();render();});
+ applyPreset('all');
+}
+document.getElementById('toggle').addEventListener('click',e=>{if(e.target.dataset.k){CUR=e.target.dataset.k;
+ // re-apply a relative preset to the new tab; keep custom absolute windows as-is
+ if(PRESET!=='custom'&&PRESET!=='all')applyPreset(PRESET); else render();}});
+fetch('data.json').then(r=>r.json()).then(d=>{DATA=d;initFilter();}).catch(e=>{document.body.innerHTML='<p style="color:#fff;padding:20px">Failed to load data.json: '+e+'</p>';});
+</script></body></html>

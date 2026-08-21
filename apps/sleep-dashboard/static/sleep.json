@@ -1,0 +1,556 @@
+{
+  "generated_at_utc": "2026-05-26T08:47:50.476754+00:00",
+  "data_span_days": 178,
+  "total_messages": 3483,
+  "n_nights": 68,
+  "overall": {
+    "avg_sleep_hrs": 9.86,
+    "avg_bedtime_hod": 24.79,
+    "avg_wake_hod": 10.64,
+    "bedtime_fmt": "12:47 AM",
+    "wake_fmt": "10:38 AM"
+  },
+  "weekday": [
+    {
+      "weekday": "Mon",
+      "avg_sleep_hrs": 9.81,
+      "avg_bedtime_hod": 24.58,
+      "avg_wake_hod": 10.39,
+      "n_nights": 14,
+      "bedtime_fmt": "12:34 AM",
+      "wake_fmt": "10:23 AM"
+    },
+    {
+      "weekday": "Tue",
+      "avg_sleep_hrs": 9.78,
+      "avg_bedtime_hod": 25.16,
+      "avg_wake_hod": 10.94,
+      "n_nights": 8,
+      "bedtime_fmt": "1:09 AM",
+      "wake_fmt": "10:56 AM"
+    },
+    {
+      "weekday": "Wed",
+      "avg_sleep_hrs": 10.3,
+      "avg_bedtime_hod": 24.82,
+      "avg_wake_hod": 11.12,
+      "n_nights": 12,
+      "bedtime_fmt": "12:49 AM",
+      "wake_fmt": "11:07 AM"
+    },
+    {
+      "weekday": "Thu",
+      "avg_sleep_hrs": 9.99,
+      "avg_bedtime_hod": 24.34,
+      "avg_wake_hod": 10.33,
+      "n_nights": 9,
+      "bedtime_fmt": "12:20 AM",
+      "wake_fmt": "10:19 AM"
+    },
+    {
+      "weekday": "Fri",
+      "avg_sleep_hrs": 9.43,
+      "avg_bedtime_hod": 24.82,
+      "avg_wake_hod": 10.26,
+      "n_nights": 9,
+      "bedtime_fmt": "12:49 AM",
+      "wake_fmt": "10:15 AM"
+    },
+    {
+      "weekday": "Sat",
+      "avg_sleep_hrs": 10.33,
+      "avg_bedtime_hod": 25.03,
+      "avg_wake_hod": 11.36,
+      "n_nights": 7,
+      "bedtime_fmt": "1:01 AM",
+      "wake_fmt": "11:21 AM"
+    },
+    {
+      "weekday": "Sun",
+      "avg_sleep_hrs": 9.32,
+      "avg_bedtime_hod": 24.97,
+      "avg_wake_hod": 10.29,
+      "n_nights": 9,
+      "bedtime_fmt": "12:58 AM",
+      "wake_fmt": "10:17 AM"
+    }
+  ],
+  "nights": [
+    {
+      "date_woke": "2025-12-12",
+      "weekday_woke": "Fri",
+      "bedtime_hod": 24.02111111111111,
+      "wake_hod": 9.333333333333334,
+      "sleep_hrs": 9.31
+    },
+    {
+      "date_woke": "2025-12-29",
+      "weekday_woke": "Mon",
+      "bedtime_hod": 25.215833333333332,
+      "wake_hod": 12.866666666666667,
+      "sleep_hrs": 11.65
+    },
+    {
+      "date_woke": "2026-01-07",
+      "weekday_woke": "Wed",
+      "bedtime_hod": 25.195,
+      "wake_hod": 11.6,
+      "sleep_hrs": 10.41
+    },
+    {
+      "date_woke": "2026-02-04",
+      "weekday_woke": "Wed",
+      "bedtime_hod": 25.894166666666667,
+      "wake_hod": 12.816666666666666,
+      "sleep_hrs": 10.92
+    },
+    {
+      "date_woke": "2026-02-09",
+      "weekday_woke": "Mon",
+      "bedtime_hod": 25.39388888888889,
+      "wake_hod": 11.783333333333333,
+      "sleep_hrs": 10.39
+    },
+    {
+      "date_woke": "2026-02-10",
+      "weekday_woke": "Tue",
+      "bedtime_hod": 25.864722222222223,
+      "wake_hod": 10.783333333333333,
+      "sleep_hrs": 8.92
+    },
+    {
+      "date_woke": "2026-02-20",
+      "weekday_woke": "Fri",
+      "bedtime_hod": 26.79083333333333,
+      "wake_hod": 9.766666666666667,
+      "sleep_hrs": 6.98
+    },
+    {
+      "date_woke": "2026-02-23",
+      "weekday_woke": "Mon",
+      "bedtime_hod": 24.708333333333332,
+      "wake_hod": 12.116666666666667,
+      "sleep_hrs": 11.41
+    },
+    {
+      "date_woke": "2026-02-24",
+      "weekday_woke": "Tue",
+      "bedtime_hod": 26.2025,
+      "wake_hod": 11.5,
+      "sleep_hrs": 9.3
+    },
+    {
+      "date_woke": "2026-03-02",
+      "weekday_woke": "Mon",
+      "bedtime_hod": 22.038611111111113,
+      "wake_hod": 11.616666666666667,
+      "sleep_hrs": 13.58
+    },
+    {
+      "date_woke": "2026-03-07",
+      "weekday_woke": "Sat",
+      "bedtime_hod": 26.23111111111111,
+      "wake_hod": 12.683333333333334,
+      "sleep_hrs": 10.45
+    },
+    {
+      "date_woke": "2026-03-11",
+      "weekday_woke": "Wed",
+      "bedtime_hod": 26.238888888888887,
+      "wake_hod": 12.0,
+      "sleep_hrs": 9.76
+    },
+    {
+      "date_woke": "2026-03-12",
+      "weekday_woke": "Thu",
+      "bedtime_hod": 26.324166666666667,
+      "wake_hod": 11.716666666666667,
+      "sleep_hrs": 9.39
+    },
+    {
+      "date_woke": "2026-03-13",
+      "weekday_woke": "Fri",
+      "bedtime_hod": 24.755,
+      "wake_hod": 12.666666666666666,
+      "sleep_hrs": 11.91
+    },
+    {
+      "date_woke": "2026-03-15",
+      "weekday_woke": "Sun",
+      "bedtime_hod": 21.653333333333332,
+      "wake_hod": 10.65,
+      "sleep_hrs": 13.0
+    },
+    {
+      "date_woke": "2026-03-16",
+      "weekday_woke": "Mon",
+      "bedtime_hod": 25.36,
+      "wake_hod": 6.6,
+      "sleep_hrs": 5.24
+    },
+    {
+      "date_woke": "2026-03-18",
+      "weekday_woke": "Wed",
+      "bedtime_hod": 24.490833333333335,
+      "wake_hod": 11.183333333333334,
+      "sleep_hrs": 10.69
+    },
+    {
+      "date_woke": "2026-03-19",
+      "weekday_woke": "Thu",
+      "bedtime_hod": 25.442777777777778,
+      "wake_hod": 11.616666666666667,
+      "sleep_hrs": 10.17
+    },
+    {
+      "date_woke": "2026-03-21",
+      "weekday_woke": "Sat",
+      "bedtime_hod": 25.958333333333332,
+      "wake_hod": 10.833333333333334,
+      "sleep_hrs": 8.88
+    },
+    {
+      "date_woke": "2026-03-23",
+      "weekday_woke": "Mon",
+      "bedtime_hod": 24.3575,
+      "wake_hod": 10.233333333333333,
+      "sleep_hrs": 9.88
+    },
+    {
+      "date_woke": "2026-03-24",
+      "weekday_woke": "Tue",
+      "bedtime_hod": 26.621388888888887,
+      "wake_hod": 9.95,
+      "sleep_hrs": 7.33
+    },
+    {
+      "date_woke": "2026-03-25",
+      "weekday_woke": "Wed",
+      "bedtime_hod": 23.82138888888889,
+      "wake_hod": 9.933333333333334,
+      "sleep_hrs": 10.11
+    },
+    {
+      "date_woke": "2026-03-27",
+      "weekday_woke": "Fri",
+      "bedtime_hod": 24.769166666666667,
+      "wake_hod": 12.666666666666666,
+      "sleep_hrs": 11.9
+    },
+    {
+      "date_woke": "2026-03-29",
+      "weekday_woke": "Sun",
+      "bedtime_hod": 25.412777777777777,
+      "wake_hod": 10.95,
+      "sleep_hrs": 9.54
+    },
+    {
+      "date_woke": "2026-03-30",
+      "weekday_woke": "Mon",
+      "bedtime_hod": 24.04277777777778,
+      "wake_hod": 12.216666666666667,
+      "sleep_hrs": 12.17
+    },
+    {
+      "date_woke": "2026-04-01",
+      "weekday_woke": "Wed",
+      "bedtime_hod": 24.631666666666668,
+      "wake_hod": 11.283333333333333,
+      "sleep_hrs": 10.65
+    },
+    {
+      "date_woke": "2026-04-02",
+      "weekday_woke": "Thu",
+      "bedtime_hod": 22.179166666666667,
+      "wake_hod": 10.0,
+      "sleep_hrs": 11.82
+    },
+    {
+      "date_woke": "2026-04-05",
+      "weekday_woke": "Sun",
+      "bedtime_hod": 24.578333333333333,
+      "wake_hod": 12.583333333333334,
+      "sleep_hrs": 12.01
+    },
+    {
+      "date_woke": "2026-04-06",
+      "weekday_woke": "Mon",
+      "bedtime_hod": 23.681944444444444,
+      "wake_hod": 9.95,
+      "sleep_hrs": 10.27
+    },
+    {
+      "date_woke": "2026-04-13",
+      "weekday_woke": "Mon",
+      "bedtime_hod": 24.433333333333334,
+      "wake_hod": 9.833333333333334,
+      "sleep_hrs": 9.4
+    },
+    {
+      "date_woke": "2026-04-14",
+      "weekday_woke": "Tue",
+      "bedtime_hod": 24.454444444444444,
+      "wake_hod": 12.833333333333334,
+      "sleep_hrs": 12.38
+    },
+    {
+      "date_woke": "2026-04-15",
+      "weekday_woke": "Wed",
+      "bedtime_hod": 23.628055555555555,
+      "wake_hod": 11.4,
+      "sleep_hrs": 11.77
+    },
+    {
+      "date_woke": "2026-04-16",
+      "weekday_woke": "Thu",
+      "bedtime_hod": 25.78472222222222,
+      "wake_hod": 9.85,
+      "sleep_hrs": 8.07
+    },
+    {
+      "date_woke": "2026-04-17",
+      "weekday_woke": "Fri",
+      "bedtime_hod": 23.20638888888889,
+      "wake_hod": 11.733333333333333,
+      "sleep_hrs": 12.53
+    },
+    {
+      "date_woke": "2026-04-19",
+      "weekday_woke": "Sun",
+      "bedtime_hod": 24.093055555555555,
+      "wake_hod": 11.316666666666666,
+      "sleep_hrs": 11.22
+    },
+    {
+      "date_woke": "2026-04-20",
+      "weekday_woke": "Mon",
+      "bedtime_hod": 23.5175,
+      "wake_hod": 10.25,
+      "sleep_hrs": 10.73
+    },
+    {
+      "date_woke": "2026-04-21",
+      "weekday_woke": "Tue",
+      "bedtime_hod": 25.680833333333332,
+      "wake_hod": 11.183333333333334,
+      "sleep_hrs": 9.5
+    },
+    {
+      "date_woke": "2026-04-22",
+      "weekday_woke": "Wed",
+      "bedtime_hod": 25.29388888888889,
+      "wake_hod": 12.983333333333333,
+      "sleep_hrs": 11.69
+    },
+    {
+      "date_woke": "2026-04-23",
+      "weekday_woke": "Thu",
+      "bedtime_hod": 25.669166666666666,
+      "wake_hod": 9.8,
+      "sleep_hrs": 8.13
+    },
+    {
+      "date_woke": "2026-04-25",
+      "weekday_woke": "Sat",
+      "bedtime_hod": 24.414722222222224,
+      "wake_hod": 11.983333333333333,
+      "sleep_hrs": 11.57
+    },
+    {
+      "date_woke": "2026-04-26",
+      "weekday_woke": "Sun",
+      "bedtime_hod": 22.788888888888888,
+      "wake_hod": 12.5,
+      "sleep_hrs": 13.71
+    },
+    {
+      "date_woke": "2026-04-27",
+      "weekday_woke": "Mon",
+      "bedtime_hod": 24.8025,
+      "wake_hod": 9.633333333333333,
+      "sleep_hrs": 8.83
+    },
+    {
+      "date_woke": "2026-04-29",
+      "weekday_woke": "Wed",
+      "bedtime_hod": 25.538611111111113,
+      "wake_hod": 9.433333333333334,
+      "sleep_hrs": 7.89
+    },
+    {
+      "date_woke": "2026-04-30",
+      "weekday_woke": "Thu",
+      "bedtime_hod": 21.296666666666667,
+      "wake_hod": 9.6,
+      "sleep_hrs": 12.3
+    },
+    {
+      "date_woke": "2026-05-01",
+      "weekday_woke": "Fri",
+      "bedtime_hod": 24.933611111111112,
+      "wake_hod": 4.666666666666667,
+      "sleep_hrs": 3.73
+    },
+    {
+      "date_woke": "2026-05-02",
+      "weekday_woke": "Sat",
+      "bedtime_hod": 24.276666666666667,
+      "wake_hod": 10.616666666666667,
+      "sleep_hrs": 10.34
+    },
+    {
+      "date_woke": "2026-05-03",
+      "weekday_woke": "Sun",
+      "bedtime_hod": 26.15,
+      "wake_hod": 11.35,
+      "sleep_hrs": 9.2
+    },
+    {
+      "date_woke": "2026-05-04",
+      "weekday_woke": "Mon",
+      "bedtime_hod": 27.466944444444444,
+      "wake_hod": 7.75,
+      "sleep_hrs": 4.28
+    },
+    {
+      "date_woke": "2026-05-05",
+      "weekday_woke": "Tue",
+      "bedtime_hod": 24.096944444444443,
+      "wake_hod": 9.75,
+      "sleep_hrs": 9.65
+    },
+    {
+      "date_woke": "2026-05-06",
+      "weekday_woke": "Wed",
+      "bedtime_hod": 25.315833333333334,
+      "wake_hod": 10.783333333333333,
+      "sleep_hrs": 9.47
+    },
+    {
+      "date_woke": "2026-05-07",
+      "weekday_woke": "Thu",
+      "bedtime_hod": 25.351111111111113,
+      "wake_hod": 10.633333333333333,
+      "sleep_hrs": 9.28
+    },
+    {
+      "date_woke": "2026-05-08",
+      "weekday_woke": "Fri",
+      "bedtime_hod": 25.547777777777778,
+      "wake_hod": 10.783333333333333,
+      "sleep_hrs": 9.24
+    },
+    {
+      "date_woke": "2026-05-09",
+      "weekday_woke": "Sat",
+      "bedtime_hod": 25.359444444444446,
+      "wake_hod": 11.55,
+      "sleep_hrs": 10.19
+    },
+    {
+      "date_woke": "2026-05-10",
+      "weekday_woke": "Sun",
+      "bedtime_hod": 25.959444444444443,
+      "wake_hod": 10.45,
+      "sleep_hrs": 8.49
+    },
+    {
+      "date_woke": "2026-05-11",
+      "weekday_woke": "Mon",
+      "bedtime_hod": 22.386111111111113,
+      "wake_hod": 10.016666666666667,
+      "sleep_hrs": 11.63
+    },
+    {
+      "date_woke": "2026-05-12",
+      "weekday_woke": "Tue",
+      "bedtime_hod": 23.375833333333333,
+      "wake_hod": 11.516666666666667,
+      "sleep_hrs": 12.14
+    },
+    {
+      "date_woke": "2026-05-13",
+      "weekday_woke": "Wed",
+      "bedtime_hod": 24.29388888888889,
+      "wake_hod": 9.616666666666667,
+      "sleep_hrs": 9.32
+    },
+    {
+      "date_woke": "2026-05-14",
+      "weekday_woke": "Thu",
+      "bedtime_hod": 24.11277777777778,
+      "wake_hod": 9.966666666666667,
+      "sleep_hrs": 9.85
+    },
+    {
+      "date_woke": "2026-05-15",
+      "weekday_woke": "Fri",
+      "bedtime_hod": 25.3425,
+      "wake_hod": 10.233333333333333,
+      "sleep_hrs": 8.89
+    },
+    {
+      "date_woke": "2026-05-16",
+      "weekday_woke": "Sat",
+      "bedtime_hod": 24.856666666666666,
+      "wake_hod": 10.883333333333333,
+      "sleep_hrs": 10.03
+    },
+    {
+      "date_woke": "2026-05-17",
+      "weekday_woke": "Sun",
+      "bedtime_hod": 27.07611111111111,
+      "wake_hod": 6.566666666666666,
+      "sleep_hrs": 3.49
+    },
+    {
+      "date_woke": "2026-05-19",
+      "weekday_woke": "Tue",
+      "bedtime_hod": 24.986666666666668,
+      "wake_hod": 9.966666666666667,
+      "sleep_hrs": 8.98
+    },
+    {
+      "date_woke": "2026-05-20",
+      "weekday_woke": "Wed",
+      "bedtime_hod": 23.469722222222224,
+      "wake_hod": 10.45,
+      "sleep_hrs": 10.98
+    },
+    {
+      "date_woke": "2026-05-21",
+      "weekday_woke": "Thu",
+      "bedtime_hod": 22.865555555555556,
+      "wake_hod": 9.766666666666667,
+      "sleep_hrs": 10.9
+    },
+    {
+      "date_woke": "2026-05-22",
+      "weekday_woke": "Fri",
+      "bedtime_hod": 24.052222222222223,
+      "wake_hod": 10.45,
+      "sleep_hrs": 10.4
+    },
+    {
+      "date_woke": "2026-05-23",
+      "weekday_woke": "Sat",
+      "bedtime_hod": 24.119722222222222,
+      "wake_hod": 10.966666666666667,
+      "sleep_hrs": 10.85
+    },
+    {
+      "date_woke": "2026-05-24",
+      "weekday_woke": "Sun",
+      "bedtime_hod": 27.040555555555557,
+      "wake_hod": 6.25,
+      "sleep_hrs": 3.21
+    },
+    {
+      "date_woke": "2026-05-25",
+      "weekday_woke": "Mon",
+      "bedtime_hod": 26.695555555555554,
+      "wake_hod": 10.583333333333334,
+      "sleep_hrs": 7.89
+    }
+  ]
+}

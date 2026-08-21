@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LA + SD Sailing Classes — Comparison</title>
+<style>
+  :root{
+    --bg:#0f1720; --panel:#16212e; --panel2:#1d2a3a; --line:#27384d;
+    --ink:#e8eef5; --muted:#9fb2c8; --accent:#3aa0ff;
+    --good:#37c692; --warn:#f4b740; --bad:#ef6a6a;
+    --asa:#3aa0ff; --us:#9b7bff; --own:#37c692; --keel:#2b5e8c; --ding:#7a5da8;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  header{padding:22px 26px 10px;border-bottom:1px solid var(--line)}
+  h1{margin:0 0 4px;font-size:22px}
+  .sub{color:var(--muted);font-size:13px}
+  .wrap{padding:18px 26px 60px;max-width:1500px;margin:0 auto}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:12px;margin:14px 0 20px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:13px 15px}
+  .card .lbl{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+  .card .val{font-size:15px;font-weight:600;margin-top:3px}
+  .card .det{color:var(--muted);font-size:12px;margin-top:3px}
+  .controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px}
+  .controls .grp{display:flex;gap:4px;background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:4px}
+  .chip{border:0;background:transparent;color:var(--muted);padding:6px 11px;border-radius:7px;cursor:pointer;font-size:12.5px}
+  .chip.on{background:var(--accent);color:#04121f;font-weight:600}
+  input.search{background:var(--panel);border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:8px 12px;font-size:13px;min-width:200px}
+  table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  th,td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);font-size:12.8px}
+  th{position:sticky;top:0;background:var(--panel2);color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.4px;cursor:pointer;white-space:nowrap}
+  th:hover{color:var(--ink)}
+  tr:last-child td{border-bottom:0}
+  tr:hover td{background:#1a2736}
+  .name{font-weight:600;font-size:13.5px}
+  .name a{color:var(--ink);text-decoration:none;border-bottom:1px dotted var(--muted)}
+  .name a:hover{color:var(--accent)}
+  .loc{color:var(--muted);font-size:11.5px;margin-top:2px}
+  .tag{display:inline-block;font-size:10.5px;padding:2px 7px;border-radius:20px;margin:2px 3px 0 0;font-weight:600}
+  .t-asa{background:rgba(58,160,255,.16);color:#7cc0ff;border:1px solid #2c5f8c}
+  .t-us{background:rgba(155,123,255,.16);color:#c4b1ff;border:1px solid #5a4a8c}
+  .t-own{background:rgba(55,198,146,.16);color:#7fe0bd;border:1px solid #2f7d62}
+  .t-keel{background:rgba(43,94,140,.22);color:#a9cdec}
+  .t-ding{background:rgba(122,93,168,.22);color:#cdb8ee}
+  .price{font-weight:700;font-size:13.5px;white-space:nowrap}
+  .muted{color:var(--muted)}
+  .free{color:#7fe0bd}
+  .call{color:var(--warn)}
+  .rev b{color:var(--ink)}
+  .legend{color:var(--muted);font-size:12px;margin:18px 0 0;line-height:1.7}
+  .note{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--warn);border-radius:8px;padding:12px 15px;margin-top:18px;color:var(--muted);font-size:12.5px}
+  .pill{font-size:10.5px;padding:1px 6px;border-radius:5px;background:#22344a;color:#9fb2c8;margin-left:5px}
+  a.ext{color:var(--accent);text-decoration:none}
+</style>
+</head>
+<body>
+<header>
+  <h1>🌊 Sailing Classes — LA &amp; San Diego</h1>
+  <div class="sub">Beginner courses, what they cost, what you get free, and what it costs to rent boats afterward. Built for Sahmoud &amp; Preksha · data verified June 15, 2026 · drive times approx from Pasadena.</div>
+</header>
+<div class="wrap">
+
+  <div class="cards" id="cards"></div>
+
+  <div class="controls">
+    <div class="grp" data-filter="region">
+      <button class="chip on" data-v="all">All regions</button>
+      <button class="chip" data-v="SD">San Diego</button>
+      <button class="chip" data-v="LA">LA &amp; OC</button>
+    </div>
+    <div class="grp" data-filter="cert">
+      <button class="chip on" data-v="all">All certs</button>
+      <button class="chip" data-v="ASA">ASA</button>
+      <button class="chip" data-v="US Sailing">US Sailing</button>
+      <button class="chip" data-v="Own">Own cert</button>
+    </div>
+    <div class="grp" data-filter="boat">
+      <button class="chip on" data-v="all">All boats</button>
+      <button class="chip" data-v="Keelboat">Keelboat</button>
+      <button class="chip" data-v="Dinghy">Dinghy</button>
+    </div>
+    <input class="search" id="search" placeholder="Search school / city…">
+  </div>
+
+  <table id="tbl">
+    <thead><tr>
+      <th data-k="name">School</th>
+      <th data-k="cert">Cert / Boat</th>
+      <th data-k="drive">Drive</th>
+      <th data-k="course">Beginner course</th>
+      <th data-k="durHrs">Duration</th>
+      <th data-k="priceNum">Price</th>
+      <th data-k="free">What's free / included</th>
+      <th data-k="rental">Boat rental after</th>
+      <th data-k="membership">Membership / club</th>
+      <th data-k="revNum">Reviews</th>
+      <th data-k="notes">Notes</th>
+    </tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+
+  <div class="note">
+    <b>Reading the data.</b> Prices/durations are the published beginner figures as of 6/15/2026; <span class="call">"call"</span> = the school doesn't publish it online (you'd have to phone). Reviews: Google/Yelp star ratings are hard to scrape reliably (Yelp blocks bots), so where a platform's <i>star</i> couldn't be verified we show the review <i>count</i> or an alternate source (TripAdvisor/Birdeye/Nicelocal) and label it — nothing here is made up. "ASA" and "US Sailing" are the two main US cert bodies (both nationally recognized for renting; ASA has a slight edge for chartering yachts abroad). Keelboat = stable big boat you'd cruise/charter; dinghy = small tippy boat, more athletic + a swim/capsize test.
+  </div>
+
+  <div class="legend" id="legend"></div>
+</div>
+
+<script>
+const DATA = [
+ // ---------- SAN DIEGO ----------
+ {name:"Learn to Sail San Diego", url:"https://learntosailsandiego.com", region:"SD", city:"Harbor Island, San Diego", drive:"~2 hr", driveNum:120,
+  cert:"ASA", boat:"Keelboat",
+  course:"ASA 101 (Basic Keelboat); liveaboard 101/103/104 combos",
+  dur:"2 days / ~16 hrs (combos 3–6 days)", durHrs:16,
+  price:"Day course: <span class='call'>call</span> · liveaboard combos (for 2): 101+103 $3.5–4.25k, 103+104 $4.5k, all-3 $5.8k", priceNum:9999,
+  free:"Combo packages include books, logbooks &amp; marina fees",
+  rental:"<span class='call'>Not published (call)</span>",
+  membership:"School / charter (no club)",
+  rev:"Google <b>4.9</b> (28) · TripAdvisor 5.0 (8) · Yelp 17 rev", revNum:4.9,
+  notes:"Private-instruction focus — nice for a couple. Mostly liveaboard reviews."},
+
+ {name:"Harbor Sailboats", url:"https://harborsailboats.com", region:"SD", city:"Harbor Island, San Diego", drive:"~2 hr", driveNum:120,
+  cert:"ASA", boat:"Keelboat",
+  course:"ASA 101 (Basic Keelboat)",
+  dur:"2 days (Sat+Sun 9–5) / 16 hrs", durHrs:16,
+  price:"~$593 all-in ($495 membership <i>incl. ASA 101</i> + $98 cert pkg)", priceNum:593,
+  free:"<span class='free'>ASA 101 included w/ membership; 1st morning rental FREE</span>",
+  rental:"Member: Capri 22 $85–140/day wk, $105–195 wknd; bigger boats $300–1,205/day",
+  membership:"$495 init + $55/mo min (credits to rentals); family +$395",
+  rev:"TripAdvisor <b>4.9</b> (7) · Yelp 48 rev · FB 94% rec", revNum:4.9,
+  notes:"Cleanest 'course → cheap member rentals' pipeline."},
+
+ {name:"Seaforth", url:"https://seaforthboatrental.com", region:"SD", city:"Harbor Island + Mission Bay", drive:"~2 hr", driveNum:120,
+  cert:"ASA", boat:"Keelboat",
+  course:"ASA 101 (Basic Keelboat)",
+  dur:"2 days (9am–3pm) / 12 hrs", durHrs:12,
+  price:"$349 + $39 cert (FREE w/ club)", priceNum:349,
+  free:"<span class='free'>ASA 101 included if you join the club ($349 init 'with class')</span>",
+  rental:"Member ~50% off — Capri 22 $70 club vs $160 public (4 hr). Public CAN rent small boats.",
+  membership:"$349 init w/class ($249 w/o) + $30/mo",
+  rev:"Yelp 23 rev (Harbor Is.) · BringFido 4.7", revNum:4.7,
+  notes:"Cheapest brand-name ASA keelboat; biggest member discount."},
+
+ {name:"J World San Diego", url:"https://sailing-jworld.com", region:"SD", city:"Shelter Island, San Diego", drive:"~2 hr", driveNum:120,
+  cert:"US Sailing", boat:"Keelboat",
+  course:"\"Learn to Sail\" (US Sailing Basic Keelboat) on a J/80",
+  dur:"4 days / 32 hrs", durHrs:32,
+  price:"$1,095 ($985 alumni / $876 member) + 10% port tax", priceNum:1095,
+  free:"<span class='free'>US Sailing logbook + 1-yr US Sailing membership</span>",
+  rental:"No open rentals — 'BoatShare' fractional ownership $400/mo (J/80), $550/mo (J/105)",
+  membership:"BoatShare (fractional) only",
+  rev:"Google <b>~4.5</b> (36) · Yelp 18 rev · top-ranked by Practical Sailor", revNum:4.5,
+  notes:"Racing/performance focus. Priciest + most hours; no casual rentals."},
+
+ {name:"Convair Sailing Club", url:"https://convairsailingclub.com", region:"SD", city:"Harbor Island, San Diego", drive:"~2 hr", driveNum:120,
+  cert:"Own", boat:"Keelboat",
+  course:"Member learn-to-sail course (Victory 21 / Ensign 23)",
+  dur:"~16 on-water hrs over 2 days + checkout", durHrs:16,
+  price:"Included in membership (no separate fee)", priceNum:1000,
+  free:"<span class='free'>Course + materials included in dues; $50 rental credit</span>",
+  rental:"<span class='free'>Cheapest anywhere — Victory 21' $10/hr ($50/day); Ensign 23' $15/hr ($75/day)</span>",
+  membership:"~$1,000/yr dues (2026), non-profit",
+  rev:"Nicelocal <b>4.8</b> (8)", revNum:4.8,
+  notes:"Cheapest long-term sailing. 'Best-kept secret' but older boats."},
+
+ {name:"Mission Bay Aquatic Center", url:"https://mbac.com", region:"SD", city:"Mission Bay, San Diego", drive:"~2 hr", driveNum:120,
+  cert:"Own", boat:"Dinghy",
+  course:"Basic Sailing (dinghy); Keelboat Sailing L1 (US Sailing)",
+  dur:"2-day weekend / 16 hrs", durHrs:16,
+  price:"Basic Sailing $265 ($150 student) · Keelboat L1 $465", priceNum:265,
+  free:"<span class='free'>Free clinics with membership</span>; gear provided",
+  rental:"$75/mo unlimited (one 2.5hr/day) or $45–60 / 2.5 hr — after a skills eval",
+  membership:"$75/mo ($42 student), 4-mo min",
+  rev:"Google <b>4.7</b> (~150) · Yelp 210 rev · Birdeye 4.8 (327)", revNum:4.7,
+  notes:"Cheapest SD way to learn; dinghy-focused, not ASA."},
+
+ // ---------- LA / ORANGE COUNTY ----------
+ {name:"Marina Sailing", url:"https://marinasailing.com", region:"LA", city:"Marina del Rey (+LB/Redondo/Newport)", drive:"~45–60 min", driveNum:55,
+  cert:"ASA", boat:"Keelboat",
+  course:"ASA 101; or 'Complete Sailing Course' (101+103)",
+  dur:"<span class='call'>days/hrs not published</span> (weekend slots, groups ≤3)", durHrs:14,
+  price:"ASA 101 $750 mem / $1,150 non-mem · Complete 101+103 $795 (incl. $495 membership)", priceNum:795,
+  free:"<span class='free'>Complete Course bundles the $495 membership</span>",
+  rental:"Member-only: 22ft $281/day, 34ft $485, 41ft $895, 45ft $1,195 (+$250 deposit)",
+  membership:"$495 init + $240/qtr (~$960/yr)",
+  rev:"Yelp <b>3.7</b> (175 brand-wide; MdR 82 rev)", revNum:3.7,
+  notes:"6 harbors. Charters are members-only. Service/maintenance gripes."},
+
+ {name:"Blue Pacific Yachting", url:"https://bluepacificyachting.com", region:"LA", city:"Marina del Rey", drive:"~45–60 min", driveNum:55,
+  cert:"ASA", boat:"Keelboat",
+  course:"ASA 101; 101+103 combo; 104 / Catalina",
+  dur:"ASA 101: 2 days / 14 hrs (group ≤4)", durHrs:14,
+  price:"ASA 101 $849 · 101+103 $1,952 (5 days) · 104 ~$1,325 · 104/114 Catalina $2,400", priceNum:849,
+  free:"—",
+  rental:"Merit 25 ~$370/3hr; Beneteau 35.5 ~$695/3hr. Members 20% off; <b>non-members CAN charter</b>.",
+  membership:"$495 init + $50/mo (1-yr min) → 20% off charters",
+  rev:"Yelp ~5.0 claimed (71 rev) · well-kept fleet, pro captains", revNum:5.0,
+  notes:"Polished; rare in letting non-members charter."},
+
+ {name:"UCLA Marina Aquatic Center", url:"https://marinaaquaticcenter.org", region:"LA", city:"Marina del Rey", drive:"~45–60 min", driveNum:55,
+  cert:"Own", boat:"Dinghy",
+  course:"Intro to Sailing (14ft RS Quest)",
+  dur:"2 days, 9:30am–5:30pm / 16 hrs", durHrs:16,
+  price:"$192 (UCLA community) – $336 (public)", priceNum:192,
+  free:"PFDs &amp; wetsuits provided",
+  rental:"<span class='free'>After passing: $15/hr (tier1) / $30/hr (tier2)</span>; pass $60–85/mo or $475–630/yr",
+  membership:"Rental pass tiers (above)",
+  rev:"Birdeye <b>4.8</b> (99) · Yelp 59 rev", revNum:4.8,
+  notes:"Cheapest LA way to learn; dinghy + own cert, not ASA."},
+
+ {name:"Orange Coast College (OCC)", url:"https://occsailing.com", region:"LA", city:"Newport Beach", drive:"~50–70 min", driveNum:65,
+  cert:"US Sailing", boat:"Keelboat",
+  course:"Beginning Keelboat L1 (Harbor 20 / J-22); or Beginning Dinghy",
+  dur:"4 sessions (~16 hrs); weekend or weekday formats", durHrs:16,
+  price:"Keelboat $475 (Harbor 20) / $410–475 (J-22) · dinghy $205", priceNum:475,
+  free:"— (community-college program)",
+  rental:"After skipper cert: Lido 14 $65–95, Harbor 20 $95–135",
+  membership:"OCC Sailing Assoc $144 yr1 ($110 renew) + skipper cert $185–260",
+  rev:"FB 100% rec (17) · Yelp 21 rev · confidence-building, solo after", revNum:4.6,
+  notes:"Community-college keelboat option = $475. Lots of summer dates."},
+
+ {name:"US Sailing Center Long Beach", url:"https://ussclb.org", region:"LA", city:"Alamitos Bay, Long Beach", drive:"~45–55 min", driveNum:50,
+  cert:"US Sailing", boat:"Keelboat",
+  course:"Basic Keelboat (KB1) on a Cal 20",
+  dur:"4 sessions × 4 hr / 16 hrs", durHrs:16,
+  price:"$275 (incl. textbook); L1/L2/L3 $275 ea; packages $650–900", priceNum:275,
+  free:"<span class='free'>Free 1-yr (national) US Sailing membership on completion</span>",
+  rental:"<span class='call'>Not published (call 562-433-7939)</span>",
+  membership:"None published locally",
+  rev:"Chamber 4.6 (19) · (Yelp listing stale/closed)", revNum:4.6,
+  notes:"Cheapest LA keelboat ($275); non-profit."},
+];
+
+// ---------- highlight cards ----------
+const cards = [
+  {lbl:"Cheapest to learn", val:"UCLA MAC — $192", det:"Marina del Rey · dinghy · own cert"},
+  {lbl:"Cheapest keelboat", val:"Long Beach — $275", det:"US Sailing Center · Cal 20 · ~50 min"},
+  {lbl:"Cheapest rentals after", val:"Convair — $10–15/hr", det:"San Diego · ~$1k/yr club"},
+  {lbl:"Closest + ASA", val:"Marina del Rey schools", det:"Marina Sailing / Blue Pacific · ~45 min"},
+  {lbl:"Best 'course→rentals' deal", val:"Harbor Sailboats", det:"~$593 all-in, 1st rental free"},
+  {lbl:"Top reviewed (volume)", val:"Mission Bay AC — 4.7/4.8", det:"~150 Google · 210 Yelp · 327 Birdeye"},
+];
+document.getElementById('cards').innerHTML = cards.map(c=>
+  `<div class="card"><div class="lbl">${c.lbl}</div><div class="val">${c.val}</div><div class="det">${c.det}</div></div>`).join('');
+
+// ---------- render ----------
+const filt = {region:'all', cert:'all', boat:'all'};
+let sortK='priceNum', sortAsc=true, q='';
+
+function certTag(c){const m={'ASA':'t-asa','US Sailing':'t-us','Own':'t-own'};return `<span class="tag ${m[c]}">${c}</span>`;}
+function boatTag(b){return `<span class="tag ${b==='Keelboat'?'t-keel':'t-ding'}">${b}</span>`;}
+
+function render(){
+  let rows = DATA.filter(d=>
+    (filt.region==='all'||d.region===filt.region) &&
+    (filt.cert==='all'||d.cert===filt.cert) &&
+    (filt.boat==='all'||d.boat===filt.boat) &&
+    (q===''|| (d.name+' '+d.city).toLowerCase().includes(q))
+  );
+  rows.sort((a,b)=>{
+    let x=a[sortK], y=b[sortK];
+    if(typeof x==='string'){x=x.toLowerCase();y=y.toLowerCase();}
+    return (x<y?-1:x>y?1:0)*(sortAsc?1:-1);
+  });
+  document.getElementById('rows').innerHTML = rows.map(d=>`
+    <tr>
+      <td><div class="name"><a href="${d.url}" target="_blank">${d.name}</a></div><div class="loc">${d.city}</div></td>
+      <td>${certTag(d.cert)}${boatTag(d.boat)}</td>
+      <td class="muted">${d.drive}</td>
+      <td>${d.course}</td>
+      <td>${d.dur}</td>
+      <td class="price">${d.price}</td>
+      <td>${d.free}</td>
+      <td>${d.rental}</td>
+      <td class="muted">${d.membership}</td>
+      <td class="rev">${d.rev}</td>
+      <td class="muted">${d.notes}</td>
+    </tr>`).join('');
+  document.getElementById('legend').innerHTML =
+    `Showing <b>${rows.length}</b> of ${DATA.length} schools · click any column header to sort · `+
+    `<span class="tag t-asa">ASA</span><span class="tag t-us">US Sailing</span><span class="tag t-own">Own cert</span> &nbsp; `+
+    `<span class="tag t-keel">Keelboat</span><span class="tag t-ding">Dinghy</span>`;
+}
+
+document.querySelectorAll('.grp').forEach(g=>{
+  const f=g.dataset.filter;
+  g.querySelectorAll('.chip').forEach(ch=>ch.onclick=()=>{
+    g.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
+    ch.classList.add('on'); filt[f]=ch.dataset.v; render();
+  });
+});
+document.getElementById('search').oninput=e=>{q=e.target.value.toLowerCase().trim();render();};
+document.querySelectorAll('th').forEach(th=>th.onclick=()=>{
+  const k=th.dataset.k; if(!k)return;
+  if(sortK===k)sortAsc=!sortAsc; else{sortK=k;sortAsc=true;}
+  render();
+});
+render();
+</script>
+</body>
+</html>

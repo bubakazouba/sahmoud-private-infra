@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rent as % of Income by Tier</title>
+<style>
+  :root{--bg:#0f1419;--panel:#1a212b;--border:#2d3744;--text:#e6ecf3;--dim:#8b97a7;--low:#ff5a3c;--all:#ff9900;--high:#5fa8ff;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:14px}
+  .wrap{max-width:960px;margin:0 auto;padding:20px}
+  h1{font-size:21px;margin:0 0 2px}
+  .sub{color:var(--dim);font-size:13px;margin-bottom:16px}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:11px;margin-bottom:18px}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:13px 15px}
+  .card .n{font-size:22px;font-weight:700;color:var(--all)}
+  .card .l{color:var(--dim);font-size:12px;margin-top:2px}
+  .chartbox{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px}
+  .legend{display:flex;gap:18px;font-size:12px;color:var(--text);margin:4px 4px 10px}
+  .sw{display:inline-block;width:12px;height:3px;border-radius:2px;margin-right:6px;vertical-align:middle}
+  .note{color:var(--dim);font-size:12px;line-height:1.55;margin-top:14px}
+</style></head>
+<body><div class="wrap">
+  <h1>🏠 Share of Income Spent on Rent, by Income Tier (U.S.)</h1>
+  <div class="sub">Median gross rent (rent + utilities) as % of household income · Census decennial + ACS, Fed Reserve, JCHS</div>
+  <div class="cards" id="cards"></div>
+  <div class="legend">
+    <span><span class="sw" style="background:#ff5a3c"></span>Lowest-income (bottom 20%)</span>
+    <span><span class="sw" style="background:#ff9900"></span>Typical renter (all, median)</span>
+    <span><span class="sw" style="background:#5fa8ff"></span>Higher-income (ref)</span>
+  </div>
+  <div class="chartbox"><svg id="svg" viewBox="0 0 900 380" width="100%"></svg></div>
+  <div class="note" id="note"></div>
+</div>
+<script>
+// REAL cited data points [year, %]
+const ALL=[[1950,26.4],[1960,25.0],[1970,21.0],[1980,19.7],[1990,26.4],[2000,25.5],[2019,29.3],[2021,30.6],[2023,31.0]]; // Census decennial + ACS, all renters median
+const LOW=[[2000,45],[2015,56],[2019,59.7],[2021,62.7]]; // bottom income quintile median rent-to-income (Fed Reserve, Census ACS)
+const HIGH=[[2015,18]]; // upper tiers (3rd quintile and above) <20% in 2015 (Fed Reserve); shown as reference
+const x0=70,x1=880,y0=30,y1=330, xmin=1950,xmax=2024, ymax=70;
+const X=yr=>x0+(yr-xmin)/(xmax-xmin)*(x1-x0);
+const Y=v=>y1-(v/ymax)*(y1-y0);
+let s='';
+// axes + gridlines
+for(let v=0;v<=70;v+=10){ const y=Y(v); s+=`<line x1="${x0}" y1="${y}" x2="${x1}" y2="${y}" stroke="#222b37"/><text x="${x0-8}" y="${y+4}" fill="#8b97a7" font-size="11" text-anchor="end">${v}%</text>`; }
+for(let yr=1950;yr<=2020;yr+=10){ const x=X(yr); s+=`<text x="${x}" y="${y1+18}" fill="#8b97a7" font-size="11" text-anchor="middle">${yr}</text>`; }
+// 30% rule reference
+s+=`<line x1="${x0}" y1="${Y(30)}" x2="${x1}" y2="${Y(30)}" stroke="#3a4658" stroke-dasharray="5,4"/><text x="${x1}" y="${Y(30)-5}" fill="#6b7787" font-size="10" text-anchor="end">30% "affordable" line</text>`;
+function line(data,color){ let p=data.map((d,i)=>(i?'L':'M')+X(d[0])+' '+Y(d[1])).join(' '); s+=`<path d="${p}" fill="none" stroke="${color}" stroke-width="2.5"/>`; data.forEach(d=>{ s+=`<circle cx="${X(d[0])}" cy="${Y(d[1])}" r="4" fill="${color}"/><text x="${X(d[0])}" y="${Y(d[1])-9}" fill="${color}" font-size="11" font-weight="700" text-anchor="middle">${d[1]}%</text>`; }); }
+line(ALL,'#ff9900'); line(LOW,'#ff5a3c');
+HIGH.forEach(d=>{ s+=`<circle cx="${X(d[0])}" cy="${Y(d[1])}" r="4" fill="#5fa8ff"/><text x="${X(d[0])}" y="${Y(d[1])+16}" fill="#5fa8ff" font-size="11" font-weight="700" text-anchor="middle">&lt;${d[1]}%</text>`; });
+document.getElementById('svg').innerHTML=s;
+document.getElementById('cards').innerHTML=[
+ ["62.7%","lowest 20% of earners spend on rent (2021)"],
+ ["31%","typical/median renter (2023), up from ~20% in 1980"],
+ ["<20%","upper-income renters (3rd quintile+, 2015)"],
+ ["~2x","rise in cost-burdened renters since 1960 (24% -> ~50%)"],
+].map(c=>`<div class="card"><div class="n">${c[0]}</div><div class="l">${c[1]}</div></div>`).join("");
+document.getElementById('note').innerHTML=
+ "The story isn't the average, it's the <b>divergence</b>. The typical renter has drifted from ~20% (1980) to ~31% (2023), but the bottom 20% of earners now spend <b>~63%</b> of income on rent while upper-income renters spend under 20%. "+
+ "Caveats (real data, honestly flagged): the by-tier (low-income) series only has solid data from 2000 on, no clean by-income data exists pre-2000. The 1970->1980 dip in the all-renters line is partly a Census methodology change (income definition). The 'higher-income' point is a 2015 reference (their exact median ratio isn't separately published; only ~1-2% of top earners are even cost-burdened). "+
+ "Sources: U.S. Census (decennial + ACS B25071), Federal Reserve FEDS Notes 2017, Harvard JCHS America's Rental Housing.";
+</script></body></html>

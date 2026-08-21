@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>US State-to-State Air Passenger Flows</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #0f0f23;
+  color: #e0e0e0;
+  min-height: 100vh;
+}
+.header {
+  padding: 20px 28px 0;
+  border-bottom: 1px solid #2a2a4a;
+  margin-bottom: 0;
+}
+.header h1 {
+  font-size: 1.65em;
+  color: #ff9900;
+  margin-bottom: 4px;
+}
+.header .subtitle {
+  color: #999;
+  font-size: 0.82em;
+  margin-bottom: 8px;
+}
+.caveat-banner {
+  background: linear-gradient(135deg, #3a1f00, #4a2800);
+  border: 1px solid #cc6600;
+  border-radius: 6px;
+  padding: 10px 16px;
+  margin: 10px 0 14px;
+  font-size: 0.87em;
+  color: #ffb347;
+  font-weight: 500;
+  line-height: 1.4;
+}
+.caveat-banner strong {
+  color: #ff9900;
+}
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 28px;
+  background: #141430;
+  border-bottom: 1px solid #2a2a4a;
+  flex-wrap: wrap;
+}
+.toggle-group {
+  display: flex;
+  border: 1px solid #2a2a4a;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.toggle-btn {
+  padding: 7px 18px;
+  background: #1a1a3e;
+  color: #aaa;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85em;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+.toggle-btn.active {
+  background: #ff9900;
+  color: #0f0f23;
+  font-weight: 600;
+}
+.toggle-btn:hover:not(.active) {
+  background: #252560;
+  color: #e0e0e0;
+}
+.stat-pills {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.stat-pill {
+  background: #1a1a3e;
+  border: 1px solid #2a2a4a;
+  border-radius: 5px;
+  padding: 5px 12px;
+  font-size: 0.78em;
+  color: #888;
+}
+.stat-pill span {
+  color: #ff9900;
+  font-weight: 600;
+}
+.main-layout {
+  display: flex;
+  height: calc(100vh - 200px);
+  min-height: 480px;
+}
+.map-pane {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  padding: 16px 20px;
+}
+.side-panel {
+  width: 320px;
+  min-width: 280px;
+  background: #141430;
+  border-left: 1px solid #2a2a4a;
+  padding: 20px 18px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.side-panel .placeholder {
+  color: #555;
+  font-size: 0.9em;
+  text-align: center;
+  margin-top: 40px;
+  line-height: 1.6;
+}
+.side-panel h2 {
+  color: #ff9900;
+  font-size: 1.05em;
+  margin-bottom: 4px;
+}
+.side-totals {
+  background: #1a1a3e;
+  border: 1px solid #2a2a4a;
+  border-radius: 8px;
+  padding: 12px 14px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.side-total-item .label {
+  font-size: 0.72em;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.side-total-item .val {
+  font-size: 1.1em;
+  font-weight: 600;
+  color: #22c55e;
+  font-family: 'SF Mono', Monaco, monospace;
+}
+.active-val {
+  color: #ff9900 !important;
+}
+.partner-table-title {
+  font-size: 0.78em;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+}
+.partner-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+  border-bottom: 1px solid #1a1a3e;
+}
+.partner-row:last-child { border-bottom: none; }
+.partner-rank {
+  font-size: 0.7em;
+  color: #666;
+  width: 16px;
+  text-align: right;
+  flex-shrink: 0;
+}
+.partner-name {
+  width: 80px;
+  flex-shrink: 0;
+  font-size: 0.83em;
+  color: #ccc;
+}
+.partner-bar-wrap {
+  flex: 1;
+  background: #1a1a3e;
+  border-radius: 3px;
+  height: 10px;
+  overflow: hidden;
+}
+.partner-bar {
+  height: 100%;
+  background: #ff9900;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+.partner-pax {
+  font-size: 0.72em;
+  color: #888;
+  width: 58px;
+  text-align: right;
+  flex-shrink: 0;
+  font-family: 'SF Mono', Monaco, monospace;
+}
+#map-svg {
+  width: 100%;
+  height: 100%;
+}
+.state-path {
+  stroke: #0f0f23;
+  stroke-width: 0.6;
+  cursor: pointer;
+  transition: opacity 0.12s;
+}
+.state-path:hover {
+  stroke: #ff9900;
+  stroke-width: 1.5;
+  opacity: 0.9;
+}
+.state-path.selected {
+  stroke: #ff9900;
+  stroke-width: 2;
+}
+.legend {
+  position: absolute;
+  bottom: 24px;
+  left: 28px;
+  background: rgba(15, 15, 35, 0.85);
+  border: 1px solid #2a2a4a;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 0.75em;
+  color: #888;
+}
+.legend-title {
+  color: #ccc;
+  font-size: 0.85em;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+#legend-gradient {
+  width: 160px;
+  height: 10px;
+  border-radius: 3px;
+  margin-bottom: 4px;
+}
+.legend-labels {
+  display: flex;
+  justify-content: space-between;
+  width: 160px;
+}
+.tooltip {
+  position: fixed;
+  background: rgba(20, 20, 48, 0.95);
+  border: 1px solid #ff9900;
+  border-radius: 5px;
+  padding: 6px 10px;
+  font-size: 0.78em;
+  pointer-events: none;
+  display: none;
+  z-index: 100;
+  color: #e0e0e0;
+}
+.error-banner {
+  margin: 40px auto;
+  max-width: 500px;
+  background: #2a1010;
+  border: 1px solid #cc3333;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  color: #ff8888;
+}
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: #888;
+  font-size: 0.95em;
+}
+.footer {
+  padding: 10px 28px;
+  background: #0a0a1a;
+  border-top: 1px solid #1a1a2a;
+  font-size: 0.72em;
+  color: #555;
+  line-height: 1.5;
+}
+.footer a { color: #3b82f6; text-decoration: none; }
+.footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>US State-to-State Air Passenger Flows</h1>
+  <div class="subtitle">
+    Source: <a href="https://www.transtats.bts.gov/" target="_blank" style="color:#3b82f6;text-decoration:none;">BTS T-100 Domestic Segment (All Carriers)</a> &mdash; Calendar Year 2023 &mdash; 529,559 segment records
+  </div>
+  <div class="caveat-banner">
+    <strong>AIR TRAVEL ONLY.</strong> This shows air-passenger flows only. Most regional and short-distance vacation travel is by car and is <strong>not captured here</strong>. Treat this as a long-haul flow proxy, not total vacation or migration volume.
+  </div>
+</div>
+
+<div class="controls">
+  <div class="toggle-group">
+    <button class="toggle-btn active" id="btn-out" onclick="setView('out')">Outflow view</button>
+    <button class="toggle-btn" id="btn-in" onclick="setView('in')">Inflow view</button>
+  </div>
+  <div class="stat-pills">
+    <div class="stat-pill">Total passengers 2023: <span id="stat-total">loading...</span></div>
+    <div class="stat-pill">State pairs: <span id="stat-pairs">loading...</span></div>
+    <div class="stat-pill" id="stat-view-pill">Showing: <span id="stat-view-label">total outflow by origin state</span></div>
+  </div>
+</div>
+
+<div id="loading" class="loading">Loading data and map...</div>
+<div id="error-container" style="display:none"></div>
+
+<div class="main-layout" id="main-layout" style="display:none">
+  <div class="map-pane" id="map-pane">
+    <svg id="map-svg"></svg>
+    <div class="legend">
+      <div class="legend-title" id="legend-title">Total Outflow (passengers)</div>
+      <canvas id="legend-gradient" width="160" height="10"></canvas>
+      <div class="legend-labels">
+        <span id="legend-min">0</span>
+        <span id="legend-max">max</span>
+      </div>
+    </div>
+    <div class="tooltip" id="tooltip"></div>
+  </div>
+
+  <div class="side-panel" id="side-panel">
+    <div class="placeholder" id="side-placeholder">
+      Click a state on the map to see<br>detailed inflow / outflow breakdowns<br>and top-10 partner states.
+    </div>
+    <div id="side-content" style="display:none">
+      <h2 id="side-state-name">State</h2>
+      <div class="side-totals">
+        <div class="side-total-item">
+          <div class="label">Total Outflow</div>
+          <div class="val" id="side-out-val">--</div>
+        </div>
+        <div class="side-total-item">
+          <div class="label">Total Inflow</div>
+          <div class="val" id="side-in-val">--</div>
+        </div>
+      </div>
+      <div>
+        <div class="partner-table-title" id="partner-title">Top 10 Outbound Destinations</div>
+        <div id="partner-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  Data: BTS T-100 Domestic Segment All Carriers, 2023 (downloaded 2026-05-19 via transtats.bts.gov).
+  Approximations: rows with missing ORIGIN_STATE_ABR excluded (83,760 rows, primarily international-leg segments with no domestic state);
+  same-state routes excluded; only 50 US states + DC shown (Hawaii, Alaska included; territories excluded from map).
+  Passenger counts are non-stop segment totals (connecting passengers counted on each leg).
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
+<script>
+let flowData = null;
+let activeView = 'out'; // 'out' or 'in'
+let selectedState = null;
+let colorScale = null;
+
+const TOPO_URL = 'https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json';
+
+function fmtM(n) {
+  if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M';
+  if (n >= 1e3) return (n / 1e3).toFixed(0) + 'K';
+  return n.toLocaleString();
+}
+function fmtFull(n) {
+  return n.toLocaleString();
+}
+
+async function loadAll() {
+  try {
+    const [flowsResp, topoResp] = await Promise.all([
+      fetch('flows.json'),
+      fetch(TOPO_URL)
+    ]);
+    if (!flowsResp.ok) throw new Error('flows.json fetch failed: ' + flowsResp.status);
+    if (!topoResp.ok) throw new Error('us-atlas fetch failed: ' + topoResp.status);
+
+    flowData = await flowsResp.json();
+    const topo = await topoResp.json();
+
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('main-layout').style.display = 'flex';
+
+    document.getElementById('stat-total').textContent = (flowData.meta.total_passengers / 1e9).toFixed(2) + 'B';
+    document.getElementById('stat-pairs').textContent = flowData.meta.state_pairs.toLocaleString();
+
+    buildMap(topo);
+  } catch (err) {
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('error-container').style.display = 'block';
+    document.getElementById('error-container').innerHTML =
+      '<div class="error-banner"><strong>Data load failed</strong><br>' + err.message +
+      '<br><br>Check /healthz for status.</div>';
+  }
+}
+
+function getActiveValues() {
+  const src = activeView === 'out' ? flowData.outflow : flowData.inflow;
+  return src;
+}
+
+function buildColorScale(vals) {
+  const max = d3.max(Object.values(vals));
+  return d3.scaleSequentialSqrt()
+    .domain([0, max])
+    .interpolator(d3.interpolateYlOrRd);
+}
+
+function buildMap(topo) {
+  const pane = document.getElementById('map-pane');
+  const svg = d3.select('#map-svg');
+  const W = pane.clientWidth || 700;
+  const H = pane.clientHeight || 460;
+
+  const projection = d3.geoAlbersUsa()
+    .fitSize([W - 10, H - 10], topojson.feature(topo, topo.objects.states));
+
+  const path = d3.geoPath().projection(projection);
+  const states = topojson.feature(topo, topo.objects.states).features;
+
+  const vals = getActiveValues();
+  colorScale = buildColorScale(vals);
+
+  svg.attr('viewBox', `0 0 ${W} ${H}`).attr('preserveAspectRatio', 'xMidYMid meet');
+
+  svg.selectAll('.state-path').remove();
+
+  const tooltip = document.getElementById('tooltip');
+
+  svg.selectAll('.state-path')
+    .data(states)
+    .enter()
+    .append('path')
+    .attr('class', 'state-path')
+    .attr('d', path)
+    .attr('fill', d => {
+      const fips = d.id.toString().padStart(2, '0');
+      const abr = flowData.fips_to_abr[fips];
+      if (!abr) return '#2a2a4a';
+      const v = vals[abr] || 0;
+      return colorScale(v);
+    })
+    .on('mousemove', function(event, d) {
+      const fips = d.id.toString().padStart(2, '0');
+      const abr = flowData.fips_to_abr[fips];
+      const name = abr ? (flowData.state_names[abr] || abr) : 'Unknown';
+      const v = abr ? (vals[abr] || 0) : 0;
+      const label = activeView === 'out' ? 'Outflow' : 'Inflow';
+      tooltip.style.display = 'block';
+      tooltip.style.left = (event.clientX + 12) + 'px';
+      tooltip.style.top = (event.clientY - 28) + 'px';
+      tooltip.innerHTML = `<strong>${name}</strong><br>${label}: ${fmtFull(v)}`;
+    })
+    .on('mouseleave', function() {
+      tooltip.style.display = 'none';
+    })
+    .on('click', function(event, d) {
+      const fips = d.id.toString().padStart(2, '0');
+      const abr = flowData.fips_to_abr[fips];
+      if (!abr) return;
+      selectState(abr, this);
+    });
+
+  updateLegend(vals);
+}
+
+function updateMapColors() {
+  const vals = getActiveValues();
+  colorScale = buildColorScale(vals);
+
+  d3.selectAll('.state-path').attr('fill', function(d) {
+    const fips = d.id.toString().padStart(2, '0');
+    const abr = flowData.fips_to_abr[fips];
+    if (!abr) return '#2a2a4a';
+    const v = vals[abr] || 0;
+    return colorScale(v);
+  });
+
+  updateLegend(vals);
+
+  if (selectedState) {
+    updateSidePanel(selectedState);
+  }
+}
+
+function updateLegend(vals) {
+  const maxVal = d3.max(Object.values(vals));
+  document.getElementById('legend-title').textContent =
+    activeView === 'out' ? 'Total Outflow (passengers)' : 'Total Inflow (passengers)';
+  document.getElementById('legend-min').textContent = '0';
+  document.getElementById('legend-max').textContent = fmtM(maxVal);
+
+  const canvas = document.getElementById('legend-gradient');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width;
+  for (let i = 0; i < W; i++) {
+    ctx.fillStyle = colorScale(maxVal * (i / W));
+    ctx.fillRect(i, 0, 1, 10);
+  }
+}
+
+function selectState(abr, pathEl) {
+  selectedState = abr;
+  d3.selectAll('.state-path').classed('selected', false);
+  if (pathEl) d3.select(pathEl).classed('selected', true);
+  updateSidePanel(abr);
+}
+
+function updateSidePanel(abr) {
+  const name = flowData.state_names[abr] || abr;
+  const outVal = flowData.outflow[abr] || 0;
+  const inVal = flowData.inflow[abr] || 0;
+
+  document.getElementById('side-placeholder').style.display = 'none';
+  document.getElementById('side-content').style.display = 'block';
+  document.getElementById('side-state-name').textContent = name;
+
+  const outEl = document.getElementById('side-out-val');
+  const inEl = document.getElementById('side-in-val');
+  outEl.textContent = fmtM(outVal);
+  inEl.textContent = fmtM(inVal);
+  outEl.className = 'val' + (activeView === 'out' ? ' active-val' : '');
+  inEl.className = 'val' + (activeView === 'in' ? ' active-val' : '');
+
+  // Build partner list
+  const partners = activeView === 'out'
+    ? (flowData.top10_out[abr] || [])
+    : (flowData.top10_in[abr] || []);
+
+  document.getElementById('partner-title').textContent =
+    activeView === 'out' ? 'Top 10 Outbound Destinations' : 'Top 10 Inbound Origins';
+
+  const maxPax = partners.length ? partners[0][1] : 1;
+  const listEl = document.getElementById('partner-list');
+  listEl.innerHTML = partners.map(([partnerAbr, pax], i) => {
+    const pName = flowData.state_names[partnerAbr] || partnerAbr;
+    const pct = Math.round((pax / maxPax) * 100);
+    return `
+      <div class="partner-row">
+        <div class="partner-rank">${i + 1}</div>
+        <div class="partner-name" title="${pName}">${pName.length > 12 ? pName.substring(0, 11) + '.' : pName}</div>
+        <div class="partner-bar-wrap"><div class="partner-bar" style="width:${pct}%"></div></div>
+        <div class="partner-pax">${fmtM(pax)}</div>
+      </div>`;
+  }).join('');
+}
+
+function setView(v) {
+  if (v === activeView) return;
+  activeView = v;
+  document.getElementById('btn-out').classList.toggle('active', v === 'out');
+  document.getElementById('btn-in').classList.toggle('active', v === 'in');
+  document.getElementById('stat-view-label').textContent =
+    v === 'out' ? 'total outflow by origin state' : 'total inflow by destination state';
+
+  if (flowData) updateMapColors();
+}
+
+// Redraw map on window resize
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    if (flowData) {
+      fetch(TOPO_URL).then(r => r.json()).then(topo => buildMap(topo));
+    }
+  }, 300);
+});
+
+loadAll();
+</script>
+</body>
+</html>
