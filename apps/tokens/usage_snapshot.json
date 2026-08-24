@@ -1,14 +1,14 @@
 {
-  "sampled_at": "2026-08-23T11:45:06.382585+00:00",
+  "sampled_at": "2026-08-24T11:45:07.596015+00:00",
   "buckets": {
     "session": {
       "label": "session",
-      "pct": 10,
-      "resets": "Aug 23, 8:30am"
+      "pct": 17,
+      "resets": "Aug 24, 5:30am"
     },
     "week_all": {
       "label": "week (all models)",
-      "pct": 28,
+      "pct": 39,
       "resets": "Aug 27, 10am"
     },
     "week_fable": {
@@ -17,5 +17,5 @@
       "resets": "Aug 27, 10am"
     }
   },
-  "raw": "You are currently using your subscription to power your Claude Code usage\n\nCurrent session: 10% used Â· resets Aug 23, 8:30am (America/Los_Angeles)\nCurrent week (all models): 28% used Â· resets Aug 27, 10am (America/Los_Angeles)\nCurrent week (Fable): 0% used Â· resets Aug 27, 10am (America/Los_Angeles)\n\nWhat's contributing to your limits usage?\nApproximate, based on local sessions on this machine â€” does not include other devices or claude.ai. Behaviors are independent characteristics, not a breakdown.\n\nLast 24h Â· 230 requests Â· 21 sessions\n  75% of your usage was at >150k context\n  62% of your usage came from sessions active for 8+ hours\n  Top MCP servers: claude-in-chrome 13%\n\nLast 7d Â· 3426 requests Â· 230 sessions\n  87% of your usage came from subagent-heavy sessions\n  87% of your usage came from sessions active for 8+ hours\n  87% of your usage was at >150k context\n  Top skills: /messenger-send 1%\n  Top subagents: general-purpose 2%\n  Top MCP servers: claude-in-chrome 21%"
+  "raw": "You are currently using your subscription to power your Claude Code usage\n\nCurrent session: 17% used Â· resets Aug 24, 5:30am (America/Los_Angeles)\nCurrent week (all models): 39% used Â· resets Aug 27, 10am (America/Los_Angeles)\nCurrent week (Fable): 0% used Â· resets Aug 27, 10am (America/Los_Angeles)\n\nWhat's contributing to your limits usage?\nApproximate, based on local sessions on this machine â€” does not include other devices or claude.ai. Behaviors are independent characteristics, not a breakdown.\n\nLast 24h Â· 490 requests Â· 32 sessions\n  93% of your usage was at >150k context\n  90% of your usage came from sessions active for 8+ hours\n  Top MCP servers: claude-in-chrome 36%\n\nLast 7d Â· 3312 requests Â· 228 sessions\n  88% of your usage was at >150k context\n  86% of your usage came from subagent-heavy sessions\n  86% of your usage came from sessions active for 8+ hours\n  Top subagents: general-purpose 1%\n  Top MCP servers: claude-in-chrome 23%"
 }
