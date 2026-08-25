@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-10T10:38-07:00",
+  "updated": "2026-08-24T10:23-07:00",
   "home": {
     "address": "1299 Cordova St, Pasadena, CA",
     "lat": 34.1427164,
@@ -130,7 +130,7 @@
           "source": "CicLAvia",
           "url": "https://www.ciclavia.org/",
           "distance_miles": 24.6,
-          "drive_time_min": 42
+          "drive_time_min": 41
         },
         {
           "id": "w1-05",
@@ -145,8 +145,8 @@
           "free": true,
           "source": "City of STEM",
           "url": "https://cityofstem.org/",
-          "distance_miles": 15.4,
-          "drive_time_min": 31
+          "distance_miles": 18.4,
+          "drive_time_min": 37
         },
         {
           "id": "w1-06",
@@ -179,7 +179,7 @@
           "url": "https://www.givehopestudios.com/",
           "unverified": true,
           "distance_miles": 14.5,
-          "drive_time_min": 27
+          "drive_time_min": 28
         },
         {
           "id": "w1-08",
@@ -213,7 +213,7 @@
           "url": "https://www.peakdesign.com/",
           "unverified": true,
           "distance_miles": 27.9,
-          "drive_time_min": 53
+          "drive_time_min": 54
         },
         {
           "id": "w1-10",
@@ -301,7 +301,7 @@
           "source": "Fever",
           "url": "https://feverup.com/m/584108",
           "distance_miles": 13.8,
-          "drive_time_min": 26,
+          "drive_time_min": 27,
           "unverified": true
         },
         {
@@ -317,8 +317,8 @@
           "free": false,
           "source": "Eventbrite",
           "url": "https://www.eventbrite.com/e/a-current-affair-pop-up-vintage-marketplace-in-los-angeles-spring-2026-tickets-1982314624404",
-          "distance_miles": 17.7,
-          "drive_time_min": 44
+          "distance_miles": 23.5,
+          "drive_time_min": 42
         },
         {
           "id": "w2-08",
@@ -367,23 +367,6 @@
           "url": "https://www.eventbrite.com/e/los-angeles-immersive-invitational-tickets-1986445882107",
           "distance_miles": 17.1,
           "drive_time_min": 24,
-          "unverified": true
-        },
-        {
-          "id": "w2-12",
-          "title": "It's My Friday Every Sunday — Strange Hotels at Davey Wayne's",
-          "date": "Sun 5/3",
-          "time": "evening",
-          "venue": "Good Times at Davey Wayne's, 1611 N El Centro Ave, Hollywood",
-          "blurb": "Weekly 70s-themed Sunday party inside a walk-through-refrigerator speakeasy.",
-          "description": "Recurring Sunday-night party at the 70s-themed Hollywood speakeasy (entrance is through a vintage refrigerator in a fake living room). Indie-electro duo Strange Hotels performs live, DJ spins 70s deep cuts, charismatic host emceeing. Dress code: California casual, no athletic wear after dark.",
-          "image": null,
-          "weirdness": 2,
-          "free": true,
-          "source": "Eventbrite",
-          "url": "https://www.eventbrite.com/e/its-my-friday-every-sunday-tickets-481361975627",
-          "distance_miles": 15.9,
-          "drive_time_min": 30,
           "unverified": true
         },
         {
@@ -568,7 +551,7 @@
           "id": "w2-15",
           "image": "https://cms.artcenter.edu/image/24766/b24/",
           "distance_miles": 6.1,
-          "drive_time_min": 15
+          "drive_time_min": 14
         },
         {
           "title": "Sci-Fi and Fantasy Book Faire",
@@ -633,22 +616,6 @@
           "id": "w2-20",
           "distance_miles": 42.4,
           "drive_time_min": 52
-        },
-        {
-          "title": "LA Taco Madness 2026 (17th edition)",
-          "date": "Sat 5/2",
-          "time": "3pm-9pm",
-          "venue": "Gloria Molina Grand Park, 200 N Grand Ave, DTLA",
-          "blurb": "13 of LA's best taquerias compete + DJs, full bar, craft beer, live art, screenprinting. all ages.",
-          "description": "L.A. Taco's annual 'Taco Madness' — 17th edition. Curated lineup of 13 of LA's best taquerias side-by-side, paired w/ DJ sets, craft beer + full bar, live painting, screenprinting demos. The classic LA-Cinco-de-Mayo-weekend taco showdown. Family-friendly this year.",
-          "weirdness": 4,
-          "free": false,
-          "source": "L.A. Taco",
-          "url": "https://lataco.com/taco-madness-2026",
-          "id": "w2-21",
-          "image": "https://lede-admin.lataco.com/wp-content/uploads/sites/45/2026/04/TACO_MADNESS_2026-Brackets-FINALS.png",
-          "distance_miles": 11.0,
-          "drive_time_min": 22
         }
       ]
     },
@@ -738,23 +705,6 @@
           "drive_time_min": 26
         },
         {
-          "id": "w3-08",
-          "title": "It's My Friday Every Sunday — Strange Hotels at Davey Wayne's",
-          "date": "Sun 5/10",
-          "time": "evening",
-          "venue": "Good Times at Davey Wayne's, 1611 N El Centro Ave, Hollywood",
-          "blurb": "Weekly 70s-themed Sunday party inside a walk-through-refrigerator speakeasy.",
-          "description": "Recurring Sunday-night party at the 70s-themed Hollywood speakeasy (entrance is through a vintage refrigerator in a fake living room). Indie-electro duo Strange Hotels performs live, DJ spins 70s deep cuts, charismatic host emceeing. Dress code: California casual, no athletic wear after dark.",
-          "image": null,
-          "weirdness": 2,
-          "free": true,
-          "source": "Eventbrite",
-          "url": "https://www.eventbrite.com/e/its-my-friday-every-sunday-tickets-481361975627",
-          "distance_miles": 15.9,
-          "drive_time_min": 30,
-          "unverified": true
-        },
-        {
           "id": "w3-09",
           "title": "Story Jam — storytelling meets improv",
           "date": "Sun 5/10",
@@ -820,7 +770,7 @@
           "url": "https://clockshop.org/",
           "category": "general",
           "distance_miles": 9.8,
-          "drive_time_min": 20
+          "drive_time_min": 21
         },
         {
           "id": "w3-add-02",
@@ -837,24 +787,7 @@
           "url": "https://www.santamonica.gov/places/tongva-park",
           "category": "general",
           "distance_miles": 26.0,
-          "drive_time_min": 44
-        },
-        {
-          "id": "w3-add-04",
-          "title": "El Clasico watch party - Real Madrid vs Barcelona",
-          "date": "Sun 5/10",
-          "time": "12pm onwards",
-          "venue": "Sunset Rooftop, Hollywood",
-          "blurb": "Rooftop watch party for one of soccer biggest fixtures.",
-          "description": "Real vs Barca on a Hollywood rooftop. Crowded but iconic if you like soccer culture. Free entry, food/drinks not.",
-          "image": "https://cdn.evbstatic.com/s3-build/perm_001/6ce389/django/images/logos/eb_orange_on_white_1200x630.png",
-          "weirdness": 2,
-          "free": true,
-          "source": "eventbrite.com",
-          "url": "https://www.eventbrite.com/",
-          "category": "general",
-          "distance_miles": 15.7,
-          "drive_time_min": 30
+          "drive_time_min": 45
         },
         {
           "id": "w3-add-05",
@@ -986,7 +919,7 @@
           "source": "Time Out LA",
           "url": "https://venicefamilyclinic.org/aea26/",
           "distance_miles": 27.7,
-          "drive_time_min": 52,
+          "drive_time_min": 53,
           "category": "general"
         },
         {
@@ -1002,8 +935,8 @@
           "free": true,
           "source": "WeLikeLA",
           "url": "https://cma.recreation.parks.lacity.gov/events/salt-marsh-open-house-8",
-          "distance_miles": 36.5,
-          "drive_time_min": 58,
+          "distance_miles": 36.9,
+          "drive_time_min": 55,
           "category": "general"
         },
         {
@@ -1044,7 +977,7 @@
           "source": "Eventbrite",
           "url": "https://www.eventbrite.com/e/flavor-fest-2026-tickets-1978932133282",
           "distance_miles": 24.2,
-          "drive_time_min": 42
+          "drive_time_min": 43
         },
         {
           "id": "w4-03",
@@ -1060,7 +993,7 @@
           "source": "Eventbrite",
           "url": "https://www.eventbrite.com/e/east-los-lucha-lucha-xtrema-tickets-1979001876887",
           "distance_miles": 12.9,
-          "drive_time_min": 25
+          "drive_time_min": 26
         },
         {
           "id": "w4-04",
@@ -1095,23 +1028,6 @@
           "drive_time_min": 25
         },
         {
-          "id": "w4-07",
-          "title": "It's My Friday Every Sunday — Strange Hotels at Davey Wayne's",
-          "date": "Sun 5/17",
-          "time": "evening",
-          "venue": "Good Times at Davey Wayne's, 1611 N El Centro Ave, Hollywood",
-          "blurb": "Weekly 70s-themed Sunday party inside a walk-through-refrigerator speakeasy.",
-          "description": "Recurring Sunday-night party at the 70s-themed Hollywood speakeasy (entrance is through a vintage refrigerator in a fake living room). Indie-electro duo Strange Hotels performs live, DJ spins 70s deep cuts, charismatic host emceeing. Dress code: California casual, no athletic wear after dark.",
-          "image": null,
-          "weirdness": 2,
-          "free": true,
-          "source": "Eventbrite",
-          "url": "https://www.eventbrite.com/e/its-my-friday-every-sunday-tickets-481361975627",
-          "distance_miles": 15.9,
-          "drive_time_min": 30,
-          "unverified": true
-        },
-        {
           "id": "w4-08",
           "title": "Smorgasburg LA — AAPI Month Sunday",
           "date": "Sun 5/17",
@@ -1141,7 +1057,7 @@
           "source": "Most Valuable Promotions",
           "url": "https://www.ticketmaster.com/mvp-and-netflix-present-ronda-rousey-inglewood-california-05-16-2026/event/0900646414E58CC8",
           "distance_miles": 25.4,
-          "drive_time_min": 42
+          "drive_time_min": 43
         },
         {
           "id": "w4-bd-01",
@@ -1242,7 +1158,7 @@
           "source": "City of Beverly Hills",
           "url": "https://www.beverlyhills.org/231/Beverly-Hills-Art-Show--May-16-17-2026",
           "distance_miles": 25.7,
-          "drive_time_min": 44,
+          "drive_time_min": 45,
           "category": "general"
         },
         {
@@ -1275,7 +1191,7 @@
           "free": false,
           "source": "artsandcraftsshow.com",
           "url": "https://www.artsandcraftsshow.com/pasadena.php",
-          "distance_miles": 1.2,
+          "distance_miles": 1.5,
           "drive_time_min": 6,
           "category": "general"
         },
@@ -1309,8 +1225,8 @@
           "free": false,
           "source": "discoverlosangeles.com",
           "url": "https://www.lacma.org/",
-          "distance_miles": 19.6,
-          "drive_time_min": 44,
+          "distance_miles": 19.9,
+          "drive_time_min": 41,
           "category": "weird"
         },
         {
@@ -1392,7 +1308,7 @@
           "source": "Otis College / Eventbrite",
           "url": "https://www.eventbrite.com/e/o-launch-annual-exhibition-2026-tickets-1987176571619",
           "distance_miles": 29.9,
-          "drive_time_min": 48,
+          "drive_time_min": 49,
           "category": "weird"
         },
         {
@@ -1492,7 +1408,7 @@
           "source": "venicefamilyclinic.org",
           "url": "https://venicefamilyclinic.org/aea26/",
           "distance_miles": 27.7,
-          "drive_time_min": 52,
+          "drive_time_min": 53,
           "category": "weird"
         },
         {
@@ -1560,7 +1476,7 @@
           "source": "streetfoodcinema.com",
           "url": "https://streetfoodcinema.com/events/opening-night-ferris-bueller-s-day-off",
           "distance_miles": 9.8,
-          "drive_time_min": 20,
+          "drive_time_min": 21,
           "category": "weird"
         },
         {
@@ -1594,7 +1510,7 @@
           "source": "eventbrite.com",
           "url": "https://www.eventbrite.com/e/raoul-pecks-orwell-225-2025-tickets-1987763283490",
           "distance_miles": 13.6,
-          "drive_time_min": 20,
+          "drive_time_min": 21,
           "category": "weird"
         },
         {
@@ -1652,8 +1568,8 @@
           "source": "lafleetweek.com",
           "url": "https://lafleetweek.com/event/lafw-dodgeball/",
           "category": "sports-1day",
-          "distance_miles": 36.5,
-          "drive_time_min": 50
+          "distance_miles": 34.6,
+          "drive_time_min": 49
         },
         {
           "id": "w5-02",
@@ -1686,7 +1602,7 @@
           "url": "https://www.eventbrite.com/e/2026-compton-community-cricket-day-tickets-1985031294036",
           "category": "sports-1day",
           "distance_miles": 21.3,
-          "drive_time_min": 39
+          "drive_time_min": 40
         },
         {
           "id": "w5-04",
@@ -1781,8 +1697,8 @@
           "free": true,
           "source": "lafleetweek.com",
           "url": "https://lafleetweek.com/event/main-la-fleet-week-expo-2/2026-05-23/",
-          "distance_miles": 34.8,
-          "drive_time_min": 52
+          "distance_miles": 34.6,
+          "drive_time_min": 50
         },
         {
           "id": "w5-11",
@@ -1846,7 +1762,7 @@
           "source": "Eventbrite",
           "url": "https://www.eventbrite.com/e/11th-annual-mainopoly-a-taste-of-main-street-tickets-1985146645054",
           "distance_miles": 27.0,
-          "drive_time_min": 49
+          "drive_time_min": 50
         },
         {
           "id": "w5-15",
@@ -1878,7 +1794,7 @@
           "source": "Eventbrite",
           "url": "https://www.eventbrite.com/e/bangin-vs-buckin-majorette-meets-clowning-dance-battle-tickets-1986553933291",
           "distance_miles": 25.6,
-          "drive_time_min": 43
+          "drive_time_min": 44
         },
         {
           "id": "w5-19",
@@ -2028,23 +1944,6 @@
           "drive_time_min": 23
         },
         {
-          "id": "w5-cron-01",
-          "title": "Topanga Days Country Fair",
-          "date": "Sat 5/23 - Mon 5/25",
-          "time": "All day (check topangadays.com for hours)",
-          "venue": "Topanga Canyon, CA (off-site parking + shuttles)",
-          "blurb": "The classic LA Memorial Day tradition — 3-day bohemian canyon fair with carnival rides, craft beer, live music stages, artisan vendors, and full hippie energy.",
-          "description": "Topanga Days is the quintessential LA Memorial Day tradition: a three-day hippie-meets-townie county fair deep in Topanga Canyon. Carnival rides, live music across multiple stages, cold craft beer, local artisan vendors, sustainable goods booths, and the peculiar warmth of 4,000 canyon people celebrating summer's arrival. Parking is off-site with shuttles. Cash-friendly. General admission ~$25-31 per day.",
-          "image": "",
-          "weirdness": 4,
-          "free": false,
-          "source": "topangadays.com / Timeout LA",
-          "url": "https://topangadays.com",
-          "distance_miles": 38.1,
-          "drive_time_min": 55,
-          "category": "weird"
-        },
-        {
           "id": "w5-cron-02",
           "title": "Fiesta Hermosa",
           "date": "Sat 5/23 - Mon 5/25",
@@ -2058,7 +1957,7 @@
           "source": "fiestahermosa.net / Timeout LA",
           "url": "https://fiestahermosa.net",
           "distance_miles": 31.9,
-          "drive_time_min": 61,
+          "drive_time_min": 62,
           "category": "general"
         },
         {
@@ -2076,24 +1975,6 @@
           "url": "https://www.eventbrite.com/e/echo-park-pride-tickets-1987970929565",
           "distance_miles": 11.4,
           "drive_time_min": 24,
-          "category": "general"
-        },
-        {
-          "id": "w5-cron-04",
-          "title": "Smorgasburg BBQ Invitational + Memorial Day Carnival",
-          "date": "Sat 5/23 + Sun 5/24",
-          "time": "All day",
-          "venue": "Santa Anita Park — 285 Huntington Dr, Arcadia, CA 91007",
-          "blurb": "BBQ competition + Memorial Day carnival at Santa Anita racetrack — ~8 min from home, same venue as the Corgi Nationals.",
-          "description": "Smorgasburg brings its BBQ Invitational to Santa Anita Park for Memorial Day weekend alongside a full carnival atmosphere and live horse racing. Pitmasters compete; attendees eat. Being at an active historic racetrack makes the whole thing weirder and better. Very close to home — Santa Anita is an 8-minute drive from Cordova.",
-          "image": "",
-          "weirdness": 3,
-          "free": false,
-          "source": "Timeout LA",
-          "url": "https://www.timeout.com/los-angeles/things-to-do/smorgasburg-bbq-invitational-and-memorial-weekend-carnival",
-          "distance_miles": 6.3,
-          "drive_time_min": 14,
-          "unverified": true,
           "category": "general"
         },
         {
@@ -2161,7 +2042,7 @@
           "source": "Eventbrite",
           "url": "https://www.eventbrite.com/e/omusubi-making-lesson-tickets-1989803742558",
           "distance_miles": 25.9,
-          "drive_time_min": 40,
+          "drive_time_min": 41,
           "category": "weird"
         },
         {
@@ -2336,23 +2217,6 @@
           "category": "general"
         },
         {
-          "id": "w5-n09",
-          "title": "LA County Fair: Art Unleashed — Final Days",
-          "date": "Sat 5/23 + Sun 5/24",
-          "time": "daily (check lacountyfair.com for hours)",
-          "venue": "Fairplex, 1101 W McKinley Ave, Pomona, CA 91768",
-          "blurb": "LA County Fair closing weekend — carnival rides, livestock, wine tasting, art installations, roller-skating rink, live concerts.",
-          "description": "The LA County Fair (theme: 'Art Unleashed') through May 31 at Fairplex in Pomona. Livestock competitions, wine and beer tastings, art installations, carnival rides, live concerts, and a roller-skating rink. A rare genuine county-fair experience near LA — corndogs, deep-fried everything, and 4-H kids showing their sheep. Closing weekend of the 2026 run.",
-          "image": "",
-          "weirdness": 2,
-          "free": false,
-          "source": "Timeout LA",
-          "url": "https://www.lacountyfair.com",
-          "distance_miles": 25.4,
-          "drive_time_min": 32,
-          "category": "general"
-        },
-        {
           "id": "w5-n10",
           "title": "Murder on the High Seas: A Farewell Voyage to Die For — Final Night",
           "date": "Sat 5/23",
@@ -2366,7 +2230,7 @@
           "source": "Timeout LA",
           "url": "https://www.timeout.com/los-angeles/things-to-do/murder-on-the-high-seas-a-farewell-voyage-to-die-for",
           "distance_miles": 30.6,
-          "drive_time_min": 47,
+          "drive_time_min": 48,
           "category": "weird"
         },
         {
@@ -2400,7 +2264,7 @@
           "source": "momsla.com",
           "url": "https://valleygreekfestival.com",
           "distance_miles": 26.8,
-          "drive_time_min": 36,
+          "drive_time_min": 35,
           "category": "general"
         },
         {
@@ -2509,7 +2373,7 @@
           "source": "Eventbrite",
           "url": "https://www.eventbrite.com/e/mayhem-superhero-villain-variety-show-tickets-1986689472693",
           "distance_miles": 13.8,
-          "drive_time_min": 26
+          "drive_time_min": 27
         },
         {
           "id": "w6-05",
@@ -2525,7 +2389,7 @@
           "source": "Eventbrite",
           "url": "https://www.eventbrite.com/e/the-dissolved-self-sound-the-sufi-imaginal-with-sahar-farooqui-khundmiri-tickets-1986143837684",
           "distance_miles": 13.6,
-          "drive_time_min": 20
+          "drive_time_min": 21
         },
         {
           "id": "w6-06",
@@ -2542,7 +2406,7 @@
           "url": "https://www.eventbrite.com/e/otd-elite-w-mikey-williams-tickets-1988282326963",
           "category": "sports-1day",
           "distance_miles": 11.0,
-          "drive_time_min": 22
+          "drive_time_min": 23
         },
         {
           "id": "w6-07",
@@ -2559,7 +2423,7 @@
           "url": "https://www.eventbrite.com/e/you-are-enough-5k-runwalk-tickets-1980018199736",
           "category": "sports-1day",
           "distance_miles": 31.8,
-          "drive_time_min": 59
+          "drive_time_min": 60
         },
         {
           "id": "w6-08",
@@ -2591,7 +2455,7 @@
           "source": "Eventbrite",
           "url": "https://www.eventbrite.com/e/hell-or-high-heels-tickets-1988199395914",
           "distance_miles": 12.3,
-          "drive_time_min": 28
+          "drive_time_min": 27
         },
         {
           "id": "w6-11",
@@ -2623,7 +2487,7 @@
           "source": "Eventbrite",
           "url": "https://www.eventbrite.com/e/katelyn-husson-designs-presents-unmuted-a-fashion-show-tickets-1986242058465",
           "distance_miles": 28.9,
-          "drive_time_min": 46
+          "drive_time_min": 47
         },
         {
           "id": "w6-13",
@@ -2688,7 +2552,7 @@
           "free": false,
           "source": "Eventbrite / Monsterpalooza",
           "url": "https://www.eventbrite.com/e/monsterpalooza-pasadena-2026-tickets-1918071035099",
-          "distance_miles": 1.2,
+          "distance_miles": 1.5,
           "drive_time_min": 6,
           "category": "weird"
         },
@@ -2706,7 +2570,7 @@
           "source": "Eventbrite",
           "url": "https://www.eventbrite.com/e/the-integratron-a-panel-discussion-sound-bath-tickets-1988421929518",
           "distance_miles": 13.6,
-          "drive_time_min": 20,
+          "drive_time_min": 21,
           "category": "weird"
         },
         {
@@ -2837,22 +2701,6 @@
       "end": "2026-06-07",
       "events": [
         {
-          "id": "w7-01",
-          "title": "24th Annual Pasadena Police Department Car Show",
-          "date": "Sat 6/6",
-          "time": "10am-3:30pm",
-          "venue": "100 Garfield Ave, Pasadena, CA 91101",
-          "blurb": "Free community car show in Pasadena — custom, classic, and specialty vehicles hosted by the PPD, proceeds support youth programs. 1 mile from home.",
-          "description": "The Pasadena Police Department hosts its 24th annual car show at City Hall. Displays of custom, classic, and specialty vehicles from local and regional owners. Proceeds benefit the Police Explorer Program (youth law enforcement training ages 14-21) and the Pasadena Police Activities League (athletic, art, and educational youth programs). Family-friendly, free entry.",
-          "image": "",
-          "weirdness": 2,
-          "free": true,
-          "source": "Eventbrite",
-          "url": "https://www.eventbrite.com/e/24th-annual-pasadena-police-department-car-show-tickets-1983558656337",
-          "distance_miles": 1.6,
-          "drive_time_min": 7
-        },
-        {
           "id": "w7-03",
           "title": "Grand Crucible — Steel Fighting (Buhurt) Tournament",
           "date": "Sat 6/6",
@@ -2866,7 +2714,7 @@
           "source": "Eventbrite",
           "url": "https://www.eventbrite.com/e/grand-crucible-tickets-1987576415563",
           "distance_miles": 13.8,
-          "drive_time_min": 26
+          "drive_time_min": 27
         },
         {
           "id": "w7-04",
@@ -2965,7 +2813,7 @@
           "source": "Eventbrite / Philosophical Research Society",
           "url": "https://www.eventbrite.com/e/night-on-the-galactic-railroad-1985-a-celestial-anime-masterpiece-tickets-1987656840115",
           "distance_miles": 13.6,
-          "drive_time_min": 20,
+          "drive_time_min": 21,
           "category": "weird"
         },
         {
@@ -2982,7 +2830,7 @@
           "source": "Eventbrite / Mystic Museum",
           "url": "https://www.eventbrite.com/e/when-monsters-attack-immersive-experience-and-tribute-art-show-june-dates-tickets-1986490505577",
           "distance_miles": 15.0,
-          "drive_time_min": 23,
+          "drive_time_min": 22,
           "category": "weird"
         },
         {
@@ -2998,7 +2846,7 @@
           "free": true,
           "source": "Eventbrite / LA Commons",
           "url": "https://www.eventbrite.com/e/2026-festival-of-masks-community-workshops-tickets-1987841699033",
-          "distance_miles": 18.0,
+          "distance_miles": 17.8,
           "drive_time_min": 37,
           "category": "weird"
         },
@@ -3084,7 +2932,7 @@
           "source": "Street Food Cinema",
           "url": "https://streetfoodcinema.com",
           "distance_miles": 9.8,
-          "drive_time_min": 20,
+          "drive_time_min": 21,
           "category": "general"
         },
         {
@@ -3118,7 +2966,7 @@
           "source": "Street Food Cinema",
           "url": "https://streetfoodcinema.com",
           "distance_miles": 12.5,
-          "drive_time_min": 26,
+          "drive_time_min": 25,
           "category": "general"
         },
         {
@@ -3135,7 +2983,7 @@
           "source": "wehopride.com",
           "url": "https://www.wehopride.com/",
           "distance_miles": 23.8,
-          "drive_time_min": 44,
+          "drive_time_min": 45,
           "category": "general"
         },
         {
@@ -3169,7 +3017,7 @@
           "source": "pickupultimate.com",
           "url": "https://pickupultimate.com/map/city/losangeles",
           "distance_miles": 27.9,
-          "drive_time_min": 54,
+          "drive_time_min": 55,
           "category": "sports-1day"
         },
         {
@@ -3300,23 +3148,6 @@
           "drive_time_min": 6
         },
         {
-          "id": "w8-01",
-          "title": "Goth Pride 2026",
-          "date": "Sat 6/13",
-          "time": "9pm",
-          "venue": "Teragram Ballroom, 1234 W 6th St, Los Angeles, CA 90017",
-          "blurb": "Goth Pride's annual convergence: live bands + drag + dark art vendors + DJ. LA's dark subculture gathers for Pride Month. 18+.",
-          "description": "The LA goth community's annual Pride night at the Teragram Ballroom: multiple live bands, drag performers, dark art vendors, and a DJ creating an inclusive dark-aesthetic gathering. 18+ event celebrating Pride Month through the goth lens — one of the more niche intersectional events of the Pride calendar.",
-          "image": "",
-          "weirdness": 4,
-          "free": false,
-          "source": "Eventbrite",
-          "url": "https://www.eventbrite.com/e/goth-pride-2026-bands-drag-dark-art-vendors-dj-and-community-18-tickets-1981967097943",
-          "distance_miles": 12.3,
-          "drive_time_min": 24,
-          "category": "weird"
-        },
-        {
           "id": "w8-02",
           "title": "Burbank Psychic Healing & Beauty Expo",
           "date": "Sat 6/13 + Sun 6/14",
@@ -3330,7 +3161,7 @@
           "source": "Eventbrite",
           "url": "https://www.eventbrite.com/e/burbank-psychic-healing-beauty-expo-june-13-14-tickets-1984656254282",
           "distance_miles": 16.4,
-          "drive_time_min": 23,
+          "drive_time_min": 22,
           "category": "weird"
         },
         {
@@ -3529,7 +3360,7 @@
           "source": "Secret LA",
           "url": "https://secretlosangeles.com/academy-museum-free-futbol/",
           "distance_miles": 20.3,
-          "drive_time_min": 43,
+          "drive_time_min": 42,
           "category": "general"
         },
         {
@@ -3657,23 +3488,6 @@
           "url": "https://garagistefestival.com/",
           "distance_miles": 9.5,
           "drive_time_min": 16,
-          "category": "general"
-        },
-        {
-          "id": "w9-07",
-          "title": "FIFA World Cup 26: Belgium vs IR Iran",
-          "date": "Sun 6/21",
-          "time": "12pm",
-          "venue": "SoFi Stadium, 1001 Stadium Dr, Inglewood, CA 90301",
-          "blurb": "World Cup 2026 group stage match at SoFi Stadium — one of LA's home games for the summer tournament.",
-          "description": "World Cup 2026 group stage match: Belgium vs IR Iran at SoFi Stadium in Inglewood. LA is hosting several FIFA World Cup 2026 matches — this is one of the group stage fixtures. Tickets are expensive but the atmosphere is unlike anything else. Free World Cup fan zones throughout the region if you'd rather watch on big screen.",
-          "image": "",
-          "weirdness": 2,
-          "free": false,
-          "source": "discoverlosangeles.com",
-          "url": "https://www.discoverlosangeles.com/event/2026/06/21/belgium-vs-ir-iran",
-          "distance_miles": 22.0,
-          "drive_time_min": 44,
           "category": "general"
         },
         {
@@ -3808,7 +3622,7 @@
           "free": true,
           "source": "LACMA / timeout.com",
           "url": "https://www.lacma.org/event/block-party",
-          "distance_miles": 19.6,
+          "distance_miles": 20.5,
           "drive_time_min": 44,
           "category": "weird"
         },
@@ -3825,7 +3639,7 @@
           "free": false,
           "source": "designerconpasadena.com",
           "url": "https://designerconpasadena.com/",
-          "distance_miles": 1.2,
+          "distance_miles": 1.5,
           "drive_time_min": 6,
           "category": "general"
         },
@@ -3961,8 +3775,8 @@
           "free": true,
           "source": "eventbrite.com",
           "url": "https://www.eventbrite.com/e/summer-solstice-pride-market-tickets-1990153830681",
-          "distance_miles": 17.4,
-          "drive_time_min": 40,
+          "distance_miles": 19.6,
+          "drive_time_min": 38,
           "category": "general"
         },
         {
@@ -4019,7 +3833,7 @@
           "free": false,
           "source": "Eventbrite",
           "url": "https://www.eventbrite.com/e/soul-comix-con-2026-tickets-1987020368411",
-          "distance_miles": 18.2,
+          "distance_miles": 18.0,
           "drive_time_min": 38,
           "category": "weird"
         },
@@ -4037,7 +3851,7 @@
           "source": "Eventbrite",
           "url": "https://www.eventbrite.com/e/hollywood-ghouls-ball-ministry-pageant-tickets-1985397746104",
           "distance_miles": 15.4,
-          "drive_time_min": 31,
+          "drive_time_min": 32,
           "category": "weird"
         },
         {
@@ -4054,7 +3868,7 @@
           "source": "Eventbrite",
           "url": "https://www.eventbrite.com/e/gcw-presents-amerikas-most-wanted-2026-tickets-1988592249951",
           "distance_miles": 13.8,
-          "drive_time_min": 26,
+          "drive_time_min": 27,
           "category": "weird"
         },
         {
@@ -4089,7 +3903,7 @@
           "source": "Eventbrite",
           "url": "https://www.eventbrite.com/",
           "distance_miles": 15.6,
-          "drive_time_min": 32,
+          "drive_time_min": 33,
           "category": "general",
           "unverified": true
         },
@@ -4208,8 +4022,8 @@
           "free": true,
           "source": "CicLAvia",
           "url": "https://www.ciclavia.org/",
-          "distance_miles": 15.4,
-          "drive_time_min": 31,
+          "distance_miles": 18.4,
+          "drive_time_min": 37,
           "category": "general"
         },
         {
@@ -4243,7 +4057,7 @@
           "source": "The Getty",
           "url": "https://www.getty.edu/visit/villa/",
           "distance_miles": 30.9,
-          "drive_time_min": 52,
+          "drive_time_min": 53,
           "category": "general"
         },
         {
@@ -4277,7 +4091,7 @@
           "source": "ARRL",
           "url": "https://www.arrl.org/field-day",
           "distance_miles": 27.8,
-          "drive_time_min": 45,
+          "drive_time_min": 46,
           "category": "weird"
         },
         {
@@ -4387,7 +4201,7 @@
           "source": "venicebeachdrumcircle.wordpress.com",
           "url": "https://venicebeachdrumcircle.wordpress.com/",
           "distance_miles": 27.7,
-          "drive_time_min": 51
+          "drive_time_min": 52
         },
         {
           "id": "w11-08",
@@ -4404,7 +4218,7 @@
           "source": "pickupultimate.com / LAOUT",
           "url": "https://pickupultimate.com/map/city/losangeles",
           "distance_miles": 27.9,
-          "drive_time_min": 54
+          "drive_time_min": 55
         },
         {
           "id": "w11-10",
@@ -4455,7 +4269,7 @@
           "source": "Patch / Huntington Beach",
           "url": "https://patch.com/california/los-angeles/2026-july-4-fireworks-guide-la-county",
           "distance_miles": 50.2,
-          "drive_time_min": 67
+          "drive_time_min": 68
         },
         {
           "id": "w11-18",
@@ -4471,8 +4285,8 @@
           "category": "",
           "source": "TimeOut / Patch",
           "url": "https://patch.com/california/los-angeles/2026-july-4-fireworks-guide-la-county",
-          "distance_miles": 30.6,
-          "drive_time_min": 47
+          "distance_miles": 30.3,
+          "drive_time_min": 51
         },
         {
           "id": "w11-19",
@@ -4562,7 +4376,7 @@
           "source": "Fever",
           "url": "https://feverup.com/m/120860",
           "distance_miles": 16.3,
-          "drive_time_min": 32
+          "drive_time_min": 33
         },
         {
           "id": "w12-05",
@@ -4595,7 +4409,7 @@
           "category": "",
           "source": "",
           "url": "",
-          "distance_miles": 26.7,
+          "distance_miles": 26.6,
           "drive_time_min": 49
         },
         {
@@ -4714,8 +4528,8 @@
           "category": "sports-1day",
           "source": "Eventbrite",
           "url": "https://www.eventbrite.com/o/socal-wiffleball-55146793143",
-          "distance_miles": 11.3,
-          "drive_time_min": 22
+          "distance_miles": 28.6,
+          "drive_time_min": 51
         },
         {
           "id": "w12-14",
@@ -4817,7 +4631,7 @@
           "source": "",
           "url": "",
           "distance_miles": 42.9,
-          "drive_time_min": 58
+          "drive_time_min": 60
         }
       ]
     },
@@ -4875,7 +4689,7 @@
           "source": "Eventbrite",
           "url": "https://www.eventbrite.com/e/swirl-surfskate-fest-2026-tickets-1991833572835",
           "distance_miles": 28.0,
-          "drive_time_min": 54
+          "drive_time_min": 55
         },
         {
           "id": "w13-04",
@@ -4926,7 +4740,7 @@
           "source": "laghosttour.com",
           "url": "https://laghosttour.com/",
           "distance_miles": 11.4,
-          "drive_time_min": 23
+          "drive_time_min": 22
         },
         {
           "id": "w13-07",
@@ -4994,7 +4808,7 @@
           "source": "visitlongbeach.com",
           "url": "https://www.visitlongbeach.com/events/long-beach-dragon-boat-festival/",
           "distance_miles": 41.0,
-          "drive_time_min": 49
+          "drive_time_min": 50
         },
         {
           "id": "w13-11",
@@ -5011,7 +4825,7 @@
           "source": "Eventbrite",
           "url": "https://www.eventbrite.com/e/lucha-wars-rjnproductions99-7-year-anniversary-tickets-1979097536006",
           "distance_miles": 12.9,
-          "drive_time_min": 25
+          "drive_time_min": 26
         },
         {
           "id": "w13-12",
@@ -5045,7 +4859,7 @@
           "source": "perrisautospeedway.com",
           "url": "http://www.perrisautospeedway.com/class/nightofdestruction.html",
           "distance_miles": 65.7,
-          "drive_time_min": 83
+          "drive_time_min": 84
         },
         {
           "id": "w13-14",
@@ -5222,7 +5036,7 @@
           "source": "midsummerscream.org",
           "url": "https://www.midsummerscream.org/",
           "distance_miles": 30.3,
-          "drive_time_min": 50
+          "drive_time_min": 51
         },
         {
           "id": "w14-02",
@@ -5551,7 +5365,7 @@
           "source": "Eventbrite",
           "url": "https://www.eventbrite.com/e/celebrate-east-los-lucha-block-party-with-live-wrestling-matches-tickets-1979097704510",
           "distance_miles": 12.9,
-          "drive_time_min": 25
+          "drive_time_min": 26
         },
         {
           "id": "w15-02",
@@ -5582,7 +5396,7 @@
           "source": "MotorsportReg",
           "url": "https://solonats.motorsportreg.com/events/cal-club-autocross-august-15th-16th-storm-stadium-lake-elsinore-scca-287543",
           "distance_miles": 67.2,
-          "drive_time_min": 84
+          "drive_time_min": 87
         },
         {
           "id": "w15-04",
@@ -5597,7 +5411,7 @@
           "source": "Eventbrite",
           "url": "https://www.eventbrite.com/e/2026-el-segundo-main-street-car-show-registration-1990355684431",
           "distance_miles": 29.2,
-          "drive_time_min": 46
+          "drive_time_min": 47
         },
         {
           "id": "w15-05",
@@ -5642,7 +5456,7 @@
           "source": "Fusicology / Time Out",
           "url": "https://www.fusicology.com/events/los-feliz-art-and-music-block-party-and-mural-festival-los-angeles-socal/",
           "distance_miles": 15.2,
-          "drive_time_min": 27
+          "drive_time_min": 28
         },
         {
           "id": "w15-08",
@@ -5657,7 +5471,7 @@
           "source": "Eventbrite",
           "url": "https://www.eventbrite.com/e/soulsearch-buena-park-enlightenment-expo-psychic-healing-fair-tickets-1990426350796",
           "distance_miles": 32.6,
-          "drive_time_min": 38
+          "drive_time_min": 39
         },
         {
           "id": "w15-09",
@@ -5671,7 +5485,7 @@
           "free": false,
           "source": "Angel City Derby",
           "url": "https://angelcityderby.com/events",
-          "distance_miles": 14.3,
+          "distance_miles": 14.9,
           "drive_time_min": 28
         },
         {
@@ -5687,7 +5501,7 @@
           "source": "Fever",
           "url": "https://feverup.com/m/120860",
           "distance_miles": 16.3,
-          "drive_time_min": 32,
+          "drive_time_min": 33,
           "unverified": true
         },
         {
@@ -5733,7 +5547,7 @@
           "source": "Melrose Trading Post",
           "url": "https://www.melrosetradingpost.org/",
           "distance_miles": 17.2,
-          "drive_time_min": 41
+          "drive_time_min": 42
         },
         {
           "id": "w15-14",
@@ -5748,7 +5562,7 @@
           "source": "robotcombatevents.com",
           "url": "https://www.robotcombatevents.com/events/7060",
           "distance_miles": 25.4,
-          "drive_time_min": 31,
+          "drive_time_min": 32,
           "unverified": true
         },
         {
@@ -5920,6 +5734,373 @@
           "venue": "Pasadena Red Cross Blood, Platelet and Plasma Donation Center — 2471 E Walnut St #103, Pasadena, CA 91107",
           "blurb": "Closest Red Cross center to home (~6 min). Whole blood / platelets / plasma. $20 Amazon gift card in August. Check redcrossblood.org for confirmed hours.",
           "description": "The Walnut St center is the closest Red Cross location to your house, about 6 minutes. Whole blood, platelets, and plasma all accepted. August donors get a $20 Amazon gift card by email. Book via redcrossblood.org or call 1-800-RED-CROSS; verify hours for Aug 16.",
+          "weirdness": 1,
+          "free": true,
+          "category": "blood-donation",
+          "source": "redcrossblood.org",
+          "url": "https://www.redcrossblood.org/local-homepage/location/pasadena-american-red-cross.html",
+          "image": "https://www.redcross.org/content/dam/redcrossblood/social-media-images/FB_Donor_Image1.jpg",
+          "distance_miles": 1.9,
+          "drive_time_min": 6
+        }
+      ]
+    },
+    {
+      "label": "Aug 29-30",
+      "start": "2026-08-29",
+      "end": "2026-08-30",
+      "events": [
+        {
+          "id": "w16-01",
+          "title": "KnokX Pro Presents: KNOKXPERIENCE Wrestlers Court",
+          "date": "Sat 8/29",
+          "time": "7:30pm-9:30pm (doors 6:30pm)",
+          "venue": "Domain Events Center, Sun Valley (LA)",
+          "blurb": "Indie wrestling drama where the villains put the whole locker room on trial.",
+          "description": "KnokX Pro Wrestling (run by WWE Hall of Famer Rikishi) stages 'Wrestlers Court' — the faction that swept every title in the promotion summons the entire roster to answer for their actions on stage. All-ages, hard-hitting live wrestling.",
+          "image": "https://img.evbuc.com/https%253A%252F%252Fcdn.evbuc.com%252Fimages%252F1190215893%252F299995167593%252F1%252Foriginal.20260803-180940",
+          "weirdness": 4,
+          "free": false,
+          "source": "Eventbrite",
+          "url": "https://www.eventbrite.com/e/knokx-pro-presents-knokxperience-wrestlers-court-august-29th-2026-tickets-1996475937272",
+          "distance_miles": 19.2,
+          "drive_time_min": 23
+        },
+        {
+          "id": "w16-02",
+          "title": "LA Conservancy: Frogtown and L.A. River Walking Tour",
+          "date": "Sat 8/29",
+          "time": "9:00am",
+          "venue": "Frogtown, LA River (Los Angeles)",
+          "blurb": "A guided walk through LA's scrappiest riverside neighborhood and its concrete-channel history.",
+          "description": "The LA Conservancy leads a walking tour through Frogtown along the LA River, covering how the neighborhood's industrial past collided with the river's flood-control history and its current arts-and-outdoors revival.",
+          "image": "",
+          "weirdness": 2,
+          "free": false,
+          "source": "LA Conservancy",
+          "url": "https://www.laconservancy.org/tours-events/event-calendar/",
+          "distance_miles": 11.7,
+          "drive_time_min": 18
+        },
+        {
+          "id": "w16-03",
+          "title": "LA Conservancy: Curtains Up on Broadway",
+          "date": "Sat 8/29",
+          "time": "10:00am",
+          "venue": "Broadway Historic Theatre District, Downtown LA",
+          "blurb": "Walk the faded marquees of LA's original movie-palace row.",
+          "description": "An LA Conservancy walking tour of Broadway's historic theater district downtown — once the country's largest concentration of movie palaces — covering vaudeville, silent-film premieres, and the strip's decline and reinvention.",
+          "image": "",
+          "weirdness": 2,
+          "free": false,
+          "source": "LA Conservancy",
+          "url": "https://www.laconservancy.org/tours-events/events-calendar/broadway-historic-theatre-and-commercial-district-walking-tour/",
+          "distance_miles": 12.1,
+          "drive_time_min": 26
+        },
+        {
+          "id": "w16-04",
+          "title": "Coed Beach Volleyball Pickup",
+          "date": "Sat 8/29",
+          "time": "6pm-8pm",
+          "venue": "Ocean View Beach, Santa Monica",
+          "blurb": "Drop-in coed beach volleyball, zero season commitment.",
+          "description": "A single drop-in coed beach volleyball pickup session run by Volo Sports at Ocean View Beach — show up solo or with friends and get grouped into games, no league sign-up needed.",
+          "image": "",
+          "weirdness": 1,
+          "free": true,
+          "category": "sports-1day",
+          "source": "Volo Sports",
+          "url": "https://www.volosports.com/d/8a417301-e2c7-4e14-bce3-9160085de9a5",
+          "distance_miles": 26.1,
+          "drive_time_min": 46
+        },
+        {
+          "id": "w16-05",
+          "title": "Open Pickup Soccer",
+          "date": "Sat 8/29",
+          "time": "5:30pm-7:30pm",
+          "venue": "Playa Vista Central Park, Playa Vista",
+          "blurb": "One-off drop-in pickup soccer, $6 and you're in.",
+          "description": "A single open pickup soccer session at Playa Vista Central Park via Volo Sports — pay $6, show up, get placed on a team. No league commitment.",
+          "image": "",
+          "weirdness": 1,
+          "free": false,
+          "category": "sports-1day",
+          "source": "Volo Sports",
+          "url": "https://www.volosports.com/d/444885a9-469a-4bac-82aa-8446c86cf2e5",
+          "distance_miles": 26.2,
+          "drive_time_min": 46
+        },
+        {
+          "id": "w16-06",
+          "title": "EaHo Block Party",
+          "date": "Sat 8/29",
+          "time": "11am-5pm",
+          "venue": "Heliotrope Dr, East Hollywood",
+          "blurb": "A gallery-run block party mashing up art, vintage racks, a raffle, and one taco cart.",
+          "description": "Track 16 Gallery, David Zwirner, Wilding Cran and a cluster of East Hollywood shops team up for a neighborhood block party — live music, raffles, vintage clothing and eyewear vendors, a book stall, and Tacos Mike parked curbside.",
+          "image": "",
+          "weirdness": 3,
+          "free": true,
+          "source": "Gallery Platform LA",
+          "url": "https://galleryplatform.la/events/eaho-block-party",
+          "distance_miles": 13.9,
+          "drive_time_min": 27
+        },
+        {
+          "id": "w16-07",
+          "title": "Visionaries Exhibition Closing w/ Artist's Talk",
+          "date": "Sun 8/30",
+          "time": "1pm-3pm",
+          "venue": "Diversions Fine Arts, Manhattan Beach",
+          "blurb": "Last chance to catch this show, with the artist walking through the work.",
+          "description": "Closing afternoon of the Visionaries exhibition at Diversions Fine Arts, capped with an artist's talk before the pieces come down.",
+          "image": "",
+          "weirdness": 2,
+          "free": true,
+          "source": "Gallery Platform LA",
+          "url": "https://galleryplatform.la/galleries/diversions-fine-arts/events/visionaries-exhibition-closing-w-artist-s-talk",
+          "distance_miles": 29.1,
+          "drive_time_min": 49
+        },
+        {
+          "id": "w16-08",
+          "title": "Melrose Trading Post",
+          "date": "Sun 8/30",
+          "time": "10am-5pm",
+          "venue": "Fairfax High School lot, Melrose Ave, LA",
+          "blurb": "LA's longest-running Sunday flea market — 260+ vintage dealers and makers.",
+          "description": "Running since 1997 in the Fairfax High lot, Melrose Trading Post packs in 260+ local makers, vintage curators, and food vendors, with live music on the Greenway Stage; admission funds the school's free arts education program.",
+          "image": "https://img.evbuc.com/https%3A%2F%2Fcdn.evbuc.com%2Fimages%2F1173685033%2F41435317002%2F1%2Foriginal.20251230-004152",
+          "weirdness": 3,
+          "free": false,
+          "source": "Eventbrite",
+          "url": "https://www.eventbrite.com/e/melrose-trading-post-las-sunday-ritual-tickets-1992794887152",
+          "distance_miles": 17.2,
+          "drive_time_min": 42
+        },
+        {
+          "id": "w16-09",
+          "title": "LAcon V Masquerade (Worldcon 2026)",
+          "date": "Sat 8/29",
+          "time": "8:00pm",
+          "venue": "Anaheim Convention Center Arena, Anaheim",
+          "blurb": "The Worldcon costume championship — elaborate sci-fi/fantasy builds walk the stage for prizes.",
+          "description": "The signature costume competition of LAcon V (the 84th Worldcon) puts amateur and veteran costumers on stage to perform their creations for judges across multiple skill divisions, with fan photo ops at intermission.",
+          "image": "https://www.lacon.org/wp-content/uploads/2026/01/nebula.jpg",
+          "weirdness": 5,
+          "free": false,
+          "source": "LAcon V / Worldcon 2026",
+          "url": "https://www.lacon.org/masquerade/",
+          "distance_miles": 11.3,
+          "drive_time_min": 22
+        },
+        {
+          "id": "w16-10",
+          "title": "Down the Rabbit Hole",
+          "date": "Sat 8/29",
+          "time": "evening (various showtimes)",
+          "venue": "Hollywood Roosevelt, Hollywood",
+          "blurb": "A secret bookcase door leads to a 90-minute Wonderland cabaret of burlesque and aerial acts.",
+          "description": "An 18+ immersive cabaret at the Hollywood Roosevelt reimagining Alice in Wonderland — secret entrance behind a bookcase, hypnotic visuals, and fantasy-blurring aerial/burlesque performances with cocktails throughout.",
+          "image": "https://applications-media.feverup.com/image/upload/f_auto,w_720,h_720/fever2/plan/photo/415589d8-80da-11f0-bfe5-8aa390b958d0",
+          "weirdness": 4,
+          "free": false,
+          "source": "Fever",
+          "url": "https://feverup.com/m/431203",
+          "distance_miles": 17.9,
+          "drive_time_min": 31
+        },
+        {
+          "id": "w16-11",
+          "title": "Rogues of the Gypsy Moon | Live Script Read",
+          "date": "Sat 8/29",
+          "time": "10am-3pm (mixer 10-11:45, reading 12-3)",
+          "venue": "Hollywood American Legion Post 43",
+          "blurb": "A free public table-read of an unproduced Terry Rossio script, performed for a room of casting execs.",
+          "description": "Written/directed by Terry Rossio (Pirates of the Caribbean), this public reading follows a bumbling British ambassador and a rebellious French princess on a comedic cross-country escape through 17th-century France, performed by veteran actors in front of industry casting directors. Breakfast mixer beforehand.",
+          "image": "https://img.evbuc.com/https%3A%2F%2Fcdn.evbuc.com%2Fimages%2F1186655818%2F157959140791%2F1%2Foriginal.20260611-044545",
+          "weirdness": 3,
+          "free": true,
+          "source": "Eventbrite",
+          "url": "https://www.eventbrite.com/e/rogues-of-the-gypsy-moon-live-script-read-tickets-1991662284507",
+          "distance_miles": 17.2,
+          "drive_time_min": 28
+        },
+        {
+          "id": "w16-12",
+          "title": "6th Annual Santa Monica Classic Car Show: Lowride for a Cause",
+          "date": "Sat 8/29",
+          "time": "10am-4pm",
+          "venue": "Santa Monica Pier",
+          "blurb": "Vintage lowriders and classics line the pier for a community fundraiser.",
+          "description": "The Pico Youth & Family Center's 'Lowride for a Cause' brings a lineup of classic and lowrider cars to Santa Monica Pier for its 6th annual show, blending LA car culture with a fundraiser.",
+          "image": "https://img.evbuc.com/https%3A%2F%2Fcdn.evbuc.com%2Fimages%2F1189661090%2F194808419680%2F1%2Foriginal.20260726-215539",
+          "weirdness": 2,
+          "free": true,
+          "source": "Eventbrite",
+          "url": "https://www.eventbrite.com/e/6th-annual-santa-monica-classic-car-show-on-the-pier-registration-1991800360496",
+          "distance_miles": 27.1,
+          "drive_time_min": 46
+        },
+        {
+          "id": "w16-13",
+          "title": "Glorious Ladies of Puppetry",
+          "date": "Sun 8/30",
+          "time": "4:30pm (doors 4pm)",
+          "venue": "Bob Baker Marionette Theater, Los Angeles",
+          "blurb": "An all-women puppeteer collective teams up with the Groundlings for improvised puppet comedy.",
+          "description": "Part of Bob Baker Marionette Theater's Summer of Puppetry series: GLOP (Glorious Ladies of Puppetry), a collective of professional women puppeteers, joins GLOG (Glorious Ladies of Groundlings) for live improv comedy built entirely around puppetry.",
+          "image": "https://images.squarespace-cdn.com/content/v1/58094bc6725e25a1bb8f6dc4/8ce8c780-c45b-4700-9b71-f58ea919a189/unnamed-1.jpeg",
+          "weirdness": 4,
+          "free": false,
+          "source": "Bob Baker Marionette Theater",
+          "url": "https://www.bobbakermarionettetheater.com/special-events-onsite/2026/8/30/glorious-ladies-of-puppetry",
+          "distance_miles": 7.3,
+          "drive_time_min": 17
+        },
+        {
+          "id": "w16-14",
+          "title": "FXC Strikers: FULL THROTTLE Long Beach",
+          "date": "Sat 8/29",
+          "time": "4pm-10pm (doors 3pm)",
+          "venue": "Thunder Studios, Long Beach",
+          "blurb": "Seven 'dirty boxing' bouts sandwiched between a motorcycle stunt show and a cannabis expo.",
+          "description": "FIREPOWER's FULL THROTTLE combines seven live dirty-boxing fights with a Concrete Cowboys motorcycle stunt show, a lifestyle/cannabis expo, and celebrity meet-and-greets, streaming nationally on Adrenaline+.",
+          "image": "https://img.evbuc.com/https%3A%2F%2Fcdn.evbuc.com%2Fimages%2F1187242482%2F543057309331%2F1%2Foriginal.20260619-010724",
+          "weirdness": 5,
+          "free": false,
+          "source": "Eventbrite",
+          "url": "https://www.eventbrite.com/e/fxc-strikers-full-throttle-long-beach-tickets-1990702754527",
+          "distance_miles": 24.2,
+          "drive_time_min": 43
+        },
+        {
+          "id": "w16-15",
+          "title": "LA Derby Dolls: Fight Crew v. Varsity Brawlers",
+          "date": "Sat 8/29",
+          "time": "doors 6pm",
+          "venue": "The Doll Factory, Los Angeles",
+          "blurb": "All-female banked-track roller derby — an unbeaten squad defends its season against the rookies.",
+          "description": "LA's original banked-track roller derby league pits Fight Crew (captained by Janis Choplin and Haught Wheels) against the rookie Varsity Brawlers. Halftime band, food trucks, beer, and a vendor village round out the night. 21+.",
+          "image": "",
+          "weirdness": 4,
+          "free": false,
+          "source": "Brown Paper Tickets",
+          "url": "https://www.brownpapertickets.com/producerevent/72216?prod_id=6484",
+          "distance_miles": 12.2,
+          "drive_time_min": 26
+        },
+        {
+          "id": "w16-16",
+          "title": "Smorgasburg LA: Ice Cream Alley",
+          "date": "Sun 8/30",
+          "time": "10am-4pm",
+          "venue": "ROW DTLA, Los Angeles",
+          "blurb": "60+ food vendors plus an entire alley dedicated to ice cream, gelato, and churros.",
+          "description": "Smorgasburg LA's Sunday market at ROW DTLA runs its 'Ice Cream Alley' takeover through early September, layering scoop shops, gelato, vegan treats, and churros on top of its usual 60+ food-vendor lineup.",
+          "image": "",
+          "weirdness": 3,
+          "free": true,
+          "source": "Smorgasburg LA",
+          "url": "https://la.smorgasburg.com/calendar/ice-cream-alley-2026",
+          "distance_miles": 13.6,
+          "drive_time_min": 27
+        },
+        {
+          "id": "w16-sports-01",
+          "title": "Pasadena Pickup Ultimate — Hamilton Park (Sat)",
+          "date": "Sat 8/29",
+          "time": "10am",
+          "venue": "Hamilton Park, Pasadena, CA",
+          "blurb": "Free recurring Saturday pickup ultimate at Hamilton Park, Pasadena. All skill levels welcome. ~6 min from home.",
+          "description": "Saturday pickup ultimate at Hamilton Park in Pasadena. Mix of skill levels, new players always welcome. Contact: Michael Thoresen (MICHAELTHORESEN@HOTMAIL.COM). Free, recurring every Saturday.",
+          "image": "https://pickupultimate.com/assets/img/pickupultimate-dot-com.png",
+          "weirdness": 1,
+          "free": true,
+          "category": "sports-1day",
+          "source": "pickupultimate.com",
+          "url": "https://pickupultimate.com/games/4694",
+          "distance_miles": 4.2,
+          "drive_time_min": 12
+        },
+        {
+          "id": "w16-sports-02",
+          "title": "Pasadena Coed Ultimate — Hahamongna (Sun)",
+          "date": "Sun 8/30",
+          "time": "10am",
+          "venue": "Hahamongna Watershed Park, 4550 Oak Grove Dr, Pasadena, CA 91103",
+          "blurb": "Free Sunday coed ultimate pickup. All skill levels, ages, genders. ~10 min from home.",
+          "description": "Sunday coed ultimate at Hahamongna Watershed Park. All skill levels, ages, genders, backgrounds welcome. Contact Andrew via Facebook: pasadenaultimate. Free, recurring every Sunday.",
+          "image": "https://pickupultimate.com/assets/img/pickupultimate-dot-com.png",
+          "weirdness": 1,
+          "free": true,
+          "category": "sports-1day",
+          "source": "pickupultimate.com",
+          "url": "https://pickupultimate.com/games/5406",
+          "distance_miles": 6.9,
+          "drive_time_min": 14
+        },
+        {
+          "id": "w16-sports-03",
+          "title": "Rose Bowl Sunday Pickup Ultimate (Sun)",
+          "date": "Sun 8/30",
+          "time": "2:30pm onwards",
+          "venue": "Brookside Park (near Rose Bowl), Pasadena, CA 91103",
+          "blurb": "Competitive Sunday pickup ultimate near the Rose Bowl. New players welcome. ~5 min from home.",
+          "description": "Competitive pickup at Brookside Park near the Rose Bowl. New players explicitly welcomed. Contact Seth (213-413-4166 / sethgillum@hotmail.com) for exact location. Free, recurring.",
+          "image": "https://pickupultimate.com/assets/img/pickupultimate-dot-com.png",
+          "weirdness": 1,
+          "free": true,
+          "category": "sports-1day",
+          "source": "pickupultimate.com",
+          "url": "https://pickupultimate.com/map/city/losangeles",
+          "distance_miles": 4.1,
+          "drive_time_min": 11
+        },
+        {
+          "id": "w16-sports-04",
+          "title": "Aircadia Ultimate Pickup — Arcadia (Sun)",
+          "date": "Sun 8/30",
+          "time": "4pm-6pm",
+          "venue": "Arcadia Civic Center Athletic Field, Arcadia, CA 91006",
+          "blurb": "Fun, laid-back Sunday afternoon pickup ultimate in Arcadia. ~12 min from home. All skill levels.",
+          "description": "Aircadia Ultimate runs friendly Sunday afternoon pickup games at the Arcadia Civic Center Athletic Field. All skill levels welcome. Contact: Leon, aircadiaultimate@gmail.com, 626-684-7661. Free, recurring.",
+          "image": "https://pickupultimate.com/assets/img/pickupultimate-dot-com.png",
+          "weirdness": 1,
+          "free": true,
+          "category": "sports-1day",
+          "source": "pickupultimate.com",
+          "url": "https://pickupultimate.com/map/city/losangeles",
+          "distance_miles": 6.4,
+          "drive_time_min": 12
+        },
+        {
+          "id": "w16-bd-01",
+          "title": "Donate blood — Pasadena Red Cross Walnut St Center (Sat 8/29)",
+          "date": "Sat 8/29",
+          "time": "8am-2:45pm",
+          "venue": "Pasadena Red Cross Blood, Platelet and Plasma Donation Center — 2471 E Walnut St #103, Pasadena, CA 91107",
+          "blurb": "Closest Red Cross center to home (~6 min). Whole blood / platelets / plasma. Check redcrossblood.org for confirmed hours.",
+          "description": "The Walnut St center is the closest Red Cross location to your house, about 6 minutes. Whole blood, platelets, and plasma all accepted. Book via redcrossblood.org or call 1-800-RED-CROSS; verify hours for Aug 29.",
+          "weirdness": 1,
+          "free": true,
+          "category": "blood-donation",
+          "source": "redcrossblood.org",
+          "url": "https://www.redcrossblood.org/local-homepage/location/pasadena-american-red-cross.html",
+          "image": "https://www.redcross.org/content/dam/redcrossblood/social-media-images/FB_Donor_Image1.jpg",
+          "distance_miles": 1.9,
+          "drive_time_min": 6
+        },
+        {
+          "id": "w16-bd-02",
+          "title": "Donate blood — Pasadena Red Cross Walnut St Center (Sun 8/30)",
+          "date": "Sun 8/30",
+          "time": "8am-2:45pm",
+          "venue": "Pasadena Red Cross Blood, Platelet and Plasma Donation Center — 2471 E Walnut St #103, Pasadena, CA 91107",
+          "blurb": "Closest Red Cross center to home (~6 min). Whole blood / platelets / plasma. Check redcrossblood.org for confirmed hours.",
+          "description": "The Walnut St center is the closest Red Cross location to your house, about 6 minutes. Whole blood, platelets, and plasma all accepted. Book via redcrossblood.org or call 1-800-RED-CROSS; verify hours for Aug 30.",
           "weirdness": 1,
           "free": true,
           "category": "blood-donation",
