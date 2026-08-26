@@ -1,21 +1,21 @@
 {
-  "sampled_at": "2026-08-25T11:45:07.387967+00:00",
+  "sampled_at": "2026-08-26T11:45:08.217299+00:00",
   "buckets": {
     "session": {
       "label": "session",
-      "pct": 14,
-      "resets": "Aug 25, 8:30am"
+      "pct": 15,
+      "resets": "Aug 26, 8:29am"
     },
     "week_all": {
       "label": "week (all models)",
-      "pct": 49,
-      "resets": "Aug 27, 10am"
+      "pct": 64,
+      "resets": "Aug 27, 9:59am"
     },
     "week_fable": {
       "label": "week (Fable)",
       "pct": 0,
-      "resets": "Aug 27, 10am"
+      "resets": "Aug 27, 9:59am"
     }
   },
-  "raw": "You are currently using your subscription to power your Claude Code usage\n\nCurrent session: 14% used Â· resets Aug 25, 8:30am (America/Los_Angeles)\nCurrent week (all models): 49% used Â· resets Aug 27, 10am (America/Los_Angeles)\nCurrent week (Fable): 0% used Â· resets Aug 27, 10am (America/Los_Angeles)\n\nWhat's contributing to your limits usage?\nApproximate, based on local sessions on this machine â€” does not include other devices or claude.ai. Behaviors are independent characteristics, not a breakdown.\n\nLast 24h Â· 481 requests Â· 41 sessions\n  72% of your usage was at >150k context\n  66% of your usage came from sessions active for 8+ hours\n  Top subagents: general-purpose 3%\n  Top MCP servers: claude-in-chrome 24%\n\nLast 7d Â· 3466 requests Â· 238 sessions\n  86% of your usage was at >150k context\n  85% of your usage came from subagent-heavy sessions\n  84% of your usage came from sessions active for 8+ hours\n  Top subagents: general-purpose 1%\n  Top MCP servers: claude-in-chrome 23%"
+  "raw": "You are currently using your subscription to power your Claude Code usage\n\nCurrent session: 15% used Â· resets Aug 26, 8:29am (America/Los_Angeles)\nCurrent week (all models): 64% used Â· resets Aug 27, 9:59am (America/Los_Angeles)\nCurrent week (Fable): 0% used Â· resets Aug 27, 9:59am (America/Los_Angeles)\n\nWhat's contributing to your limits usage?\nApproximate, based on local sessions on this machine â€” does not include other devices or claude.ai. Behaviors are independent characteristics, not a breakdown.\n\nLast 24h Â· 399 requests Â· 36 sessions\n  91% of your usage was at >150k context\n  84% of your usage came from sessions active for 8+ hours\n  Top MCP servers: claude-in-chrome 24%\n\nLast 7d Â· 2741 requests Â· 226 sessions\n  86% of your usage was at >150k context\n  81% of your usage came from sessions active for 8+ hours\n  Top MCP servers: claude-in-chrome 24%"
 }
