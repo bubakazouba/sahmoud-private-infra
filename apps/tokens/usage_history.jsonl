@@ -2503,3 +2503,52 @@
 {"sampled_at": "2026-08-27T10:45:08.616352+00:00", "pct": {"week_all": 75, "week_fable": 0}}
 {"sampled_at": "2026-08-27T11:15:07.543794+00:00", "pct": {"session": 7, "week_all": 76, "week_fable": 0}}
 {"sampled_at": "2026-08-27T11:45:08.855160+00:00", "pct": {"session": 17, "week_all": 77, "week_fable": 0}}
+{"sampled_at": "2026-08-27T12:15:07.346267+00:00", "pct": {"session": 24, "week_all": 77, "week_fable": 0}}
+{"sampled_at": "2026-08-27T12:45:08.570642+00:00", "pct": {"session": 24, "week_all": 77, "week_fable": 0}}
+{"sampled_at": "2026-08-27T13:15:08.043336+00:00", "pct": {"session": 32, "week_all": 78, "week_fable": 0}}
+{"sampled_at": "2026-08-27T13:45:08.592975+00:00", "pct": {"session": 33, "week_all": 78, "week_fable": 0}}
+{"sampled_at": "2026-08-27T14:15:07.423492+00:00", "pct": {"session": 33, "week_all": 78, "week_fable": 0}}
+{"sampled_at": "2026-08-27T14:45:09.241825+00:00", "pct": {"session": 33, "week_all": 78, "week_fable": 0}}
+{"sampled_at": "2026-08-27T15:15:07.137745+00:00", "pct": {"session": 34, "week_all": 78, "week_fable": 0}}
+{"sampled_at": "2026-08-27T15:45:08.630635+00:00", "pct": {"session": 34, "week_all": 78, "week_fable": 0}}
+{"sampled_at": "2026-08-27T16:15:11.295554+00:00", "pct": {"session": 7, "week_all": 79, "week_fable": 0}}
+{"sampled_at": "2026-08-27T16:45:08.886639+00:00", "pct": {"session": 8, "week_all": 79, "week_fable": 0}}
+{"sampled_at": "2026-08-27T17:15:08.375308+00:00", "pct": {"session": 24, "week_all": 2}}
+{"sampled_at": "2026-08-27T17:45:08.895500+00:00", "pct": {"session": 34, "week_all": 2}}
+{"sampled_at": "2026-08-27T18:15:07.301950+00:00", "pct": {"session": 41, "week_all": 3}}
+{"sampled_at": "2026-08-27T18:45:09.011722+00:00", "pct": {"session": 45, "week_all": 4}}
+{"sampled_at": "2026-08-27T19:15:07.572547+00:00", "pct": {"session": 49, "week_all": 4}}
+{"sampled_at": "2026-08-27T19:45:08.857854+00:00", "pct": {"session": 56, "week_all": 5}}
+{"sampled_at": "2026-08-27T20:15:07.542621+00:00", "pct": {"session": 65, "week_all": 6}}
+{"sampled_at": "2026-08-27T20:45:09.007624+00:00", "pct": {"session": 67, "week_all": 6}}
+{"sampled_at": "2026-08-27T21:15:07.199078+00:00", "pct": {"session": 1, "week_all": 6}}
+{"sampled_at": "2026-08-27T21:45:08.600192+00:00", "pct": {"session": 1, "week_all": 6}}
+{"sampled_at": "2026-08-27T22:15:07.136533+00:00", "pct": {"session": 6, "week_all": 7}}
+{"sampled_at": "2026-08-27T22:45:08.671460+00:00", "pct": {"session": 7, "week_all": 7}}
+{"sampled_at": "2026-08-27T23:15:08.021511+00:00", "pct": {"session": 7, "week_all": 7}}
+{"sampled_at": "2026-08-27T23:45:09.592889+00:00", "pct": {"session": 9, "week_all": 7}}
+{"sampled_at": "2026-08-28T00:15:07.592962+00:00", "pct": {"session": 13, "week_all": 7}}
+{"sampled_at": "2026-08-28T00:45:08.762263+00:00", "pct": {"session": 19, "week_all": 8}}
+{"sampled_at": "2026-08-28T01:15:07.464012+00:00", "pct": {"session": 20, "week_all": 8}}
+{"sampled_at": "2026-08-28T01:45:09.181216+00:00", "pct": {"session": 20, "week_all": 8}}
+{"sampled_at": "2026-08-28T02:15:07.390964+00:00", "pct": {"week_all": 8}}
+{"sampled_at": "2026-08-28T02:45:09.113260+00:00", "pct": {"week_all": 8}}
+{"sampled_at": "2026-08-28T03:15:07.885601+00:00", "pct": {"session": 0, "week_all": 8}}
+{"sampled_at": "2026-08-28T03:45:08.887683+00:00", "pct": {"session": 0, "week_all": 8}}
+{"sampled_at": "2026-08-28T04:15:08.212466+00:00", "pct": {"session": 13, "week_all": 9}}
+{"sampled_at": "2026-08-28T04:45:08.984905+00:00", "pct": {"session": 15, "week_all": 9}}
+{"sampled_at": "2026-08-28T05:15:07.982516+00:00", "pct": {"session": 15, "week_all": 9}}
+{"sampled_at": "2026-08-28T05:45:09.360097+00:00", "pct": {"session": 15, "week_all": 9}}
+{"sampled_at": "2026-08-28T06:15:07.522465+00:00", "pct": {"session": 29, "week_all": 11}}
+{"sampled_at": "2026-08-28T06:45:08.981486+00:00", "pct": {"session": 29, "week_all": 11}}
+{"sampled_at": "2026-08-28T07:15:07.876391+00:00", "pct": {"session": 29, "week_all": 11}}
+{"sampled_at": "2026-08-28T07:45:09.032853+00:00", "pct": {"session": 30, "week_all": 11}}
+{"sampled_at": "2026-08-28T08:15:07.458913+00:00", "pct": {"week_all": 11}}
+{"sampled_at": "2026-08-28T08:45:12.843638+00:00", "pct": {"week_all": 11}}
+{"sampled_at": "2026-08-28T09:15:07.532083+00:00", "pct": {"week_all": 11}}
+{"sampled_at": "2026-08-28T09:45:08.899011+00:00", "pct": {"week_all": 11}}
+{"sampled_at": "2026-08-28T10:15:07.567191+00:00", "pct": {"week_all": 11}}
+{"sampled_at": "2026-08-28T10:45:09.013404+00:00", "pct": {"week_all": 11}}
+{"sampled_at": "2026-08-28T11:15:07.960963+00:00", "pct": {"session": 6, "week_all": 11}}
+{"sampled_at": "2026-08-28T11:45:14.099763+00:00", "pct": {"session": 12, "week_all": 12}}
+{"sampled_at": "2026-08-28T12:15:07.446920+00:00", "pct": {"session": 21, "week_all": 12}}
