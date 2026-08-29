@@ -2552,3 +2552,50 @@
 {"sampled_at": "2026-08-28T11:15:07.960963+00:00", "pct": {"session": 6, "week_all": 11}}
 {"sampled_at": "2026-08-28T11:45:14.099763+00:00", "pct": {"session": 12, "week_all": 12}}
 {"sampled_at": "2026-08-28T12:15:07.446920+00:00", "pct": {"session": 21, "week_all": 12}}
+{"sampled_at": "2026-08-28T12:45:09.186477+00:00", "pct": {"session": 22, "week_all": 12}}
+{"sampled_at": "2026-08-28T13:15:07.695013+00:00", "pct": {"session": 22, "week_all": 12}}
+{"sampled_at": "2026-08-28T13:45:09.371608+00:00", "pct": {"session": 30, "week_all": 13}}
+{"sampled_at": "2026-08-28T14:15:07.861324+00:00", "pct": {"session": 38, "week_all": 14}}
+{"sampled_at": "2026-08-28T14:45:09.231718+00:00", "pct": {"session": 47, "week_all": 15}}
+{"sampled_at": "2026-08-28T15:15:07.773240+00:00", "pct": {"session": 47, "week_all": 15}}
+{"sampled_at": "2026-08-28T15:45:08.939649+00:00", "pct": {"session": 48, "week_all": 15}}
+{"sampled_at": "2026-08-28T16:15:14.949435+00:00", "pct": {"session": 10, "week_all": 16}}
+{"sampled_at": "2026-08-28T16:45:08.399060+00:00", "pct": {"session": 13, "week_all": 16}}
+{"sampled_at": "2026-08-28T17:15:07.163418+00:00", "pct": {"session": 24, "week_all": 17}}
+{"sampled_at": "2026-08-28T17:45:07.455861+00:00", "pct": {"session": 32, "week_all": 17}}
+{"sampled_at": "2026-08-28T18:15:09.876101+00:00", "pct": {"session": 33, "week_all": 18}}
+{"sampled_at": "2026-08-28T18:45:07.129221+00:00", "pct": {"session": 34, "week_all": 18}}
+{"sampled_at": "2026-08-28T19:15:06.858232+00:00", "pct": {"session": 37, "week_all": 18}}
+{"sampled_at": "2026-08-28T19:45:06.982780+00:00", "pct": {"session": 37, "week_all": 18}}
+{"sampled_at": "2026-08-28T20:15:06.849161+00:00", "pct": {"session": 38, "week_all": 18}}
+{"sampled_at": "2026-08-28T20:45:07.086934+00:00", "pct": {"session": 38, "week_all": 18}}
+{"sampled_at": "2026-08-28T21:15:06.844109+00:00", "pct": {"week_all": 18}}
+{"sampled_at": "2026-08-28T21:45:07.189813+00:00", "pct": {"session": 1, "week_all": 18}}
+{"sampled_at": "2026-08-28T22:15:08.304757+00:00", "pct": {"session": 5, "week_all": 19}}
+{"sampled_at": "2026-08-28T22:45:07.034222+00:00", "pct": {"session": 8, "week_all": 19}}
+{"sampled_at": "2026-08-28T23:15:06.813883+00:00", "pct": {"session": 8, "week_all": 19}}
+{"sampled_at": "2026-08-28T23:45:07.130868+00:00", "pct": {"session": 11, "week_all": 19}}
+{"sampled_at": "2026-08-29T00:15:08.789986+00:00", "pct": {"session": 17, "week_all": 20}}
+{"sampled_at": "2026-08-29T00:45:08.450055+00:00", "pct": {"session": 22, "week_all": 20}}
+{"sampled_at": "2026-08-29T01:15:08.370065+00:00", "pct": {"session": 26, "week_all": 21}}
+{"sampled_at": "2026-08-29T01:45:11.145774+00:00", "pct": {"session": 26, "week_all": 21}}
+{"sampled_at": "2026-08-29T02:15:08.986234+00:00", "pct": {"session": 33, "week_all": 21}}
+{"sampled_at": "2026-08-29T02:45:07.119480+00:00", "pct": {"week_all": 21}}
+{"sampled_at": "2026-08-29T03:15:09.305844+00:00", "pct": {"session": 8, "week_all": 22}}
+{"sampled_at": "2026-08-29T03:45:08.765295+00:00", "pct": {"session": 19, "week_all": 23}}
+{"sampled_at": "2026-08-29T04:15:08.290694+00:00", "pct": {"session": 19, "week_all": 23}}
+{"sampled_at": "2026-08-29T04:45:07.206061+00:00", "pct": {"session": 19, "week_all": 23}}
+{"sampled_at": "2026-08-29T05:15:06.978865+00:00", "pct": {"session": 19, "week_all": 23}}
+{"sampled_at": "2026-08-29T05:45:08.244779+00:00", "pct": {"session": 19, "week_all": 23}}
+{"sampled_at": "2026-08-29T06:15:07.154545+00:00", "pct": {"session": 19, "week_all": 23}}
+{"sampled_at": "2026-08-29T06:45:07.332190+00:00", "pct": {"session": 19, "week_all": 23}}
+{"sampled_at": "2026-08-29T07:15:08.726744+00:00", "pct": {"session": 25, "week_all": 24}}
+{"sampled_at": "2026-08-29T07:45:08.604379+00:00", "pct": {"session": 31, "week_all": 24}}
+{"sampled_at": "2026-08-29T08:15:07.172595+00:00", "pct": {"week_all": 24}}
+{"sampled_at": "2026-08-29T08:45:07.396381+00:00", "pct": {"week_all": 24}}
+{"sampled_at": "2026-08-29T09:15:07.087603+00:00", "pct": {"week_all": 24}}
+{"sampled_at": "2026-08-29T09:45:07.327915+00:00", "pct": {"week_all": 24}}
+{"sampled_at": "2026-08-29T10:15:07.049346+00:00", "pct": {"week_all": 24}}
+{"sampled_at": "2026-08-29T10:45:07.309691+00:00", "pct": {"week_all": 24}}
+{"sampled_at": "2026-08-29T11:15:07.398827+00:00", "pct": {"session": 6, "week_all": 25}}
+{"sampled_at": "2026-08-29T11:45:07.428131+00:00", "pct": {"session": 9, "week_all": 25}}
