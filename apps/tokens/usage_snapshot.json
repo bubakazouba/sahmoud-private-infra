@@ -1,21 +1,21 @@
 {
-  "sampled_at": "2026-09-03T11:45:08.082110+00:00",
+  "sampled_at": "2026-09-04T12:15:07.836760+00:00",
   "buckets": {
     "session": {
       "label": "session",
-      "pct": 14,
-      "resets": "Sep 3, 5am"
+      "pct": 24,
+      "resets": "Sep 4, 7:10am"
     },
     "week_all": {
       "label": "week (all models)",
-      "pct": 17,
-      "resets": "Sep 3, 10am"
+      "pct": 11,
+      "resets": "Sep 10, 10am"
     },
     "week_fable": {
       "label": "week (Fable)",
       "pct": 5,
-      "resets": "Sep 3, 10am"
+      "resets": "Sep 10, 10am"
     }
   },
-  "raw": "You are currently using your subscription to power your Claude Code usage\n\nCurrent session: 14% used Â· resets Sep 3, 5am (America/Los_Angeles)\nCurrent week (all models): 17% used Â· resets Sep 3, 10am (America/Los_Angeles)\nCurrent week (Fable): 5% used Â· resets Sep 3, 10am (America/Los_Angeles)\n\nWhat's contributing to your limits usage?\nApproximate, based on local sessions on this machine â€” does not include other devices or claude.ai. Behaviors are independent characteristics, not a breakdown.\n\nLast 24h Â· 630 requests Â· 29 sessions\n  84% of your usage came from subagent-heavy sessions\n  84% of your usage came from sessions active for 8+ hours\n  71% of your usage was at >150k context\n  Top subagents: general-purpose 12%\n  Top MCP servers: claude-in-chrome 14%\n\nLast 7d Â· 4452 requests Â· 189 sessions\n  87% of your usage came from subagent-heavy sessions\n  87% of your usage was at >150k context\n  87% of your usage came from sessions active for 8+ hours\n  Top subagents: general-purpose 2%\n  Top MCP servers: claude-in-chrome 32%"
+  "raw": "You are currently using your subscription to power your Claude Code usage\n\nCurrent session: 24% used Â· resets Sep 4, 7:10am (America/Los_Angeles)\nCurrent week (all models): 11% used Â· resets Sep 10, 10am (America/Los_Angeles)\nCurrent week (Fable): 5% used Â· resets Sep 10, 10am (America/Los_Angeles)\n\nWhat's contributing to your limits usage?\nApproximate, based on local sessions on this machine â€” does not include other devices or claude.ai. Behaviors are independent characteristics, not a breakdown.\n\nLast 24h Â· 654 requests Â· 37 sessions\n  84% of your usage came from subagent-heavy sessions\n  84% of your usage came from sessions active for 8+ hours\n  84% of your usage was at >150k context\n  Top skills: /artifact-design 1%\n  Top subagents: general-purpose 2%\n  Top MCP servers: claude-in-chrome 14%\n\nLast 7d Â· 4505 requests Â· 189 sessions\n  87% of your usage came from subagent-heavy sessions\n  87% of your usage was at >150k context\n  86% of your usage came from sessions active for 8+ hours\n  Top subagents: general-purpose 2%\n  Top MCP servers: claude-in-chrome 28%"
 }
