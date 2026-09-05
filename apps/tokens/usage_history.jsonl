@@ -2888,3 +2888,48 @@
 {"sampled_at": "2026-09-04T11:15:08.345925+00:00", "pct": {"session": 11, "week_all": 10, "week_fable": 5}}
 {"sampled_at": "2026-09-04T11:45:07.965568+00:00", "pct": {"session": 15, "week_all": 10, "week_fable": 5}}
 {"sampled_at": "2026-09-04T12:15:07.836760+00:00", "pct": {"session": 24, "week_all": 11, "week_fable": 5}}
+{"sampled_at": "2026-09-04T12:45:07.741792+00:00", "pct": {"session": 24, "week_all": 11, "week_fable": 5}}
+{"sampled_at": "2026-09-04T13:15:07.795187+00:00", "pct": {"session": 24, "week_all": 11, "week_fable": 5}}
+{"sampled_at": "2026-09-04T13:45:08.186890+00:00", "pct": {"session": 25, "week_all": 11, "week_fable": 5}}
+{"sampled_at": "2026-09-04T14:15:07.808822+00:00", "pct": {"week_all": 11, "week_fable": 5}}
+{"sampled_at": "2026-09-04T14:45:07.922539+00:00", "pct": {"session": 0, "week_all": 11, "week_fable": 5}}
+{"sampled_at": "2026-09-04T15:15:07.834689+00:00", "pct": {"session": 0, "week_all": 11, "week_fable": 5}}
+{"sampled_at": "2026-09-04T15:45:07.888963+00:00", "pct": {"session": 0, "week_all": 11, "week_fable": 5}}
+{"sampled_at": "2026-09-04T16:15:07.979877+00:00", "pct": {"session": 4, "week_all": 11, "week_fable": 5}}
+{"sampled_at": "2026-09-04T16:45:08.019962+00:00", "pct": {"session": 4, "week_all": 11, "week_fable": 5}}
+{"sampled_at": "2026-09-04T17:15:08.337932+00:00", "pct": {"session": 24, "week_all": 12, "week_fable": 7}}
+{"sampled_at": "2026-09-04T17:45:08.189367+00:00", "pct": {"session": 27, "week_all": 12, "week_fable": 7}}
+{"sampled_at": "2026-09-04T18:15:07.863523+00:00", "pct": {"session": 29, "week_all": 13, "week_fable": 7}}
+{"sampled_at": "2026-09-04T18:45:09.420053+00:00", "pct": {"session": 29, "week_all": 13, "week_fable": 7}}
+{"sampled_at": "2026-09-04T19:15:08.260705+00:00", "pct": {"session": 29, "week_all": 13, "week_fable": 7}}
+{"sampled_at": "2026-09-04T19:45:09.826696+00:00", "pct": {"week_all": 13, "week_fable": 7}}
+{"sampled_at": "2026-09-04T21:15:07.922692+00:00", "pct": {"session": 5, "week_all": 0}}
+{"sampled_at": "2026-09-04T21:45:09.721342+00:00", "pct": {"session": 5, "week_all": 0}}
+{"sampled_at": "2026-09-04T22:15:07.633409+00:00", "pct": {"session": 5, "week_all": 0}}
+{"sampled_at": "2026-09-04T22:45:09.552065+00:00", "pct": {"session": 6, "week_all": 0}}
+{"sampled_at": "2026-09-04T23:15:08.115322+00:00", "pct": {"session": 10, "week_all": 1}}
+{"sampled_at": "2026-09-04T23:45:09.595072+00:00", "pct": {"session": 12, "week_all": 2}}
+{"sampled_at": "2026-09-05T00:15:07.585336+00:00", "pct": {"session": 14, "week_all": 2}}
+{"sampled_at": "2026-09-05T00:45:09.858130+00:00", "pct": {"session": 15, "week_all": 2}}
+{"sampled_at": "2026-09-05T01:15:07.783287+00:00", "pct": {"session": 15, "week_all": 2}}
+{"sampled_at": "2026-09-05T01:45:10.253386+00:00", "pct": {"session": 3, "week_all": 2}}
+{"sampled_at": "2026-09-05T02:15:08.120824+00:00", "pct": {"session": 4, "week_all": 3}}
+{"sampled_at": "2026-09-05T02:45:09.849656+00:00", "pct": {"session": 4, "week_all": 3}}
+{"sampled_at": "2026-09-05T03:15:08.080858+00:00", "pct": {"session": 4, "week_all": 3}}
+{"sampled_at": "2026-09-05T03:45:10.358005+00:00", "pct": {"session": 5, "week_all": 3}}
+{"sampled_at": "2026-09-05T04:15:08.651037+00:00", "pct": {"session": 6, "week_all": 3}}
+{"sampled_at": "2026-09-05T04:45:10.116676+00:00", "pct": {"session": 9, "week_all": 3}}
+{"sampled_at": "2026-09-05T05:15:07.926485+00:00", "pct": {"session": 9, "week_all": 3}}
+{"sampled_at": "2026-09-05T05:45:10.332821+00:00", "pct": {"session": 12, "week_all": 3}}
+{"sampled_at": "2026-09-05T06:15:10.940083+00:00", "pct": {"session": 12, "week_all": 3}}
+{"sampled_at": "2026-09-05T06:45:10.442540+00:00", "pct": {"week_all": 3}}
+{"sampled_at": "2026-09-05T07:15:08.018220+00:00", "pct": {"week_all": 3}}
+{"sampled_at": "2026-09-05T07:45:07.286397+00:00", "pct": {"week_all": 3}}
+{"sampled_at": "2026-09-05T08:15:09.478689+00:00", "pct": {"week_all": 3}}
+{"sampled_at": "2026-09-05T08:45:07.138052+00:00", "pct": {"week_all": 3}}
+{"sampled_at": "2026-09-05T09:15:06.950988+00:00", "pct": {"week_all": 3}}
+{"sampled_at": "2026-09-05T09:45:10.542613+00:00", "pct": {"week_all": 3}}
+{"sampled_at": "2026-09-05T10:15:07.169687+00:00", "pct": {"session": 0, "week_all": 3}}
+{"sampled_at": "2026-09-05T10:45:07.244188+00:00", "pct": {"session": 3, "week_all": 4, "week_fable": 0}}
+{"sampled_at": "2026-09-05T11:15:07.420120+00:00", "pct": {"session": 9, "week_all": 4, "week_fable": 0}}
+{"sampled_at": "2026-09-05T11:45:07.167668+00:00", "pct": {"session": 13, "week_all": 4, "week_fable": 0}}
